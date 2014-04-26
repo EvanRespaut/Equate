@@ -30,6 +30,9 @@ public class Calculator implements OnConvertionListener{
 	//stores whether or not we just hit equals
 	private boolean solved=false;
 
+	//we want the display precision to be a bit less than calculated
+	private MathContext mcOperate = new MathContext(intCalcPrecision);
+	private MathContext mcDisp = new MathContext(intDisplayPrecision);
 
 	//precision for all calculations
 	public static final int intDisplayPrecision = 8;
@@ -41,10 +44,18 @@ public class Calculator implements OnConvertionListener{
 	private static final String strInfinityError = "Number Too Large";
 
 
-	//we want the display precision to be a bit less than calculated
-	private MathContext mcOperate = new MathContext(intCalcPrecision);
-	private MathContext mcDisp = new MathContext(intDisplayPrecision);
+	//note that in []'s only ^, -, and ] need escapes. - doen't need one if invalid
+	private static final String regexInvalidChars = ".*[^0-9()E.+*^/-].*";
+	private static final String regexOperators = "+/*^-";
+	private static final String regexInvalidStartChar = "[E*^/]";
+	private static final String regexAnyValidOperator = "[" + regexOperators + "]";
+	private static final String regexAnyOperatorOrE = "[E" + regexOperators + "]";
+	private static final String regexGroupedNumber = "(\\-?\\d*\\.?\\d+\\.?(?:E[\\-\\+]?\\d+)?)";
 
+	private static final String regexGroupedExponent = "(\\^)";
+	private static final String regexGroupedMultDiv = "([/*])";
+	private static final String regexGroupedAddSub = "([+-])";
+	
 
 	//this is for testing only
 	private Calculator(){
@@ -134,14 +145,17 @@ public class Calculator implements OnConvertionListener{
 
 	/**
 	 * Function that is called after user hits the "=" key
+	 * Cleans off the expression, adds missing parentheses, then loads in more accurate result values if possible into expression
+	 * Iterates over expression using PEMAS order of operations, then sets solved flag to true
+	 * @return the cleaned previous expression for loading into prevExpression
 	 */	
-	private void solve(){
+	private String solve(){
 		//clean off any dangling operators and E's (not para!!)
 		expression = expression.replaceAll(regexAnyOperatorOrE + "+$", "");
 
 		//if expression empty, don't need to solve anything
 		if(expression.equals(""))
-			return;
+			return "";
 
 		//if more open para then close, add corresponding close para's
 		int numCloseParaToAdd = numOpenPara();
@@ -164,16 +178,18 @@ public class Calculator implements OnConvertionListener{
 			}
 		}
 
-		//iterates over calcExp to find what to solve
-		//called by equals and before any unit convert
+		//The P operator of PEMAS, this function will call the remaining EMAS 
 		expression = collapsePara(expression);
-
-		String prevAns = expression;
-		//save the entire unsolved expression in a list
-		prevExpressions.add(prevExp + " = " + prevAns);
 
 		//flag used to tell backspace and numbers to clear the expression when pressed
 		solved=true;
+
+		//String prevAns = expression;
+		//save the entire unsolved expression in a list
+		//prevExpressions.add(prevExp + " = " + prevAns);
+	
+		//return the cleaned previous expression for loading into prevExpression
+		return prevExp;
 	}
 
 
@@ -196,20 +212,6 @@ public class Calculator implements OnConvertionListener{
 
 		return sToClean;
 	}
-
-
-	//note that in []'s only ^, -, and ] need escapes. - doen't need one if invalid
-	static final String regexInvalidChars = ".*[^0-9()E.+*^/-].*";
-	static final String regexOperators = "+/*^-";
-	static final String regexInvalidStartChar = "[E*^/]";
-	static final String regexAnyValidOperator = "[" + regexOperators + "]";
-	static final String regexAnyOperatorOrE = "[E" + regexOperators + "]";
-	static final String regexGroupedNumber = "(\\-?\\d*\\.?\\d+\\.?(?:E[\\-\\+]?\\d+)?)";
-
-	static final String regexGroupedExponent = "(\\^)";
-	static final String regexGroupedMultDiv = "([/*])";
-	static final String regexGroupedAddSub = "([+-])";
-
 
 	/**
 	 * Recursively loop over all parentheses, invoke other operators in results found within
@@ -384,7 +386,7 @@ public class Calculator implements OnConvertionListener{
 	/**
 	 * Rounds exression down by a mathcontext mcDisp
 	 */	
-	private void roundExpressionResult() {
+	private void roundAndCleanExpression() {
 		//if expression was displaying error (with invalid chars) leave
 		if(expression.matches(regexInvalidChars) || expression.equals(""))
 			return;
@@ -408,6 +410,9 @@ public class Calculator implements OnConvertionListener{
 			expression = bd.toPlainString();
 		else
 			expression = bd.toString();
+		
+		//finally clean the result off
+		expression=cleanNum(expression);
 	}
 
 
@@ -416,13 +421,16 @@ public class Calculator implements OnConvertionListener{
 	 * @param fromValue is standardized value of the unit being converted from
 	 * @param toValue is standardized value of the unit being converted to
 	 */		
-	public void convertFromTo(double fromValue, double toValue){
+	public void convertFromTo(double fromValue, double toValue, String fromName, String toName){
 		//if expression empty, or contains invalid chars, don't need to solve anything
 		if(expression.equals("") || expression.matches(regexInvalidChars))
 			return;
 
 		//first solve the function
-		solve();
+		String prevExp = solve();
+		//if there was nothing to solve, just leave
+		if (prevExp.equals(""))
+			return;
 
 		//this catches weird expressions like "-(-)-"
 		try{
@@ -439,15 +447,16 @@ public class Calculator implements OnConvertionListener{
 			return;
 		}
 
-		//round the expression off
-		roundExpressionResult();
-
-		expression=cleanNum(expression);
+		//round and clean the result expression off
+		roundAndCleanExpression();
+		
+		//load the final value into prevExpression
+		prevExpressions.add(prevExp + " " + fromName + " = " + expression + " " + toName);		
 	}
 
 
 	/**
-	 * Passed a key from caculator (num/op/back/clear/eq) and distributes it to its proper function
+	 * Passed a key from calculator (num/op/back/clear/eq) and distributes it to its proper function
 	 * @param sKey is either single character (but still a String) or a string from prevExpression
 	 */
 	public void parseKeyPressed(String sKey){
@@ -457,9 +466,14 @@ public class Calculator implements OnConvertionListener{
 
 		//check for equals key
 		if(sKey.equals("=")){
-			solve();
-			roundExpressionResult();
-			expression=cleanNum(expression);
+			String prevExp = solve();
+			//if there was nothing to solve, just leave
+			if (prevExp.equals(""))
+				return;
+			//round and clean the result expression off
+			roundAndCleanExpression();
+			//load the final value into prevExpression
+			prevExpressions.add(prevExp + " = " + expression);
 		}
 		//check for backspace key
 		else if(sKey.equals("b"))

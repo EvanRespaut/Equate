@@ -107,26 +107,6 @@ public class ResultListFragment extends ListFragment {
 					}
 
 			});
-			/*
-			textView.setOnTouchListener(new OnTouchListener() {
-				@Override
-				public boolean onTouch(View view, MotionEvent event) {
-					if(event.getAction() == MotionEvent.ACTION_DOWN) 
-						((TextView)view).setBackgroundColor(getResources().getColor(R.color.num_button_pressed));
-					else if (event.getAction() == MotionEvent.ACTION_CANCEL) 
-						((TextView)view).setBackgroundColor(getResources().getColor(R.color.app_background));						
-					else if (event.getAction() == MotionEvent.ACTION_OUTSIDE) 
-						((TextView)view).setBackgroundColor(getResources().getColor(R.color.app_background));						
-					else if (event.getAction() == MotionEvent.ACTION_UP) {
-						String text = (String) ((TextView)view).getText();
-						((TextView)view).setBackgroundColor(getResources().getColor(R.color.app_background));
-						//pass the textView's value to the calculator
-						Calculator.getCalculator(getActivity()).parseKeyPressed(text);
-						mCallback.updateScreen(false);				        
-					}
-					return true;
-				}
-			});*/
 		}
 
 		/**
