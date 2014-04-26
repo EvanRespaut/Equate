@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">UnitCalc</string>
+    <string name="action_settings">Settings</string>
+    
+    <string name="decimal_button">.</string>
+    <string name="equals_button">=</string>
+    <string name="ee_button">EE</string>
+    <string name="backspace_button">Backspace</string>
+    <string name="open_para_button">(</string>
+    <string name="close_para_button">)</string>
+    
+    
+    <string name="zero_button">0</string>
+    <string name="one_button">1</string>
+    <string name="two_button">2</string>
+    <string name="three_button">3</string>
+    <string name="four_button">4</string>
+    <string name="five_button">5</string>
+    <string name="six_button">6</string>
+    <string name="seven_button">7</string>
+    <string name="eight_button">8</string>
+    <string name="nine_button">9</string>
+    
+    <string name="plus_button">+</string>
+    <string name="minus_button">-</string>
+    <string name="multiply_button">×</string>
+    <string name="divide_button">÷</string>
+    
+    <string name="convert_in_button">in</string>
+    <string name="convert_ft_button">ft</string>
+    <string name="convert_m_button">m</string>
+    <string name="convert_cm_button">cm</string>
+    <string name="convert_mm_button">mm</string>
+    <string name="convert_miles_button">miles</string>
+    <string name="convert_km_button">km</string>
+    <string name="convert_um_button">um</string>
+    <string name="convert_nm_button">nm</string>
+    <string name="convert_ly_button">light years</string>
+
+    <color name="equal_button_normal">#965000</color>
+    <color name="equal_button_pressed">#E59647</color>
+    <color name="equal_button_text_normal">#D4D4D4</color>
+    <color name="equal_button_text_pressed">#232323</color>
+    
+    <color name="num_button_normal">#191919</color>
+    <color name="num_button_pressed">#93795B</color>
+ 
+    <color name="op_button_normal">#232323</color>
+    <color name="op_button_pressed">#C4A179</color>
+    
+    <color name="conv_button_pressed">#333056</color>
+    
+    <color name="button_text_normal">#D4D4D4</color>
+    <color name="button_text_pressed">#232323</color>
+    
+    
+    <color name="result_text">#FFFFFF</color>
+   
+    <color name="prev_result_text">#808080</color>
+    <color name="prev_result_text_pressed">#000000</color>
+    
+    <color name="app_background">#000000</color>
+    
+</resources>
