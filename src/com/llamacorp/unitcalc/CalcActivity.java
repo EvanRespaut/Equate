@@ -51,7 +51,6 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 		R.id.decimal_button,
 		R.id.equals_button,
 		R.id.ee_button,
-		R.id.power_button,
 
 		R.id.open_para_button,
 		R.id.close_para_button,
