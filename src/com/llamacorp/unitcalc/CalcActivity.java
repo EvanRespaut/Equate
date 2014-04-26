@@ -168,6 +168,8 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 					break;
 					case R.id.ee_button: buttonValue="E";
 					break;
+					case R.id.power_button: buttonValue="^";
+					break;
 					case R.id.open_para_button: buttonValue="(";
 					break;
 					case R.id.close_para_button: buttonValue=")";

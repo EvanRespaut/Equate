@@ -37,7 +37,9 @@ public class Calculator implements OnConvertionListener{
 
 	//Error messages
 	private static final String strSyntaxError = "Syntax Error";
-	private static final String strDivideZeroError = "Divide by Zero Error";
+	private static final String strDivideZeroError = "Divide By Zero Error";
+	private static final String strInfinityError = "Number Too Large";
+
 
 	//we want the display precision to be a bit less than calculated
 	private MathContext mcOperate = new MathContext(intCalcPrecision);
@@ -78,7 +80,7 @@ public class Calculator implements OnConvertionListener{
 			mCaculator = new Calculator(c.getApplicationContext());
 		return mCaculator;
 	}
-	
+
 	/**
 	 * Function used to initiate the array of various types of units
 	 */	
@@ -98,7 +100,7 @@ public class Calculator implements OnConvertionListener{
 		unitsOfLength.addUnit("cm", 0.01);
 		unitsOfLength.addUnit("m", 1.0);
 		mUnitTypeArray.add(unitsOfLength);	
-			
+
 		UnitType unitsOfArea = new UnitType(this);
 		unitsOfArea.addUnit("in^2", 0.00064516);//0.0254^2
 		unitsOfArea.addUnit("ft^2", 0.09290304);//0.3048^2
@@ -112,8 +114,8 @@ public class Calculator implements OnConvertionListener{
 		unitsOfArea.addUnit("km^2", 1000000.0);
 		unitsOfArea.addUnit("ha", 10000.0);
 		mUnitTypeArray.add(unitsOfArea);
-		
-		
+
+
 		UnitType unitsOfVolume = new UnitType(this);
 		unitsOfVolume.addUnit("tbsp", 0.000014786764765625);//gal/256
 		unitsOfVolume.addUnit("cup",  0.00023658823625);//gal/16
@@ -197,24 +199,21 @@ public class Calculator implements OnConvertionListener{
 
 
 	//note that in []'s only ^, -, and ] need escapes. - doen't need one if invalid
-	static final String regexInvalidChars = ".*[^0-9()E.+*/-].*";
-	static final String regexOperators = "+/*-";
-	static final String regexMultDivOps = "*/";
-	static final String regexInvalidStartChar = "[E" + regexMultDivOps + "]";
+	static final String regexInvalidChars = ".*[^0-9()E.+*^/-].*";
+	static final String regexOperators = "+/*^-";
+	static final String regexInvalidStartChar = "[E*^/]";
 	static final String regexAnyValidOperator = "[" + regexOperators + "]";
 	static final String regexAnyOperatorOrE = "[E" + regexOperators + "]";
-	static final String regexNotNumber = "[^\\d]";
-	//brackets make into group. note star is 0 or more, + is 1 or more, ? is 0 or 1; 
-	//note that the exponent part uses all uncaptured groups "?:"
-	// OLD EXPRESSION (\\d*\\.?\\d+\\.?(?:(?:E\\-\\d+)|(?:E\\d+))?)
 	static final String regexGroupedNumber = "(\\-?\\d*\\.?\\d+\\.?(?:E[\\-\\+]?\\d+)?)";
-	static final String regexMultDiv = "([/*])";
-	static final String regexAddSub = "([+-])";
+
+	static final String regexGroupedExponent = "(\\^)";
+	static final String regexGroupedMultDiv = "([/*])";
+	static final String regexGroupedAddSub = "([+-])";
 
 
 	/**
 	 * Recursively loop over all parentheses, invoke other operators in results found within
-	 * @param s is the String to loop the parenthese solving over
+	 * @param s is the String to loop the parentheses solving over
 	 */	
 	private String collapsePara(String s) {
 		//find the first open para
@@ -253,8 +252,9 @@ public class Calculator implements OnConvertionListener{
 			}
 		}
 		//perform other operations in proper order of operations
-		s = collapseOps(regexMultDiv, s);
-		s = collapseOps(regexAddSub, s);
+		s = collapseOps(regexGroupedExponent, s);
+		s = collapseOps(regexGroupedMultDiv, s);
+		s = collapseOps(regexGroupedAddSub, s);
 		return s;
 	}
 
@@ -296,6 +296,21 @@ public class Calculator implements OnConvertionListener{
 				result=operand1.subtract(operand2,mcOperate);
 			else if(operator.equals("*"))
 				result=operand1.multiply(operand2,mcOperate);
+			else if(operator.equals("^")){
+				//this is a temp hack, will most likely want to use a custom bigdecimal function to perform more accurate/bigger conversions
+				double dResult=Math.pow(operand1.doubleValue(), operand2.doubleValue());
+				//catch infinity errors could be neg or pos
+				try{
+					result = BigDecimal.valueOf(dResult);
+				} catch (NumberFormatException ex){
+					if (dResult==Double.POSITIVE_INFINITY || dResult==Double.NEGATIVE_INFINITY)
+						str=strInfinityError;	
+					//else case most likely shouldn't occur
+					else 
+						str=strSyntaxError;		
+					return str;
+				}
+			}
 			else if(operator.equals("/")){
 				//catch divide by zero errors
 				try{
@@ -449,11 +464,11 @@ public class Calculator implements OnConvertionListener{
 		//check for backspace key
 		else if(sKey.equals("b"))
 			backspace();
-			
+
 		//check for clear key
 		else if(sKey.equals("c"))
 			clear();
-			
+
 		//else try all other potential numbers and operators, as well as prevExpression
 		else
 			addToExpression(sKey);
@@ -556,7 +571,7 @@ public class Calculator implements OnConvertionListener{
 	/**
 	 * Backspace function for the cacluator
 	 */
-	 private void backspace(){
+	private void backspace(){
 		//if we just solved expression, clear expression out
 		if(solved){
 			mUnitTypeArray.get(UnitTypePos).clearUnitSelection();
@@ -574,7 +589,7 @@ public class Calculator implements OnConvertionListener{
 				mUnitTypeArray.get(UnitTypePos).clearUnitSelection();
 		}	
 	}
-	
+
 	public List<String> getPrevExpressions() {
 		return prevExpressions;
 	}
