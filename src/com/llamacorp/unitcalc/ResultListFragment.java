@@ -61,13 +61,14 @@ public class ResultListFragment extends ListFragment {
 		Calculator.getCalculator(getActivity()).parseKeyPressed(query);
 		mCallback.updateScreen(false);
 	}
-	*/
-	 
+	 */
 
-	private class ResultAdapter extends ArrayAdapter<String> {
-		public ResultAdapter(List<String> prevTest){
+
+	private class ResultAdapter extends ArrayAdapter<PrevExpression> {
+		public ResultAdapter(List<PrevExpression> prevTest){
 			super(getActivity(), 0, prevTest);
 		}
+
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent){
@@ -76,13 +77,13 @@ public class ResultListFragment extends ListFragment {
 				convertView = getActivity().getLayoutInflater().inflate(R.layout.list_item_result, null);
 
 			// Configure the view for this result
-			String prevExpression = getItem(position);
+			PrevExpression prevExp = getItem(position);
 
 			TextView textViewQuerry = (TextView)convertView.findViewById(R.id.list_item_result_textPrevQuerry);	
-			setUpResultTextView(textViewQuerry, prevExpression, true);
+			setUpResultTextView(textViewQuerry, prevExp.getTextQuerry());
 
 			TextView textViewAnswer = (TextView)convertView.findViewById(R.id.list_item_result_textPrevAnswer);
-			setUpResultTextView(textViewAnswer, prevExpression, false);
+			setUpResultTextView(textViewAnswer, prevExp.getTextAnswer());
 
 			return convertView; 
 		}
@@ -90,43 +91,37 @@ public class ResultListFragment extends ListFragment {
 		/**
 		 * Helper function to reduce repeated code. Sets up the query and answer textViews
 		 * @param textView the TextView to setup
-		 * @param prevExpression the previous query and answer string
+		 * @param text the previous query or answer String
 		 */
-		private void setUpResultTextView(TextView textView, String prevExpression, boolean isQuery){
+		private void setUpResultTextView(TextView textView, String text){
 			textView.setClickable(true);
-			textView.setText(splitPrevExpression(prevExpression, isQuery));
-			
+			textView.setText(text);
+
 			textView.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View view) {
-					String text = (String) ((TextView)view).getText();
-					//((TextView)view).setBackgroundColor(getResources().getColor(R.color.num_button_pressed));
-					//pass the textView's value to the calculator
-					Calculator.getCalculator(getActivity()).parseKeyPressed(text);
+					//get the listView position of this answer/query
+					int position = getListView().getPositionForView((View)view.getParent());
+					//grab the associated previous expression
+					PrevExpression thisPrevExp = Calculator.getCalculator(getActivity()).getPrevExpressions().get(position);
+					//get text to pass back to calc
+					String passBack="";
+					if (view.getId()==R.id.list_item_result_textPrevQuerry)
+						passBack = thisPrevExp.getQuerry();
+					if (view.getId()==R.id.list_item_result_textPrevAnswer)
+						passBack = thisPrevExp.getAnswer();
+					Calculator.getCalculator(getActivity()).parseKeyPressed(passBack);
+					
+					//now set up the proper unit
+					//TODO
+					
 					mCallback.updateScreen(false);				
-					}
+				}
 
 			});
 		}
-
-		/**
-		 * Function that splits up the prevExpression string
-		 * @param prevExpression is string to split, ie "1+2 = 3"
-		 * @param wantQuery is 0 for query, ie "1+2", 1 for answer, ie "3"
-		 */
-		private String splitPrevExpression(String prevExpression, boolean wantQuery){
-			String [] splitPrevExp;
-			splitPrevExp = prevExpression.split("\\s=\\s");
-
-			if(splitPrevExp.length != 2)
-				throw new IllegalArgumentException("In resultlistfragment, splitPrevExpression is improperly formatted..."); 
-
-			if(wantQuery)
-				return splitPrevExp[0];
-			else
-				return splitPrevExp[1];			
-		}
 	}
+
 
 	/**
 	 * Gets called by the activity

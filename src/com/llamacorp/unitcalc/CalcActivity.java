@@ -83,10 +83,10 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 
 	static final String strExpressionEnd = " =";
 
-	//this is just a temp test function
-	public String getPrevResult(){
-		return calc.toStringLastExpression();
-	}
+	////this is just a temp test function
+	//public String getPrevResult(){
+	//	return calc.toStringLastExpression();
+	//}
 
 
 	/**

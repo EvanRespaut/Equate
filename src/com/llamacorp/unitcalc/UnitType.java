@@ -8,7 +8,7 @@ public class UnitType {
 
 	// Parent class must implement this interface
 	public interface OnConvertionListener {
-		public void convertFromTo(double fromValue, double toValue, String fromName, String toName);
+		public void convertFromTo(Unit fromUnit, Unit toUnit);
 	}
 
 	
@@ -96,34 +96,8 @@ public class UnitType {
 	 * @param newUnitPos is the Unit position to convert to
 	 */
 	private void convert(int newUnitPos){
-		double fromValue = mUnitArray.get(mCurrUnitPos).getValue();
-		String fromName = mUnitArray.get(mCurrUnitPos).getDispName();
-		double toValue = mUnitArray.get(newUnitPos).getValue();
-		String toName = mUnitArray.get(newUnitPos).getDispName();
-		mCallback.convertFromTo(fromValue, toValue, fromName, toName);
+		Unit fromUnit = mUnitArray.get(mCurrUnitPos);
+		Unit toUnit = mUnitArray.get(newUnitPos);
+		mCallback.convertFromTo(fromUnit, toUnit);
 	}
-
-	private class Unit{
-		private String mDispName;
-		private double mValue;
-
-		public Unit(String name, double value){
-			mDispName = name;
-			mValue = value;
-		}
-
-		public String getDispName() {
-			return mDispName;
-		}
-
-		public double getValue() {
-			return mValue;
-		}
-		
-		public String toString(){
-			return mDispName;
-		}
-
-	}
-
 }

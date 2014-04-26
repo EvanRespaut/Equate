@@ -22,7 +22,7 @@ public class Calculator implements OnConvertionListener{
 	//this string stores the more precise result after solving
 	private String precResult="";
 
-	private List<String> prevExpressions = new ArrayList<String>();
+	private List<PrevExpression> prevExpressions = new ArrayList<PrevExpression>();
 
 	private ArrayList<UnitType> mUnitTypeArray;
 	private int UnitTypePos;
@@ -149,13 +149,13 @@ public class Calculator implements OnConvertionListener{
 	 * Iterates over expression using PEMAS order of operations, then sets solved flag to true
 	 * @return the cleaned previous expression for loading into prevExpression
 	 */	
-	private String solve(){
+	private boolean solve(){
 		//clean off any dangling operators and E's (not para!!)
 		expression = expression.replaceAll(regexAnyOperatorOrE + "+$", "");
 
 		//if expression empty, don't need to solve anything
 		if(expression.equals(""))
-			return "";
+			return false;
 
 		//if more open para then close, add corresponding close para's
 		int numCloseParaToAdd = numOpenPara();
@@ -164,7 +164,7 @@ public class Calculator implements OnConvertionListener{
 		}
 
 		//save the expression temporarily, later save to prevExpression
-		String prevExp=expression;
+		prevExpressions.add(new PrevExpression(expression));
 
 		//load in more precise result if possible
 		if(!precResult.equals("")){
@@ -183,13 +183,12 @@ public class Calculator implements OnConvertionListener{
 
 		//flag used to tell backspace and numbers to clear the expression when pressed
 		solved=true;
-
+		
+		//solve was a success (might be able to replace with solved
+		return true;
 		//String prevAns = expression;
 		//save the entire unsolved expression in a list
 		//prevExpressions.add(prevExp + " = " + prevAns);
-	
-		//return the cleaned previous expression for loading into prevExpression
-		return prevExp;
 	}
 
 
@@ -336,7 +335,7 @@ public class Calculator implements OnConvertionListener{
 
 	/**
 	 * Gets the first number (returned as a String) in the current expression
-	 * @return the first number, or "" if expression empty, or entire expression if doesn't contain regexAnyValidOperator
+	 * @return anything before the first valid operator, or "" if expression empty, or entire expression if doesn't contain regexAnyValidOperator
 	 */
 	private String firstNumb(){
 		String [] strA = expression.split(regexAnyValidOperator);
@@ -345,7 +344,7 @@ public class Calculator implements OnConvertionListener{
 
 	/**
 	 * Gets the last double (returned as a String) in the current expression
-	 * @return last number, or "" if expression empty, or entire expression if doesn't contain regexAnyValidOperator
+	 * @return anything after last valid operator, or "" if expression empty, or entire expression if doesn't contain regexAnyValidOperator
 	 */
 	private String lastNumb(){
 		String [] strA = expression.split(regexAnyValidOperator);
@@ -384,7 +383,7 @@ public class Calculator implements OnConvertionListener{
 	}
 
 	/**
-	 * Rounds exression down by a mathcontext mcDisp
+	 * Rounds expression down by a mathcontext mcDisp
 	 */	
 	private void roundAndCleanExpression() {
 		//if expression was displaying error (with invalid chars) leave
@@ -421,22 +420,22 @@ public class Calculator implements OnConvertionListener{
 	 * @param fromValue is standardized value of the unit being converted from
 	 * @param toValue is standardized value of the unit being converted to
 	 */		
-	public void convertFromTo(double fromValue, double toValue, String fromName, String toName){
+	public void convertFromTo(Unit fromUnit, Unit toUnit){
 		//if expression empty, or contains invalid chars, don't need to solve anything
 		if(expression.equals("") || expression.matches(regexInvalidChars))
 			return;
 
 		//first solve the function
-		String prevExp = solve();
-		//if there was nothing to solve, just leave
-		if (prevExp.equals(""))
+		boolean solveSuccess = solve();
+		//if there solve failed because there was nothing to solve, just leave (this way prevExpression isn't loaded)
+		if (!solveSuccess)
 			return;
 
 		//this catches weird expressions like "-(-)-"
 		try{
 			//convert numbers into big decimals for more operation control over precision			
-			BigDecimal bdToUnit   = new BigDecimal(toValue,mcOperate);
-			BigDecimal bdCurrUnit = new BigDecimal(fromValue,mcOperate);			
+			BigDecimal bdToUnit   = new BigDecimal(toUnit.getValue(),mcOperate);
+			BigDecimal bdCurrUnit = new BigDecimal(fromUnit.getValue(),mcOperate);			
 			BigDecimal bdResult   = new BigDecimal(expression,mcOperate);
 			// perform actual unit conversion (result*currUnit/toUnit)
 			expression = bdResult.multiply(bdCurrUnit.divide(bdToUnit, mcOperate),mcOperate).toString();
@@ -450,8 +449,11 @@ public class Calculator implements OnConvertionListener{
 		//round and clean the result expression off
 		roundAndCleanExpression();
 		
+		//load units into prevExpression (this will also set contains unit flag
+		prevExpressions.get(prevExpressions.size()-1).setQuerryUnit(fromUnit);
+		prevExpressions.get(prevExpressions.size()-1).setAnswerUnit(toUnit);
 		//load the final value into prevExpression
-		prevExpressions.add(prevExp + " " + fromName + " = " + expression + " " + toName);		
+		prevExpressions.get(prevExpressions.size()-1).setAnswer(expression);
 	}
 
 
@@ -466,14 +468,15 @@ public class Calculator implements OnConvertionListener{
 
 		//check for equals key
 		if(sKey.equals("=")){
-			String prevExp = solve();
-			//if there was nothing to solve, just leave
-			if (prevExp.equals(""))
+			//first solve the function
+			boolean solveSuccess = solve();
+			//if there solve failed because there was nothing to solve, just leave (this way prevExpression isn't loaded)
+			if (!solveSuccess)
 				return;
 			//round and clean the result expression off
 			roundAndCleanExpression();
 			//load the final value into prevExpression
-			prevExpressions.add(prevExp + " = " + expression);
+			prevExpressions.get(prevExpressions.size()-1).setAnswer(expression);
 		}
 		//check for backspace key
 		else if(sKey.equals("b"))
@@ -508,7 +511,7 @@ public class Calculator implements OnConvertionListener{
 			throw new IllegalArgumentException("In addToExpression, invalid sKey..."); 
 
 
-		//don't start with [*/E] when the expression string is empty or if we opened a para
+		//don't start with [*/^E] when the expression string is empty or if we opened a para
 		if(sKey.matches(regexInvalidStartChar) && (lastNumb().equals("") || expression.matches(".*\\($")))
 			return;
 
@@ -526,15 +529,16 @@ public class Calculator implements OnConvertionListener{
 		if(sKey.matches("[0-9]") && expression.matches(".*\\)$"))
 			expression = expression + "*";
 
-		//add auto completion for close para
+		//add auto completion for close parentheses
 		if(sKey.equals(")"))	
 			if(numOpenPara() <= 0) //if more close than open, add an open
 				expression = "(" + expression;
 
 		//if we already have a decimal in the number, don't add another
 		if(sKey.equals(".") && lastNumb().matches(".*[.E].*"))
-			//lastNumb returns the last num even if we already hit op, if we did hit op, allow decimals
-			if(expression.matches(".*[^-+/*]$"))
+			//lastNumb returns the last num; if expression="4.3+", returns "4.3"; if last key was an operator, allow decimals
+			//if(expression.matches(".*[^-+/*]$"))
+			if(!expression.matches(".*" + regexAnyValidOperator + "$"))
 				return;
 
 		//if we already have a E in the number, don't add another; also don't add E immediately after an operator
@@ -564,13 +568,9 @@ public class Calculator implements OnConvertionListener{
 
 
 	/**
-	 * Clear function for the cacluator
+	 * Clear function for the calculator
 	 */	
 	private void clear(){
-		//if the expression is already cleared, clear the viewable history too
-		if(prevExpressions.size()>0 && expression.equals(""))
-			prevExpressions.set(prevExpressions.size()-1,"");
-
 		//clear the immediate expression
 		expression="";
 
@@ -583,11 +583,11 @@ public class Calculator implements OnConvertionListener{
 
 
 	/**
-	 * Backspace function for the cacluator
+	 * Backspace function for the calculator
 	 */
 	private void backspace(){
 		//if we just solved expression, clear expression out
-		if(solved){
+		if(solved || expression.equals("")){
 			mUnitTypeArray.get(UnitTypePos).clearUnitSelection();
 			expression="";
 			solved=false;
@@ -604,11 +604,11 @@ public class Calculator implements OnConvertionListener{
 		}	
 	}
 
-	public List<String> getPrevExpressions() {
+	public List<PrevExpression> getPrevExpressions() {
 		return prevExpressions;
 	}
 
-	/** Used by the controller to determine if any conv keys should be selected */
+	/** Used by the controller to determine if any convert keys should be selected */
 	public boolean currUnitIsSet(){
 		return mUnitTypeArray.get(UnitTypePos).getIsUnitSelected();
 	}
@@ -624,15 +624,14 @@ public class Calculator implements OnConvertionListener{
 	public void setUnitTypePos(int pos){
 		UnitTypePos = pos;
 	}
-
-
-	/** returns the string of the previous expression */
-	public String toStringLastExpression(){
-		if(prevExpressions.size()==0)
-			return "";
-		else 
-			return prevExpressions.get(prevExpressions.size()-1);
-	}
+	
+	///** returns the string of the previous expression */
+	//public String toStringLastExpression(){
+	//	if(prevExpressions.size()==0)
+	//		return "";
+	//	else 
+	//		return prevExpressions.get(prevExpressions.size()-1).toString();
+	//}
 
 	@Override
 	public String toString(){
