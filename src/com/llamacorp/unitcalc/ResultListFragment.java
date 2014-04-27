@@ -113,7 +113,7 @@ public class ResultListFragment extends ListFragment {
 					Calculator.getCalculator(getActivity()).parseKeyPressed(passBack);
 					
 					//now set up the proper unit
-					//TODO
+					//TODO use mCallback.unitSelectedByResultList() or maybe just its natual unit selected function?
 					
 					mCallback.updateScreen(false);				
 				}

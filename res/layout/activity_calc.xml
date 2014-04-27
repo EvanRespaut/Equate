@@ -5,59 +5,6 @@
     android:gravity="bottom"
     android:orientation="vertical" >
 
-    
-        <!--
-        <TextView
-            android:id="@+id/textPrevDisplay"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="left"
-            android:paddingBottom="10dp"
-            android:paddingRight="5dp"
-            android:textColor="@color/prev_result_text"
-            android:textSize="30sp" >
-        </TextView>
-
-        
-        <HorizontalScrollView
-            android:id="@+id/scrollView1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fillViewport="true"
-            android:scrollbars="none" >
-
-            <TextView
-                android:id="@+id/textDisplay"
-                android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
-                android:layout_marginBottom="10dp"
-                android:layout_marginRight="5dp"
-                android:gravity="right"
-                android:singleLine="true"
-                android:text="@string/app_name"
-                android:textSize="40sp" >
-            </TextView>
-        </HorizontalScrollView>
-
-        <TextView
-            android:id="@+id/textDisplay"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:layout_marginRight="5dp"
-            android:gravity="right"
-            android:singleLine="true"
-            android:scrollHorizontally="true"
-        	android:ellipsize="none"
-		    android:focusable="true"
-		    android:focusableInTouchMode="true" 
-            android:text="@string/app_name"
-            android:textSize="40sp" >
-        </TextView>
-
-        -->
-    
-    
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -217,18 +164,21 @@
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
+                android:layout_margin="1dp"
                 android:layout_weight="1"
                 android:background="@color/app_background" >
 
                 <Button
                     android:id="@+id/ee_button"
-                    style="@style/OpButton"
+                    style="@style/SmallOpButton"
+                    android:layout_marginRight="1dp"
                     android:text="@string/ee_button" />
 
                 <Button
                     android:id="@+id/power_button"
-                    style="@style/OpButton"
-                    android:text="^" />
+                    style="@style/SmallOpButton"
+                    android:layout_marginLeft="1dp"
+                    android:text="@string/power_button" />
             </LinearLayout>
 
             <Button
