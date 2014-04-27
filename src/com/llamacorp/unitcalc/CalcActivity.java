@@ -78,6 +78,7 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 			currFrag.clearKeySelection();
 		}
 
+		//update the prev expression and do it with the normal scroll (not fast)
 		updateScreen(keyPressed.equals("="));
 	}
 
@@ -94,13 +95,19 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 	 * @param updatePrev whether or not to update previous answer
 	 */
 	public void updateScreen(boolean updatePrev){
+		//no insta scroll for previous expression
+		updateScreenWithInstaScrollOption(updatePrev, false);
+	}
+	
+	
+	private void updateScreenWithInstaScrollOption(boolean updatePrev, boolean instaScroll){
 		mDisplay.setText(calc.toString());
 
 		//if we hit equals, update prev expression
 		if(updatePrev){
 			FragmentManager fm = getSupportFragmentManager();
 			ResultListFragment prevResultFragment = (ResultListFragment)fm.findFragmentById(R.id.resultListfragmentContainer);
-			prevResultFragment.refresh();
+			prevResultFragment.refresh(instaScroll);
 		}
 	}
 
@@ -114,7 +121,7 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 
 		//main result display
 		mDisplay = (TextView)findViewById(R.id.textDisplay);
-
+		
 		//use fragment manager to make the result list
 		FragmentManager fm = getSupportFragmentManager();
 		Fragment resultFragment = fm.findFragmentById(R.id.resultListfragmentContainer);
@@ -271,6 +278,18 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 				}
 			};
 		});
+
+	}
+	
+	@Override
+	public void onResume(){
+		super.onResume();
+
+		//only set display to UnitCalc if no expression is there yet
+		if(calc.toString().equals("") && calc.getPrevExpressions().size()==0)
+			mDisplay.setText(R.string.app_name);
+		else
+			updateScreenWithInstaScrollOption(true, true);		
 	}
 
 

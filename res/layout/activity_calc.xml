@@ -27,7 +27,6 @@
             android:layout_marginRight="5dp"
             android:layout_weight="0"
             android:gravity="right"
-            android:text="@string/app_name"
             android:textSize="40sp" >
         </TextView>
     </LinearLayout>

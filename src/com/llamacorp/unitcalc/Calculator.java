@@ -47,7 +47,7 @@ public class Calculator implements OnConvertionListener{
 	//note that in []'s only ^, -, and ] need escapes. - doen't need one if invalid
 	private static final String regexInvalidChars = ".*[^0-9()E.+*^/-].*";
 	private static final String regexOperators = "+/*^-";
-	private static final String regexInvalidStartChar = "[E*^/]";
+	private static final String regexInvalidStartChar = "[E*^/+]";
 	private static final String regexAnyValidOperator = "[" + regexOperators + "]";
 	private static final String regexAnyOperatorOrE = "[E" + regexOperators + "]";
 	private static final String regexGroupedNumber = "(\\-?\\d*\\.?\\d+\\.?(?:E[\\-\\+]?\\d+)?)";
@@ -55,7 +55,7 @@ public class Calculator implements OnConvertionListener{
 	private static final String regexGroupedExponent = "(\\^)";
 	private static final String regexGroupedMultDiv = "([/*])";
 	private static final String regexGroupedAddSub = "([+-])";
-	
+
 
 	//this is for testing only
 	private Calculator(){
@@ -183,7 +183,7 @@ public class Calculator implements OnConvertionListener{
 
 		//flag used to tell backspace and numbers to clear the expression when pressed
 		solved=true;
-		
+
 		//solve was a success (might be able to replace with solved
 		return true;
 		//String prevAns = expression;
@@ -409,7 +409,7 @@ public class Calculator implements OnConvertionListener{
 			expression = bd.toPlainString();
 		else
 			expression = bd.toString();
-		
+
 		//finally clean the result off
 		expression=cleanNum(expression);
 	}
@@ -448,7 +448,7 @@ public class Calculator implements OnConvertionListener{
 
 		//round and clean the result expression off
 		roundAndCleanExpression();
-		
+
 		//load units into prevExpression (this will also set contains unit flag
 		prevExpressions.get(prevExpressions.size()-1).setQuerryUnit(fromUnit);
 		prevExpressions.get(prevExpressions.size()-1).setAnswerUnit(toUnit);
@@ -548,17 +548,24 @@ public class Calculator implements OnConvertionListener{
 
 		//if we E was last pressed, only allow [1-9+-(]
 		if(lastNumb().matches(".*E$"))
-			if(sKey.matches("[^\\d(+-]"))
+			if(sKey.matches("[^\\d(-]"))
 				return;
 
 		//if last digit was only a decimal, don't add any operator or E
 		if(sKey.matches(regexAnyOperatorOrE) && lastNumb().equals("."))
-			return;				
+			return;	
+		
+		//don't allow "--" or "65E--"
+		if(sKey.matches("[-]") && expression.matches(".*E?[-]"))
+			return;	
 
-		//if we're adding an operator and we already have one, replace it
-		if(sKey.matches(regexAnyValidOperator) && expression.matches(".*" + regexAnyValidOperator + "$"))
+		//if we have "84*-", replace both the * and the - with the operator
+		if(sKey.matches(regexAnyValidOperator) && expression.matches(".*" + regexAnyValidOperator + regexAnyValidOperator + "$"))
+			expression = expression.substring(0, expression.length()-2) + sKey;
+		//if there's already an operator, replace it with the new operator, except for -, let that stack up
+		else if(sKey.matches(regexInvalidStartChar) && expression.matches(".*" + regexAnyValidOperator + "$"))
 			expression = expression.substring(0, expression.length()-1) + sKey;
-		//otherwise load the new string
+		//otherwise load the new keypress
 		else
 			expression = expression + sKey;
 
@@ -624,14 +631,6 @@ public class Calculator implements OnConvertionListener{
 	public void setUnitTypePos(int pos){
 		UnitTypePos = pos;
 	}
-	
-	///** returns the string of the previous expression */
-	//public String toStringLastExpression(){
-	//	if(prevExpressions.size()==0)
-	//		return "";
-	//	else 
-	//		return prevExpressions.get(prevExpressions.size()-1).toString();
-	//}
 
 	@Override
 	public String toString(){

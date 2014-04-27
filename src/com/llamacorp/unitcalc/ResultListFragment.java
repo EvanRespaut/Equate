@@ -111,10 +111,10 @@ public class ResultListFragment extends ListFragment {
 					if (view.getId()==R.id.list_item_result_textPrevAnswer)
 						passBack = thisPrevExp.getAnswer();
 					Calculator.getCalculator(getActivity()).parseKeyPressed(passBack);
-					
+
 					//now set up the proper unit
 					//TODO use mCallback.unitSelectedByResultList() or maybe just its natual unit selected function?
-					
+
 					mCallback.updateScreen(false);				
 				}
 
@@ -125,12 +125,15 @@ public class ResultListFragment extends ListFragment {
 
 	/**
 	 * Gets called by the activity
+	 * @param instaScroll 
 	 */
-	public void refresh() {
+	public void refresh(boolean instaScroll) {
 		//notify the adapter that the listview needs to be updated
 		((ResultAdapter)getListAdapter()).notifyDataSetChanged();	
 		//scroll to the bottom of the list
-		getListView().smoothScrollToPosition(getListAdapter().getCount()-1);
-		//getListView().setSelection(getListAdapter().getCount()-1);
+		if(instaScroll)
+			getListView().setSelection(getListAdapter().getCount()-1);
+		else
+			getListView().smoothScrollToPosition(getListAdapter().getCount()-1);
 	}
 }
