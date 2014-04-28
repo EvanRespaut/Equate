@@ -3,12 +3,18 @@ package com.llamacorp.unitcalc;
 import java.util.ArrayList;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.RelativeSizeSpan;
+import android.text.style.SuperscriptSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView.BufferType;
 
 public class ConvertKeysFragment extends Fragment {
 	//this is for communication with the parent activity
@@ -32,11 +38,8 @@ public class ConvertKeysFragment extends Fragment {
 					+ " must implement OnConvertKeySelectedListener");
 		}
 	}
-	
-	
-	
-	
-	
+
+
 	//used for the extra
 	private static final String EXTRA_UNIT_TYPE_POS = "com.llamacorp.unitcalc.unit_type_pos";
 	//holds UnitType for this fragment aka series of convert buttons
@@ -82,7 +85,22 @@ public class ConvertKeysFragment extends Fragment {
 
 		for(int i = 0; i < mUnitType.size(); i++) {
 			Button button = (Button)v.findViewById(convertButtonIds[i]);
-			button.setText(mUnitType.getUnitDisplayName(i));
+
+			String displayText = mUnitType.getUnitDisplayName(i);
+
+			//want to superscript text after a "^" character
+			String [] splitArray = displayText.split("\\^");
+			//only upper-case text if it exists
+			if(splitArray.length>1){
+				//cut out the "^"
+				SpannableString spanText = new SpannableString(splitArray[0] + splitArray[1]);   
+				//superscript the portion after the "^"
+				spanText.setSpan(new SuperscriptSpan(), splitArray[0].length(), spanText.length(), 0);  
+				button.setText(spanText, BufferType.SPANNABLE);   
+			}
+			//otherwise just set it normally
+			else
+				button.setText(displayText);
 
 			button.setOnClickListener(new View.OnClickListener() {
 				@Override
@@ -98,7 +116,7 @@ public class ConvertKeysFragment extends Fragment {
 							//if conversion performed, update screen
 							if(didConvert)
 								mCallback.updateScreen(true);
-							
+
 							//Add color to newly selected convert button
 							view.setSelected(true);
 							break;
@@ -109,15 +127,12 @@ public class ConvertKeysFragment extends Fragment {
 			//add to our list of conv buttons
 			mConvButton.add(button);			
 		}
-
 		return v;
 	}
 
-	
 	public void clearKeySelection(){
 		//Clear color from previously selected convert button
 		Button prevSelected = mConvButton.get(mUnitType.getCurrUnitPos());
 		prevSelected.setSelected(false);	
 	}
-
 }
