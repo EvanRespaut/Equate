@@ -3,12 +3,9 @@ package com.llamacorp.unitcalc;
 import java.util.ArrayList;
 
 import android.app.Activity;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.SpannableString;
-import android.text.style.ForegroundColorSpan;
-import android.text.style.RelativeSizeSpan;
 import android.text.style.SuperscriptSpan;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,7 +35,6 @@ public class ConvertKeysFragment extends Fragment {
 					+ " must implement OnConvertKeySelectedListener");
 		}
 	}
-
 
 	//used for the extra
 	private static final String EXTRA_UNIT_TYPE_POS = "com.llamacorp.unitcalc.unit_type_pos";
@@ -76,7 +72,7 @@ public class ConvertKeysFragment extends Fragment {
 		fragment.setArguments(args);
 		return fragment;
 	}
-
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState){
 		View v = inflater.inflate(R.layout.fragment_convert_keys, parent, false);
@@ -87,7 +83,7 @@ public class ConvertKeysFragment extends Fragment {
 			Button button = (Button)v.findViewById(convertButtonIds[i]);
 
 			String displayText = mUnitType.getUnitDisplayName(i);
-
+			
 			//want to superscript text after a "^" character
 			String [] splitArray = displayText.split("\\^");
 			//only upper-case text if it exists
@@ -102,23 +98,17 @@ public class ConvertKeysFragment extends Fragment {
 			else
 				button.setText(displayText);
 
+			
 			button.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View view) {
+					int viewId = view.getId();
 					for (int i=0; i<convertButtonIds.length; i++){
-						if(convertButtonIds[i] == view.getId()){
-							//Clear color from previously selected convert button
-							Button prevSelected = mConvButton.get(mUnitType.getCurrUnitPos());
-							prevSelected.setSelected(false);	
-							//Set select unit, also this will potentially call convert if we already have a selected unit
-							boolean didConvert = mUnitType.selectUnit(i);
-
-							//if conversion performed, update screen
-							if(didConvert)
-								mCallback.updateScreen(true);
-
-							//Add color to newly selected convert button
-							view.setSelected(true);
+						if(convertButtonIds[i] == viewId){
+							//select key
+							selectKey(i);
+							
+							//don't continue looking through the button array
 							break;
 						}
 					}
@@ -130,6 +120,28 @@ public class ConvertKeysFragment extends Fragment {
 		return v;
 	}
 
+	
+	public void selectUnit(Unit selectedUnit) {
+		int selectedUnitPos = mUnitType.selectUnit(selectedUnit);
+		if(selectedUnitPos != -1)
+			selectKey(selectedUnitPos);
+	}
+	
+	
+	private void selectKey(int buttonPos){
+		//Clear color from previously selected convert button
+		clearKeySelection();
+		//Set select unit, also this will potentially call convert if we already have a selected unit
+		boolean didConvert = mUnitType.selectUnit(buttonPos);
+
+		//if conversion performed, update screen
+		if(didConvert)
+			mCallback.updateScreen(true);
+
+		//Add color to newly selected convert button
+		mConvButton.get(buttonPos).setSelected(true);			
+	}
+	
 	public void clearKeySelection(){
 		//Clear color from previously selected convert button
 		Button prevSelected = mConvButton.get(mUnitType.getCurrUnitPos());

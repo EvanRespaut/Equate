@@ -69,17 +69,19 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 		//pass button value to CalcAcitvity to pass to calc
 		calc.parseKeyPressed(keyPressed);
 
-		//see if colored convert button should be not colored (if backspace or clear were pressed)
-		if(!calc.currUnitIsSet()){
-			//NOT SURE IF THIS IS A PROPER WAY TO DO THIS
-			FragmentStatePagerAdapter tempAdapter = (FragmentStatePagerAdapter) mViewPager.getAdapter();
-			ConvertKeysFragment currFrag = (ConvertKeysFragment) tempAdapter.instantiateItem(mViewPager, mViewPager.getCurrentItem());
-			//clear the currently selected key
-			currFrag.clearKeySelection();
-		}
-
 		//update the prev expression and do it with the normal scroll (not fast)
 		updateScreen(keyPressed.equals("="));
+	}
+	
+	/**
+	 * Selects the coloring for a selected unit key
+	 * @see com.llamacorp.unitcalc.ResultListFragment.OnResultSelectedListener#selectUnit(int)
+	 */
+	public void selectUnit(Unit unit){
+		//NOT SURE IF THIS IS A PROPER WAY TO DO THIS
+		FragmentStatePagerAdapter tempAdapter = (FragmentStatePagerAdapter) mViewPager.getAdapter();
+		ConvertKeysFragment currFrag = (ConvertKeysFragment) tempAdapter.instantiateItem(mViewPager, mViewPager.getCurrentItem());
+		currFrag.selectUnit(unit);
 	}
 
 	static final String strExpressionEnd = " =";
@@ -97,6 +99,15 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 	public void updateScreen(boolean updatePrev){
 		//no insta scroll for previous expression
 		updateScreenWithInstaScrollOption(updatePrev, false);
+
+		//see if colored convert button should be not colored (if backspace or clear were pressed, or if expression solved)
+		if(!calc.currUnitIsSet()){
+			//NOT SURE IF THIS IS A PROPER WAY TO DO THIS
+			FragmentStatePagerAdapter tempAdapter = (FragmentStatePagerAdapter) mViewPager.getAdapter();
+			ConvertKeysFragment currFrag = (ConvertKeysFragment) tempAdapter.instantiateItem(mViewPager, mViewPager.getCurrentItem());
+			//clear the currently selected key
+			currFrag.clearKeySelection();
+		}
 	}
 	
 	
@@ -117,7 +128,7 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 		setContentView(R.layout.activity_calc);
 
 		//either get old calc or create a new one
-		calc = Calculator.getCalculator(getApplicationContext());
+		calc = Calculator.getCalculator(this);
 
 		//main result display
 		mDisplay = (TextView)findViewById(R.id.textDisplay);
@@ -145,9 +156,26 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 				return ConvertKeysFragment.newInstance(pos);
 			}
 		});
+		//add a little break between pages
 		mViewPager.setPageMargin(10);
-
-
+		
+		/*
+		mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+			//as the page is being scrolled to
+			@Override
+			public void onPageSelected(int pos) {
+				Crime crime = mCrimes.get(pos);
+				if (crime.getTitle() != null)
+					setTitle(crime.getTitle());
+			}
+			
+			@Override
+			public void onPageScrolled(int pos, float posOffset, int posOffsetPixels) {}
+			
+			@Override
+			public void onPageScrollStateChanged(int state) {}
+		});
+		 */
 
 		calcButton = new ArrayList<Button>();
 
@@ -278,7 +306,6 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 				}
 			};
 		});
-
 	}
 	
 	@Override

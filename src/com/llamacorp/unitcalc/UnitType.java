@@ -11,7 +11,7 @@ public class UnitType {
 		public void convertFromTo(Unit fromUnit, Unit toUnit);
 	}
 
-	
+
 	private ArrayList<Unit> mUnitArray;
 	private int mCurrUnitPos;
 	private boolean mIsUnitSelected;
@@ -29,7 +29,7 @@ public class UnitType {
 			throw new ClassCastException(parent.toString()
 					+ " must implement OnConvertKeySelectedListener");
 		}
-		
+
 		mUnitArray = new ArrayList<Unit>();
 		mIsUnitSelected = false;
 	}
@@ -41,7 +41,23 @@ public class UnitType {
 		Unit u = new Unit(title, value);
 		mUnitArray.add(u);
 	}
-	
+
+
+	/**
+	 * Allows selection of a unit using a Unit, if that selection is plausible
+	 * @return -1 if selection failed, otherwise the array position of the selected unit
+	 */		
+	public int selectUnit(Unit unitSelection){
+		for(int i=0;i<mUnitArray.size();i++){
+			if(unitSelection.equals(mUnitArray.get(i))){
+				selectUnit(i);
+				return i; //found the unit
+			}
+		}
+		return -1;  //if we didn't find the unit
+	}
+
+
 	/**
 	 * If mCurrUnit not set, set mCurrUnit
 	 * If mCurrUnit already set, call functions to perform a convert
@@ -69,7 +85,7 @@ public class UnitType {
 	public void clearUnitSelection(){
 		mIsUnitSelected = false;
 	}
-	
+
 	public boolean getIsUnitSelected(){
 		return mIsUnitSelected;
 	}
@@ -85,11 +101,11 @@ public class UnitType {
 	public int size() {
 		return mUnitArray.size();
 	}
-	
+
 	public int getCurrUnitPos(){
 		return mCurrUnitPos;
 	}
-	
+
 	/**
 	 * Used to gather values to convert to and from and then call parent class to do raw conversion
 	 * Convert from unit is specified by the current Unit

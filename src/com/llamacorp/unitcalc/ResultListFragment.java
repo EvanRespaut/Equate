@@ -12,32 +12,33 @@ import android.widget.TextView;
 
 public class ResultListFragment extends ListFragment {
 	//this is for communication with the parent activity
-	OnResultSelectedListener mCallback;
+	private OnResultSelectedListener mCallback;
+	private List<PrevExpression> mResultArray;
 
 	// Container Activity must implement this interface
 	public interface OnResultSelectedListener {
 		public void updateScreen(boolean updatePrev);
+		public void selectUnit(Unit unit);
 	}
 
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 
-		// This makes sure that the container activity has implemented
-		// the callback interface. If not, it throws an exception
+		//Make sure container implements callback interface; else, throw exception
 		try {
 			mCallback = (OnResultSelectedListener) activity;
 		} catch (ClassCastException e) {
-			throw new ClassCastException(activity.toString()
-					+ " must implement OnResultSelectedListener");
+			throw new ClassCastException(activity.toString() + " must implement OnResultSelectedListener");
 		}
 	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
-		ResultAdapter adapter = new ResultAdapter(Calculator.getCalculator(getActivity()).getPrevExpressions());
+		
+		mResultArray = Calculator.getCalculator(getActivity()).getPrevExpressions();
+		ResultAdapter adapter = new ResultAdapter(mResultArray);
 		setListAdapter(adapter);	
 	}
 
@@ -102,19 +103,36 @@ public class ResultListFragment extends ListFragment {
 				public void onClick(View view) {
 					//get the listView position of this answer/query
 					int position = getListView().getPositionForView((View)view.getParent());
+					//grab the calc
+					Calculator calc = Calculator.getCalculator(getActivity());
 					//grab the associated previous expression
-					PrevExpression thisPrevExp = Calculator.getCalculator(getActivity()).getPrevExpressions().get(position);
+					PrevExpression thisPrevExp = mResultArray.get(position);
+						
+					
 					//get text to pass back to calc
-					String passBack="";
-					if (view.getId()==R.id.list_item_result_textPrevQuerry)
-						passBack = thisPrevExp.getQuerry();
-					if (view.getId()==R.id.list_item_result_textPrevAnswer)
-						passBack = thisPrevExp.getAnswer();
-					Calculator.getCalculator(getActivity()).parseKeyPressed(passBack);
-
-					//now set up the proper unit
-					//TODO use mCallback.unitSelectedByResultList() or maybe just its natual unit selected function?
-
+					String textPassBack="";
+					int viewID = view.getId();
+					if (viewID==R.id.list_item_result_textPrevQuerry)
+						textPassBack = thisPrevExp.getQuerry();
+					if (viewID==R.id.list_item_result_textPrevAnswer)
+						textPassBack = thisPrevExp.getAnswer();
+					
+					//if unit not selected in calc, and result has unit, set that unit
+					if(!calc.currUnitIsSet() && thisPrevExp.containsUnits()){
+						Unit unitPassBack = new Unit();
+						if (viewID==R.id.list_item_result_textPrevQuerry)
+							unitPassBack = thisPrevExp.getQuerryUnit();
+						if (viewID==R.id.list_item_result_textPrevAnswer)
+							unitPassBack = thisPrevExp.getAnswerUnit();
+						
+						//if the selection was a success (and we weren't in the wrong unitType), then set the color
+						//int selectedUnitPos = calc.getCurrUnitType().selectUnit(unitPassBack);
+						//if(selectedUnitPos != -1)
+						mCallback.selectUnit(unitPassBack);
+					}
+					
+					
+					calc.parseKeyPressed(textPassBack);
 					mCallback.updateScreen(false);				
 				}
 
