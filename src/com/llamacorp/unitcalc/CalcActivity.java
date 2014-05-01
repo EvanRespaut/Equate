@@ -288,7 +288,7 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 					break;
 				case MotionEvent.ACTION_UP:
 					if (mHandler == null) return true;
-					//user released button before reapeat could fire
+					//user released button before repeat could fire
 					mHandler.removeCallbacks(mBackspaceRepeat);
 					mHandler = null;
 					break;

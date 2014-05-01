@@ -80,7 +80,7 @@ public class ResultListFragment extends ListFragment {
 			// Configure the view for this result
 			PrevExpression prevExp = getItem(position);
 
-			TextView textViewQuerry = (TextView)convertView.findViewById(R.id.list_item_result_textPrevQuerry);	
+			TextView textViewQuerry = (TextView)convertView.findViewById(R.id.list_item_result_textPrevQuery);	
 			setUpResultTextView(textViewQuerry, prevExp.getTextQuerry());
 
 			TextView textViewAnswer = (TextView)convertView.findViewById(R.id.list_item_result_textPrevAnswer);
@@ -112,7 +112,7 @@ public class ResultListFragment extends ListFragment {
 					//get text to pass back to calc
 					String textPassBack="";
 					int viewID = view.getId();
-					if (viewID==R.id.list_item_result_textPrevQuerry)
+					if (viewID==R.id.list_item_result_textPrevQuery)
 						textPassBack = thisPrevExp.getQuerry();
 					if (viewID==R.id.list_item_result_textPrevAnswer)
 						textPassBack = thisPrevExp.getAnswer();
@@ -120,7 +120,7 @@ public class ResultListFragment extends ListFragment {
 					//if unit not selected in calc, and result has unit, set that unit
 					if(!calc.currUnitIsSet() && thisPrevExp.containsUnits()){
 						Unit unitPassBack = new Unit();
-						if (viewID==R.id.list_item_result_textPrevQuerry)
+						if (viewID==R.id.list_item_result_textPrevQuery)
 							unitPassBack = thisPrevExp.getQuerryUnit();
 						if (viewID==R.id.list_item_result_textPrevAnswer)
 							unitPassBack = thisPrevExp.getAnswerUnit();
