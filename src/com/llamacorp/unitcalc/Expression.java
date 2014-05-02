@@ -9,6 +9,8 @@ public class Expression {
 	//this string stores the more precise result after solving
 	private String mPreciseResult;
 	private MathContext mMcDisp;
+	public static int mIntDisplayPrecision;
+
 	//stores whether or not this expression was just solved
 	private boolean mSolved;
 
@@ -26,16 +28,58 @@ public class Expression {
 	public static final String regexGroupedNumber = "(\\-?\\d*\\.?\\d+\\.?(?:E[\\-\\+]?\\d+)?)";
 
 
-	public Expression(MathContext mcDisp){
+	public Expression(int dispPrecision){
 		mExpression="";
 		mPreciseResult="";
 		setSolved(false);
-		mMcDisp = mcDisp;
+		//skip precise unit usage if precision is set to 0
+		if(dispPrecision>0){
+			mIntDisplayPrecision = dispPrecision;
+			mMcDisp = new MathContext(mIntDisplayPrecision);
+		}
 	}
 
 	public Expression(){
-		this(null);
+		//precision of zero means any precise result converting will be skipped
+		this(0);
 	}
+
+
+	/**
+	 * Rounds expression down by a MathContext mcDisp
+	 * @throws NumberFormatException if Expression not formatted correctly
+	 */	
+	public void roundAndCleanExpression() {
+		//if expression was displaying error (with invalid chars) leave
+		if(mExpression.matches(regexInvalidChars) || mExpression.equals(""))
+			return;
+
+		//if there's any messed formatting, or if number is too big, throw syntax error
+		BigDecimal bd;
+		//try{
+			//round the answer for viewer's pleasure
+			bd = new BigDecimal(mExpression,mMcDisp);
+		//}
+		//catch (NumberFormatException e){
+		//	mExpression=strSyntaxError;
+		//	return;
+		//}
+
+		//save the original to precise result for potential later use
+		mPreciseResult = mExpression;
+
+		//determine if exponent (number after E) is small enough for non-engineering style print, otherwise do regular style
+		if(lastNumbExponent()<mIntDisplayPrecision)
+			mExpression = bd.toPlainString();
+		else
+			mExpression = bd.toString();
+
+		//finally clean the result off
+		mExpression=cleanFormatting(mExpression);
+	}
+
+
+
 
 
 	/** Close any open parentheses in this expression */
@@ -64,15 +108,15 @@ public class Expression {
 			}
 		}
 	}
-	
+
 	/** Clean off any dangling operators and E's (not parentheses!!) at the END ONLY */
 	public void cleanDanglingOps(){
 		mExpression = mExpression.replaceAll(regexAnyOperatorOrE + "+$", "");
 	}
-	
 
-	
-	
+
+
+
 	/** Returns if this expression is empty */
 	public boolean isEmpty(){
 		if(mExpression.equals("")) 
@@ -82,13 +126,13 @@ public class Expression {
 	}
 
 
-	
-	
+
+
 	/** Returns the post rounded result */
 	public String getPreciseResult(){
 		return mPreciseResult;
 	}
-	
+
 
 	public boolean isSolved() {
 		return mSolved;
@@ -101,13 +145,13 @@ public class Expression {
 	public void setExpression(String tempExp) {
 		mExpression=tempExp;
 	}	
-	
+
 	@Override
 	public String toString(){
 		return mExpression;
 	}
 
-	
+
 
 	/**
 	 * Clean up a string's formatting 
@@ -128,8 +172,8 @@ public class Expression {
 
 		return sToClean;
 	}
-	
-		
+
+
 	/**
 	 * Counts the number of open vs number of closed parentheses in the given 
 	 * @return 0 if equal num of open/close para, positive # if more open, neg # if more close
@@ -147,8 +191,20 @@ public class Expression {
 		return numOpen - numClose;
 	}
 
-	
-	
+
+	/** Gets the number after the E in expression (not including + and -) */	
+	private int lastNumbExponent(){
+		//func returns "" if expression empty, and expression if doesn't contain E[+-]?
+		if(mExpression.contains("E")){
+			String [] strA = mExpression.split("E[+-]?");
+			return Integer.parseInt(strA[strA.length-1]);
+		}
+		else 
+			//need to be bigger than intDisplayPrecision so calling func uses toString instead of toPlainString
+			return intDisplayPrecision+2;
+	}
+
+
 	/**
 	 * Gets the first number (returned as a String) in the current expression
 	 * @return anything before the first valid operator, or "" if expression empty, or entire expression if doesn't contain regexAnyValidOperator
@@ -168,5 +224,5 @@ public class Expression {
 		else return strA[strA.length-1];
 	}
 
-	
+
 }

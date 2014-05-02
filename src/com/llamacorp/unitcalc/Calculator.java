@@ -142,8 +142,8 @@ public class Calculator implements OnConvertionListener{
 		if(prevEx.equals(""))
 			mPrevExpressions.add(new PrevExpression(prevEx));
 	}
-	
-	
+
+
 	/**
 	 * Solves a given Expression
 	 * Cleans off the expression, adds missing parentheses, then loads in more accurate result values if possible into expression
@@ -163,7 +163,7 @@ public class Calculator implements OnConvertionListener{
 		//if expression empty, don't need to solve anything
 		if(exp.isEmpty())
 			return "";
-			
+
 		//load in the precise result if possible
 		exp.loadPreciseResult();
 
@@ -174,7 +174,7 @@ public class Calculator implements OnConvertionListener{
 
 		//flag used to tell backspace and numbers to clear the expression when pressed
 		exp.setSolved(true);
-		
+
 		return prevExp;
 	}
 
@@ -303,53 +303,6 @@ public class Calculator implements OnConvertionListener{
 
 
 
-
-	/** Gets the number after the E in expression (not including + and -) */	
-	private int lastNumbExponent(){
-		//func returns "" if expression empty, and expression if doesn't contain E[+-]?
-		if(mExpression.contains("E")){
-			String [] strA = mExpression.split("E[+-]?");
-			return Integer.parseInt(strA[strA.length-1]);
-		}
-		else 
-			//need to be bigger than intDisplayPrecision so calling func uses toString instead of toPlainString
-			return intDisplayPrecision+2;
-	}	
-
-
-	/**
-	 * Rounds expression down by a mathcontext mcDisp
-	 */	
-	private void roundAndCleanExpression() {
-		//if expression was displaying error (with invalid chars) leave
-		if(mExpression.matches(regexInvalidChars) || mExpression.equals(""))
-			return;
-
-		//if there's any messed formatting, or if number is too big, throw syntax error
-		BigDecimal bd;
-		try{
-			//round the answer for viewer's pleasure
-			bd = new BigDecimal(mExpression,mMcDisp);
-		}
-		catch (NumberFormatException e){
-			mExpression=strSyntaxError;
-			return;
-		}
-
-		//save the original to precise result for potential later use
-		mPrecResult = mExpression;
-
-		//determine if exponent (number after E) is small enough for non-engineering style print, otherwise do regular style
-		if(lastNumbExponent()<intDisplayPrecision)
-			mExpression = bd.toPlainString();
-		else
-			mExpression = bd.toString();
-
-		//finally clean the result off
-		mExpression=cleanNum(mExpression);
-	}
-
-
 	/**
 	 * Function used to convert from one unit to another
 	 * @param fromValue is standardized value of the unit being converted from
@@ -381,8 +334,15 @@ public class Calculator implements OnConvertionListener{
 			return;
 		}
 
-		//round and clean the result expression off
-		roundAndCleanExpression();
+
+		//rounding operation may throw NumberFormatException
+		try{
+			mExpression.roundAndCleanExpression();
+		}
+		catch (NumberFormatException e){
+			mExpression=strSyntaxError;
+			return;
+		}
 
 		//load units into prevExpression (this will also set contains unit flag
 		mPrevExpressions.get(mPrevExpressions.size()-1).setQuerryUnit(fromUnit);
