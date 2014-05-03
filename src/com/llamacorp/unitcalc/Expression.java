@@ -29,9 +29,8 @@ public class Expression {
 
 
 	public Expression(int dispPrecision){
-		mExpression="";
+		clearExpression();
 		mPreciseResult="";
-		setSolved(false);
 		//skip precise unit usage if precision is set to 0
 		if(dispPrecision>0){
 			mIntDisplayPrecision = dispPrecision;
@@ -43,6 +42,90 @@ public class Expression {
 		//precision of zero means any precise result converting will be skipped
 		this(0);
 	}
+
+
+
+	/**
+	 * This function will try to add a number or operator, or entire prevExpression to the current expression
+	 * Note that there is lots of error checking to be sure user can't entire an invalid operator/number
+	 * @param sKey should only be single vaild number or operator character, or longer previous expressions
+	 */
+	public void addToExpression(String sKey){
+		//for now, if we're adding a prev expression, just add it without error checking
+		if(sKey.length()>1){
+			if(mSolved) mExpression=sKey;
+			else mExpression = mExpression + sKey;
+			mSolved=false;
+			return;
+		}
+
+		//check for invalid entries
+		if(sKey.matches(regexInvalidChars))
+			throw new IllegalArgumentException("In addToExpression, invalid sKey..."); 
+
+
+		//don't start with [*/^E] when the expression string is empty or if we opened a para
+		if(sKey.matches(regexInvalidStartChar) && (lastNumb().equals("") || mExpression.matches(".*\\($")))
+			return;
+
+		//if just hit equals, and we hit [.0-9(], then clear expression
+		if(mSolved && sKey.matches("[.0-9(]"))
+			clearExpression();
+
+		//when adding (, if the previous character was any number or decimal, or close para, add mult
+		if(sKey.equals("(") && mExpression.matches(".*[\\d).]$"))
+			mExpression = mExpression + "*";
+
+		//when adding # after ), add multiply
+		if(sKey.matches("[0-9]") && mExpression.matches(".*\\)$"))
+			mExpression = mExpression + "*";
+
+		//add auto completion for close parentheses
+		if(sKey.equals(")"))	
+			if(numOpenPara() <= 0) //if more close than open, add an open
+				mExpression = "(" + mExpression;
+
+		//if we already have a decimal in the number, don't add another
+		if(sKey.equals(".") && lastNumb().matches(".*[.E].*"))
+			//lastNumb returns the last num; if expression="4.3+", returns "4.3"; if last key was an operator, allow decimals
+			//if(expression.matches(".*[^-+/*]$"))
+			if(!mExpression.matches(".*" + regexAnyValidOperator + "$"))
+				return;
+
+		//if we already have a E in the number, don't add another; also don't add E immediately after an operator
+		//if(sKey.equals("E") && (lastNumb().contains("E")))
+		if(sKey.equals("E") && (lastNumb().contains("E") || mExpression.matches(".*" + regexAnyValidOperator + "$")))
+			return;		
+
+		//if we E was last pressed, only allow [1-9+-(]
+		if(lastNumb().matches(".*E$"))
+			if(sKey.matches("[^\\d(-]"))
+				return;
+
+		//if last digit was only a decimal, don't add any operator or E
+		if(sKey.matches(regexAnyOperatorOrE) && lastNumb().equals("."))
+			return;	
+
+		//don't allow "--" or "65E--"
+		if(sKey.matches("[-]") && mExpression.matches(".*E?[-]"))
+			return;	
+
+		//if we have "84*-", replace both the * and the - with the operator
+		if(sKey.matches(regexAnyValidOperator) && mExpression.matches(".*" + regexAnyValidOperator + regexAnyValidOperator + "$"))
+			mExpression = mExpression.substring(0, mExpression.length()-2) + sKey;
+		//if there's already an operator, replace it with the new operator, except for -, let that stack up
+		else if(sKey.matches(regexInvalidStartChar) && mExpression.matches(".*" + regexAnyValidOperator + "$"))
+			mExpression = mExpression.substring(0, mExpression.length()-1) + sKey;
+		//otherwise load the new keypress
+		else
+			mExpression = mExpression + sKey;
+
+		//we added a num/op, reset the solved flag
+		mSolved=false;
+	}
+
+
+
 
 
 	/**
@@ -57,8 +140,8 @@ public class Expression {
 		//if there's any messed formatting, or if number is too big, throw syntax error
 		BigDecimal bd;
 		//try{
-			//round the answer for viewer's pleasure
-			bd = new BigDecimal(mExpression,mMcDisp);
+		//round the answer for viewer's pleasure
+		bd = new BigDecimal(mExpression,mMcDisp);
 		//}
 		//catch (NumberFormatException e){
 		//	mExpression=strSyntaxError;
@@ -97,15 +180,16 @@ public class Expression {
 	 */		
 	public void loadPreciseResult(){
 		//make sure we have valid precise result and rounding Mathcontext first
-		if(!mPreciseResult.equals("") || mMcDisp != null){
-			//make the precise string not precise temporarily for comparison 
-			BigDecimal formallyPrec = new BigDecimal(mPreciseResult, mMcDisp);
-			String formallyPrecCleaned = cleanFormatting(formallyPrec.toString());
+		if(mPreciseResult.equals("") || mMcDisp == null)
+			return;
 
-			//find out if expression's first term matches first part of the precise result, if so replace with more precise term
-			if(firstNumb().equals(formallyPrecCleaned)){
-				mExpression=mExpression.replaceFirst(regexGroupedNumber, mPreciseResult.toString());
-			}
+		//make the precise string not precise temporarily for comparison 
+		BigDecimal formallyPrec = new BigDecimal(mPreciseResult, mMcDisp);
+		String formallyPrecCleaned = cleanFormatting(formallyPrec.toString());
+
+		//find out if expression's first term matches first part of the precise result, if so replace with more precise term
+		if(firstNumb().equals(formallyPrecCleaned)){
+			mExpression=mExpression.replaceFirst(regexGroupedNumber, mPreciseResult.toString());
 		}
 	}
 
@@ -127,6 +211,14 @@ public class Expression {
 
 
 
+	/** Returns if this expression is has invalid characters */
+	public boolean isInvalid(){
+		if(mExpression.matches(regexInvalidChars)) 
+			return true;
+		else 
+			return false;
+	}
+
 
 	/** Returns the post rounded result */
 	public String getPreciseResult(){
@@ -145,6 +237,16 @@ public class Expression {
 	public void setExpression(String tempExp) {
 		mExpression=tempExp;
 	}	
+
+	public void clearExpression(){
+		mExpression="";
+		mSolved = false;		
+	}
+
+	public void deleteLastDigit(){
+		if(!mExpression.isEmpty())
+			mExpression=mExpression.substring(0, mExpression.length()-1);	
+	}
 
 	@Override
 	public String toString(){
@@ -201,7 +303,7 @@ public class Expression {
 		}
 		else 
 			//need to be bigger than intDisplayPrecision so calling func uses toString instead of toPlainString
-			return intDisplayPrecision+2;
+			return mIntDisplayPrecision+2;
 	}
 
 

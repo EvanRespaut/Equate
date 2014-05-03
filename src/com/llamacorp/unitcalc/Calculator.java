@@ -44,7 +44,7 @@ public class Calculator implements OnConvertionListener{
 
 	//------THIS IS FOR TESTING ONLY-----------------
 	private Calculator(){
-		mExpression=new Expression(new MathContext(intDisplayPrecision)); 		
+		mExpression=new Expression(intDisplayPrecision); 		
 		mMcOperate = new MathContext(intCalcPrecision); 
 		mUnitTypePos=0;	
 		initiateUnits();	
@@ -59,7 +59,7 @@ public class Calculator implements OnConvertionListener{
 	private Calculator(Context appContext){
 		//save our context
 		//mAppContext = appContext;
-		mExpression=new Expression(new MathContext(intDisplayPrecision));
+		mExpression=new Expression(intDisplayPrecision);
 		//load the calculating precision
 		mMcOperate = new MathContext(intCalcPrecision);
 
@@ -135,12 +135,16 @@ public class Calculator implements OnConvertionListener{
 	 * @param exp
 	 * @return solved expression
 	 */
-	private void solveCurrentExpression(){
+	private boolean solveAndLoadIntoPrevExpression(){
 		String prevEx = solve(mExpression, mMcOperate);
 
 		//save the expression temporarily, later save to prevExpression
-		if(prevEx.equals(""))
+		if(!prevEx.equals("")){
 			mPrevExpressions.add(new PrevExpression(prevEx));
+			return true;
+		}
+		else 
+			return false;
 	}
 
 
@@ -310,11 +314,11 @@ public class Calculator implements OnConvertionListener{
 	 */		
 	public void convertFromTo(Unit fromUnit, Unit toUnit){
 		//if expression empty, or contains invalid chars, don't need to solve anything
-		if(mExpression.equals("") || mExpression.matches(regexInvalidChars))
+		if(mExpression.isEmpty() || mExpression.isInvalid())
 			return;
 
 		//first solve the function
-		boolean solveSuccess = solveCurrentExpression();
+		boolean solveSuccess = solveAndLoadIntoPrevExpression();
 		//if there solve failed because there was nothing to solve, just leave (this way prevExpression isn't loaded)
 		if (!solveSuccess)
 			return;
@@ -324,13 +328,13 @@ public class Calculator implements OnConvertionListener{
 			//convert numbers into big decimals for more operation control over precision			
 			BigDecimal bdToUnit   = new BigDecimal(toUnit.getValue(),mMcOperate);
 			BigDecimal bdCurrUnit = new BigDecimal(fromUnit.getValue(),mMcOperate);			
-			BigDecimal bdResult   = new BigDecimal(mExpression,mMcOperate);
+			BigDecimal bdResult   = new BigDecimal(mExpression.toString(),mMcOperate);
 			// perform actual unit conversion (result*currUnit/toUnit)
-			mExpression = bdResult.multiply(bdCurrUnit.divide(bdToUnit, mMcOperate),mMcOperate).toString();
+			mExpression.setExpression(bdResult.multiply(bdCurrUnit.divide(bdToUnit, mMcOperate),mMcOperate).toString());
 		}
 		catch (NumberFormatException e){
 			//System.out.println("e.getMessage()= " + e.getMessage());
-			mExpression=strSyntaxError;
+			mExpression.setExpression(strSyntaxError);
 			return;
 		}
 
@@ -340,7 +344,7 @@ public class Calculator implements OnConvertionListener{
 			mExpression.roundAndCleanExpression();
 		}
 		catch (NumberFormatException e){
-			mExpression=strSyntaxError;
+			mExpression.setExpression(strSyntaxError);
 			return;
 		}
 
@@ -348,7 +352,7 @@ public class Calculator implements OnConvertionListener{
 		mPrevExpressions.get(mPrevExpressions.size()-1).setQuerryUnit(fromUnit);
 		mPrevExpressions.get(mPrevExpressions.size()-1).setAnswerUnit(toUnit);
 		//load the final value into prevExpression
-		mPrevExpressions.get(mPrevExpressions.size()-1).setAnswer(mExpression);
+		mPrevExpressions.get(mPrevExpressions.size()-1).setAnswer(mExpression.toString());
 	}
 
 
@@ -358,20 +362,25 @@ public class Calculator implements OnConvertionListener{
 	 */
 	public void parseKeyPressed(String sKey){
 		//if expression was displaying "Syntax Error" or similar (containing invalid chars) clear it
-		if(mExpression.matches(regexInvalidChars))
-			mExpression="";
+		if(mExpression.isInvalid())
+			mExpression.setExpression("");
 
 		//check for equals key
 		if(sKey.equals("=")){
 			//first solve the function
-			boolean solveSuccess = solveCurrentExpression();
+			boolean solveSuccess = solveAndLoadIntoPrevExpression();
 			//if there solve failed because there was nothing to solve, just leave (this way prevExpression isn't loaded)
 			if (!solveSuccess)
 				return;
-			//round and clean the result expression off
-			roundAndCleanExpression();
-			//load the final value into prevExpression
-			mPrevExpressions.get(mPrevExpressions.size()-1).setAnswer(mExpression);
+			//rounding operation may throw NumberFormatException
+			try{
+				mExpression.roundAndCleanExpression();
+			}
+			catch (NumberFormatException e){
+				mExpression.setExpression(strSyntaxError);
+				return;
+			}			//load the final value into prevExpression
+			mPrevExpressions.get(mPrevExpressions.size()-1).setAnswer(mExpression.toString());
 		}
 		//check for backspace key
 		else if(sKey.equals("b"))
@@ -382,90 +391,13 @@ public class Calculator implements OnConvertionListener{
 			clear();
 
 		//else try all other potential numbers and operators, as well as prevExpression
-		else
-			addToExpression(sKey);
-	}
+		else{
+			//if just hit equals, and we hit [.0-9(], then clear current unit type
+			if(mExpression.isSolved() && sKey.matches("[.0-9(]"))
+				mUnitTypeArray.get(mUnitTypePos).clearUnitSelection();
 
-
-	/**
-	 * This function will try to add a number or operator, or entire prevExpression to the current expression
-	 * Note that there is lots of error checking to be sure user can't entire an invalid operator/number
-	 * @param sKey should only be single vaild number or operator character, or longer previous expressions
-	 */
-	private void addToExpression(String sKey){
-		//for now, if we're adding a prev expression, just add it without error checking
-		if(sKey.length()>1){
-			if(mSolved) mExpression=sKey;
-			else mExpression = mExpression + sKey;
-			mSolved=false;
-			return;
+			mExpression.addToExpression(sKey);
 		}
-
-		//check for invalid entries
-		if(sKey.matches(regexInvalidChars))
-			throw new IllegalArgumentException("In addToExpression, invalid sKey..."); 
-
-
-		//don't start with [*/^E] when the expression string is empty or if we opened a para
-		if(sKey.matches(regexInvalidStartChar) && (lastNumb().equals("") || mExpression.matches(".*\\($")))
-			return;
-
-		//if just hit equals, and we hit [.0-9(], then delete expression
-		if(mSolved && sKey.matches("[.0-9(]")){
-			//also will want to clear current unit type
-			mUnitTypeArray.get(mUnitTypePos).clearUnitSelection();
-			mExpression="";
-		}
-		//when adding (, if the previous character was any number or decimal, or close para, add mult
-		if(sKey.equals("(") && mExpression.matches(".*[\\d).]$"))
-			mExpression = mExpression + "*";
-
-		//when adding # after ), add multiply
-		if(sKey.matches("[0-9]") && mExpression.matches(".*\\)$"))
-			mExpression = mExpression + "*";
-
-		//add auto completion for close parentheses
-		if(sKey.equals(")"))	
-			if(numOpenPara() <= 0) //if more close than open, add an open
-				mExpression = "(" + mExpression;
-
-		//if we already have a decimal in the number, don't add another
-		if(sKey.equals(".") && lastNumb().matches(".*[.E].*"))
-			//lastNumb returns the last num; if expression="4.3+", returns "4.3"; if last key was an operator, allow decimals
-			//if(expression.matches(".*[^-+/*]$"))
-			if(!mExpression.matches(".*" + regexAnyValidOperator + "$"))
-				return;
-
-		//if we already have a E in the number, don't add another; also don't add E immediately after an operator
-		//if(sKey.equals("E") && (lastNumb().contains("E")))
-		if(sKey.equals("E") && (lastNumb().contains("E") || mExpression.matches(".*" + regexAnyValidOperator + "$")))
-			return;		
-
-		//if we E was last pressed, only allow [1-9+-(]
-		if(lastNumb().matches(".*E$"))
-			if(sKey.matches("[^\\d(-]"))
-				return;
-
-		//if last digit was only a decimal, don't add any operator or E
-		if(sKey.matches(regexAnyOperatorOrE) && lastNumb().equals("."))
-			return;	
-
-		//don't allow "--" or "65E--"
-		if(sKey.matches("[-]") && mExpression.matches(".*E?[-]"))
-			return;	
-
-		//if we have "84*-", replace both the * and the - with the operator
-		if(sKey.matches(regexAnyValidOperator) && mExpression.matches(".*" + regexAnyValidOperator + regexAnyValidOperator + "$"))
-			mExpression = mExpression.substring(0, mExpression.length()-2) + sKey;
-		//if there's already an operator, replace it with the new operator, except for -, let that stack up
-		else if(sKey.matches(regexInvalidStartChar) && mExpression.matches(".*" + regexAnyValidOperator + "$"))
-			mExpression = mExpression.substring(0, mExpression.length()-1) + sKey;
-		//otherwise load the new keypress
-		else
-			mExpression = mExpression + sKey;
-
-		//we added a num/op, reset the solved flag
-		mSolved=false;
 	}
 
 
@@ -474,10 +406,7 @@ public class Calculator implements OnConvertionListener{
 	 */	
 	private void clear(){
 		//clear the immediate expression
-		mExpression="";
-
-		//reset solved flag
-		mSolved=false;
+		mExpression.clearExpression();
 
 		//reset current unit
 		mUnitTypeArray.get(mUnitTypePos).clearUnitSelection();
@@ -488,20 +417,19 @@ public class Calculator implements OnConvertionListener{
 	 * Backspace function for the calculator
 	 */
 	private void backspace(){
-		//if we just solved expression, clear expression out
-		if(mSolved || mExpression.equals("")){
+		//clear out unit selection and expression if we just solved or if expression empty
+		if(mExpression.isSolved() || mExpression.isEmpty()){
 			mUnitTypeArray.get(mUnitTypePos).clearUnitSelection();
-			mExpression="";
-			mSolved=false;
+			mExpression.clearExpression();
 			//we're done. don't want to execute code below
 			return;
 		}
 
 		//delete last of calcExp list so long as expression isn't already empty
-		if(!mExpression.equals("")){
-			mExpression=mExpression.substring(0, mExpression.length()-1);	
+		if(!mExpression.isEmpty()){
+			mExpression.deleteLastDigit();
 			//if we just cleared the expression out, also clear currUnit
-			if(mExpression.equals(""))
+			if(mExpression.isEmpty())
 				mUnitTypeArray.get(mUnitTypePos).clearUnitSelection();
 		}	
 	}
@@ -534,7 +462,7 @@ public class Calculator implements OnConvertionListener{
 	@Override
 	public String toString(){
 		//needed for display updating
-		return mExpression;
+		return mExpression.toString();
 	}
 
 }
