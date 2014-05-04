@@ -137,7 +137,8 @@ public class Calculator implements OnConvertionListener{
 	 */
 	private boolean solveAndLoadIntoPrevExpression(){
 		String prevEx = solve(mExpression, mMcOperate);
-
+System.out.println("isUnitIsSet()" + isUnitIsSet());
+System.out.println("mUnitTypePos" + mUnitTypePos);
 		//save the expression temporarily, later save to prevExpression
 		if(!prevEx.equals("")){
 			mPrevExpressions.add(new PrevExpression(prevEx));

@@ -87,12 +87,7 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 
 	static final String strExpressionEnd = " =";
 
-	////this is just a temp test function
-	//public String getPrevResult(){
-	//	return calc.toStringLastExpression();
-	//}
-
-
+	
 	/**
 	 * Updates the current and previous answers
 	 * @param updatePrev whether or not to update previous answer
@@ -143,7 +138,7 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 			fm.beginTransaction().add(R.id.resultListfragmentContainer, resultFragment).commit();			
 		}
 
-		//
+		
 		mViewPager = (ViewPager)findViewById(R.id.convertKeyPager);
 		
 		mViewPager.setAdapter(new FragmentStatePagerAdapter(fm) {
@@ -160,14 +155,16 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 		//add a little break between pages
 		mViewPager.setPageMargin(10);
 		
-		/*
+		//need to tell calc when a new UnitType page is selected
 		mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 			//as the page is being scrolled to
 			@Override
 			public void onPageSelected(int pos) {
-				Crime crime = mCrimes.get(pos);
-				if (crime.getTitle() != null)
-					setTitle(crime.getTitle());
+				//clear out the unit in the last UnitType, and make sure it's not selected
+				calc.getCurrUnitType().clearUnitSelection();
+				updateScreen(false);
+				//tell calc what the new UnitType is
+				calc.setUnitTypePos(pos);
 			}
 			
 			@Override
@@ -176,7 +173,7 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 			@Override
 			public void onPageScrollStateChanged(int state) {}
 		});
-		 */
+		 
 
 		calcButton = new ArrayList<Button>();
 
