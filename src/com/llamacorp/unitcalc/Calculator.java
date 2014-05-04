@@ -141,6 +141,13 @@ public class Calculator implements OnConvertionListener{
 		//save the expression temporarily, later save to prevExpression
 		if(!prevEx.equals("")){
 			mPrevExpressions.add(new PrevExpression(prevEx));
+			//also set prev expression's unit if it's selected
+			if(isUnitIsSet()){
+				//load units into prevExpression (this will also set contains unit flag
+				Unit toUnit = getCurrUnitType().getSelectedUnit();
+				mPrevExpressions.get(mPrevExpressions.size()-1).setQuerryUnit(toUnit);
+				mPrevExpressions.get(mPrevExpressions.size()-1).setAnswerUnit(toUnit);
+			}
 			return true;
 		}
 		else 
@@ -348,7 +355,7 @@ public class Calculator implements OnConvertionListener{
 			return;
 		}
 
-		//load units into prevExpression (this will also set contains unit flag
+		//load units into prevExpression (this will also set contains unit flag) (overrides that from solve)
 		mPrevExpressions.get(mPrevExpressions.size()-1).setQuerryUnit(fromUnit);
 		mPrevExpressions.get(mPrevExpressions.size()-1).setAnswerUnit(toUnit);
 		//load the final value into prevExpression
@@ -439,8 +446,8 @@ public class Calculator implements OnConvertionListener{
 	}
 
 	/** Used by the controller to determine if any convert keys should be selected */
-	public boolean currUnitIsSet(){
-		return mUnitTypeArray.get(mUnitTypePos).getIsUnitSelected();
+	public boolean isUnitIsSet(){
+		return mUnitTypeArray.get(mUnitTypePos).isUnitSelected();
 	}
 
 	public UnitType getUnitType(int pos) {

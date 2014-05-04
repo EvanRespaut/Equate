@@ -86,7 +86,7 @@ public class UnitType {
 		mIsUnitSelected = false;
 	}
 
-	public boolean getIsUnitSelected(){
+	public boolean isUnitSelected(){
 		return mIsUnitSelected;
 	}
 
@@ -96,6 +96,10 @@ public class UnitType {
 	 */
 	public String getUnitDisplayName(int pos){
 		return mUnitArray.get(pos).toString();
+	}
+	
+	public Unit getSelectedUnit(){
+		return mUnitArray.get(mCurrUnitPos);
 	}
 
 	public int size() {

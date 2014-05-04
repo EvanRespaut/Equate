@@ -102,7 +102,7 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 		updateScreenWithInstaScrollOption(updatePrev, false);
 
 		//see if colored convert button should be not colored (if backspace or clear were pressed, or if expression solved)
-		if(!calc.currUnitIsSet()){
+		if(!calc.isUnitIsSet()){
 			//NOT SURE IF THIS IS A PROPER WAY TO DO THIS
 			FragmentStatePagerAdapter tempAdapter = (FragmentStatePagerAdapter) mViewPager.getAdapter();
 			ConvertKeysFragment currFrag = (ConvertKeysFragment) tempAdapter.instantiateItem(mViewPager, mViewPager.getCurrentItem());
