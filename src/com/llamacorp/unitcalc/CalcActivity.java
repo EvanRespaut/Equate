@@ -16,9 +16,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.TextView;
 
-import com.llamacorp.unitcalc.R;
 import com.llamacorp.unitcalc.ConvertKeysFragment.OnConvertKeySelectedListener;
 import com.llamacorp.unitcalc.ResultListFragment.OnResultSelectedListener;
 
@@ -28,7 +26,7 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 
 	private List<Button> calcButton;
 	//private List<Button> convButton;
-	private TextView mDisplay;
+	private EditTextCursorWatcher mDisplay;
 	//private TextView mPrevDisplay;
 	//private HorizontalScrollView mHorizontalScroll;
 
@@ -73,7 +71,7 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 		//update the prev expression and do it with the normal scroll (not fast)
 		updateScreen(keyPressed.equals("="));
 	}
-	
+
 	/**
 	 * Selects the coloring for a selected unit key
 	 * @see com.llamacorp.unitcalc.ResultListFragment.OnResultSelectedListener#selectUnit(int)
@@ -87,7 +85,7 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 
 	static final String strExpressionEnd = " =";
 
-	
+
 	/**
 	 * Updates the current and previous answers
 	 * @param updatePrev whether or not to update previous answer
@@ -105,11 +103,20 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 			currFrag.clearKeySelection();
 		}
 	}
-	
-	
-	private void updateScreenWithInstaScrollOption(boolean updatePrev, boolean instaScroll){
-		mDisplay.setText(calc.toString());
 
+
+	private void updateScreenWithInstaScrollOption(boolean updatePrev, boolean instaScroll){
+		//save text selection
+		int selEnd = mDisplay.getSelectionEnd();
+		int oldTextLen = mDisplay.getText().length();
+		int newTextLen = calc.toString().length();
+		mDisplay.setText(calc.toString());
+		//if we were at the end before, put us at the end now
+		if(selEnd==oldTextLen) selEnd = newTextLen;
+		//else selEnd = selEnd + newTextLen - oldTextLen;
+		 selEnd = newTextLen;
+		mDisplay.setSelection(selEnd, selEnd);
+		
 		//if we hit equals, update prev expression
 		if(updatePrev){
 			FragmentManager fm = getSupportFragmentManager();
@@ -127,8 +134,10 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 		calc = Calculator.getCalculator(this);
 
 		//main result display
-		mDisplay = (TextView)findViewById(R.id.textDisplay);
-		
+		mDisplay = (EditTextCursorWatcher)findViewById(R.id.textDisplay);
+		mDisplay.setCalc(calc);
+		mDisplay.disableSoftInputFromAppearing();
+
 		//use fragment manager to make the result list
 		FragmentManager fm = getSupportFragmentManager();
 		Fragment resultFragment = fm.findFragmentById(R.id.resultListfragmentContainer);
@@ -138,9 +147,9 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 			fm.beginTransaction().add(R.id.resultListfragmentContainer, resultFragment).commit();			
 		}
 
-		
+
 		mViewPager = (ViewPager)findViewById(R.id.convertKeyPager);
-		
+
 		mViewPager.setAdapter(new FragmentStatePagerAdapter(fm) {
 			@Override
 			public int getCount(){
@@ -154,7 +163,7 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 		});
 		//add a little break between pages
 		mViewPager.setPageMargin(10);
-		
+
 		//need to tell calc when a new UnitType page is selected
 		mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 			//as the page is being scrolled to
@@ -166,14 +175,14 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 				//tell calc what the new UnitType is
 				calc.setUnitTypePos(pos);
 			}
-			
+
 			@Override
 			public void onPageScrolled(int pos, float posOffset, int posOffsetPixels) {}
-			
+
 			@Override
 			public void onPageScrollStateChanged(int state) {}
 		});
-		 
+
 
 		calcButton = new ArrayList<Button>();
 
@@ -305,7 +314,8 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 			};
 		});
 	}
-	
+
+
 	@Override
 	public void onResume(){
 		super.onResume();

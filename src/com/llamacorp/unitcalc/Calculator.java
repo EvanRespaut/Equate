@@ -137,8 +137,6 @@ public class Calculator implements OnConvertionListener{
 	 */
 	private boolean solveAndLoadIntoPrevExpression(){
 		String prevEx = solve(mExpression, mMcOperate);
-System.out.println("isUnitIsSet()" + isUnitIsSet());
-System.out.println("mUnitTypePos" + mUnitTypePos);
 		//save the expression temporarily, later save to prevExpression
 		if(!prevEx.equals("")){
 			mPrevExpressions.add(new PrevExpression(prevEx));
@@ -404,7 +402,7 @@ System.out.println("mUnitTypePos" + mUnitTypePos);
 			if(mExpression.isSolved() && sKey.matches("[.0-9(]"))
 				mUnitTypeArray.get(mUnitTypePos).clearUnitSelection();
 
-			mExpression.addToExpression(sKey);
+			mExpression.keyPresses(sKey);
 		}
 	}
 
@@ -466,11 +464,19 @@ System.out.println("mUnitTypePos" + mUnitTypePos);
 	public void setUnitTypePos(int pos){
 		mUnitTypePos = pos;
 	}
+	
+	/**
+	 * Set the EditText selection for expression
+	 * @param selStart
+	 * @param selEnd
+	 */
+	public void setSelection(int selStart, int selEnd) {
+		mExpression.setSelection(selStart, selEnd);
+	}
 
 	@Override
 	public String toString(){
 		//needed for display updating
 		return mExpression.toString();
 	}
-
 }

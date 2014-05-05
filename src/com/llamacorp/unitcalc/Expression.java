@@ -9,7 +9,11 @@ public class Expression {
 	//this string stores the more precise result after solving
 	private String mPreciseResult;
 	private MathContext mMcDisp;
-	public static int mIntDisplayPrecision;
+	private int mIntDisplayPrecision;
+
+	//highlighted text selection
+	private int mSelectionStart;
+	private int mSelectionEnd;
 
 	//stores whether or not this expression was just solved
 	private boolean mSolved;
@@ -31,6 +35,7 @@ public class Expression {
 	public Expression(int dispPrecision){
 		clearExpression();
 		mPreciseResult="";
+		setSelection(0, 0);
 		//skip precise unit usage if precision is set to 0
 		if(dispPrecision>0){
 			mIntDisplayPrecision = dispPrecision;
@@ -43,26 +48,30 @@ public class Expression {
 		this(0);
 	}
 
-
-
 	/**
 	 * This function will try to add a number or operator, or entire prevExpression to the current expression
 	 * Note that there is lots of error checking to be sure user can't entire an invalid operator/number
 	 * @param sKey should only be single vaild number or operator character, or longer previous expressions
 	 */
-	public void addToExpression(String sKey){
+	public void keyPresses(String sKey){
 		//for now, if we're adding a prev expression, just add it without error checking
 		if(sKey.length()>1){
 			if(mSolved) mExpression=sKey;
-			else mExpression = mExpression + sKey;
+			else insertString(sKey);
 			mSolved=false;
 			return;
 		}
+
 
 		//check for invalid entries
 		if(sKey.matches(regexInvalidChars))
 			throw new IllegalArgumentException("In addToExpression, invalid sKey..."); 
 
+		//if we're inserting a character, don't bother with case checking
+		if(getSelectionEnd() < mExpression.length()){
+			insertString(sKey);
+			return;
+		}
 
 		//don't start with [*/^E] when the expression string is empty or if we opened a para
 		if(sKey.matches(regexInvalidStartChar) && (lastNumb().equals("") || mExpression.matches(".*\\($")))
@@ -118,7 +127,7 @@ public class Expression {
 			mExpression = mExpression.substring(0, mExpression.length()-1) + sKey;
 		//otherwise load the new keypress
 		else
-			mExpression = mExpression + sKey;
+			insertString(sKey);
 
 		//we added a num/op, reset the solved flag
 		mSolved=false;
@@ -225,6 +234,23 @@ public class Expression {
 		return mPreciseResult;
 	}
 
+	public int getSelectionStart() {
+		return mSelectionStart;
+	}
+
+	public int getSelectionEnd() {
+		return mSelectionEnd;
+	}
+
+	public void setSelection(int selectionStart, int selectionEnd ) {
+		if(selectionEnd>mExpression.length() || selectionStart>mExpression.length())
+			throw new IllegalArgumentException("In Expression.setSelection, selection end or start > expression length");
+		if(selectionEnd < selectionStart) 
+			throw new IllegalArgumentException("In Expression.setSelection, selection end < selection start");
+		mSelectionStart = selectionStart;
+		mSelectionEnd = selectionEnd;		
+	}
+
 
 	public boolean isSolved() {
 		return mSolved;
@@ -275,6 +301,21 @@ public class Expression {
 		return sToClean;
 	}
 
+	/**
+	 * Add a String to this expression at the correct selection point
+	 * @param toAdd the String to add
+	 */
+	private void insertString(String toAdd){
+		if(isEmpty()){
+			mExpression = toAdd;
+			return;
+		}
+		int selStart = getSelectionStart();
+		int selEnd = getSelectionEnd();
+		int expLen = mExpression.length();
+
+		mExpression = mExpression.substring(0, selStart) + toAdd + mExpression.substring(selEnd, expLen);
+	}
 
 	/**
 	 * Counts the number of open vs number of closed parentheses in the given 
