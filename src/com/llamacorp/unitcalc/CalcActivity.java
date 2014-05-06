@@ -59,7 +59,7 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 	};
 
 	//main calculator object
-	public Calculator calc;// = new Calculator();
+	public Calculator mCalc;// = new Calculator();
 
 	//maps id's of buttons to convert values
 	SparseArray<Double> units = new SparseArray<Double>();
@@ -67,7 +67,7 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 	//called when any non convert key is pressed
 	public void numButtonPressed(String keyPressed){
 		//pass button value to CalcAcitvity to pass to calc
-		calc.parseKeyPressed(keyPressed);
+		mCalc.parseKeyPressed(keyPressed);
 
 		//update the prev expression and do it with the normal scroll (not fast)
 		updateScreen(keyPressed.equals("="));
@@ -96,7 +96,7 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 		updateScreenWithInstaScrollOption(updatePrev, false);
 
 		//see if colored convert button should be not colored (if backspace or clear were pressed, or if expression solved)
-		if(!calc.isUnitIsSet()){
+		if(!mCalc.isUnitIsSet()){
 			//NOT SURE IF THIS IS A PROPER WAY TO DO THIS
 			FragmentStatePagerAdapter tempAdapter = (FragmentStatePagerAdapter) mViewPager.getAdapter();
 			ConvertKeysFragment currFrag = (ConvertKeysFragment) tempAdapter.instantiateItem(mViewPager, mViewPager.getCurrentItem());
@@ -121,19 +121,23 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 		//THESE TWO FUNCTIONS SHOULD BE TIED TOGETHER BY EXPRESSION AND A LISTENER
 		//or does expression even need to keep track of this????
 		calc.setSelection(selEnd, selEnd);
-		*/
-		
+		 */
+
 		//setText will reset selection to 0,0, so save it right now
-		int selStart = calc.getSelectionStart();
-		int selEnd = calc.getSelectionEnd();
+		int selStart = mCalc.getSelectionStart();
+		int selEnd = mCalc.getSelectionEnd();
 
 		Log.d("t", "before setText");
 		//update the main display
-		mDisplay.setText(calc.toString());
+		mDisplay.setText(mCalc.toString());
 		Log.d("t", "after setText");
 		//updating the text restarts selection to 0,0, so load in the current selection
 		mDisplay.setSelection(selStart, selEnd);
-		
+		if(selStart == mCalc.toString().length())
+			mDisplay.setCursorVisible(false);
+		else 
+			mDisplay.setCursorVisible(true);
+
 		//if we hit equals, update prev expression
 		if(updatePrev){
 			FragmentManager fm = getSupportFragmentManager();
@@ -148,11 +152,11 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 		setContentView(R.layout.activity_calc);
 
 		//either get old calc or create a new one
-		calc = Calculator.getCalculator(this);
+		mCalc = Calculator.getCalculator(this);
 
 		//main result display
 		mDisplay = (EditTextCursorWatcher)findViewById(R.id.textDisplay);
-		mDisplay.setCalc(calc);
+		mDisplay.setCalc(mCalc);
 		mDisplay.disableSoftInputFromAppearing();
 
 		//use fragment manager to make the result list
@@ -170,7 +174,7 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 		mViewPager.setAdapter(new FragmentStatePagerAdapter(fm) {
 			@Override
 			public int getCount(){
-				return calc.getUnitTypeSize();
+				return mCalc.getUnitTypeSize();
 			}
 
 			@Override
@@ -187,10 +191,10 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 			@Override
 			public void onPageSelected(int pos) {
 				//clear out the unit in the last UnitType, and make sure it's not selected
-				calc.getCurrUnitType().clearUnitSelection();
+				mCalc.getCurrUnitType().clearUnitSelection();
 				updateScreen(false);
 				//tell calc what the new UnitType is
-				calc.setUnitTypePos(pos);
+				mCalc.setUnitTypePos(pos);
 			}
 
 			@Override
@@ -338,7 +342,7 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 		super.onResume();
 
 		//only set display to UnitCalc if no expression is there yet
-		if(calc.toString().equals("") && calc.getPrevExpressions().size()==0)
+		if(mCalc.toString().equals("") && mCalc.getPrevExpressions().size()==0)
 			mDisplay.setText(R.string.app_name);
 		else
 			updateScreenWithInstaScrollOption(true, true);		

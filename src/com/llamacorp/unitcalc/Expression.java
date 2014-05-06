@@ -3,6 +3,8 @@ package com.llamacorp.unitcalc;
 import java.math.BigDecimal;
 import java.math.MathContext;
 
+import android.util.Log;
+
 public class Expression {
 	//the main expression string
 	private String mExpression;
@@ -244,8 +246,13 @@ public class Expression {
 	public void setSelection(int selectionStart, int selectionEnd ) {
 		if(selectionEnd>mExpression.length() || selectionStart>mExpression.length())
 			throw new IllegalArgumentException("In Expression.setSelection, selection end or start > expression length");
-		if(selectionEnd < selectionStart) 
-			throw new IllegalArgumentException("In Expression.setSelection, selection end < selection start");
+		//this occurs if the use drags the end selector before the start selector; need the following code so expression doesn't get confused
+		if(selectionEnd < selectionStart) {
+			int temp = selectionEnd;
+			selectionEnd = selectionStart;
+			selectionStart = temp;
+		}
+		
 		mSelectionStart = selectionStart;
 		mSelectionEnd = selectionEnd;		
 	}

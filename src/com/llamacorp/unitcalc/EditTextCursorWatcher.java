@@ -5,12 +5,11 @@ import android.content.Context;
 import android.os.Build;
 import android.text.InputType;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.widget.EditText;
 
 public class EditTextCursorWatcher extends EditText {
 	private Calculator mCalc;
-	
+
 	public EditTextCursorWatcher(Context context, AttributeSet attrs,
 			int defStyle) {
 		super(context, attrs, defStyle);
@@ -29,7 +28,7 @@ public class EditTextCursorWatcher extends EditText {
 	public void setCalc(Calculator calc) {
 		mCalc=calc;		
 	} 
-	
+
 	/**
 	 * Disable soft keyboard from appearing, use in conjunction with android:windowSoftInputMode="stateAlwaysHidden|adjustNothing"
 	 * @param editText
@@ -49,14 +48,14 @@ public class EditTextCursorWatcher extends EditText {
 	@Override   
 	protected void onSelectionChanged(int selStart, int selEnd) { 
 		//Toast.makeText(getContext(), "selStart is " + selStart + "selEnd is " + selEnd, Toast.LENGTH_LONG).show();
-		if(mCalc!=null)
+		if(mCalc!=null){
 			mCalc.setSelection(selStart, selEnd);
-		Log.d("test", "onSelectionChange called. selStart=" + String.valueOf(selStart));
-		//if the selection is at the end of expression, don't show cursor
-		//if(selStart==mCalc.toString().length())
-		//	setCursorVisible(false);
-		//else
-		//	setCursorVisible(true);
+			//if the selection is at the end of expression, don't show cursor
+			if(selStart==mCalc.toString().length())
+				setCursorVisible(false);
+			else
+				setCursorVisible(true);
+		}
 	}
 
 }
