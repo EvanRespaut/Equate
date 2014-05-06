@@ -74,7 +74,7 @@ public class ConvertKeysFragment extends Fragment {
 		fragment.setArguments(args);
 		return fragment;
 	}
-	
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState){
 		View v = inflater.inflate(R.layout.fragment_convert_keys, parent, false);
@@ -85,7 +85,7 @@ public class ConvertKeysFragment extends Fragment {
 			Button button = (Button)v.findViewById(convertButtonIds[i]);
 
 			String displayText = mUnitType.getUnitDisplayName(i);
-			
+
 			//want to superscript text after a "^" character
 			String [] splitArray = displayText.split("\\^");
 			//only upper-case text if it exists
@@ -100,7 +100,7 @@ public class ConvertKeysFragment extends Fragment {
 			else
 				button.setText(displayText);
 
-			
+
 			button.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View view) {
@@ -108,8 +108,8 @@ public class ConvertKeysFragment extends Fragment {
 					for (int i=0; i<convertButtonIds.length; i++){
 						if(convertButtonIds[i] == viewId){
 							//select key
-							selectKey(i);
-							
+							clickUnitButton(i);
+
 							//don't continue looking through the button array
 							break;
 						}
@@ -122,15 +122,19 @@ public class ConvertKeysFragment extends Fragment {
 		return v;
 	}
 
-	
-	public void selectUnit(Unit selectedUnit) {
-		int selectedUnitPos = mUnitType.selectUnit(selectedUnit);
-		if(selectedUnitPos != -1)
-			selectKey(selectedUnitPos);
+
+	/** Used by parent activity to select a unit within this fragment 
+	 * @param unit the Unit selected */
+	public void selectUnit(Unit unit) {
+		int unitPos = mUnitType.getUnitPosition(unit);
+		//unitPos will be -1 if it wasn't found
+		if(unitPos != -1)
+			clickUnitButton(unitPos);
 	}
-	
-	
-	private void selectKey(int buttonPos){
+
+	/** Used to pass selected unit to the UnitType model class
+	 * @param buttonPos the position in the list of buttons to select */
+	private void clickUnitButton(int buttonPos){
 		//Clear color from previously selected convert button
 		clearKeySelection();
 		//Set select unit, also this will potentially call convert if we already have a selected unit
@@ -140,10 +144,11 @@ public class ConvertKeysFragment extends Fragment {
 		if(didConvert)
 			mCallback.updateScreen(true);
 
-		//Add color to newly selected convert button
-		mConvButton.get(buttonPos).setSelected(true);			
+		//If new unit still selected, add color to newly selected convert button
+		if(mUnitType.isUnitSelected())
+			mConvButton.get(buttonPos).setSelected(true);			
 	}
-	
+
 	public void clearKeySelection(){
 		//Clear color from previously selected convert button
 		Button prevSelected = mConvButton.get(mUnitType.getCurrUnitPos());

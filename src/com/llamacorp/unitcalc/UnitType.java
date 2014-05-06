@@ -44,15 +44,13 @@ public class UnitType {
 
 
 	/**
-	 * Allows selection of a unit using a Unit, if that selection is plausible
-	 * @return -1 if selection failed, otherwise the array position of the selected unit
+	 * Get the position of the unit in the unit array
+	 * @return -1 if selection failed, otherwise the position of the unit
 	 */		
-	public int selectUnit(Unit unitSelection){
+	public int getUnitPosition(Unit unit){
 		for(int i=0;i<mUnitArray.size();i++){
-			if(unitSelection.equals(mUnitArray.get(i))){
-				selectUnit(i);
+			if(unit.equals(mUnitArray.get(i)))
 				return i; //found the unit
-			}
 		}
 		return -1;  //if we didn't find the unit
 	}
@@ -67,6 +65,11 @@ public class UnitType {
 		boolean didConvert = false;
 		//If we've already selected a unit, do conversion
 		if(mIsUnitSelected){
+			//if the unit is the same as before, de-select it
+			if(mCurrUnitPos==pos){
+				mIsUnitSelected=false;
+				return didConvert;
+			}
 			convert(pos);
 			didConvert = true;
 		}

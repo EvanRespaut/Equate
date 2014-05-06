@@ -51,9 +51,9 @@ public class EditTextCursorWatcher extends EditText {
 		if(mCalc!=null){
 			mCalc.setSelection(selStart, selEnd);
 			//if the selection is at the end of expression, don't show cursor
-			if(selStart==mCalc.toString().length())
-				setCursorVisible(false);
-			else
+			//if(selStart==mCalc.toString().length())
+			//	setCursorVisible(false);
+			//else
 				setCursorVisible(true);
 		}
 	}

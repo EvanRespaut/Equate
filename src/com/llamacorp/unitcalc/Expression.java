@@ -3,8 +3,6 @@ package com.llamacorp.unitcalc;
 import java.math.BigDecimal;
 import java.math.MathContext;
 
-import android.util.Log;
-
 public class Expression {
 	//the main expression string
 	private String mExpression;
