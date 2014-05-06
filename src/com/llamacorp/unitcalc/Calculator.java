@@ -180,7 +180,7 @@ public class Calculator implements OnConvertionListener{
 		//main calculation: first the P of PEMAS, this function then calls remaining EMAS 
 		String tempExp = collapsePara(exp.toString(), mcSolve);
 		//save solved expression away
-		exp.setExpression(tempExp);
+		exp.replaceExpression(tempExp);
 
 		//flag used to tell backspace and numbers to clear the expression when pressed
 		exp.setSolved(true);
@@ -336,11 +336,11 @@ public class Calculator implements OnConvertionListener{
 			BigDecimal bdCurrUnit = new BigDecimal(fromUnit.getValue(),mMcOperate);			
 			BigDecimal bdResult   = new BigDecimal(mExpression.toString(),mMcOperate);
 			// perform actual unit conversion (result*currUnit/toUnit)
-			mExpression.setExpression(bdResult.multiply(bdCurrUnit.divide(bdToUnit, mMcOperate),mMcOperate).toString());
+			mExpression.replaceExpression(bdResult.multiply(bdCurrUnit.divide(bdToUnit, mMcOperate),mMcOperate).toString());
 		}
 		catch (NumberFormatException e){
 			//System.out.println("e.getMessage()= " + e.getMessage());
-			mExpression.setExpression(strSyntaxError);
+			mExpression.replaceExpression(strSyntaxError);
 			return;
 		}
 
@@ -350,7 +350,7 @@ public class Calculator implements OnConvertionListener{
 			mExpression.roundAndCleanExpression();
 		}
 		catch (NumberFormatException e){
-			mExpression.setExpression(strSyntaxError);
+			mExpression.replaceExpression(strSyntaxError);
 			return;
 		}
 
@@ -369,7 +369,7 @@ public class Calculator implements OnConvertionListener{
 	public void parseKeyPressed(String sKey){
 		//if expression was displaying "Syntax Error" or similar (containing invalid chars) clear it
 		if(mExpression.isInvalid())
-			mExpression.setExpression("");
+			mExpression.replaceExpression("");
 
 		//check for equals key
 		if(sKey.equals("=")){
@@ -383,7 +383,7 @@ public class Calculator implements OnConvertionListener{
 				mExpression.roundAndCleanExpression();
 			}
 			catch (NumberFormatException e){
-				mExpression.setExpression(strSyntaxError);
+				mExpression.replaceExpression(strSyntaxError);
 				return;
 			}			//load the final value into prevExpression
 			mPrevExpressions.get(mPrevExpressions.size()-1).setAnswer(mExpression.toString());
@@ -433,7 +433,7 @@ public class Calculator implements OnConvertionListener{
 
 		//delete last of calcExp list so long as expression isn't already empty
 		if(!mExpression.isEmpty()){
-			mExpression.deleteLastDigit();
+			mExpression.backspaceAtSelection();
 			//if we just cleared the expression out, also clear currUnit
 			if(mExpression.isEmpty())
 				mUnitTypeArray.get(mUnitTypePos).clearUnitSelection();
@@ -463,6 +463,15 @@ public class Calculator implements OnConvertionListener{
 
 	public void setUnitTypePos(int pos){
 		mUnitTypePos = pos;
+	}
+	
+	
+	public int getSelectionEnd(){
+		return mExpression.getSelectionEnd();
+	}	
+	
+	public int getSelectionStart(){
+		return mExpression.getSelectionStart();
 	}
 	
 	/**

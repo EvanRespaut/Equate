@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.Menu;
 import android.view.MotionEvent;
@@ -106,6 +107,7 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 
 
 	private void updateScreenWithInstaScrollOption(boolean updatePrev, boolean instaScroll){
+		/*
 		//save text selection
 		int selEnd = mDisplay.getSelectionEnd();
 		int oldTextLen = mDisplay.getText().length();
@@ -116,6 +118,21 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 		//else selEnd = selEnd + newTextLen - oldTextLen;
 		 selEnd = newTextLen;
 		mDisplay.setSelection(selEnd, selEnd);
+		//THESE TWO FUNCTIONS SHOULD BE TIED TOGETHER BY EXPRESSION AND A LISTENER
+		//or does expression even need to keep track of this????
+		calc.setSelection(selEnd, selEnd);
+		*/
+		
+		//setText will reset selection to 0,0, so save it right now
+		int selStart = calc.getSelectionStart();
+		int selEnd = calc.getSelectionEnd();
+
+		Log.d("t", "before setText");
+		//update the main display
+		mDisplay.setText(calc.toString());
+		Log.d("t", "after setText");
+		//updating the text restarts selection to 0,0, so load in the current selection
+		mDisplay.setSelection(selStart, selEnd);
 		
 		//if we hit equals, update prev expression
 		if(updatePrev){

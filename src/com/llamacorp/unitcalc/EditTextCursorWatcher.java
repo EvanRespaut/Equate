@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Build;
 import android.text.InputType;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.widget.EditText;
 
 public class EditTextCursorWatcher extends EditText {
@@ -50,6 +51,12 @@ public class EditTextCursorWatcher extends EditText {
 		//Toast.makeText(getContext(), "selStart is " + selStart + "selEnd is " + selEnd, Toast.LENGTH_LONG).show();
 		if(mCalc!=null)
 			mCalc.setSelection(selStart, selEnd);
+		Log.d("test", "onSelectionChange called. selStart=" + String.valueOf(selStart));
+		//if the selection is at the end of expression, don't show cursor
+		//if(selStart==mCalc.toString().length())
+		//	setCursorVisible(false);
+		//else
+		//	setCursorVisible(true);
 	}
 
 }

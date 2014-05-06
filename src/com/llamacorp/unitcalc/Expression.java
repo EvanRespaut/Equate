@@ -56,8 +56,8 @@ public class Expression {
 	public void keyPresses(String sKey){
 		//for now, if we're adding a prev expression, just add it without error checking
 		if(sKey.length()>1){
-			if(mSolved) mExpression=sKey;
-			else insertString(sKey);
+			if(mSolved) replaceExpression(sKey);
+			else insertAtSelection(sKey);
 			mSolved=false;
 			return;
 		}
@@ -69,7 +69,7 @@ public class Expression {
 
 		//if we're inserting a character, don't bother with case checking
 		if(getSelectionEnd() < mExpression.length()){
-			insertString(sKey);
+			insertAtSelection(sKey);
 			return;
 		}
 
@@ -83,16 +83,16 @@ public class Expression {
 
 		//when adding (, if the previous character was any number or decimal, or close para, add mult
 		if(sKey.equals("(") && mExpression.matches(".*[\\d).]$"))
-			mExpression = mExpression + "*";
+			sKey = "*" + sKey;
 
 		//when adding # after ), add multiply
 		if(sKey.matches("[0-9]") && mExpression.matches(".*\\)$"))
-			mExpression = mExpression + "*";
+			sKey = "*" + sKey;
 
 		//add auto completion for close parentheses
 		if(sKey.equals(")"))	
 			if(numOpenPara() <= 0) //if more close than open, add an open
-				mExpression = "(" + mExpression;
+				addToExpressionStart("(");
 
 		//if we already have a decimal in the number, don't add another
 		if(sKey.equals(".") && lastNumb().matches(".*[.E].*"))
@@ -121,20 +121,17 @@ public class Expression {
 
 		//if we have "84*-", replace both the * and the - with the operator
 		if(sKey.matches(regexAnyValidOperator) && mExpression.matches(".*" + regexAnyValidOperator + regexAnyValidOperator + "$"))
-			mExpression = mExpression.substring(0, mExpression.length()-2) + sKey;
+			replaceExpression(mExpression.substring(0, mExpression.length()-2) + sKey);
 		//if there's already an operator, replace it with the new operator, except for -, let that stack up
 		else if(sKey.matches(regexInvalidStartChar) && mExpression.matches(".*" + regexAnyValidOperator + "$"))
-			mExpression = mExpression.substring(0, mExpression.length()-1) + sKey;
+			replaceExpression(mExpression.substring(0, mExpression.length()-1) + sKey);
 		//otherwise load the new keypress
 		else
-			insertString(sKey);
+			insertAtSelection(sKey);
 
 		//we added a num/op, reset the solved flag
 		mSolved=false;
 	}
-
-
-
 
 
 	/**
@@ -162,15 +159,13 @@ public class Expression {
 
 		//determine if exponent (number after E) is small enough for non-engineering style print, otherwise do regular style
 		if(lastNumbExponent()<mIntDisplayPrecision)
-			mExpression = bd.toPlainString();
+			replaceExpression(bd.toPlainString());
 		else
-			mExpression = bd.toString();
+			replaceExpression(bd.toString());
 
 		//finally clean the result off
-		mExpression=cleanFormatting(mExpression);
+		replaceExpression(cleanFormatting(mExpression));
 	}
-
-
 
 
 
@@ -179,7 +174,7 @@ public class Expression {
 		//if more open parentheses then close, add corresponding close para's
 		int numCloseParaToAdd = numOpenPara();
 		for(int i=0; i<numCloseParaToAdd; i++){
-			mExpression = mExpression + ")";
+			insertAtSelection(")");
 		}
 	}
 
@@ -198,13 +193,13 @@ public class Expression {
 
 		//find out if expression's first term matches first part of the precise result, if so replace with more precise term
 		if(firstNumb().equals(formallyPrecCleaned)){
-			mExpression=mExpression.replaceFirst(regexGroupedNumber, mPreciseResult.toString());
+			replaceExpression(mExpression.replaceFirst(regexGroupedNumber, mPreciseResult.toString()));
 		}
 	}
 
 	/** Clean off any dangling operators and E's (not parentheses!!) at the END ONLY */
 	public void cleanDanglingOps(){
-		mExpression = mExpression.replaceAll(regexAnyOperatorOrE + "+$", "");
+		replaceExpression(mExpression.replaceAll(regexAnyOperatorOrE + "+$", ""));
 	}
 
 
@@ -242,6 +237,10 @@ public class Expression {
 		return mSelectionEnd;
 	}
 
+	public void setSelectionToEnd() {
+		setSelection(mExpression.length(), mExpression.length());	
+	}
+	
 	public void setSelection(int selectionStart, int selectionEnd ) {
 		if(selectionEnd>mExpression.length() || selectionStart>mExpression.length())
 			throw new IllegalArgumentException("In Expression.setSelection, selection end or start > expression length");
@@ -260,18 +259,34 @@ public class Expression {
 		mSolved = solved;
 	}
 
-	public void setExpression(String tempExp) {
+	/** Replaces entire expression. Selection moves to end of the expression.
+	 * @param tempExp String to replace expression with*/
+	public void replaceExpression(String tempExp) {
 		mExpression=tempExp;
+		setSelection(mExpression.length(), mExpression.length());	
 	}	
 
+	/** Clears entire expression. Note selection will move to 0,0 */
 	public void clearExpression(){
-		mExpression="";
+		replaceExpression("");
 		mSolved = false;		
 	}
 
-	public void deleteLastDigit(){
-		if(!mExpression.isEmpty())
-			mExpression=mExpression.substring(0, mExpression.length()-1);	
+	public void backspaceAtSelection(){
+		int selStart = getSelectionStart();
+		int selEnd = getSelectionEnd();
+
+		//return if nothing to delete or selection at beginning of expression
+		if(isEmpty() || selEnd==0)
+			return;
+		
+		//if something is highlighted, delete highlighted part (replace with "")
+		if(selStart!=selEnd)
+			insertAtSelection("");
+		else {
+			mExpression = mExpression.substring(0, selStart-1) + mExpression.substring(selStart, mExpression.length());
+			setSelection(selStart-1, selStart-1);
+		}
 	}
 
 	@Override
@@ -280,6 +295,39 @@ public class Expression {
 	}
 
 
+	/** Adds String to beginning of expression. Note selection will NOT move relative 
+	 * to the rest of the expression
+	 * @param str String to add to beginning of expression */
+	private void addToExpressionStart(String str) {
+		int selStart = getSelectionStart();
+		int selEnd = getSelectionEnd();
+		int strLen = str.length();
+		mExpression = str + mExpression;
+		setSelection(selStart + strLen, selEnd + strLen);
+	}
+	
+	
+	/**
+	 * Add a String to this expression at the correct selection point
+	 * @param toAdd the String to add
+	 */
+	private void insertAtSelection(String toAdd){
+		//just add the string if expression is empty
+		if(isEmpty())
+			replaceExpression(toAdd);
+		//replace selection with toAdd
+		else {
+			//used to later tell where to place the selection (cursor)
+			int selStart = getSelectionStart();
+			int selEnd = getSelectionEnd();
+			int expLen = mExpression.length();
+
+			mExpression = mExpression.substring(0, selStart) + toAdd + mExpression.substring(selEnd, expLen);
+			//move cursor down by newly added key.  note there is not "selection" just a cursor (since start=end)
+			setSelection(selStart+toAdd.length(), selStart+toAdd.length());
+		}
+	}
+	
 
 	/**
 	 * Clean up a string's formatting 
@@ -299,22 +347,6 @@ public class Expression {
 		sToClean = sToClean.replaceAll("([\\d.]+?)0+E", "$1E");
 
 		return sToClean;
-	}
-
-	/**
-	 * Add a String to this expression at the correct selection point
-	 * @param toAdd the String to add
-	 */
-	private void insertString(String toAdd){
-		if(isEmpty()){
-			mExpression = toAdd;
-			return;
-		}
-		int selStart = getSelectionStart();
-		int selEnd = getSelectionEnd();
-		int expLen = mExpression.length();
-
-		mExpression = mExpression.substring(0, selStart) + toAdd + mExpression.substring(selEnd, expLen);
 	}
 
 	/**
