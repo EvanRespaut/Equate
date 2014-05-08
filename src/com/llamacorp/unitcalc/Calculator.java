@@ -184,7 +184,6 @@ public class Calculator implements OnConvertionListener{
 
 		//flag used to tell backspace and numbers to clear the expression when pressed
 		exp.setSolved(true);
-
 		return prevExp;
 	}
 
@@ -384,7 +383,6 @@ public class Calculator implements OnConvertionListener{
 			}
 			catch (NumberFormatException e){
 				mExpression.replaceExpression(strSyntaxError);
-				return;
 			}			//load the final value into prevExpression
 			mPrevExpressions.get(mPrevExpressions.size()-1).setAnswer(mExpression.toString());
 		}

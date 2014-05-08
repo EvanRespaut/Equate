@@ -21,13 +21,14 @@
 
         <com.llamacorp.unitcalc.EditTextCursorWatcher
             android:id="@+id/textDisplay"
-            android:background="@color/app_background"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="2dp"
             android:layout_marginRight="5dp"
             android:layout_weight="0"
+            android:background="@color/app_background"
             android:gravity="right"
+            android:inputType="textNoSuggestions"
             android:textSize="40sp" />
     </LinearLayout>
 
