@@ -38,10 +38,16 @@ public class UnitType {
 	 * Used to build a UnitType
 	 */
 	public void addUnit(String title, double value){
-		Unit u = new Unit(title, value);
-		mUnitArray.add(u);
+		addUnit(title, value, 0);
 	}
 
+	/**
+	 * Used to build a UnitType
+	 */
+	public void addUnit(String title, double value, double intercept){
+		Unit u = new Unit(title, value, intercept);
+		mUnitArray.add(u);
+	}
 
 	/**
 	 * Get the position of the unit in the unit array

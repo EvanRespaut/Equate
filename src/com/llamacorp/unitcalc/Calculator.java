@@ -85,47 +85,80 @@ public class Calculator implements OnConvertionListener{
 		mUnitTypeArray = new ArrayList<UnitType>();
 
 		UnitType unitsOfLength = new UnitType(this);
-		unitsOfLength.addUnit("in", 0.0254);
-		unitsOfLength.addUnit("ft", 0.3048);
-		unitsOfLength.addUnit("yard", 0.9144);
-		unitsOfLength.addUnit("mile", 1609.344);
-		unitsOfLength.addUnit("km", 1000.0);
+		unitsOfLength.addUnit("in", 1/0.0254);
+		unitsOfLength.addUnit("ft", 1/0.3048);
+		unitsOfLength.addUnit("yard", 1/0.9144);
+		unitsOfLength.addUnit("mile", 1/1609.344);
+		unitsOfLength.addUnit("km", 1/1000.0);
 
-		unitsOfLength.addUnit("nm", 0.000000001);
-		unitsOfLength.addUnit("um", 0.000001);
-		unitsOfLength.addUnit("mm", 0.001);
-		unitsOfLength.addUnit("cm", 0.01);
+		unitsOfLength.addUnit("nm", 1/0.000000001);
+		unitsOfLength.addUnit("µm", 1/0.000001);
+		unitsOfLength.addUnit("mm", 1/0.001);
+		unitsOfLength.addUnit("cm", 1/0.01);
 		unitsOfLength.addUnit("m", 1.0);
 		mUnitTypeArray.add(unitsOfLength);	
 
 		UnitType unitsOfArea = new UnitType(this);
-		unitsOfArea.addUnit("in^2", 0.00064516);//0.0254^2
-		unitsOfArea.addUnit("ft^2", 0.09290304);//0.3048^2
-		unitsOfArea.addUnit("yd^2", 0.83612736);//0.3048^2*9
-		unitsOfArea.addUnit("acre", 4046.8564224);//0.3048^2*9*4840
-		unitsOfArea.addUnit("mi^2", 2589988.110336);//1609.344^2
+		unitsOfArea.addUnit("in^2", 1/0.00064516);//0.0254^2
+		unitsOfArea.addUnit("ft^2", 1/0.09290304);//0.3048^2
+		unitsOfArea.addUnit("yd^2", 1/0.83612736);//0.3048^2*9
+		unitsOfArea.addUnit("acre", 1/4046.8564224);//0.3048^2*9*4840
+		unitsOfArea.addUnit("mi^2", 1/2589988.110336);//1609.344^2
 
-		unitsOfArea.addUnit("mm^2", 0.000001);
-		unitsOfArea.addUnit("cm^2", 0.0001);
+		unitsOfArea.addUnit("mm^2", 1/0.000001);
+		unitsOfArea.addUnit("cm^2", 1/0.0001);
 		unitsOfArea.addUnit("m^2", 1.0);
-		unitsOfArea.addUnit("km^2", 1000000.0);
-		unitsOfArea.addUnit("ha", 10000.0);
+		unitsOfArea.addUnit("km^2", 1/1000000.0);
+		unitsOfArea.addUnit("ha", 1/10000.0);
 		mUnitTypeArray.add(unitsOfArea);
 
 
 		UnitType unitsOfVolume = new UnitType(this);
-		unitsOfVolume.addUnit("tbsp", 0.000014786764765625);//gal/256
-		unitsOfVolume.addUnit("cup",  0.00023658823625);//gal/16
-		unitsOfVolume.addUnit("pint", 0.0004731764725);//gal/8
-		unitsOfVolume.addUnit("qt",   0.000946352945);//gal/4
-		unitsOfVolume.addUnit("gal",  0.00378541178);//found online; source of other conversions
+		unitsOfVolume.addUnit("tbsp", 1/0.000014786764765625);//gal/256
+		unitsOfVolume.addUnit("cup", 1/0.00023658823625);//gal/16
+		unitsOfVolume.addUnit("pint", 1/0.0004731764725);//gal/8
+		unitsOfVolume.addUnit("qt", 1/0.000946352945);//gal/4
+		unitsOfVolume.addUnit("gal", 1/0.00378541178);//found online; source of other conversions
 
-		unitsOfVolume.addUnit("tsp", 4.92892158854166666667e-6);//gal/768
-		unitsOfVolume.addUnit("fl oz", 0.00002957352953125);//gal/128
-		unitsOfVolume.addUnit("ml", 1e-6);
-		unitsOfVolume.addUnit("l", 0.001);
+		unitsOfVolume.addUnit("tsp", 1/4.92892158854166666667e-6);//gal/768
+		unitsOfVolume.addUnit("fl oz", 1/0.00002957352953125);//gal/128
+		unitsOfVolume.addUnit("ml", 1/1e-6);
+		unitsOfVolume.addUnit("l", 1/0.001);
 		unitsOfVolume.addUnit("m^3", 1);
 		mUnitTypeArray.add(unitsOfVolume);
+
+
+		UnitType unitsOfWeight = new UnitType(this);
+		unitsOfWeight.addUnit("oz", 1/0.0283495);
+		unitsOfWeight.addUnit("lb", 1/0.453592);
+		unitsOfWeight.addUnit("short ton", 1/907.184);
+		unitsOfWeight.addUnit("long ton", 1/1016.04608);
+		unitsOfWeight.addUnit("stone", 1/6.350288);
+
+		unitsOfWeight.addUnit("µg", 1/1e-9);
+		unitsOfWeight.addUnit("mg", 1/1e-6);
+		unitsOfWeight.addUnit("g", 1/0.001);
+		unitsOfWeight.addUnit("kg", 1);
+		unitsOfWeight.addUnit("metric ton", 1/1e3);
+		mUnitTypeArray.add(unitsOfWeight);
+
+
+		UnitType unitsOfTemp = new UnitType(this);
+		unitsOfTemp.addUnit("",  0, 0);
+		unitsOfTemp.addUnit("",  0, 0);
+		unitsOfTemp.addUnit("",  0, 0);
+		unitsOfTemp.addUnit("",  0, 0);
+		unitsOfTemp.addUnit("°F",  1.8, -17.77777777777777778);
+
+		unitsOfTemp.addUnit("",  0, 0);
+		unitsOfTemp.addUnit("",  0, 0);
+		unitsOfTemp.addUnit("",  0, 0);
+		unitsOfTemp.addUnit("",  0, 0);
+		unitsOfTemp.addUnit("°C", 1, 32);
+		mUnitTypeArray.add(unitsOfTemp);
+
+
+
 	}
 
 
@@ -333,9 +366,10 @@ public class Calculator implements OnConvertionListener{
 			//convert numbers into big decimals for more operation control over precision			
 			BigDecimal bdToUnit   = new BigDecimal(toUnit.getValue(),mMcOperate);
 			BigDecimal bdCurrUnit = new BigDecimal(fromUnit.getValue(),mMcOperate);			
+			BigDecimal bdCurrUnitIntercept = new BigDecimal(fromUnit.getIntercept(),mMcOperate);			
 			BigDecimal bdResult   = new BigDecimal(mExpression.toString(),mMcOperate);
 			// perform actual unit conversion (result*currUnit/toUnit)
-			mExpression.replaceExpression(bdResult.multiply(bdCurrUnit.divide(bdToUnit, mMcOperate),mMcOperate).toString());
+			mExpression.replaceExpression(bdCurrUnitIntercept.add(bdResult.multiply(bdToUnit.divide(bdCurrUnit, mMcOperate),mMcOperate)).toString());
 		}
 		catch (NumberFormatException e){
 			//System.out.println("e.getMessage()= " + e.getMessage());
@@ -462,16 +496,16 @@ public class Calculator implements OnConvertionListener{
 	public void setUnitTypePos(int pos){
 		mUnitTypePos = pos;
 	}
-	
-	
+
+
 	public int getSelectionEnd(){
 		return mExpression.getSelectionEnd();
 	}	
-	
+
 	public int getSelectionStart(){
 		return mExpression.getSelectionStart();
 	}
-	
+
 	/**
 	 * Set the EditText selection for expression
 	 * @param selStart

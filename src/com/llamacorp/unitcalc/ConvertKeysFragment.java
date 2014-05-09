@@ -82,10 +82,17 @@ public class ConvertKeysFragment extends Fragment {
 		mConvButton = new ArrayList<Button>();
 
 		for(int i = 0; i < mUnitType.size(); i++) {
+			String displayText = mUnitType.getUnitDisplayName(i);
+			
 			Button button = (Button)v.findViewById(convertButtonIds[i]);
 
-			String displayText = mUnitType.getUnitDisplayName(i);
+			//add to our list of conv buttons
+			mConvButton.add(button);			
 
+			//if button is empty, don't create OnClickListener for it
+			if(displayText.equals(""))
+				continue;
+			
 			//want to superscript text after a "^" character
 			String [] splitArray = displayText.split("\\^");
 			//only upper-case text if it exists
@@ -109,15 +116,12 @@ public class ConvertKeysFragment extends Fragment {
 						if(convertButtonIds[i] == viewId){
 							//select key
 							clickUnitButton(i);
-
 							//don't continue looking through the button array
 							break;
 						}
 					}
 				}
 			});
-			//add to our list of conv buttons
-			mConvButton.add(button);			
 		}
 		return v;
 	}

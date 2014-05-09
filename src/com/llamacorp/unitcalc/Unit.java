@@ -6,15 +6,20 @@ public class Unit{
 	//0 for most conversions; 32 and -160/9 for Celsius and Fahrenheit
 	private double mIntercept;
 
-	public Unit(String name, double value){
+	
+	//intercept's only known need is temp convertions
+	public Unit(String name, double value, double intercept){
 		mDispName = name;
 		mValue = value;
-		mIntercept = 0;
-	}
+		mIntercept = intercept;
+	}	
 	
+	public Unit(String name, double value){
+		this(name, value, 0);
+	}
+
 	public Unit(){
-		mDispName = "";
-		mValue = 0;
+		this("", 0, 0);
 	}
 
 	public double getValue() {
