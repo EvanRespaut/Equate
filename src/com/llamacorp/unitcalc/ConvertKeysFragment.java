@@ -123,6 +123,9 @@ public class ConvertKeysFragment extends Fragment {
 				}
 			});
 		}
+		//this is called to refreshed the selected button after app closes and comes back
+		colorSelectedButton();
+
 		return v;
 	}
 
@@ -140,20 +143,29 @@ public class ConvertKeysFragment extends Fragment {
 	 * @param buttonPos the position in the list of buttons to select */
 	private void clickUnitButton(int buttonPos){
 		//Clear color from previously selected convert button
-		clearKeySelection();
+		clearButtonSelection();
 		//Set select unit, also this will potentially call convert if we already have a selected unit
 		boolean didConvert = mUnitType.selectUnit(buttonPos);
 
 		//if conversion performed, update screen
 		if(didConvert)
 			mCallback.updateScreen(true);
-
+		
+		colorSelectedButton();
+	}
+	
+	public void colorSelectedButton(){
+		//is null when app's onResume calls it (convertkey's onCreate called after activity's onResume)
+		if(mUnitType==null){
+			System.out.println("mUnitType is null");
+			return;
+		}
 		//If new unit still selected, add color to newly selected convert button
 		if(mUnitType.isUnitSelected())
-			mConvButton.get(buttonPos).setSelected(true);			
+			mConvButton.get(mUnitType.getCurrUnitPos()).setSelected(true);			
 	}
 
-	public void clearKeySelection(){
+	public void clearButtonSelection(){
 		//Clear color from previously selected convert button
 		Button prevSelected = mConvButton.get(mUnitType.getCurrUnitPos());
 		prevSelected.setSelected(false);	

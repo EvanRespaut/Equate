@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.DisplayMetrics;
 import android.util.SparseArray;
 import android.view.Menu;
 import android.view.MotionEvent;
@@ -100,7 +101,7 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 			FragmentStatePagerAdapter tempAdapter = (FragmentStatePagerAdapter) mViewPager.getAdapter();
 			ConvertKeysFragment currFrag = (ConvertKeysFragment) tempAdapter.instantiateItem(mViewPager, mViewPager.getCurrentItem());
 			//clear the currently selected key
-			currFrag.clearKeySelection();
+			currFrag.clearButtonSelection();
 		}
 	}
 
@@ -153,6 +154,12 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 		mViewPager = (ViewPager)findViewById(R.id.convertKeyPager);
 
 		mViewPager.setAdapter(new FragmentStatePagerAdapter(fm) {
+			//@Override
+			//public  float getPageWidth(int position)
+			//{
+			//	return 0.93f;
+			//}
+
 			@Override
 			public int getCount(){
 				return mCalc.getUnitTypeSize();
@@ -163,8 +170,6 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 				return ConvertKeysFragment.newInstance(pos);
 			}
 		});
-		//add a little break between pages
-		mViewPager.setPageMargin(10);
 
 		//need to tell calc when a new UnitType page is selected
 		mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -176,6 +181,18 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 				updateScreen(false);
 				//tell calc what the new UnitType is
 				mCalc.setUnitTypePos(pos);
+
+
+				DisplayMetrics metrics = getResources().getDisplayMetrics();
+
+				int padLeft=(int) (metrics.density * 8f + 0.5f);
+				int padRight=(int) (metrics.density * 8f + 0.5f);
+				if(mViewPager.getCurrentItem()==0)
+					padLeft=0;
+				//if(mViewPager.getCurrentItem()==mViewPager.getAdapter().getCount()-1)
+				//	padRight=0;
+
+				mViewPager.setPadding(padLeft, 0, padRight, 0);
 			}
 
 			@Override
@@ -184,6 +201,26 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 			@Override
 			public void onPageScrollStateChanged(int state) {}
 		});
+
+
+
+		DisplayMetrics metrics = getResources().getDisplayMetrics();
+
+		int padLeft=(int) (metrics.density * 8f + 0.5f);
+		int padRight=padLeft;
+		if(mViewPager.getCurrentItem()==0)
+			padLeft=0;
+		if(mViewPager.getCurrentItem()==mViewPager.getAdapter().getCount()-1)
+			padRight=0;
+
+		mViewPager.setPadding(padLeft, 0, padRight, 0);
+
+
+		mViewPager.setClipToPadding(false);
+		//add a little break between pages
+		mViewPager.setPageMargin(8);
+
+
 
 
 		calcButton = new ArrayList<Button>();
@@ -249,35 +286,6 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 			calcButton.add(button);
 		}
 
-		/*
-		int convKeyID = 0;
-		for(int i = 0; i < units.size(); i++) {
-			convKeyID = units.keyAt(i);
-
-			Button button = (Button)findViewById(convKeyID);
-			button.setOnClickListener(new View.OnClickListener() {
-
-				@Override
-				public void onClick(View view) {
-					double convertTo = units.get(view.getId());
-					//pass button id straight to calc
-					calc.parseConvertKey(convertTo);
-					//update screen (aka result)
-					updateScreen(true);
-
-					//clear previously selected convert button
-					for(Button b:convButton)
-						b.setSelected(false);	
-
-					//set this convert button to selected
-					if(calc.currUnitIsSet())
-						view.setSelected(true);
-				}
-			});
-			//add to our list of conv buttons
-			convButton.add(button);			
-		}
-		 */
 
 		ImageButton backspaceButton = (ImageButton) findViewById(R.id.backspace_button);
 		backspaceButton.setOnTouchListener(new View.OnTouchListener() {
@@ -321,14 +329,18 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 	@Override
 	public void onResume(){
 		super.onResume();
-
+		
+		//maybe fixes that random crash?
+		if(mCalc==null)
+			return;
+		
 		//only set display to UnitCalc if no expression is there yet
 		if(mCalc.toString().equals("") && mCalc.getPrevExpressions().size()==0){
 			mDisplay.setText(R.string.app_name);
 			mDisplay.setCursorVisible(false);
 		}
 		else
-			updateScreenWithInstaScrollOption(true, true);		
+			updateScreenWithInstaScrollOption(true, true);
 	}
 
 

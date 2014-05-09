@@ -56,6 +56,8 @@
     <color name="button_text_normal">#D4D4D4</color>
     <color name="button_text_pressed">#232323</color>
     
+    <color name="prev_curr_exp_divider">#252525</color>
+    
     
     <color name="result_text">#FFFFFF</color>
    
