@@ -17,6 +17,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ListView;
 
 import com.llamacorp.unitcalc.ConvertKeysFragment.OnConvertKeySelectedListener;
 import com.llamacorp.unitcalc.ResultListFragment.OnResultSelectedListener;
@@ -24,6 +25,7 @@ import com.llamacorp.unitcalc.ResultListFragment.OnResultSelectedListener;
 public class CalcActivity  extends FragmentActivity implements OnResultSelectedListener, OnConvertKeySelectedListener{
 
 	private ViewPager mViewPager; 
+	private ResultListFragment mResultFragment;
 
 	private List<Button> calcButton;
 	//private List<Button> convButton;
@@ -74,7 +76,7 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 	}
 
 	/**
-	 * Selects the coloring for a selected unit key
+	 * Selects the a unit (used by prev result list)
 	 * @see com.llamacorp.unitcalc.ResultListFragment.OnResultSelectedListener#selectUnit(int)
 	 */
 	public void selectUnit(Unit unit){
@@ -126,6 +128,19 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 			ResultListFragment prevResultFragment = (ResultListFragment)fm.findFragmentById(R.id.resultListfragmentContainer);
 			prevResultFragment.refresh(instaScroll);
 		}
+
+
+		//make a little gray divider above expression when prev expression hits it
+		View divider = findViewById(R.id.prev_curr_exp_divider);
+		ListView mResultListView = mResultFragment.getListView();
+		//don't try this unless prev expression has something there
+		if(mResultListView.getChildCount()>0){
+			//test to see if the last child's bottom edge is greater than the the total result list height
+			//note that 0 is top of screen; also note that an extra child height is needed to reach the bottom
+			if(mResultListView.getChildAt(mResultListView.getChildCount() - 1).getBottom() + 
+					mResultListView.getChildAt(mResultListView.getChildCount() - 1).getHeight() >= mResultListView.getHeight())
+				divider.setBackgroundColor(getResources().getColor(R.color.prev_curr_exp_divider));
+		}
 	}
 
 	@Override
@@ -143,11 +158,11 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 
 		//use fragment manager to make the result list
 		FragmentManager fm = getSupportFragmentManager();
-		Fragment resultFragment = fm.findFragmentById(R.id.resultListfragmentContainer);
+		mResultFragment = (ResultListFragment) fm.findFragmentById(R.id.resultListfragmentContainer);
 
-		if(resultFragment == null){
-			resultFragment = new ResultListFragment();
-			fm.beginTransaction().add(R.id.resultListfragmentContainer, resultFragment).commit();			
+		if(mResultFragment == null){
+			mResultFragment = new ResultListFragment();
+			fm.beginTransaction().add(R.id.resultListfragmentContainer, mResultFragment).commit();			
 		}
 
 
@@ -329,11 +344,11 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 	@Override
 	public void onResume(){
 		super.onResume();
-		
+
 		//maybe fixes that random crash?
 		if(mCalc==null)
 			return;
-		
+
 		//only set display to UnitCalc if no expression is there yet
 		if(mCalc.toString().equals("") && mCalc.getPrevExpressions().size()==0){
 			mDisplay.setText(R.string.app_name);

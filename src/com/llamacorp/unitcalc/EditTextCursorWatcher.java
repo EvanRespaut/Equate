@@ -36,7 +36,7 @@ public class EditTextCursorWatcher extends EditText {
 	@SuppressLint("NewApi")
 	public void disableSoftInputFromAppearing() {
 		if (Build.VERSION.SDK_INT >= 11) {
-			setRawInputType(InputType.TYPE_CLASS_TEXT);
+			setRawInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
 			setTextIsSelectable(true);
 		} else {
 			setRawInputType(InputType.TYPE_NULL);
