@@ -82,13 +82,14 @@ public class ConvertKeysFragment extends Fragment {
 		mConvButton = new ArrayList<Button>();
 
 		for(int i = 0; i < mUnitType.size(); i++) {
-			String displayText = mUnitType.getUnitDisplayName(i);
-			
 			Button button = (Button)v.findViewById(convertButtonIds[i]);
 
 			//add to our list of conv buttons
 			mConvButton.add(button);			
 
+			
+			String displayText = mUnitType.getUnitDisplayName(i);
+			
 			//if button is empty, don't create OnClickListener for it
 			if(displayText.equals(""))
 				continue;

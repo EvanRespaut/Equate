@@ -49,12 +49,11 @@ public class EditTextCursorWatcher extends EditText {
 	protected void onSelectionChanged(int selStart, int selEnd) { 
 		//Toast.makeText(getContext(), "selStart is " + selStart + "selEnd is " + selEnd, Toast.LENGTH_LONG).show();
 		if(mCalc!=null){
+			//if expression is empty, no need to set selection (happens if user clicks "UnicCalc")
+			if(mCalc.toString().equals(""))
+				return;
 			mCalc.setSelection(selStart, selEnd);
-			//if the selection is at the end of expression, don't show cursor
-			//if(selStart==mCalc.toString().length())
-			//	setCursorVisible(false);
-			//else
-				setCursorVisible(true);
+			setCursorVisible(true);
 		}
 	}
 

@@ -314,12 +314,34 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 				case MotionEvent.ACTION_DOWN:
 					if (mHandler != null) return true;
 					mHandler = new Handler();
-					mHandler.postDelayed(mBackspaceRepeat, 400);
+					mHandler.postDelayed(mBackspaceRepeat, 500);
 					//pass backspace "b"  to calc, change conv key colors (maybe) and update screen
-					numButtonPressed("b");
+					
+					/*					
+					final View v=view;
+					final Handler handler = new Handler();
+					(new Thread(){
+						int i;
+				        @Override
+				        public void run(){
+				            for(i=0; i<255; i++){
+				                handler.post(new Runnable(){
+				                    public void run(){
+				                    	v.setBackgroundColor(Color.argb(255, i, i, i));
+				                    }
+				                });
+				                // next will pause the thread for some time
+				                try{ sleep(10); }
+				                catch(InterruptedException e){ break; }
+				            }
+				        }
+				    }).start();
+					*/
+					
 					break;
 				case MotionEvent.ACTION_UP:
 					if (mHandler == null) return true;
+					numButtonPressed("b");
 					//user released button before repeat could fire
 					mHandler.removeCallbacks(mBackspaceRepeat);
 					mHandler = null;
@@ -332,9 +354,9 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 			Runnable mBackspaceRepeat = new Runnable() {
 				@Override 
 				public void run() {
-					mHandler.postDelayed(this, 100);
+					//mHandler.postDelayed(this, 100);
 					//pass backspace "b" to calc, change conv key colors (maybe) and update screen
-					numButtonPressed("b");
+					numButtonPressed("c");
 				}
 			};
 		});

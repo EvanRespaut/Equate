@@ -7,10 +7,13 @@ import com.llamacorp.unitcalc.R;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.text.SpannableString;
+import android.text.style.SuperscriptSpan;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+import android.widget.TextView.BufferType;
 
 public class ResultListFragment extends ListFragment {
 	//this is for communication with the parent activity
@@ -98,7 +101,20 @@ public class ResultListFragment extends ListFragment {
 		 */
 		private void setUpResultTextView(TextView textView, String text){
 			textView.setClickable(true);
-			textView.setText(text);
+			
+			//want to superscript text after a "^" character
+			String [] splitArray = text.split("\\^");
+			//only upper-case text if it exists
+			if(splitArray.length>1){
+				//cut out the "^"
+				SpannableString spanText = new SpannableString(splitArray[0] + splitArray[1]);   
+				//superscript the portion after the "^"
+				spanText.setSpan(new SuperscriptSpan(), splitArray[0].length(), spanText.length(), 0);  
+				textView.setText(spanText, BufferType.SPANNABLE);   
+			}
+			//otherwise just set it normally
+			else
+				textView.setText(text);
 
 			textView.setOnClickListener(new View.OnClickListener() {
 				@Override
