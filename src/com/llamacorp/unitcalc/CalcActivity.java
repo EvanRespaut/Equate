@@ -3,6 +3,8 @@ package com.llamacorp.unitcalc;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -306,50 +308,139 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 		backspaceButton.setOnTouchListener(new View.OnTouchListener() {
 
 			//this handler is now associated with current thread's Looper
-			private Handler mHandler;
+			//private Handler mHoldHandler;
+			//private View mView;
+			private HoldBackspace mHoldBackspace;
+
+			private boolean latch;
+			long startTime;
+			long colorEndTime;
 
 			@Override 
 			public boolean onTouch(View view, MotionEvent event) {
 				switch(event.getAction()) {
 				case MotionEvent.ACTION_DOWN:
-					if (mHandler != null) return true;
-					mHandler = new Handler();
-					mHandler.postDelayed(mBackspaceRepeat, 500);
+					//if (mHoldHandler != null) return true;
+					//mHoldHandler = new Handler();
+					//mHoldHandler.postDelayed(mBackspaceRepeat, 500);
 					//pass backspace "b"  to calc, change conv key colors (maybe) and update screen
-					
-					/*					
-					final View v=view;
-					final Handler handler = new Handler();
-					(new Thread(){
-						int i;
-				        @Override
-				        public void run(){
-				            for(i=0; i<255; i++){
-				                handler.post(new Runnable(){
-				                    public void run(){
-				                    	v.setBackgroundColor(Color.argb(255, i, i, i));
-				                    }
-				                });
-				                // next will pause the thread for some time
-				                try{ sleep(10); }
-				                catch(InterruptedException e){ break; }
-				            }
-				        }
-				    }).start();
-					*/
-					
+
+					//colorHandler = new Handler();
+					//mThread.start();
+					latch=false;
+					startTime = System.currentTimeMillis();
+					mHoldBackspace = new HoldBackspace(view, 500);
+					mHoldBackspace.execute();
+
 					break;
 				case MotionEvent.ACTION_UP:
-					if (mHandler == null) return true;
+					//if (mHoldHandler == null) return true;
 					numButtonPressed("b");
+					latch=true;
+					view.setBackgroundColor(getResources().getColor(R.color.op_button_normal));
+					//mThread.interrupt();
 					//user released button before repeat could fire
-					mHandler.removeCallbacks(mBackspaceRepeat);
-					mHandler = null;
+					//mHoldHandler.removeCallbacks(mBackspaceRepeat);
+					//mHoldHandler = null;
 					break;
 				}
 				return false;
 			}
 
+
+
+			class HoldBackspace extends AsyncTask<String, Void, String> {
+				private View mView;
+				private int mHoldTimeout;
+				//amount of change in color for each step
+				private int mStartColor;
+				private int mEndColor;
+				//used to indicate how many times the colors will change
+				private static final int NUM_COLOR_CHANGES=50;
+
+				public HoldBackspace(View view, int holdTimeout){
+					this.mView=view;
+					this.mHoldTimeout=holdTimeout;
+				}
+
+				private int mInc;
+				@Override
+				protected String doInBackground(String... params) {
+					for (mInc = 0; mInc < NUM_COLOR_CHANGES; mInc++) {
+						try {
+							Thread.sleep(mHoldTimeout/NUM_COLOR_CHANGES);
+						} catch (InterruptedException e) {
+							Thread.interrupted();
+						}							
+						if(isCancelled()) return "Canceled"; 
+/*
+						final int deltaRed= Color.red(mStartColor) + ((Color.red(mEndColor)-Color.red(mStartColor))*mInc)/NUM_COLOR_CHANGES;
+						final int deltaGreen= Color.green(mStartColor) + ((Color.green(mEndColor)-Color.green(mStartColor))*mInc)/NUM_COLOR_CHANGES;
+						final int deltaBlue= Color.blue(mStartColor) + ((Color.blue(mEndColor)-Color.blue(mStartColor))*mInc)/NUM_COLOR_CHANGES;
+
+						runOnUiThread(new Runnable() {
+							@Override
+							public void run() {
+								if(latch==false){
+
+									//System.out.println("deltaRed = "+deltaRed);
+									//System.out.println("deltaGreen = "+deltaGreen);
+									//System.out.println("deltaBlue = "+deltaBlue);
+									//System.out.println("mInc = "+mInc);
+									//System.out.println("----------");
+
+									mView.setBackgroundColor(Color.argb(255, deltaRed, deltaGreen, deltaBlue));
+									if(mInc==NUM_COLOR_CHANGES-1) colorEndTime=System.currentTimeMillis();
+								}
+							}
+						});
+						*/
+					}
+					return "Executed";
+				}
+
+				@Override
+				protected void onPostExecute(String result) {
+					numButtonPressed("c");
+					long endtime = System.currentTimeMillis();
+					System.out.println("total time="+ String.valueOf( endtime-startTime));
+					//System.out.println("colorEndTime="+String.valueOf(colorEndTime-startTime));
+					//System.out.println("---------");
+					colorEndTime=0;
+				}
+
+				@Override
+				protected void onPreExecute() {
+					//mStartColor = getResources().getColor(R.color.op_button_pressed);
+					//mEndColor = getResources().getColor(R.color.backspace_button_held);
+
+					//mView=findViewById(R.id.backspace_button);
+				}
+
+				@Override
+				protected void onProgressUpdate(Void... values) {}
+			}
+
+			/*
+			Thread mThread = (new Thread(){
+				int i;
+		        @Override
+		        public void run(){
+		        	if(interrupted()) return;
+		            for(i=0; i<255; i++){
+		                colorHandler.post(new Runnable(){
+		                    public void run(){
+		                    	mView.setBackgroundColor(Color.argb(255, i, i, i));
+		                    }
+		                });
+		                // next will pause the thread for some time
+		                try{ sleep(10); }
+		                catch(InterruptedException e){ break; }
+		            }
+		        }
+		    });
+			 */
+			/*
 			//set up the runnable for when backspace is held down
 			Runnable mBackspaceRepeat = new Runnable() {
 				@Override 
@@ -358,8 +449,11 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 					//pass backspace "b" to calc, change conv key colors (maybe) and update screen
 					numButtonPressed("c");
 				}
-			};
+			};*/
 		});
+
+
+
 	}
 
 
