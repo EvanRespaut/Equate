@@ -51,7 +51,7 @@
     <color name="op_button_normal">#232323</color>
     <color name="op_button_pressed">#C4A179</color>
     
-    <color name="backspace_button_held">#C90000</color>
+    <color name="backspace_button_held">#FF0000</color>
     
     <color name="conv_button_pressed">#333056</color>
     
