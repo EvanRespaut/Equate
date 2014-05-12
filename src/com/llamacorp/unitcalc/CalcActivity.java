@@ -170,12 +170,6 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 		mViewPager = (ViewPager)findViewById(R.id.convertKeyPager);
 
 		mViewPager.setAdapter(new FragmentStatePagerAdapter(fm) {
-			//@Override
-			//public  float getPageWidth(int position)
-			//{
-			//	return 0.93f;
-			//}
-
 			@Override
 			public int getCount(){
 				return mCalc.getUnitTypeSize();
@@ -203,10 +197,10 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 
 				int padLeft=(int) (metrics.density * 8f + 0.5f);
 				int padRight=(int) (metrics.density * 8f + 0.5f);
-				if(mViewPager.getCurrentItem()==0)
-					padLeft=0;
-				//if(mViewPager.getCurrentItem()==mViewPager.getAdapter().getCount()-1)
-				//	padRight=0;
+//				if(mViewPager.getCurrentItem()==0)
+//					padLeft=0;
+//				if(mViewPager.getCurrentItem()==mViewPager.getAdapter().getCount()-1)
+//					padRight=0;
 
 				mViewPager.setPadding(padLeft, 0, padRight, 0);
 			}
@@ -224,10 +218,10 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 
 		int padLeft=(int) (metrics.density * 8f + 0.5f);
 		int padRight=padLeft;
-		if(mViewPager.getCurrentItem()==0)
-			padLeft=0;
-		if(mViewPager.getCurrentItem()==mViewPager.getAdapter().getCount()-1)
-			padRight=0;
+//		if(mViewPager.getCurrentItem()==0)
+//			padLeft=0;
+//		if(mViewPager.getCurrentItem()==mViewPager.getAdapter().getCount()-1)
+//			padRight=0;
 
 		mViewPager.setPadding(padLeft, 0, padRight, 0);
 
@@ -436,7 +430,7 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 				private int mEndColor = getResources().getColor(R.color.backspace_button_held);
 
 				private static final int NUM_COLOR_CHANGES=10;
-				private static final int BACKSPACE_HOLD_TIME=5000;			
+				private static final int BACKSPACE_HOLD_TIME=500;			
 
 				@Override 
 				public void run() {

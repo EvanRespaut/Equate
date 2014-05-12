@@ -40,8 +40,8 @@
     <string name="convert_nm_button">nm</string>
     <string name="convert_ly_button">light years</string>
 
-    <color name="equal_button_normal">#965000</color>
-    <color name="equal_button_pressed">#E59647</color>
+    <color name="equal_button_normal">#176B17</color>
+    <color name="equal_button_pressed">#61AD61</color>
     <color name="equal_button_text_normal">#D4D4D4</color>
     <color name="equal_button_text_pressed">#232323</color>
     
@@ -51,9 +51,10 @@
     <color name="op_button_normal">#232323</color>
     <color name="op_button_pressed">#C4A179</color>
     
-    <color name="backspace_button_held">#FF0000</color>
+    <color name="backspace_button_held">#E10000</color>
     
-    <color name="conv_button_pressed">#333056</color>
+    <color name="conv_button_normal">#001D20</color>
+    <color name="conv_button_pressed">#007782</color>
     
     <color name="button_text_normal">#D4D4D4</color>
     <color name="button_text_pressed">#232323</color>
