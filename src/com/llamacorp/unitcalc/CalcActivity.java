@@ -156,6 +156,15 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 		mDisplay = (EditTextCursorWatcher)findViewById(R.id.textDisplay);
 		mDisplay.setCalc(mCalc);
 		mDisplay.disableSoftInputFromAppearing();
+		//if end of expression clicked, cursor will apear for paste commands etc
+		mDisplay.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				mCalc.setSolved(false);
+				mDisplay.setCursorVisible(true);
+			}
+
+		});
 
 		//use fragment manager to make the result list
 		FragmentManager fm = getSupportFragmentManager();
@@ -183,7 +192,7 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 				return ConvertKeysFragment.newInstance(pos % mCalc.getUnitTypeSize());
 				//TODO try debugging this 
 			}
-		
+
 		});
 
 		//need to tell calc when a new UnitType page is selected
@@ -202,10 +211,10 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 
 				int padLeft=(int) (metrics.density * 8f + 0.5f);
 				int padRight=(int) (metrics.density * 8f + 0.5f);
-//				if(mViewPager.getCurrentItem()==0)
-//					padLeft=0;
-//				if(mViewPager.getCurrentItem()==mViewPager.getAdapter().getCount()-1)
-//					padRight=0;
+				//				if(mViewPager.getCurrentItem()==0)
+				//					padLeft=0;
+				//				if(mViewPager.getCurrentItem()==mViewPager.getAdapter().getCount()-1)
+				//					padRight=0;
 
 				mViewPager.setPadding(padLeft, 0, padRight, 0);
 			}
@@ -223,10 +232,10 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 
 		int padLeft=(int) (metrics.density * 8f + 0.5f);
 		int padRight=padLeft;
-//		if(mViewPager.getCurrentItem()==0)
-//			padLeft=0;
-//		if(mViewPager.getCurrentItem()==mViewPager.getAdapter().getCount()-1)
-//			padRight=0;
+		//		if(mViewPager.getCurrentItem()==0)
+		//			padLeft=0;
+		//		if(mViewPager.getCurrentItem()==mViewPager.getAdapter().getCount()-1)
+		//			padRight=0;
 
 		mViewPager.setPadding(padLeft, 0, padRight, 0);
 
@@ -454,10 +463,10 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 					mColorHoldHandler.postDelayed(this, BACKSPACE_HOLD_TIME/NUM_COLOR_CHANGES);
 
 					float deltaRed= (float)Color.red(mStartColor) + ((float)Color.red(mEndColor)-(float)Color.red(mStartColor))*((float)mInc*(float)mInc*(float)mInc)/((float)NUM_COLOR_CHANGES*(float)NUM_COLOR_CHANGES*(float)NUM_COLOR_CHANGES);
-//					int deltaGreen= Color.green(mStartColor) + ((Color.green(mEndColor)-Color.green(mStartColor))*mInc^3)/NUM_COLOR_CHANGES^3;
-//					int deltaBlue= Color.blue(mStartColor) + ((Color.blue(mEndColor)-Color.blue(mStartColor))*mInc^3)/NUM_COLOR_CHANGES^3;
+					//					int deltaGreen= Color.green(mStartColor) + ((Color.green(mEndColor)-Color.green(mStartColor))*mInc^3)/NUM_COLOR_CHANGES^3;
+					//					int deltaBlue= Color.blue(mStartColor) + ((Color.blue(mEndColor)-Color.blue(mStartColor))*mInc^3)/NUM_COLOR_CHANGES^3;
 
-//					int deltaRed= Color.red(mStartColor) + ((Color.red(mEndColor)-Color.red(mStartColor))*mInc)/NUM_COLOR_CHANGES;
+					//					int deltaRed= Color.red(mStartColor) + ((Color.red(mEndColor)-Color.red(mStartColor))*mInc)/NUM_COLOR_CHANGES;
 					int deltaGreen= Color.green(mStartColor) + ((Color.green(mEndColor)-Color.green(mStartColor))*mInc)/NUM_COLOR_CHANGES;
 					int deltaBlue= Color.blue(mStartColor) + ((Color.blue(mEndColor)-Color.blue(mStartColor))*mInc)/NUM_COLOR_CHANGES;
 

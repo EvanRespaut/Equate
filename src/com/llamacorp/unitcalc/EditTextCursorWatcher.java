@@ -44,7 +44,7 @@ public class EditTextCursorWatcher extends EditText {
 		}
 	}
 
-
+	
 	@Override   
 	protected void onSelectionChanged(int selStart, int selEnd) { 
 		//Toast.makeText(getContext(), "selStart is " + selStart + "selEnd is " + selEnd, Toast.LENGTH_LONG).show();

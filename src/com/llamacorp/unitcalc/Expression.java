@@ -66,12 +66,6 @@ public class Expression {
 		if(sKey.matches(regexInvalidChars))
 			throw new IllegalArgumentException("In addToExpression, invalid sKey..."); 
 
-		//if we're inserting a character, don't bother with case checking
-		//if(getSelectionEnd() < mExpression.length()){
-		//	insertAtSelection(sKey);
-		//	return;
-		//}
-
 		//don't start with [*/^E] when the expression string is empty or if we opened a para
 		if(sKey.matches(regexInvalidStartChar) && (lastNumb().equals("") || expresssionToSelection().matches(".*\\($")))
 			return;
@@ -85,7 +79,7 @@ public class Expression {
 			sKey = "*" + sKey;
 
 		//when adding # after ), add multiply
-		if(sKey.matches("[0-9]") && expresssionToSelection().matches(".*\\)$"))
+		if(sKey.matches("[.0-9]") && expresssionToSelection().matches(".*\\)$"))
 			sKey = "*" + sKey;
 
 		//add auto completion for close parentheses
@@ -118,11 +112,15 @@ public class Expression {
 
 		//if we have "84*-", replace both the * and the - with the operator
 		if(sKey.matches(regexAnyValidOperator) && expresssionToSelection().matches(".*" + regexAnyValidOperator + regexAnyValidOperator + "$")){
+			//if we have something higlighted, delete it first
+			if(getSelectionEnd()>getSelectionStart()) backspaceAtSelection();
 			backspaceAtSelection();
 			backspaceAtSelection();
 		}
 		//if there's already an operator, replace it with the new operator, except for -, let that stack up
 		else if(sKey.matches(regexInvalidStartChar) && expresssionToSelection().matches(".*" + regexAnyValidOperator + "$")){
+			//if we have something higlighted, delete it first
+			if(getSelectionEnd()>getSelectionStart()) backspaceAtSelection();
 			backspaceAtSelection();
 		}
 		//otherwise load the new keypress
