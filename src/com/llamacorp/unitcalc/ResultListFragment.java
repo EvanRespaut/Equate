@@ -112,6 +112,7 @@ public class ResultListFragment extends ListFragment {
 				spanText.setSpan(new SuperscriptSpan(), splitArray[0].length(), spanText.length(), 0);  
 				textView.setText(spanText, BufferType.SPANNABLE);   
 			}
+			
 			//otherwise just set it normally
 			else
 				textView.setText(text);

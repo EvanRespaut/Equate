@@ -172,13 +172,18 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 		mViewPager.setAdapter(new FragmentStatePagerAdapter(fm) {
 			@Override
 			public int getCount(){
-				return mCalc.getUnitTypeSize();
+				return 10000;
+				//return mCalc.getUnitTypeSize();
 			}
 
 			@Override
 			public Fragment getItem(int pos){
-				return ConvertKeysFragment.newInstance(pos);
+				System.out.println("pos="+pos);
+				System.out.println("pos % mCalc.getUnitTypeSize()"+pos % mCalc.getUnitTypeSize());
+				return ConvertKeysFragment.newInstance(pos % mCalc.getUnitTypeSize());
+				//TODO try debugging this 
 			}
+		
 		});
 
 		//need to tell calc when a new UnitType page is selected

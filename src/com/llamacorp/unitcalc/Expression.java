@@ -62,19 +62,18 @@ public class Expression {
 			return;
 		}
 
-
 		//check for invalid entries
 		if(sKey.matches(regexInvalidChars))
 			throw new IllegalArgumentException("In addToExpression, invalid sKey..."); 
 
 		//if we're inserting a character, don't bother with case checking
-		if(getSelectionEnd() < mExpression.length()){
-			insertAtSelection(sKey);
-			return;
-		}
+		//if(getSelectionEnd() < mExpression.length()){
+		//	insertAtSelection(sKey);
+		//	return;
+		//}
 
 		//don't start with [*/^E] when the expression string is empty or if we opened a para
-		if(sKey.matches(regexInvalidStartChar) && (lastNumb().equals("") || mExpression.matches(".*\\($")))
+		if(sKey.matches(regexInvalidStartChar) && (lastNumb().equals("") || expresssionToSelection().matches(".*\\($")))
 			return;
 
 		//if just hit equals, and we hit [.0-9(], then clear expression
@@ -82,11 +81,11 @@ public class Expression {
 			clearExpression();
 
 		//when adding (, if the previous character was any number or decimal, or close para, add mult
-		if(sKey.equals("(") && mExpression.matches(".*[\\d).]$"))
+		if(sKey.equals("(") && expresssionToSelection().matches(".*[\\d).]$"))
 			sKey = "*" + sKey;
 
 		//when adding # after ), add multiply
-		if(sKey.matches("[0-9]") && mExpression.matches(".*\\)$"))
+		if(sKey.matches("[0-9]") && expresssionToSelection().matches(".*\\)$"))
 			sKey = "*" + sKey;
 
 		//add auto completion for close parentheses
@@ -97,13 +96,11 @@ public class Expression {
 		//if we already have a decimal in the number, don't add another
 		if(sKey.equals(".") && lastNumb().matches(".*[.E].*"))
 			//lastNumb returns the last num; if expression="4.3+", returns "4.3"; if last key was an operator, allow decimals
-			//if(expression.matches(".*[^-+/*]$"))
-			if(!mExpression.matches(".*" + regexAnyValidOperator + "$"))
+			if(!expresssionToSelection().matches(".*" + regexAnyValidOperator + "$"))
 				return;
 
 		//if we already have a E in the number, don't add another; also don't add E immediately after an operator
-		//if(sKey.equals("E") && (lastNumb().contains("E")))
-		if(sKey.equals("E") && (lastNumb().contains("E") || mExpression.matches(".*" + regexAnyValidOperator + "$")))
+		if(sKey.equals("E") && (lastNumb().contains("E") || expresssionToSelection().matches(".*" + regexAnyValidOperator + "$")))
 			return;		
 
 		//if we E was last pressed, only allow [1-9+-(]
@@ -116,18 +113,20 @@ public class Expression {
 			return;	
 
 		//don't allow "--" or "65E--"
-		if(sKey.matches("[-]") && mExpression.matches(".*E?[-]"))
+		if(sKey.matches("[-]") && expresssionToSelection().matches(".*E?[-]"))
 			return;	
 
 		//if we have "84*-", replace both the * and the - with the operator
-		if(sKey.matches(regexAnyValidOperator) && mExpression.matches(".*" + regexAnyValidOperator + regexAnyValidOperator + "$"))
-			replaceExpression(mExpression.substring(0, mExpression.length()-2) + sKey);
+		if(sKey.matches(regexAnyValidOperator) && expresssionToSelection().matches(".*" + regexAnyValidOperator + regexAnyValidOperator + "$")){
+			backspaceAtSelection();
+			backspaceAtSelection();
+		}
 		//if there's already an operator, replace it with the new operator, except for -, let that stack up
-		else if(sKey.matches(regexInvalidStartChar) && mExpression.matches(".*" + regexAnyValidOperator + "$"))
-			replaceExpression(mExpression.substring(0, mExpression.length()-1) + sKey);
+		else if(sKey.matches(regexInvalidStartChar) && expresssionToSelection().matches(".*" + regexAnyValidOperator + "$")){
+			backspaceAtSelection();
+		}
 		//otherwise load the new keypress
-		else
-			insertAtSelection(sKey);
+		insertAtSelection(sKey);
 
 		//we added a num/op, reset the solved flag
 		mSolved=false;
@@ -168,7 +167,6 @@ public class Expression {
 	}
 
 
-
 	/** Close any open parentheses in this expression */
 	public void closeOpenPar(){
 		//if more open parentheses then close, add corresponding close para's
@@ -178,6 +176,7 @@ public class Expression {
 		}
 	}
 
+	
 	/**
 	 * Load in more precise result if possible
 	 * @param mMcDisp is the amount to round
@@ -197,12 +196,11 @@ public class Expression {
 		}
 	}
 
+	
 	/** Clean off any dangling operators and E's (not parentheses!!) at the END ONLY */
 	public void cleanDanglingOps(){
 		replaceExpression(mExpression.replaceAll(regexAnyOperatorOrE + "+$", ""));
 	}
-
-
 
 
 	/** Returns if this expression is empty */
@@ -212,7 +210,6 @@ public class Expression {
 		else 
 			return false;
 	}
-
 
 
 	/** Returns if this expression is has invalid characters */
@@ -229,17 +226,21 @@ public class Expression {
 		return mPreciseResult;
 	}
 
+	
 	public int getSelectionStart() {
 		return mSelectionStart;
 	}
 
+	
 	public int getSelectionEnd() {
 		return mSelectionEnd;
 	}
 
+	
 	public void setSelectionToEnd() {
 		setSelection(mExpression.length(), mExpression.length());	
 	}
+	
 	
 	public void setSelection(int selectionStart, int selectionEnd ) {
 		if(selectionEnd>mExpression.length() || selectionStart>mExpression.length())
@@ -260,10 +261,12 @@ public class Expression {
 		return mSolved;
 	}
 
+	
 	public void setSolved(boolean solved) {
 		mSolved = solved;
 	}
 
+	
 	/** Replaces entire expression. Selection moves to end of the expression.
 	 * @param tempExp String to replace expression with*/
 	public void replaceExpression(String tempExp) {
@@ -271,12 +274,14 @@ public class Expression {
 		setSelection(mExpression.length(), mExpression.length());	
 	}	
 
+	
 	/** Clears entire expression. Note selection will move to 0,0 */
 	public void clearExpression(){
 		replaceExpression("");
 		mSolved = false;		
 	}
 
+	
 	public void backspaceAtSelection(){
 		int selStart = getSelectionStart();
 		int selEnd = getSelectionEnd();
@@ -361,10 +366,10 @@ public class Expression {
 	private int numOpenPara() {
 		int numOpen = 0;
 		int numClose = 0;
-		for(int i=0; i<mExpression.length(); i++){
-			if (mExpression.charAt(i) == '(')
+		for(int i=0; i<expresssionToSelection().length(); i++){
+			if (expresssionToSelection().charAt(i) == '(')
 				numOpen++;
-			if (mExpression.charAt(i) == ')')
+			if (expresssionToSelection().charAt(i) == ')')
 				numClose++;
 		}
 
@@ -386,22 +391,26 @@ public class Expression {
 
 
 	/**
-	 * Gets the first number (returned as a String) in the current expression
+	 * Gets the first number (returned as a String) at selection in current expression
 	 * @return anything before the first valid operator, or "" if expression empty, or entire expression if doesn't contain regexAnyValidOperator
 	 */
 	private String firstNumb(){
-		String [] strA = mExpression.split(regexAnyValidOperator);
+		String [] strA = expresssionToSelection().split(regexAnyValidOperator);
 		return strA[0];
 	}
 
 	/**
-	 * Gets the last double (returned as a String) in the current expression
+	 * Gets the last double (returned as a String) at selection in current expression
 	 * @return anything after last valid operator, or "" if expression empty, or entire expression if doesn't contain regexAnyValidOperator
 	 */
 	private String lastNumb(){
-		String [] strA = mExpression.split(regexAnyValidOperator);
+		String [] strA = expresssionToSelection().split(regexAnyValidOperator);
 		if(strA.length==0) return "";
 		else return strA[strA.length-1];
+	}
+	
+	private String expresssionToSelection(){
+		return mExpression.substring(0,getSelectionStart());
 	}
 
 
