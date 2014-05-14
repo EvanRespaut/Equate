@@ -24,13 +24,18 @@ public class Expression {
 	public static final String regexGroupedAddSub = "([+-])";
 
 	//note that in []'s only ^, -, and ] need escapes. - doen't need one if invalid
-	public static final String regexInvalidChars = ".*[^0-9()E.+*^/-].*";
+	public static final String regexInvalidChars = "[^0-9()E.+*^/-]";	
+	public static final String regexHasInvalidChars = ".*" + regexInvalidChars + ".*";
 	public static final String regexOperators = "+/*^-";
 	public static final String regexInvalidStartChar = "[E*^/+]";
 	public static final String regexAnyValidOperator = "[" + regexOperators + "]";
 	public static final String regexAnyOperatorOrE = "[E" + regexOperators + "]";
 	public static final String regexGroupedNumber = "(\\-?\\d*\\.?\\d+\\.?(?:E[\\-\\+]?\\d+)?)";
-
+	
+	private String[][] substituteChars = new String[][]{{"[\u00f7·]", "/"}, //alt-246
+														{"[x\u00d7]", "*"},//alt-0215,249,250 
+														{"[-]", "-"}}; //alt-0151,0150
+														//TODO add in all these characters
 
 	public Expression(int dispPrecision){
 		clearExpression();
@@ -48,6 +53,7 @@ public class Expression {
 		this(0);
 	}
 
+	
 	/**
 	 * This function will try to add a number or operator, or entire prevExpression to the current expression
 	 * Note that there is lots of error checking to be sure user can't entire an invalid operator/number
@@ -63,7 +69,7 @@ public class Expression {
 		}
 
 		//check for invalid entries
-		if(sKey.matches(regexInvalidChars))
+		if(sKey.matches(regexHasInvalidChars))
 			throw new IllegalArgumentException("In addToExpression, invalid sKey..."); 
 
 		//don't start with [*/^E] when the expression string is empty or if we opened a para
@@ -130,14 +136,31 @@ public class Expression {
 		mSolved=false;
 	}
 
-
+	
+	/**
+	* This function takes text pasted by user, formats it and loads it into the expression
+	* @param str text to clean and load into expression
+	*/
+	public void pasteIntoExpression(String str){
+		//first replace all substitutable characters
+		for(int i=0;i<substituteChars.length;i++)
+			str = str.replaceAll(substituteChars[i][0],substituteChars[i][1]);
+		//next remove all invalid chars
+		str = str.replaceAll(regexInvalidChars,"");
+		//then just blindly insert text without case checking
+		insertAtSelection(str);
+		//likely not necessary, since the click on EditText should've overwritten solved
+		mSolved=false;
+	}
+	
+	
 	/**
 	 * Rounds expression down by a MathContext mcDisp
 	 * @throws NumberFormatException if Expression not formatted correctly
 	 */	
 	public void roundAndCleanExpression() {
 		//if expression was displaying error (with invalid chars) leave
-		if(mExpression.matches(regexInvalidChars) || mExpression.equals(""))
+		if(isInvalid() || mExpression.equals(""))
 			return;
 
 		//if there's any messed formatting, or if number is too big, throw syntax error
@@ -212,7 +235,7 @@ public class Expression {
 
 	/** Returns if this expression is has invalid characters */
 	public boolean isInvalid(){
-		if(mExpression.matches(regexInvalidChars)) 
+		if(mExpression.matches(regexHasInvalidChars)) 
 			return true;
 		else 
 			return false;

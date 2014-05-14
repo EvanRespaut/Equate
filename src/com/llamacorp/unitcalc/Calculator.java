@@ -497,6 +497,10 @@ public class Calculator implements OnConvertionListener{
 		mUnitTypePos = pos;
 	}
 	
+	public void pasteIntoExpression(String str){
+		mExpression.pasteIntoExpression(str);
+	}
+	
 	public void setSolved(boolean solved){
 		mExpression.setSolved(solved);
 	}

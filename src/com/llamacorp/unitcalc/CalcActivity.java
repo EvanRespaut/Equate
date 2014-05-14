@@ -11,6 +11,8 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.util.SparseArray;
 import android.view.Menu;
@@ -110,18 +112,8 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 
 
 	private void updateScreenWithInstaScrollOption(boolean updatePrev, boolean instaScroll){
-		//setText will reset selection to 0,0, so save it right now
-		int selStart = mCalc.getSelectionStart();
-		int selEnd = mCalc.getSelectionEnd();
-
-		//update the main display
-		mDisplay.setText(mCalc.toString());
-		//updating the text restarts selection to 0,0, so load in the current selection
-		mDisplay.setSelection(selStart, selEnd);
-		if(selStart == mCalc.toString().length())
-			mDisplay.setCursorVisible(false);
-		else 
-			mDisplay.setCursorVisible(true);
+		//Update EditText view
+		mDisplay.updateTextFromCalc();
 
 		//if we hit equals, update prev expression
 		if(updatePrev){
@@ -163,8 +155,17 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 				mCalc.setSolved(false);
 				mDisplay.setCursorVisible(true);
 			}
-
 		});
+
+		mDisplay.addTextChangedListener(new TextWatcher(){
+			@Override
+			public void afterTextChanged(Editable s){
+				
+			}
+			@Override public void beforeTextChanged(CharSequence s, int start, int count, int after){}
+			@Override public void onTextChanged(CharSequence s, int start, int before, int count){}
+		});
+
 
 		//use fragment manager to make the result list
 		FragmentManager fm = getSupportFragmentManager();
