@@ -34,7 +34,7 @@ public class Expression {
 	
 	private String[][] substituteChars = new String[][]{{"[\u00f7·]", "/"}, //alt-246
 														{"[x\u00d7]", "*"},//alt-0215,249,250 
-														{"[-]", "-"}}; //alt-0151,0150
+														{"[\u0096\u0097]", "-"}}; //alt-0151,0150
 														//TODO add in all these characters
 
 	public Expression(int dispPrecision){

@@ -15,6 +15,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.util.SparseArray;
+import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
@@ -149,23 +150,36 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 		mDisplay.setCalc(mCalc);
 		mDisplay.disableSoftInputFromAppearing();
 		//if end of expression clicked, cursor will apear for paste commands etc
+		/*
 		mDisplay.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				mCalc.setSolved(false);
-				mDisplay.setCursorVisible(true);
 			}
 		});
-
-		mDisplay.addTextChangedListener(new TextWatcher(){
+		*/
+		
+		//hold click will select all text
+		mDisplay.setOnLongClickListener(new View.OnLongClickListener() {
 			@Override
-			public void afterTextChanged(Editable s){
-				
+			public boolean onLongClick(View v) {
+				mDisplay.selectAll();
+				//return false so Android consumes the rest of the event
+				return false;
 			}
-			@Override public void beforeTextChanged(CharSequence s, int start, int count, int after){}
-			@Override public void onTextChanged(CharSequence s, int start, int before, int count){}
 		});
-
+		
+		//clicking display will set solve=false, and will make the cursor visible
+		mDisplay.setOnTouchListener(new View.OnTouchListener() {
+			@Override 
+			public boolean onTouch(View view, MotionEvent event) {
+				if(event.getAction()==MotionEvent.ACTION_DOWN){
+					//once the user clicks on part of the expression, don't want # to delete it
+					mCalc.setSolved(false);
+					mDisplay.setCursorVisible(true);
+				}
+				return false;
+			}
+		});
 
 		//use fragment manager to make the result list
 		FragmentManager fm = getSupportFragmentManager();
