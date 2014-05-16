@@ -15,7 +15,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView.BufferType;
 
-public class ConvertKeysFragment extends Fragment {
+public class ConvKeysFragment extends Fragment {
 	//this is for communication with the parent activity
 	OnConvertKeySelectedListener mCallback;
 
@@ -66,11 +66,11 @@ public class ConvertKeysFragment extends Fragment {
 		mUnitType = Calculator.getCalculator(getActivity()).getUnitType(pos);
 	}
 
-	public static ConvertKeysFragment newInstance(int unitTypePos){
+	public static ConvKeysFragment newInstance(int unitTypePos){
 		Bundle args = new Bundle();
 		args.putInt(EXTRA_UNIT_TYPE_POS, unitTypePos);
 
-		ConvertKeysFragment fragment = new ConvertKeysFragment();
+		ConvKeysFragment fragment = new ConvKeysFragment();
 		fragment.setArguments(args);
 		return fragment;
 	}
@@ -167,6 +167,8 @@ public class ConvertKeysFragment extends Fragment {
 	}
 
 	public void clearButtonSelection(){
+		//function may be called before convert key array built, in which case, leave
+		if(mConvButton == null) return;
 		//Clear color from previously selected convert button
 		Button prevSelected = mConvButton.get(mUnitType.getCurrUnitPos());
 		prevSelected.setSelected(false);	

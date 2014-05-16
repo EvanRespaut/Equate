@@ -132,7 +132,7 @@ public class EditTextCursorWatcher extends EditText {
 	
 	
 	/**
-	 * Updates the text with current value from calc
+	 * Updates the text with current value from calc.
 	 * Preserves calc's cursor selections
 	 */
 	public void updateTextFromCalc(){

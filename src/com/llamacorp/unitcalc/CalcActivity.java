@@ -11,11 +11,8 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.util.SparseArray;
-import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
@@ -23,12 +20,12 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
 
-import com.llamacorp.unitcalc.ConvertKeysFragment.OnConvertKeySelectedListener;
+import com.llamacorp.unitcalc.ConvKeysFragment.OnConvertKeySelectedListener;
 import com.llamacorp.unitcalc.ResultListFragment.OnResultSelectedListener;
 
 public class CalcActivity  extends FragmentActivity implements OnResultSelectedListener, OnConvertKeySelectedListener{
 
-	private ViewPager mViewPager; 
+	private ViewPager mConvKeysViewPager; 
 	private ResultListFragment mResultFragment;
 
 	private List<Button> calcButton;
@@ -79,14 +76,20 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 		updateScreen(keyPressed.equals("="));
 	}
 
+	
 	/**
 	 * Selects the a unit (used by prev result list)
 	 * @see com.llamacorp.unitcalc.ResultListFragment.OnResultSelectedListener#selectUnit(int)
 	 */
 	public void selectUnit(Unit unit){
 		//NOT SURE IF THIS IS A PROPER WAY TO DO THIS
-		FragmentStatePagerAdapter tempAdapter = (FragmentStatePagerAdapter) mViewPager.getAdapter();
-		ConvertKeysFragment currFrag = (ConvertKeysFragment) tempAdapter.instantiateItem(mViewPager, mViewPager.getCurrentItem());
+		FragmentStatePagerAdapter tempAdapter = (FragmentStatePagerAdapter) mConvKeysViewPager.getAdapter();
+		ConvKeysFragment currFrag = (ConvKeysFragment) tempAdapter.instantiateItem(mConvKeysViewPager, mConvKeysViewPager.getCurrentItem());
+
+		//first scroll to the proper Unit type page
+		//TODO find which Unit Type we're pulling from result list
+		//int pos =
+		//mConvKeysViewPager.setCurrentItem(1);
 		currFrag.selectUnit(unit);
 	}
 
@@ -104,8 +107,8 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 		//see if colored convert button should be not colored (if backspace or clear were pressed, or if expression solved)
 		if(!mCalc.isUnitIsSet()){
 			//NOT SURE IF THIS IS A PROPER WAY TO DO THIS
-			FragmentStatePagerAdapter tempAdapter = (FragmentStatePagerAdapter) mViewPager.getAdapter();
-			ConvertKeysFragment currFrag = (ConvertKeysFragment) tempAdapter.instantiateItem(mViewPager, mViewPager.getCurrentItem());
+			FragmentStatePagerAdapter tempAdapter = (FragmentStatePagerAdapter) mConvKeysViewPager.getAdapter();
+			ConvKeysFragment currFrag = (ConvKeysFragment) tempAdapter.instantiateItem(mConvKeysViewPager, mConvKeysViewPager.getCurrentItem());
 			//clear the currently selected key
 			currFrag.clearButtonSelection();
 		}
@@ -121,19 +124,18 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 			FragmentManager fm = getSupportFragmentManager();
 			ResultListFragment prevResultFragment = (ResultListFragment)fm.findFragmentById(R.id.resultListfragmentContainer);
 			prevResultFragment.refresh(instaScroll);
-		}
 
-
-		//make a little gray divider above expression when prev expression hits it
-		View divider = findViewById(R.id.prev_curr_exp_divider);
-		ListView mResultListView = mResultFragment.getListView();
-		//don't try this unless prev expression has something there
-		if(mResultListView.getChildCount()>0){
-			//test to see if the last child's bottom edge is greater than the the total result list height
-			//note that 0 is top of screen; also note that an extra child height is needed to reach the bottom
-			if(mResultListView.getChildAt(mResultListView.getChildCount() - 1).getBottom() + 
-					mResultListView.getChildAt(mResultListView.getChildCount() - 1).getHeight() >= mResultListView.getHeight())
-				divider.setBackgroundColor(getResources().getColor(R.color.prev_curr_exp_divider));
+			//make a little gray divider above expression when prev expression hits it
+			View divider = findViewById(R.id.prev_curr_exp_divider);
+			ListView mResultListView = mResultFragment.getListView();
+			//don't try this unless prev expression has something there
+			if(mResultListView.getChildCount()>0){
+				//test to see if the last child's bottom edge is greater than the the total result list height
+				//note that 0 is top of screen; also note that an extra child height is needed to reach the bottom
+				if(mResultListView.getChildAt(mResultListView.getChildCount() - 1).getBottom() + 
+						mResultListView.getChildAt(mResultListView.getChildCount() - 1).getHeight() >= mResultListView.getHeight())
+					divider.setBackgroundColor(getResources().getColor(R.color.prev_curr_exp_divider));
+			}
 		}
 	}
 
@@ -156,8 +158,8 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 			public void onClick(View v) {
 			}
 		});
-		*/
-		
+		 */
+
 		//hold click will select all text
 		mDisplay.setOnLongClickListener(new View.OnLongClickListener() {
 			@Override
@@ -167,7 +169,7 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 				return false;
 			}
 		});
-		
+
 		//clicking display will set solve=false, and will make the cursor visible
 		mDisplay.setOnTouchListener(new View.OnTouchListener() {
 			@Override 
@@ -191,27 +193,28 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 		}
 
 
-		mViewPager = (ViewPager)findViewById(R.id.convertKeyPager);
+		mConvKeysViewPager = (ViewPager)findViewById(R.id.convertKeyPager);
 
-		mViewPager.setAdapter(new FragmentStatePagerAdapter(fm) {
+		mConvKeysViewPager.setAdapter(new FragmentStatePagerAdapter(fm) {
 			@Override
 			public int getCount(){
-				return 10000;
-				//return mCalc.getUnitTypeSize();
+				//return 10000;
+				return mCalc.getUnitTypeSize();
 			}
 
 			@Override
 			public Fragment getItem(int pos){
-				System.out.println("pos="+pos);
-				System.out.println("pos % mCalc.getUnitTypeSize()"+pos % mCalc.getUnitTypeSize());
-				return ConvertKeysFragment.newInstance(pos % mCalc.getUnitTypeSize());
-				//TODO try debugging this 
+				//				System.out.println("pos="+pos);
+				//				System.out.println("pos % mCalc.getUnitTypeSize()"+pos % mCalc.getUnitTypeSize());
+				//				return ConvKeysFragment.newInstance(pos % mCalc.getUnitTypeSize());
+				//				//TODO try debugging this 
+				return ConvKeysFragment.newInstance(pos);
 			}
 
 		});
 
 		//need to tell calc when a new UnitType page is selected
-		mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+		mConvKeysViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 			//as the page is being scrolled to
 			@Override
 			public void onPageSelected(int pos) {
@@ -231,7 +234,7 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 				//				if(mViewPager.getCurrentItem()==mViewPager.getAdapter().getCount()-1)
 				//					padRight=0;
 
-				mViewPager.setPadding(padLeft, 0, padRight, 0);
+				mConvKeysViewPager.setPadding(padLeft, 0, padRight, 0);
 			}
 
 			@Override
@@ -252,12 +255,15 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 		//		if(mViewPager.getCurrentItem()==mViewPager.getAdapter().getCount()-1)
 		//			padRight=0;
 
-		mViewPager.setPadding(padLeft, 0, padRight, 0);
+		mConvKeysViewPager.setPadding(padLeft, 0, padRight, 0);
 
-
-		mViewPager.setClipToPadding(false);
+		//this shows the edges of the next page work
+		mConvKeysViewPager.setClipToPadding(false);
 		//add a little break between pages
-		mViewPager.setPageMargin(8);
+		mConvKeysViewPager.setPageMargin(8);
+		//set the default page to length
+		mConvKeysViewPager.setCurrentItem(2);
+
 
 
 
@@ -493,8 +499,6 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 				}
 			};			
 		});
-
-
 	}
 
 

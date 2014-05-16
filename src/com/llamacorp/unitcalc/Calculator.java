@@ -84,6 +84,36 @@ public class Calculator implements OnConvertionListener{
 	private void initiateUnits(){
 		mUnitTypeArray = new ArrayList<UnitType>();
 
+		UnitType unitsOfTemp = new UnitType(this);
+		unitsOfTemp.addUnit("",  0, 0);
+		unitsOfTemp.addUnit("",  0, 0);
+		unitsOfTemp.addUnit("",  0, 0);
+		unitsOfTemp.addUnit("",  0, 0);
+		unitsOfTemp.addUnit("°F",  1.8, -17.77777777777777778);
+
+		unitsOfTemp.addUnit("",  0, 0);
+		unitsOfTemp.addUnit("",  0, 0);
+		unitsOfTemp.addUnit("",  0, 0);
+		unitsOfTemp.addUnit("",  0, 0);
+		unitsOfTemp.addUnit("°C", 1, 32);
+		mUnitTypeArray.add(unitsOfTemp);
+
+		
+		UnitType unitsOfWeight = new UnitType(this);
+		unitsOfWeight.addUnit("oz", 1/0.0283495);
+		unitsOfWeight.addUnit("lb", 1/0.453592);
+		unitsOfWeight.addUnit("short ton", 1/907.184);
+		unitsOfWeight.addUnit("long ton", 1/1016.04608);
+		unitsOfWeight.addUnit("stone", 1/6.350288);
+
+		unitsOfWeight.addUnit("µg", 1/1e-9);
+		unitsOfWeight.addUnit("mg", 1/1e-6);
+		unitsOfWeight.addUnit("g", 1/0.001);
+		unitsOfWeight.addUnit("kg", 1);
+		unitsOfWeight.addUnit("metric ton", 1/1e3);
+		mUnitTypeArray.add(unitsOfWeight);
+
+		
 		UnitType unitsOfLength = new UnitType(this);
 		unitsOfLength.addUnit("in", 1/0.0254);
 		unitsOfLength.addUnit("ft", 1/0.3048);
@@ -98,6 +128,7 @@ public class Calculator implements OnConvertionListener{
 		unitsOfLength.addUnit("m", 1.0);
 		mUnitTypeArray.add(unitsOfLength);	
 
+		
 		UnitType unitsOfArea = new UnitType(this);
 		unitsOfArea.addUnit("in^2", 1/0.00064516);//0.0254^2
 		unitsOfArea.addUnit("ft^2", 1/0.09290304);//0.3048^2
@@ -126,39 +157,6 @@ public class Calculator implements OnConvertionListener{
 		unitsOfVolume.addUnit("l", 1/0.001);
 		unitsOfVolume.addUnit("m^3", 1);
 		mUnitTypeArray.add(unitsOfVolume);
-
-
-		UnitType unitsOfWeight = new UnitType(this);
-		unitsOfWeight.addUnit("oz", 1/0.0283495);
-		unitsOfWeight.addUnit("lb", 1/0.453592);
-		unitsOfWeight.addUnit("short ton", 1/907.184);
-		unitsOfWeight.addUnit("long ton", 1/1016.04608);
-		unitsOfWeight.addUnit("stone", 1/6.350288);
-
-		unitsOfWeight.addUnit("µg", 1/1e-9);
-		unitsOfWeight.addUnit("mg", 1/1e-6);
-		unitsOfWeight.addUnit("g", 1/0.001);
-		unitsOfWeight.addUnit("kg", 1);
-		unitsOfWeight.addUnit("metric ton", 1/1e3);
-		mUnitTypeArray.add(unitsOfWeight);
-
-
-		UnitType unitsOfTemp = new UnitType(this);
-		unitsOfTemp.addUnit("",  0, 0);
-		unitsOfTemp.addUnit("",  0, 0);
-		unitsOfTemp.addUnit("",  0, 0);
-		unitsOfTemp.addUnit("",  0, 0);
-		unitsOfTemp.addUnit("°F",  1.8, -17.77777777777777778);
-
-		unitsOfTemp.addUnit("",  0, 0);
-		unitsOfTemp.addUnit("",  0, 0);
-		unitsOfTemp.addUnit("",  0, 0);
-		unitsOfTemp.addUnit("",  0, 0);
-		unitsOfTemp.addUnit("°C", 1, 32);
-		mUnitTypeArray.add(unitsOfTemp);
-
-
-
 	}
 
 
