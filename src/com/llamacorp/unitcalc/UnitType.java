@@ -50,10 +50,10 @@ public class UnitType {
 	}
 
 	/**
-	 * Get the position of the unit in the unit array
+	 * Find the position of the unit in the unit array
 	 * @return -1 if selection failed, otherwise the position of the unit
 	 */		
-	public int getUnitPosition(Unit unit){
+	public int findUnitPosition(Unit unit){
 		for(int i=0;i<mUnitArray.size();i++){
 			if(unit.equals(mUnitArray.get(i)))
 				return i; //found the unit

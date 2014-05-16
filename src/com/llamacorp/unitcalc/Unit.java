@@ -7,7 +7,7 @@ public class Unit{
 	private double mIntercept;
 
 	
-	//intercept's only known need is temp convertions
+	//intercept's only known need is temp conversions
 	public Unit(String name, double value, double intercept){
 		mDispName = name;
 		mValue = value;

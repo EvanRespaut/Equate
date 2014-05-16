@@ -3,15 +3,16 @@ package com.llamacorp.unitcalc;
 public class PrevExpression {
 	private String mQuerry;
 	private String mAnswer;
-	private Unit mQuerryUnit;
+	private Unit mQueryUnit;
 	private Unit mAnswerUnit;
+	private int mUnitTypePos;
 	boolean mContainsUnits;
 
 
 	public PrevExpression(String querry){
 		mQuerry=querry;
 		mAnswer="";
-		mQuerryUnit = new Unit();
+		mQueryUnit = new Unit();
 		mAnswerUnit = new Unit();
 		mContainsUnits=false;
 	}
@@ -37,21 +38,26 @@ public class PrevExpression {
 	}
 
 	public Unit getQuerryUnit() {
-		return mQuerryUnit;
+		return mQueryUnit;
 	}
 
-	public void setQuerryUnit(Unit querryUnit) {
-		mQuerryUnit = querryUnit;
+	/** Set the query and answer units, and the overarching UnitType array position
+	 * @param queryUnit is the Unit to set for this query
+	 * @param answerUnit is the Unit to set for this answer
+	 * @param unitTypePos is the position in the UnitType array */
+	public void setResultUnit(Unit queryUnit, Unit answerUnit, int unitTypePos) {
+		mQueryUnit = queryUnit;
+		mAnswerUnit = answerUnit;
+		mUnitTypePos = unitTypePos;
 		mContainsUnits=true;
+	}
+
+	public int getUnitTypePos() {
+		return mUnitTypePos;
 	}
 
 	public Unit getAnswerUnit() {
 		return mAnswerUnit;
-	}
-
-	public void setAnswerUnit(Unit answerUnit) {
-		mAnswerUnit = answerUnit;
-		mContainsUnits=true;
 	}
 
 	public boolean containsUnits() {
@@ -61,7 +67,7 @@ public class PrevExpression {
 
 	public String getTextQuerry() {
 		if(mContainsUnits)
-			return mQuerry + " " + mQuerryUnit;
+			return mQuerry + " " + mQueryUnit;
 		else
 			return mQuerry;	
 	}

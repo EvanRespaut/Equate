@@ -76,24 +76,25 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 		updateScreen(keyPressed.equals("="));
 	}
 
+	private Unit unitToSelectAfterScroll;
 	
 	/**
 	 * Selects the a unit (used by prev result list)
 	 * @see com.llamacorp.unitcalc.ResultListFragment.OnResultSelectedListener#selectUnit(int)
 	 */
-	public void selectUnit(Unit unit){
+	public void selectUnit(Unit unit, int unitTypePos){
 		//NOT SURE IF THIS IS A PROPER WAY TO DO THIS
 		FragmentStatePagerAdapter tempAdapter = (FragmentStatePagerAdapter) mConvKeysViewPager.getAdapter();
 		ConvKeysFragment currFrag = (ConvKeysFragment) tempAdapter.instantiateItem(mConvKeysViewPager, mConvKeysViewPager.getCurrentItem());
 
-		//first scroll to the proper Unit type page
-		//TODO find which Unit Type we're pulling from result list
-		//int pos =
-		//mConvKeysViewPager.setCurrentItem(1);
-		currFrag.selectUnit(unit);
+		//if not on right page, scroll there first
+		if(unitTypePos!=mConvKeysViewPager.getCurrentItem()){
+			unitToSelectAfterScroll=unit;
+			mConvKeysViewPager.setCurrentItem(unitTypePos);
+		}
+		else
+			currFrag.selectUnit(unit);
 	}
-
-	static final String strExpressionEnd = " =";
 
 
 	/**
@@ -235,6 +236,14 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 				//					padRight=0;
 
 				mConvKeysViewPager.setPadding(padLeft, 0, padRight, 0);
+				
+				if(unitToSelectAfterScroll!=null){
+					FragmentStatePagerAdapter tempAdapter = (FragmentStatePagerAdapter) mConvKeysViewPager.getAdapter();
+					ConvKeysFragment currFrag = (ConvKeysFragment) tempAdapter.instantiateItem(mConvKeysViewPager, mConvKeysViewPager.getCurrentItem());
+
+					currFrag.selectUnit(unitToSelectAfterScroll);
+					unitToSelectAfterScroll=null;
+				}
 			}
 
 			@Override

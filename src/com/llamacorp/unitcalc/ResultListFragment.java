@@ -23,7 +23,7 @@ public class ResultListFragment extends ListFragment {
 	// Container Activity must implement this interface
 	public interface OnResultSelectedListener {
 		public void updateScreen(boolean updatePrev);
-		public void selectUnit(Unit unit);
+		public void selectUnit(Unit unit, int unitTypePos);
 	}
 
 	@Override
@@ -147,7 +147,7 @@ public class ResultListFragment extends ListFragment {
 						//if the selection was a success (and we weren't in the wrong unitType), then set the color
 						//int selectedUnitPos = calc.getCurrUnitType().selectUnit(unitPassBack);
 						//if(selectedUnitPos != -1)
-						mCallback.selectUnit(unitPassBack);
+						mCallback.selectUnit(unitPassBack, thisPrevExp.getUnitTypePos());
 					}
 					
 					

@@ -134,7 +134,7 @@ public class ConvKeysFragment extends Fragment {
 	/** Used by parent activity to select a unit within this fragment 
 	 * @param unit the Unit selected */
 	public void selectUnit(Unit unit) {
-		int unitPos = mUnitType.getUnitPosition(unit);
+		int unitPos = mUnitType.findUnitPosition(unit);
 		//unitPos will be -1 if it wasn't found
 		if(unitPos != -1)
 			clickUnitButton(unitPos);

@@ -175,8 +175,7 @@ public class Calculator implements OnConvertionListener{
 			if(isUnitIsSet()){
 				//load units into prevExpression (this will also set contains unit flag
 				Unit toUnit = getCurrUnitType().getSelectedUnit();
-				mPrevExpressions.get(mPrevExpressions.size()-1).setQuerryUnit(toUnit);
-				mPrevExpressions.get(mPrevExpressions.size()-1).setAnswerUnit(toUnit);
+				mPrevExpressions.get(mPrevExpressions.size()-1).setResultUnit(toUnit, toUnit, mUnitTypePos);
 			}
 			return true;
 		}
@@ -386,8 +385,7 @@ public class Calculator implements OnConvertionListener{
 		}
 
 		//load units into prevExpression (this will also set contains unit flag) (overrides that from solve)
-		mPrevExpressions.get(mPrevExpressions.size()-1).setQuerryUnit(fromUnit);
-		mPrevExpressions.get(mPrevExpressions.size()-1).setAnswerUnit(toUnit);
+		mPrevExpressions.get(mPrevExpressions.size()-1).setResultUnit(fromUnit, toUnit, mUnitTypePos);
 		//load the final value into prevExpression
 		mPrevExpressions.get(mPrevExpressions.size()-1).setAnswer(mExpression.toString());
 	}
