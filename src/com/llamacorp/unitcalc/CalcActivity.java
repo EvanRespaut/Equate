@@ -77,23 +77,19 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 	}
 
 	private Unit unitToSelectAfterScroll;
-	
+
 	/**
 	 * Selects the a unit (used by prev result list)
 	 * @see com.llamacorp.unitcalc.ResultListFragment.OnResultSelectedListener#selectUnit(int)
 	 */
 	public void selectUnit(Unit unit, int unitTypePos){
-		//NOT SURE IF THIS IS A PROPER WAY TO DO THIS
-		FragmentStatePagerAdapter tempAdapter = (FragmentStatePagerAdapter) mConvKeysViewPager.getAdapter();
-		ConvKeysFragment currFrag = (ConvKeysFragment) tempAdapter.instantiateItem(mConvKeysViewPager, mConvKeysViewPager.getCurrentItem());
-
 		//if not on right page, scroll there first
 		if(unitTypePos!=mConvKeysViewPager.getCurrentItem()){
 			unitToSelectAfterScroll=unit;
 			mConvKeysViewPager.setCurrentItem(unitTypePos);
 		}
 		else
-			currFrag.selectUnit(unit);
+			getConvKeyFrag(mConvKeysViewPager.getCurrentItem()).selectUnit(unit);
 	}
 
 
@@ -106,13 +102,8 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 		updateScreenWithInstaScrollOption(updatePrev, false);
 
 		//see if colored convert button should be not colored (if backspace or clear were pressed, or if expression solved)
-		if(!mCalc.isUnitIsSet()){
-			//NOT SURE IF THIS IS A PROPER WAY TO DO THIS
-			FragmentStatePagerAdapter tempAdapter = (FragmentStatePagerAdapter) mConvKeysViewPager.getAdapter();
-			ConvKeysFragment currFrag = (ConvKeysFragment) tempAdapter.instantiateItem(mConvKeysViewPager, mConvKeysViewPager.getCurrentItem());
-			//clear the currently selected key
-			currFrag.clearButtonSelection();
-		}
+		if(!mCalc.isUnitIsSet())
+			clearConvKeyForFragPos(mConvKeysViewPager.getCurrentItem());
 	}
 
 
@@ -211,7 +202,6 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 				//				//TODO try debugging this 
 				return ConvKeysFragment.newInstance(pos);
 			}
-
 		});
 
 		//need to tell calc when a new UnitType page is selected
@@ -219,29 +209,28 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 			//as the page is being scrolled to
 			@Override
 			public void onPageSelected(int pos) {
-				//clear out the unit in the last UnitType, and make sure it's not selected
-				mCalc.getCurrUnitType().clearUnitSelection();
-				updateScreen(false);
-				//tell calc what the new UnitType is
+				//update the calc with current UnitType selection
 				mCalc.setUnitTypePos(pos);
 
-
+				//set the margins so that you can see a bit of the left and right pages
 				DisplayMetrics metrics = getResources().getDisplayMetrics();
-
 				int padLeft=(int) (metrics.density * 8f + 0.5f);
 				int padRight=(int) (metrics.density * 8f + 0.5f);
 				//				if(mViewPager.getCurrentItem()==0)
 				//					padLeft=0;
 				//				if(mViewPager.getCurrentItem()==mViewPager.getAdapter().getCount()-1)
 				//					padRight=0;
-
 				mConvKeysViewPager.setPadding(padLeft, 0, padRight, 0);
-				
-				if(unitToSelectAfterScroll!=null){
-					FragmentStatePagerAdapter tempAdapter = (FragmentStatePagerAdapter) mConvKeysViewPager.getAdapter();
-					ConvKeysFragment currFrag = (ConvKeysFragment) tempAdapter.instantiateItem(mConvKeysViewPager, mConvKeysViewPager.getCurrentItem());
 
-					currFrag.selectUnit(unitToSelectAfterScroll);
+
+				//clear selected unit from adjacent convert key fragment so you can't see a bit of them
+				int currConvKeyPos = mConvKeysViewPager.getCurrentItem();
+				clearConvKeyForFragPos(currConvKeyPos-1);
+				clearConvKeyForFragPos(currConvKeyPos+1);
+
+				//if user clicks unit-ed result, scroll to that UnitType fragment
+				if(unitToSelectAfterScroll!=null){
+					getConvKeyFrag(mConvKeysViewPager.getCurrentItem()).selectUnit(unitToSelectAfterScroll);
 					unitToSelectAfterScroll=null;
 				}
 			}
@@ -252,7 +241,6 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 			@Override
 			public void onPageScrollStateChanged(int state) {}
 		});
-
 
 
 		DisplayMetrics metrics = getResources().getDisplayMetrics();
@@ -270,10 +258,8 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 		mConvKeysViewPager.setClipToPadding(false);
 		//add a little break between pages
 		mConvKeysViewPager.setPageMargin(8);
-		//set the default page to length
+		//set the default page to length UnitType
 		mConvKeysViewPager.setCurrentItem(2);
-
-
 
 
 
@@ -528,7 +514,35 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 			updateScreenWithInstaScrollOption(true, true);
 	}
 
-
+	
+	/**
+	 * Clear the unit selection for convert key fragment at position pos
+	 * @param pos the position of the desired convert key fragment to clear selected units from 
+	 */
+	private void clearConvKeyForFragPos(int pos){
+		ConvKeysFragment currFragLeft = getConvKeyFrag(pos);
+		if(currFragLeft!=null)
+			currFragLeft.clearButtonSelection();
+	}
+	
+	
+	/**
+	 * Helper function to return the convert key fragment at position pos
+	 * @param pos the position of the desired convert key fragment
+	 * @return will return the fragment or null if it doesn't exist at that position
+	 */
+	private ConvKeysFragment getConvKeyFrag(int pos){
+		FragmentStatePagerAdapter tempAdapter = (FragmentStatePagerAdapter) mConvKeysViewPager.getAdapter();
+		//make sure we aren't trying to access an invalid page fragment
+		if(pos<tempAdapter.getCount() && pos>=0){
+			ConvKeysFragment currFrag = (ConvKeysFragment) tempAdapter.instantiateItem(mConvKeysViewPager, pos);
+			return currFrag;
+		}
+		else return null;
+	}
+	
+	
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
