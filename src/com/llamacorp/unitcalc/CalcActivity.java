@@ -12,7 +12,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.DisplayMetrics;
-import android.util.SparseArray;
 import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
@@ -24,15 +23,11 @@ import com.llamacorp.unitcalc.ConvKeysFragment.OnConvertKeySelectedListener;
 import com.llamacorp.unitcalc.ResultListFragment.OnResultSelectedListener;
 
 public class CalcActivity  extends FragmentActivity implements OnResultSelectedListener, OnConvertKeySelectedListener{
-
 	private ViewPager mConvKeysViewPager; 
 	private ResultListFragment mResultFragment;
 
 	private List<Button> calcButton;
-	//private List<Button> convButton;
 	private EditTextCursorWatcher mDisplay;
-	//private TextView mPrevDisplay;
-	//private HorizontalScrollView mHorizontalScroll;
 
 	private static final int[] BUTTON_IDS = {
 		R.id.zero_button,
@@ -64,22 +59,23 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 	//main calculator object
 	public Calculator mCalc;// = new Calculator();
 
-	//maps id's of buttons to convert values
-	SparseArray<Double> units = new SparseArray<Double>();
-
-	//called when any non convert key is pressed
+	/**
+	 * Called when any non convert key is pressed
+	 * @param keyPressed ASCII representation of the key pressed ("1", "=" "*", etc)
+	 */
 	public void numButtonPressed(String keyPressed){
 		//pass button value to CalcAcitvity to pass to calc
 		mCalc.parseKeyPressed(keyPressed);
 
-		//update the prev expression and do it with the normal scroll (not fast)
+		//update the result list and do it with the normal scroll (not fast)
 		updateScreen(keyPressed.equals("="));
 	}
 
+	//Crude fix: used to tell the ConvKeyViewPager what unit to select after scrolling to correct UnitType
 	private Unit unitToSelectAfterScroll;
 
 	/**
-	 * Selects the a unit (used by prev result list)
+	 * Selects the a unit (used by result list)
 	 * @see com.llamacorp.unitcalc.ResultListFragment.OnResultSelectedListener#selectUnit(int)
 	 */
 	public void selectUnit(Unit unit, int unitTypePos){
@@ -94,12 +90,12 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 
 
 	/**
-	 * Updates the current and previous answers
-	 * @param updatePrev whether or not to update previous answer
+	 * Updates the current expression and result list
+	 * @param updateResult whether or not to update result
 	 */
-	public void updateScreen(boolean updatePrev){
+	public void updateScreen(boolean updateResult){
 		//no insta scroll for previous expression
-		updateScreenWithInstaScrollOption(updatePrev, false);
+		updateScreenWithInstaScrollOption(updateResult, false);
 
 		//see if colored convert button should be not colored (if backspace or clear were pressed, or if expression solved)
 		if(!mCalc.isUnitIsSet())
@@ -107,20 +103,25 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 	}
 
 
-	private void updateScreenWithInstaScrollOption(boolean updatePrev, boolean instaScroll){
+	/**
+	 * Function 
+	 * @param updateResult
+	 * @param instaScroll
+	 */
+	private void updateScreenWithInstaScrollOption(boolean updateResult, boolean instaScroll){
 		//Update EditText view
 		mDisplay.updateTextFromCalc();
 
-		//if we hit equals, update prev expression
-		if(updatePrev){
+		//if we hit equals, update result list
+		if(updateResult){
 			FragmentManager fm = getSupportFragmentManager();
-			ResultListFragment prevResultFragment = (ResultListFragment)fm.findFragmentById(R.id.resultListfragmentContainer);
-			prevResultFragment.refresh(instaScroll);
+			ResultListFragment resultListFragment = (ResultListFragment)fm.findFragmentById(R.id.resultListfragmentContainer);
+			resultListFragment.refresh(instaScroll);
 
 			//make a little gray divider above expression when prev expression hits it
 			View divider = findViewById(R.id.prev_curr_exp_divider);
 			ListView mResultListView = mResultFragment.getListView();
-			//don't try this unless prev expression has something there
+			//don't try this unless result list has something there
 			if(mResultListView.getChildCount()>0){
 				//test to see if the last child's bottom edge is greater than the the total result list height
 				//note that 0 is top of screen; also note that an extra child height is needed to reach the bottom
@@ -143,14 +144,6 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 		mDisplay = (EditTextCursorWatcher)findViewById(R.id.textDisplay);
 		mDisplay.setCalc(mCalc);
 		mDisplay.disableSoftInputFromAppearing();
-		//if end of expression clicked, cursor will apear for paste commands etc
-		/*
-		mDisplay.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-			}
-		});
-		 */
 
 		//hold click will select all text
 		mDisplay.setOnLongClickListener(new View.OnLongClickListener() {
@@ -258,8 +251,8 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 		mConvKeysViewPager.setClipToPadding(false);
 		//add a little break between pages
 		mConvKeysViewPager.setPageMargin(8);
-		//set the default page to length UnitType
-		mConvKeysViewPager.setCurrentItem(2);
+		//set page back to the previously selected page
+		mConvKeysViewPager.setCurrentItem(mCalc.getUnitTypePos());
 
 
 
@@ -359,99 +352,6 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 			}
 
 
-			/*
-			class HoldBackspace extends AsyncTask<String, Void, String> {
-				private View mView;
-				private int mHoldTimeout;
-				//amount of change in color for each step
-				private int mStartColor;
-				private int mEndColor;
-				//used to indicate how many times the colors will change
-				private static final int NUM_COLOR_CHANGES=50;
-
-				public HoldBackspace(View view, int holdTimeout){
-					this.mView=view;
-					this.mHoldTimeout=holdTimeout;
-				}
-
-				private int mInc;
-				@Override
-				protected String doInBackground(String... params) {
-					for (mInc = 0; mInc < NUM_COLOR_CHANGES; mInc++) {
-						try {
-							Thread.sleep(mHoldTimeout/NUM_COLOR_CHANGES);
-						} catch (InterruptedException e) {
-							Thread.interrupted();
-						}							
-						if(isCancelled()) return "Canceled"; 
-
-						final int deltaRed= Color.red(mStartColor) + ((Color.red(mEndColor)-Color.red(mStartColor))*mInc)/NUM_COLOR_CHANGES;
-						final int deltaGreen= Color.green(mStartColor) + ((Color.green(mEndColor)-Color.green(mStartColor))*mInc)/NUM_COLOR_CHANGES;
-						final int deltaBlue= Color.blue(mStartColor) + ((Color.blue(mEndColor)-Color.blue(mStartColor))*mInc)/NUM_COLOR_CHANGES;
-
-						runOnUiThread(new Runnable() {
-							@Override
-							public void run() {
-								if(latch==false){
-
-									//System.out.println("deltaRed = "+deltaRed);
-									//System.out.println("deltaGreen = "+deltaGreen);
-									//System.out.println("deltaBlue = "+deltaBlue);
-									//System.out.println("mInc = "+mInc);
-									//System.out.println("----------");
-
-									mView.setBackgroundColor(Color.argb(255, deltaRed, deltaGreen, deltaBlue));
-									if(mInc==NUM_COLOR_CHANGES-1) colorEndTime=System.currentTimeMillis();
-								}
-							}
-						});
-
-					}
-					return "Executed";
-				}
-
-				@Override
-				protected void onPostExecute(String result) {
-					numButtonPressed("c");
-					long endtime = System.currentTimeMillis();
-					System.out.println("total time="+ String.valueOf( endtime-startTime));
-					//System.out.println("colorEndTime="+String.valueOf(colorEndTime-startTime));
-					//System.out.println("---------");
-					colorEndTime=0;
-				}
-
-				@Override
-				protected void onPreExecute() {
-					//mStartColor = getResources().getColor(R.color.op_button_pressed);
-					//mEndColor = getResources().getColor(R.color.backspace_button_held);
-
-					//mView=findViewById(R.id.backspace_button);
-				}
-
-				@Override
-				protected void onProgressUpdate(Void... values) {}
-			}
-			 */
-
-			/*
-			Thread mThread = (new Thread(){
-				int i;
-		        @Override
-		        public void run(){
-		        	if(interrupted()) return;
-		            for(i=0; i<255; i++){
-		                colorHandler.post(new Runnable(){
-		                    public void run(){
-		                    	mView.setBackgroundColor(Color.argb(255, i, i, i));
-		                    }
-		                });
-		                // next will pause the thread for some time
-		                try{ sleep(10); }
-		                catch(InterruptedException e){ break; }
-		            }
-		        }
-		    });
-			 */
 
 			private int mInc;
 			//set up the runnable for when backspace is held down
@@ -506,7 +406,7 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 			return;
 
 		//only set display to UnitCalc if no expression is there yet
-		if(mCalc.toString().equals("") && mCalc.getPrevExpressions().size()==0){
+		if(mCalc.toString().equals("") && mCalc.getResultList().size()==0){
 			mDisplay.setText(R.string.app_name);
 			mDisplay.setCursorVisible(false);
 		}

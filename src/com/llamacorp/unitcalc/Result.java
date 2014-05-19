@@ -1,6 +1,6 @@
 package com.llamacorp.unitcalc;
 
-public class PrevExpression {
+public class Result {
 	private String mQuerry;
 	private String mAnswer;
 	private Unit mQueryUnit;
@@ -9,7 +9,7 @@ public class PrevExpression {
 	boolean mContainsUnits;
 
 
-	public PrevExpression(String querry){
+	public Result(String querry){
 		mQuerry=querry;
 		mAnswer="";
 		mQueryUnit = new Unit();
@@ -17,7 +17,7 @@ public class PrevExpression {
 		mContainsUnits=false;
 	}
 
-	public PrevExpression(){
+	public Result(){
 		this("");
 	}
 

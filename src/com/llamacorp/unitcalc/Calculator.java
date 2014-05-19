@@ -20,8 +20,8 @@ public class Calculator implements OnConvertionListener{
 	//main expression
 	private Expression mExpression;
 
-	//string of previous expressions; this will be directly manipulated by ResultListFragment
-	private List<PrevExpression> mPrevExpressions = new ArrayList<PrevExpression>();
+	//string of results; this will be directly manipulated by ResultListFragment
+	private List<Result> mResultList = new ArrayList<Result>();
 
 	//stores the array of various types of units (length, area, volume, etc)
 	private ArrayList<UnitType> mUnitTypeArray;
@@ -46,7 +46,7 @@ public class Calculator implements OnConvertionListener{
 	private Calculator(){
 		mExpression=new Expression(intDisplayPrecision); 		
 		mMcOperate = new MathContext(intCalcPrecision); 
-		mUnitTypePos=0;	
+		mUnitTypePos=2;	
 		initiateUnits();	
 	}
 	//------THIS IS FOR TESTING ONLY-----------------
@@ -64,7 +64,7 @@ public class Calculator implements OnConvertionListener{
 		mMcOperate = new MathContext(intCalcPrecision);
 
 		//set the unit type to length by default
-		mUnitTypePos=0;
+		mUnitTypePos=2;
 		//call helper method to actually load in units
 		initiateUnits();
 	}
@@ -166,16 +166,16 @@ public class Calculator implements OnConvertionListener{
 	 * @param exp
 	 * @return solved expression
 	 */
-	private boolean solveAndLoadIntoPrevExpression(){
-		String prevEx = solve(mExpression, mMcOperate);
+	private boolean solveAndLoadIntoResultList(){
+		String result = solve(mExpression, mMcOperate);
 		//save the expression temporarily, later save to prevExpression
-		if(!prevEx.equals("")){
-			mPrevExpressions.add(new PrevExpression(prevEx));
-			//also set prev expression's unit if it's selected
+		if(!result.equals("")){
+			mResultList.add(new Result(result));
+			//also set result's unit if it's selected
 			if(isUnitIsSet()){
-				//load units into prevExpression (this will also set contains unit flag
+				//load units into result list (this will also set contains unit flag
 				Unit toUnit = getCurrUnitType().getSelectedUnit();
-				mPrevExpressions.get(mPrevExpressions.size()-1).setResultUnit(toUnit, toUnit, mUnitTypePos);
+				mResultList.get(mResultList.size()-1).setResultUnit(toUnit, toUnit, mUnitTypePos);
 			}
 			return true;
 		}
@@ -190,7 +190,7 @@ public class Calculator implements OnConvertionListener{
 	 * Iterates over expression using PEMAS order of operations
 	 * @param exp is the Expression to solve
 	 * @param mcSolve is the rounding to use to solve
-	 * @return the expression before conversion (potentially used for prev Expression)
+	 * @return the expression before conversion (potentially used for result list)
 	 */	
 	static private String solve(Expression exp, MathContext mcSolve){
 		//clean off any dangling operators and E's (not parentheses!!)
@@ -199,7 +199,7 @@ public class Calculator implements OnConvertionListener{
 		//if more open parentheses then close, add corresponding close para's
 		exp.closeOpenPar();
 
-		String prevExp = exp.toString();
+		String result = exp.toString();
 		//if expression empty, don't need to solve anything
 		if(exp.isEmpty())
 			return "";
@@ -214,7 +214,7 @@ public class Calculator implements OnConvertionListener{
 
 		//flag used to tell backspace and numbers to clear the expression when pressed
 		exp.setSolved(true);
-		return prevExp;
+		return result;
 	}
 
 
@@ -353,8 +353,8 @@ public class Calculator implements OnConvertionListener{
 			return;
 
 		//first solve the function
-		boolean solveSuccess = solveAndLoadIntoPrevExpression();
-		//if there solve failed because there was nothing to solve, just leave (this way prevExpression isn't loaded)
+		boolean solveSuccess = solveAndLoadIntoResultList();
+		//if there solve failed because there was nothing to solve, just leave (this way result list isn't loaded)
 		if (!solveSuccess)
 			return;
 
@@ -384,16 +384,16 @@ public class Calculator implements OnConvertionListener{
 			return;
 		}
 
-		//load units into prevExpression (this will also set contains unit flag) (overrides that from solve)
-		mPrevExpressions.get(mPrevExpressions.size()-1).setResultUnit(fromUnit, toUnit, mUnitTypePos);
-		//load the final value into prevExpression
-		mPrevExpressions.get(mPrevExpressions.size()-1).setAnswer(mExpression.toString());
+		//load units into result list (this will also set contains unit flag) (overrides that from solve)
+		mResultList.get(mResultList.size()-1).setResultUnit(fromUnit, toUnit, mUnitTypePos);
+		//load the final value into the result list
+		mResultList.get(mResultList.size()-1).setAnswer(mExpression.toString());
 	}
 
 
 	/**
 	 * Passed a key from calculator (num/op/back/clear/eq) and distributes it to its proper function
-	 * @param sKey is either single character (but still a String) or a string from prevExpression
+	 * @param sKey is either single character (but still a String) or a string from result list
 	 */
 	public void parseKeyPressed(String sKey){
 		//if expression was displaying "Syntax Error" or similar (containing invalid chars) clear it
@@ -403,8 +403,8 @@ public class Calculator implements OnConvertionListener{
 		//check for equals key
 		if(sKey.equals("=")){
 			//first solve the function
-			boolean solveSuccess = solveAndLoadIntoPrevExpression();
-			//if there solve failed because there was nothing to solve, just leave (this way prevExpression isn't loaded)
+			boolean solveSuccess = solveAndLoadIntoResultList();
+			//if there solve failed because there was nothing to solve, just leave (this way result list isn't loaded)
 			if (!solveSuccess)
 				return;
 			//rounding operation may throw NumberFormatException
@@ -413,8 +413,8 @@ public class Calculator implements OnConvertionListener{
 			}
 			catch (NumberFormatException e){
 				mExpression.replaceExpression(strSyntaxError);
-			}			//load the final value into prevExpression
-			mPrevExpressions.get(mPrevExpressions.size()-1).setAnswer(mExpression.toString());
+			}			//load the final value into the result list
+			mResultList.get(mResultList.size()-1).setAnswer(mExpression.toString());
 		}
 		//check for backspace key
 		else if(sKey.equals("b"))
@@ -424,7 +424,7 @@ public class Calculator implements OnConvertionListener{
 		else if(sKey.equals("c"))
 			clear();
 
-		//else try all other potential numbers and operators, as well as prevExpression
+		//else try all other potential numbers and operators, as well as result list
 		else{
 			//if just hit equals, and we hit [.0-9(], then clear current unit type
 			if(mExpression.isSolved() && sKey.matches("[.0-9(]"))
@@ -468,8 +468,8 @@ public class Calculator implements OnConvertionListener{
 		}	
 	}
 
-	public List<PrevExpression> getPrevExpressions() {
-		return mPrevExpressions;
+	public List<Result> getResultList() {
+		return mResultList;
 	}
 
 	/** Used by the controller to determine if any convert keys should be selected */
@@ -491,6 +491,10 @@ public class Calculator implements OnConvertionListener{
 
 	public void setUnitTypePos(int pos){
 		mUnitTypePos = pos;
+	}
+	
+	public int getUnitTypePos() {
+		return mUnitTypePos;
 	}
 	
 	public void pasteIntoExpression(String str){

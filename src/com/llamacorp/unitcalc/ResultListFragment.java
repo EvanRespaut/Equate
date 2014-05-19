@@ -2,8 +2,6 @@ package com.llamacorp.unitcalc;
 
 import java.util.List;
 
-import com.llamacorp.unitcalc.R;
-
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
@@ -18,11 +16,11 @@ import android.widget.TextView.BufferType;
 public class ResultListFragment extends ListFragment {
 	//this is for communication with the parent activity
 	private OnResultSelectedListener mCallback;
-	private List<PrevExpression> mResultArray;
+	private List<Result> mResultArray;
 
 	// Container Activity must implement this interface
 	public interface OnResultSelectedListener {
-		public void updateScreen(boolean updatePrev);
+		public void updateScreen(boolean updateResult);
 		public void selectUnit(Unit unit, int unitTypePos);
 	}
 
@@ -41,37 +39,39 @@ public class ResultListFragment extends ListFragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
-		mResultArray = Calculator.getCalculator(getActivity()).getPrevExpressions();
+
+		mResultArray = Calculator.getCalculator(getActivity()).getResultList();
 		ResultAdapter adapter = new ResultAdapter(mResultArray);
 		setListAdapter(adapter);	
 	}
 
-	/*
-	@Override
-	public void onListItemClick(ListView l, View v, int position, long id){
-		String result = ((ResultAdapter)getListAdapter()).getItem(position);
-		System.out.println("position=" + position);
-		System.out.println("result= " + result);
-		System.out.println("id= " + id);
 
-		String [] splitPrevExp;
-		splitPrevExp = result.split("\\s=\\s");
+	//	@Override
+	//	public void onListItemClick(ListView l, View v, int position, long id){
+	//		Toast.makeText(getActivity(), "Cut!", Toast.LENGTH_SHORT).show();
+	//
+	//				String result = ((ResultAdapter)getListAdapter()).getItem(position);
+	//				System.out.println("position=" + position);
+	//				System.out.println("result= " + result);
+	//				System.out.println("id= " + id);
+	//		
+	//				String [] splitPrevExp;
+	//				splitPrevExp = result.split("\\s=\\s");
+	//		
+	//				if(splitPrevExp.length != 2)
+	//					throw new IllegalArgumentException("In resultlistfragment, splitPrevExpression is improperly formatted..."); 
+	//		
+	//				String query =  splitPrevExp[0];	
+	//				System.out.println("query= " + query);
+	//		
+	//				Calculator.getCalculator(getActivity()).parseKeyPressed(query);
+	//				mCallback.updateScreen(false);
+	//	}
 
-		if(splitPrevExp.length != 2)
-			throw new IllegalArgumentException("In resultlistfragment, splitPrevExpression is improperly formatted..."); 
-
-		String query =  splitPrevExp[0];	
-		System.out.println("query= " + query);
-
-		Calculator.getCalculator(getActivity()).parseKeyPressed(query);
-		mCallback.updateScreen(false);
-	}
-	 */
 
 
-	private class ResultAdapter extends ArrayAdapter<PrevExpression> {
-		public ResultAdapter(List<PrevExpression> prevTest){
+	private class ResultAdapter extends ArrayAdapter<Result> {
+		public ResultAdapter(List<Result> prevTest){
 			super(getActivity(), 0, prevTest);
 		}
 
@@ -83,13 +83,13 @@ public class ResultListFragment extends ListFragment {
 				convertView = getActivity().getLayoutInflater().inflate(R.layout.list_item_result, null);
 
 			// Configure the view for this result
-			PrevExpression prevExp = getItem(position);
+			Result result = getItem(position);
 
 			TextView textViewQuerry = (TextView)convertView.findViewById(R.id.list_item_result_textPrevQuery);	
-			setUpResultTextView(textViewQuerry, prevExp.getTextQuerry());
+			setUpResultTextView(textViewQuerry, result.getTextQuerry());
 
 			TextView textViewAnswer = (TextView)convertView.findViewById(R.id.list_item_result_textPrevAnswer);
-			setUpResultTextView(textViewAnswer, prevExp.getTextAnswer());
+			setUpResultTextView(textViewAnswer, result.getTextAnswer());
 
 			return convertView; 
 		}
@@ -100,8 +100,8 @@ public class ResultListFragment extends ListFragment {
 		 * @param text the previous query or answer String
 		 */
 		private void setUpResultTextView(TextView textView, String text){
-			textView.setClickable(true);
-			
+			//textView.setClickable(true);
+
 			//want to superscript text after a "^" character
 			String [] splitArray = text.split("\\^");
 			//only upper-case text if it exists
@@ -112,7 +112,7 @@ public class ResultListFragment extends ListFragment {
 				spanText.setSpan(new SuperscriptSpan(), splitArray[0].length(), spanText.length(), 0);  
 				textView.setText(spanText, BufferType.SPANNABLE);   
 			}
-			
+
 			//otherwise just set it normally
 			else
 				textView.setText(text);
@@ -125,32 +125,32 @@ public class ResultListFragment extends ListFragment {
 					//grab the calc
 					Calculator calc = Calculator.getCalculator(getActivity());
 					//grab the associated previous expression
-					PrevExpression thisPrevExp = mResultArray.get(position);
-						
-					
+					Result thisResult = mResultArray.get(position);
+
+
 					//get text to pass back to calc
 					String textPassBack="";
 					int viewID = view.getId();
 					if (viewID==R.id.list_item_result_textPrevQuery)
-						textPassBack = thisPrevExp.getQuerry();
+						textPassBack = thisResult.getQuerry();
 					if (viewID==R.id.list_item_result_textPrevAnswer)
-						textPassBack = thisPrevExp.getAnswer();
-					
+						textPassBack = thisResult.getAnswer();
+
 					//if unit not selected in calc, and result has unit, set that unit
-					if(!calc.isUnitIsSet() && thisPrevExp.containsUnits()){
+					if(!calc.isUnitIsSet() && thisResult.containsUnits()){
 						Unit unitPassBack = new Unit();
 						if (viewID==R.id.list_item_result_textPrevQuery)
-							unitPassBack = thisPrevExp.getQuerryUnit();
+							unitPassBack = thisResult.getQuerryUnit();
 						if (viewID==R.id.list_item_result_textPrevAnswer)
-							unitPassBack = thisPrevExp.getAnswerUnit();
-						
+							unitPassBack = thisResult.getAnswerUnit();
+
 						//if the selection was a success (and we weren't in the wrong unitType), then set the color
 						//int selectedUnitPos = calc.getCurrUnitType().selectUnit(unitPassBack);
 						//if(selectedUnitPos != -1)
-						mCallback.selectUnit(unitPassBack, thisPrevExp.getUnitTypePos());
+						mCallback.selectUnit(unitPassBack, thisResult.getUnitTypePos());
 					}
-					
-					
+
+
 					calc.parseKeyPressed(textPassBack);
 					mCallback.updateScreen(false);				
 				}

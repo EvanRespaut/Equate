@@ -21,7 +21,7 @@ public class ConvKeysFragment extends Fragment {
 
 	// Container Activity must implement this interface
 	public interface OnConvertKeySelectedListener {
-		public void updateScreen(boolean updatePrev);
+		public void updateScreen(boolean updateResult);
 	}
 
 	@Override
@@ -64,6 +64,12 @@ public class ConvKeysFragment extends Fragment {
 		int pos = getArguments().getInt(EXTRA_UNIT_TYPE_POS);
 
 		mUnitType = Calculator.getCalculator(getActivity()).getUnitType(pos);
+	}
+	
+	@Override
+	public void onResume(){
+		super.onResume();
+		colorSelectedButton();
 	}
 
 	public static ConvKeysFragment newInstance(int unitTypePos){
@@ -124,9 +130,7 @@ public class ConvKeysFragment extends Fragment {
 				}
 			});
 		}
-		//this is called to refreshed the selected button after app closes and comes back
-		colorSelectedButton();
-
+		
 		return v;
 	}
 
@@ -157,10 +161,9 @@ public class ConvKeysFragment extends Fragment {
 	
 	public void colorSelectedButton(){
 		//is null when app's onResume calls it (convertkey's onCreate called after activity's onResume)
-		if(mUnitType==null){
-			System.out.println("mUnitType is null");
+		if(mUnitType==null)
 			return;
-		}
+		
 		//If new unit still selected, add color to newly selected convert button
 		if(mUnitType.isUnitSelected())
 			mConvButton.get(mUnitType.getCurrUnitPos()).setSelected(true);			

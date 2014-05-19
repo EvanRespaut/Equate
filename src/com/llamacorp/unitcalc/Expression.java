@@ -55,12 +55,12 @@ public class Expression {
 
 	
 	/**
-	 * This function will try to add a number or operator, or entire prevExpression to the current expression
+	 * This function will try to add a number or operator, or entire result list to the current expression
 	 * Note that there is lots of error checking to be sure user can't entire an invalid operator/number
-	 * @param sKey should only be single vaild number or operator character, or longer previous expressions
+	 * @param sKey should only be single vaild number or operator character, or longer previous results
 	 */
 	public void keyPresses(String sKey){
-		//for now, if we're adding a prev expression, just add it without error checking
+		//for now, if we're adding a previous result, just add it without error checking
 		if(sKey.length()>1){
 			if(mSolved) replaceExpression(sKey);
 			else insertAtSelection(sKey);

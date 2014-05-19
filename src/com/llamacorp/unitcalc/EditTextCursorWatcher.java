@@ -34,6 +34,7 @@ public class EditTextCursorWatcher extends EditText {
 		this.context=context;
 	}
 
+	/** Set the singleton calc to this EditText for its own use */
 	public void setCalc(Calculator calc) {
 		mCalc=calc;		
 	} 
