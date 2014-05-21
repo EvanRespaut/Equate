@@ -57,15 +57,30 @@
             android:layout_weight="1"
             android:background="@color/app_background" >
 
-            <Button
-                android:id="@+id/open_para_button"
-                style="@style/OpButton"
-                android:text="@string/open_para_button" />
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_margin="1dp"
+                android:layout_weight="1"
+                android:background="@color/app_background" >
+
+                <Button
+                    android:id="@+id/open_para_button"
+                    style="@style/SmallOpButton"
+                    android:layout_marginRight="1dp"
+                    android:text="@string/open_para_button" />
+
+                <Button
+                    android:id="@+id/close_para_button"
+                    style="@style/SmallOpButton"
+                    android:layout_marginLeft="1dp"
+                    android:text="@string/close_para_button" />
+            </LinearLayout>
 
             <Button
-                android:id="@+id/close_para_button"
+                android:id="@+id/percent_button"
                 style="@style/OpButton"
-                android:text="@string/close_para_button" />
+                android:text="@string/percent_button" />
 
             <Button
                 android:id="@+id/divide_button"

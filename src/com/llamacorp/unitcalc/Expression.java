@@ -24,18 +24,18 @@ public class Expression {
 	public static final String regexGroupedAddSub = "([+-])";
 
 	//note that in []'s only ^, -, and ] need escapes. - doen't need one if invalid
-	public static final String regexInvalidChars = "[^0-9()E.+*^/-]";	
+	public static final String regexInvalidChars = "[^0-9()E.+*^/%-]";	
 	public static final String regexHasInvalidChars = ".*" + regexInvalidChars + ".*";
-	public static final String regexOperators = "+/*^-";
-	public static final String regexInvalidStartChar = "[E*^/+]";
+	public static final String regexOperators = "+/*^%-";
+	public static final String regexInvalidStartChar = "[E*^/%+]";
 	public static final String regexAnyValidOperator = "[" + regexOperators + "]";
 	public static final String regexAnyOperatorOrE = "[E" + regexOperators + "]";
 	public static final String regexGroupedNumber = "(\\-?\\d*\\.?\\d+\\.?(?:E[\\-\\+]?\\d+)?)";
-	
+
 	private String[][] substituteChars = new String[][]{{"[\u00f7·]", "/"}, //alt-246
-														{"[x\u00d7]", "*"},//alt-0215,249,250 
-														{"[\u0096\u0097]", "-"}}; //alt-0151,0150
-														//TODO add in all these characters
+			{"[x\u00d7]", "*"},//alt-0215,249,250 
+			{"[\u0096\u0097]", "-"}}; //alt-0151,0150
+	//TODO add in all these characters
 
 	public Expression(int dispPrecision){
 		clearExpression();
@@ -53,7 +53,7 @@ public class Expression {
 		this(0);
 	}
 
-	
+
 	/**
 	 * This function will try to add a number or operator, or entire result list to the current expression
 	 * Note that there is lots of error checking to be sure user can't entire an invalid operator/number
@@ -73,7 +73,7 @@ public class Expression {
 			throw new IllegalArgumentException("In addToExpression, invalid sKey..."); 
 
 		//don't start with [*/^E] when the expression string is empty or if we opened a para
-		if(sKey.matches(regexInvalidStartChar) && (lastNumb().equals("") || expresssionToSelection().matches(".*\\($")))
+		if(sKey.matches(regexInvalidStartChar) && (getLastNumb().equals("") || expresssionToSelection().matches(".*\\($")))
 			return;
 
 		//if just hit equals, and we hit [.0-9(], then clear expression
@@ -94,22 +94,22 @@ public class Expression {
 				addToExpressionStart("(");
 
 		//if we already have a decimal in the number, don't add another
-		if(sKey.equals(".") && lastNumb().matches(".*[.E].*"))
+		if(sKey.equals(".") && getLastNumb().matches(".*[.E].*"))
 			//lastNumb returns the last num; if expression="4.3+", returns "4.3"; if last key was an operator, allow decimals
 			if(!expresssionToSelection().matches(".*" + regexAnyValidOperator + "$"))
 				return;
 
 		//if we already have a E in the number, don't add another; also don't add E immediately after an operator
-		if(sKey.equals("E") && (lastNumb().contains("E") || expresssionToSelection().matches(".*" + regexAnyValidOperator + "$")))
+		if(sKey.equals("E") && (getLastNumb().contains("E") || expresssionToSelection().matches(".*" + regexAnyValidOperator + "$")))
 			return;		
 
 		//if we E was last pressed, only allow [1-9+-(]
-		if(lastNumb().matches(".*E$"))
+		if(getLastNumb().matches(".*E$"))
 			if(sKey.matches("[^\\d(-]"))
 				return;
 
 		//if last digit was only a decimal, don't add any operator or E
-		if(sKey.matches(regexAnyOperatorOrE) && lastNumb().equals("."))
+		if(sKey.matches(regexAnyOperatorOrE) && getLastNumb().equals("."))
 			return;	
 
 		//don't allow "--" or "65E--"
@@ -136,11 +136,11 @@ public class Expression {
 		mSolved=false;
 	}
 
-	
+
 	/**
-	* This function takes text pasted by user, formats it and loads it into the expression
-	* @param str text to clean and load into expression
-	*/
+	 * This function takes text pasted by user, formats it and loads it into the expression
+	 * @param str text to clean and load into expression
+	 */
 	public void pasteIntoExpression(String str){
 		//first replace all substitutable characters
 		for(int i=0;i<substituteChars.length;i++)
@@ -152,8 +152,8 @@ public class Expression {
 		//likely not necessary, since the click on EditText should've overwritten solved
 		mSolved=false;
 	}
-	
-	
+
+
 	/**
 	 * Rounds expression down by a MathContext mcDisp
 	 * @throws NumberFormatException if Expression not formatted correctly
@@ -188,6 +188,34 @@ public class Expression {
 	}
 
 
+	/**
+	 * Replaces % operators their respective evaluable operators
+	 */
+	//TODO
+	public void replacePercentOps() {
+		//case where % is at the end of the expression
+		if(mExpression.matches(".+%$")){
+			//trim off the the %
+			replaceExpression(mExpression.toString().substring(0,length()-1));
+			String lastNum = getLastNumb();
+			//trim off the last number
+			replaceExpression(mExpression.toString().substring(0,length()-getLastNumb().length()));
+			//be sure we don't try to find a last number when expression is empty
+			if(!isEmpty()){
+				String lastOp = mExpression.toString().substring(length()-1,length());
+				if(lastOp.matches(regexGroupedAddSub)){
+					replaceExpression(mExpression.toString().substring(0,length()-1) + "*(1" + lastOp + lastNum + "*0.01)");
+					return;
+				}
+			}
+			replaceExpression(mExpression.toString() + lastNum + "*0.01");
+			return;
+		}
+	}
+
+
+
+
 	/** Close any open parentheses in this expression */
 	public void closeOpenPar(){
 		//if more open parentheses then close, add corresponding close para's
@@ -197,7 +225,7 @@ public class Expression {
 		}
 	}
 
-	
+
 	/**
 	 * Load in more precise result if possible
 	 * @param mMcDisp is the amount to round
@@ -212,14 +240,16 @@ public class Expression {
 		String formallyPrecCleaned = cleanFormatting(formallyPrec.toString());
 
 		//find out if expression's first term matches first part of the precise result, if so replace with more precise term
-		if(firstNumb().equals(formallyPrecCleaned)){
+		if(getFirstNumb().equals(formallyPrecCleaned)){
 			replaceExpression(mExpression.replaceFirst(regexGroupedNumber, mPreciseResult.toString()));
 		}
 	}
 
-	
+
 	/** Clean off any dangling operators and E's (not parentheses!!) at the END ONLY */
 	public void cleanDanglingOps(){
+		//don't want to trim off %'s so long as there's at least one char before it
+		if(mExpression.matches(".+%$")) return;
 		replaceExpression(mExpression.replaceAll(regexAnyOperatorOrE + "+$", ""));
 	}
 
@@ -247,22 +277,22 @@ public class Expression {
 		return mPreciseResult;
 	}
 
-	
+
 	public int getSelectionStart() {
 		return mSelectionStart;
 	}
 
-	
+
 	public int getSelectionEnd() {
 		return mSelectionEnd;
 	}
 
-	
+
 	public void setSelectionToEnd() {
 		setSelection(mExpression.length(), mExpression.length());	
 	}
-	
-	
+
+
 	public void setSelection(int selectionStart, int selectionEnd ) {
 		if(selectionEnd>mExpression.length() || selectionStart>mExpression.length())
 			throw new IllegalArgumentException("In Expression.setSelection, selection end or start > expression length");
@@ -272,7 +302,7 @@ public class Expression {
 			selectionEnd = selectionStart;
 			selectionStart = temp;
 		}
-		
+
 		mSelectionStart = selectionStart;
 		mSelectionEnd = selectionEnd;		
 	}
@@ -282,12 +312,12 @@ public class Expression {
 		return mSolved;
 	}
 
-	
+
 	public void setSolved(boolean solved) {
 		mSolved = solved;
 	}
 
-	
+
 	/** Replaces entire expression. Selection moves to end of the expression.
 	 * @param tempExp String to replace expression with*/
 	public void replaceExpression(String tempExp) {
@@ -295,14 +325,14 @@ public class Expression {
 		setSelection(mExpression.length(), mExpression.length());	
 	}	
 
-	
+
 	/** Clears entire expression. Note selection will move to 0,0 */
 	public void clearExpression(){
 		replaceExpression("");
 		mSolved = false;		
 	}
 
-	
+
 	public void backspaceAtSelection(){
 		int selStart = getSelectionStart();
 		int selEnd = getSelectionEnd();
@@ -310,7 +340,7 @@ public class Expression {
 		//return if nothing to delete or selection at beginning of expression
 		if(isEmpty() || selEnd==0)
 			return;
-		
+
 		//if something is highlighted, delete highlighted part (replace with "")
 		if(selStart!=selEnd)
 			insertAtSelection("");
@@ -318,6 +348,11 @@ public class Expression {
 			mExpression = mExpression.substring(0, selStart-1) + mExpression.substring(selStart, mExpression.length());
 			setSelection(selStart-1, selStart-1);
 		}
+	}
+
+	/** @return the length of the expression */
+	public int length(){
+		return mExpression.toString().length();
 	}
 
 	@Override
@@ -336,8 +371,8 @@ public class Expression {
 		mExpression = str + mExpression;
 		setSelection(selStart + strLen, selEnd + strLen);
 	}
-	
-	
+
+
 	/**
 	 * Add a String to this expression at the correct selection point
 	 * @param toAdd the String to add
@@ -358,7 +393,7 @@ public class Expression {
 			setSelection(selStart+toAdd.length(), selStart+toAdd.length());
 		}
 	}
-	
+
 
 	/**
 	 * Clean up a string's formatting 
@@ -413,26 +448,30 @@ public class Expression {
 
 	/**
 	 * Gets the first number (returned as a String) at selection in current expression
-	 * @return anything before the first valid operator, or "" if expression empty, or entire expression if doesn't contain regexAnyValidOperator
+	 * @return anything before the first valid operator, or "" if expression empty, 
+	 * or entire expression if doesn't contain regexAnyValidOperator
 	 */
-	private String firstNumb(){
+	private String getFirstNumb(){
 		String [] strA = expresssionToSelection().split(regexAnyValidOperator);
 		return strA[0];
 	}
 
 	/**
 	 * Gets the last double (returned as a String) at selection in current expression
-	 * @return anything after last valid operator, or "" if expression empty, or entire expression if doesn't contain regexAnyValidOperator
+	 * @return anything after last valid operator, or "" if expression empty, or entire expression 
+	 * if doesn't contain regexAnyValidOperator. Note if expression is "1+-5" it will return "-5"
 	 */
-	private String lastNumb(){
+	private String getLastNumb(){
 		String [] strA = expresssionToSelection().split(regexAnyValidOperator);
 		if(strA.length==0) return "";
-		else return strA[strA.length-1];
+		else {
+			if (expresssionToSelection().matches(".*"+regexAnyValidOperator+regexAnyValidOperator+regexGroupedNumber))
+				return expresssionToSelection().replaceAll(".*?"+regexAnyValidOperator+regexGroupedNumber, "$1");
+			return strA[strA.length-1];
+		}
 	}
-	
+
 	private String expresssionToSelection(){
 		return mExpression.substring(0,getSelectionStart());
 	}
-
-
 }

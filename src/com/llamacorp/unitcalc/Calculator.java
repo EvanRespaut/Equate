@@ -206,6 +206,9 @@ public class Calculator implements OnConvertionListener{
 
 		//load in the precise result if possible
 		exp.loadPreciseResult();
+		
+		//deal with percent operators
+		exp.replacePercentOps();
 
 		//main calculation: first the P of PEMAS, this function then calls remaining EMAS 
 		String tempExp = collapsePara(exp.toString(), mcSolve);

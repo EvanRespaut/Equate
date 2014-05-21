@@ -11,6 +11,7 @@
     <string name="backspace_button">Backspace</string>
     <string name="open_para_button">(</string>
     <string name="close_para_button">)</string>
+    <string name="percent_button">%</string>
     
     
     <string name="zero_button">0</string>
