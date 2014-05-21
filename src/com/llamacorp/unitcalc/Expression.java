@@ -203,12 +203,13 @@ public class Expression {
 			//be sure we don't try to find a last number when expression is empty
 			if(!isEmpty()){
 				String lastOp = mExpression.toString().substring(length()-1,length());
-				if(lastOp.matches(regexGroupedAddSub)){
-					replaceExpression(mExpression.toString().substring(0,length()-1) + "*(1" + lastOp + lastNum + "*0.01)");
+				String expWithoutOp = mExpression.toString().substring(0,length()-1);
+				if(lastOp.matches(regexGroupedAddSub) && !expWithoutOp.equals("")){
+					replaceExpression(expWithoutOp + "*(1" + lastOp + lastNum + "*0.01)");
 					return;
 				}
 			}
-			replaceExpression(mExpression.toString() + lastNum + "*0.01");
+			replaceExpression(mExpression.toString() + "(" + lastNum + "*0.01)");
 			return;
 		}
 	}
