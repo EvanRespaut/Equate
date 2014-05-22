@@ -150,7 +150,14 @@ public class EditTextCursorWatcher extends EditText {
 		else 
 			setCursorVisible(true);
 	}
-
+	
+	/** Sets the current selection to the end of the expression */
+	public void setSelectionToEnd(){
+		int expLen = mCalc.toString().length();
+		setSelection(expLen, expLen);
+		setCursorVisible(false);
+	}
+	
 
 	@Override   
 	protected void onSelectionChanged(int selStart, int selEnd) { 

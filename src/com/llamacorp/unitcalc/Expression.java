@@ -191,27 +191,40 @@ public class Expression {
 	/**
 	 * Replaces % operators their respective evaluable operators
 	 */
-	//TODO
+	//TODO this is still broken....
 	public void replacePercentOps() {
-		//case where % is at the end of the expression
-		if(mExpression.matches(".+%$")){
-			//trim off the the %
-			replaceExpression(mExpression.toString().substring(0,length()-1));
-			String lastNum = getLastNumb();
-			//trim off the last number
-			replaceExpression(mExpression.toString().substring(0,length()-getLastNumb().length()));
-			//be sure we don't try to find a last number when expression is empty
-			if(!isEmpty()){
-				String lastOp = mExpression.toString().substring(length()-1,length());
-				String expWithoutOp = mExpression.toString().substring(0,length()-1);
-				if(lastOp.matches(regexGroupedAddSub) && !expWithoutOp.equals("")){
-					replaceExpression(expWithoutOp + "*(1" + lastOp + lastNum + "*0.01)");
-					return;
+		String str=mExpression.toString();
+		String subStr = "";
+		for(int i=0;i<str.length();i++){
+			if(str.charAt(i)=='%'){
+				//shorten the expression and trim off the %
+				subStr = str.substring(0, i);
+				String lastNum = getLastNumb(subStr);
+				//trim off the last number
+				subStr = subStr.substring(0,subStr.length()-lastNum.length());
+				//as long as the string isn't empty, find last operator
+				if(!subStr.equals("")){
+					String lastOp = subStr.substring(subStr.length()-1,subStr.length());
+					//trim off the last operator
+					subStr = subStr.substring(0,subStr.length()-1);
+					//case similar to 200+5% or 200-5%
+					if(lastOp.matches(regexGroupedAddSub) && !subStr.equals(""))
+						subStr = "(" + subStr + ")*(1" + lastOp + lastNum + "*0.01)";
+					else
+						subStr = subStr + lastOp + "(" + lastNum + "*0.01)";
 				}
+				else
+					subStr = "(" + lastNum + "*0.01)";
+				//replace the old contents with the new expression
+				str = subStr + str.substring(i+1, str.length());
+				//move up i by the diff between the new and old str
+				i = subStr.length();
+				System.out.println("i="+i);
+				System.out.println("str="+str);
+				System.out.println("subStr="+subStr);			
 			}
-			replaceExpression(mExpression.toString() + "(" + lastNum + "*0.01)");
-			return;
 		}
+		replaceExpression(str);
 	}
 
 
@@ -463,11 +476,21 @@ public class Expression {
 	 * if doesn't contain regexAnyValidOperator. Note if expression is "1+-5" it will return "-5"
 	 */
 	private String getLastNumb(){
-		String [] strA = expresssionToSelection().split(regexAnyValidOperator);
+		return getLastNumb(expresssionToSelection());
+	}
+
+	/**
+	 * Gets the last double (returned as a String) for input string
+	 * @param String expression to find last number of
+	 * @return anything after last valid operator, or "" if expression empty, or entire expression 
+	 * if doesn't contain regexAnyValidOperator. Note if expression is "1+-5" it will return "-5"
+	 */
+	private String getLastNumb(String expStr){
+		String [] strA = expStr.split(regexAnyValidOperator);
 		if(strA.length==0) return "";
 		else {
-			if (expresssionToSelection().matches(".*"+regexAnyValidOperator+regexAnyValidOperator+regexGroupedNumber))
-				return expresssionToSelection().replaceAll(".*?"+regexAnyValidOperator+regexGroupedNumber, "$1");
+			if (expStr.matches(".*"+regexAnyValidOperator+regexAnyValidOperator+regexGroupedNumber))
+				return expStr.replaceAll(".*?"+regexAnyValidOperator+regexGroupedNumber, "$1");
 			return strA[strA.length-1];
 		}
 	}

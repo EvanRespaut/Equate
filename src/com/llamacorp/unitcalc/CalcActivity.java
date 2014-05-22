@@ -120,6 +120,7 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 			resultListFragment.refresh(instaScroll);
 
 			//make a little gray divider above expression when prev expression hits it
+
 			View divider = findViewById(R.id.prev_curr_exp_divider);
 			ListView mResultListView = mResultFragment.getListView();
 			//don't try this unless result list has something there
@@ -413,8 +414,10 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 			mDisplay.setText(R.string.app_name);
 			mDisplay.setCursorVisible(false);
 		}
-		else
+		else{
 			updateScreenWithInstaScrollOption(true, true);
+			mDisplay.setSelectionToEnd();
+		}
 	}
 
 	
