@@ -29,6 +29,7 @@ public class Expression {
 	public static final String regexOperators = "+/*^%-";
 	public static final String regexInvalidStartChar = "[E*^/%+]";
 	public static final String regexAnyValidOperator = "[" + regexOperators + "]";
+	public static final String regexAnyOpExceptPercent = regexAnyValidOperator.replace("%","");
 	public static final String regexAnyOperatorOrE = "[E" + regexOperators + "]";
 	public static final String regexGroupedNumber = "(\\-?\\d*\\.?\\d+\\.?(?:E[\\-\\+]?\\d+)?)";
 
@@ -115,16 +116,20 @@ public class Expression {
 		//don't allow "--" or "65E--"
 		if(sKey.matches("[-]") && expresssionToSelection().matches(".*E?[-]"))
 			return;	
+			
+		//don't allow two %'s in a row
+		if(sKey.matches("%") && expresssionToSelection().matches(".*%$"))
+			return;
 
 		//if we have "84*-", replace both the * and the - with the operator
-		if(sKey.matches(regexAnyValidOperator) && expresssionToSelection().matches(".*" + regexAnyValidOperator + regexAnyValidOperator + "$")){
+		if(sKey.matches(regexAnyValidOperator) && expresssionToSelection().matches(".*" + regexAnyOpExceptPercent + regexAnyValidOperator + "$")){
 			//if we have something higlighted, delete it first
 			if(getSelectionEnd()>getSelectionStart()) backspaceAtSelection();
 			backspaceAtSelection();
 			backspaceAtSelection();
 		}
 		//if there's already an operator, replace it with the new operator, except for -, let that stack up
-		else if(sKey.matches(regexInvalidStartChar) && expresssionToSelection().matches(".*" + regexAnyValidOperator + "$")){
+		else if(sKey.matches(regexInvalidStartChar) && expresssionToSelection().matches(".*" + regexAnyOpExceptPercent + "$")){
 			//if we have something higlighted, delete it first
 			if(getSelectionEnd()>getSelectionStart()) backspaceAtSelection();
 			backspaceAtSelection();
@@ -490,7 +495,7 @@ public class Expression {
 		if(strA.length==0) return "";
 		else {
 			if (expStr.matches(".*"+regexAnyValidOperator+regexAnyValidOperator+regexGroupedNumber))
-				return expStr.replaceAll(".*?"+regexAnyValidOperator+regexGroupedNumber, "$1");
+				return expStr.replaceAll(".*?"+regexAnyValidOperator+regexGroupedNumber+"$", "$1");
 			return strA[strA.length-1];
 		}
 	}
