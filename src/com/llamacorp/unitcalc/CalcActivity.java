@@ -21,11 +21,14 @@ import android.widget.ListView;
 
 import com.llamacorp.unitcalc.ConvKeysFragment.OnConvertKeySelectedListener;
 import com.llamacorp.unitcalc.ResultListFragment.OnResultSelectedListener;
+import com.viewpagerindicator.TabPageIndicator;
 
 public class CalcActivity  extends FragmentActivity implements OnResultSelectedListener, OnConvertKeySelectedListener{
 	private ViewPager mConvKeysViewPager; 
 	private ResultListFragment mResultFragment;
 
+    private static final String[] CONTENT = new String[] { "Temp", "Weight", "Length", "Area", "Volume"};
+	
 	private List<Button> calcButton;
 	private EditTextCursorWatcher mDisplay;
 
@@ -197,10 +200,24 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 				//				//TODO try debugging this 
 				return ConvKeysFragment.newInstance(pos);
 			}
+
+	        @Override
+	        public CharSequence getPageTitle(int position) {
+	            return CONTENT[position % CONTENT.length];
+	        }
 		});
 
+		/*
+		CirclePageIndicator viewPageIndicator = (CirclePageIndicator)findViewById(R.id.titles);
+		viewPageIndicator.setViewPager(mConvKeysViewPager);
+		viewPageIndicator.setFillColor(Color.GRAY);
+		viewPageIndicator.setStrokeColor(Color.GRAY);
+		*/
+		TabPageIndicator viewPageIndicator = (TabPageIndicator)findViewById(R.id.titles);
+		viewPageIndicator.setViewPager(mConvKeysViewPager);
+		
 		//need to tell calc when a new UnitType page is selected
-		mConvKeysViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+		viewPageIndicator.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 			//as the page is being scrolled to
 			@Override
 			public void onPageSelected(int pos) {
@@ -216,7 +233,6 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 				//				if(mViewPager.getCurrentItem()==mViewPager.getAdapter().getCount()-1)
 				//					padRight=0;
 				mConvKeysViewPager.setPadding(padLeft, 0, padRight, 0);
-
 
 				//clear selected unit from adjacent convert key fragment so you can't see a bit of them
 				int currConvKeyPos = mConvKeysViewPager.getCurrentItem();
@@ -255,7 +271,6 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 		mConvKeysViewPager.setPageMargin(8);
 		//set page back to the previously selected page
 		mConvKeysViewPager.setCurrentItem(mCalc.getUnitTypePos());
-
 
 
 		calcButton = new ArrayList<Button>();
