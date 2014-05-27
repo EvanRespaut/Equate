@@ -11,17 +11,17 @@ import android.content.Context;
 import com.llamacorp.unitcalc.UnitType.OnConvertionListener;
 
 public class Calculator implements OnConvertionListener{
+    private static final String FILENAME = "saved_data.json";
 	private static Calculator mCaculator;
-
-	//private static Calculator mCaculator;
-	//this will be used later with a serializer to save data to the system
-	//private Context mAppContext; 
+	private Context mAppContext; 
+	
+    private CalcJSONSerializer mSerializer;
 
 	//main expression
 	private Expression mExpression;
 
 	//string of results; this will be directly manipulated by ResultListFragment
-	private List<Result> mResultList = new ArrayList<Result>();
+	private List<Result> mResultList;
 
 	//stores the array of various types of units (length, area, volume, etc)
 	private ArrayList<UnitType> mUnitTypeArray;
@@ -44,6 +44,7 @@ public class Calculator implements OnConvertionListener{
 
 	//------THIS IS FOR TESTING ONLY-----------------
 	private Calculator(){
+		mResultList = new ArrayList<Result>();
 		mExpression=new Expression(intDisplayPrecision); 		
 		mMcOperate = new MathContext(intCalcPrecision); 
 		mUnitTypePos=2;	
@@ -58,7 +59,14 @@ public class Calculator implements OnConvertionListener{
 	 */
 	private Calculator(Context appContext){
 		//save our context
-		//mAppContext = appContext;
+		mAppContext = appContext;
+		mSerializer = new CalcJSONSerializer(mAppContext, FILENAME);
+	
+        try {
+            mResultList = mSerializer.loadResult();
+        } catch (Exception e) {	
+			mResultList = new ArrayList<Result>();
+		}
 		mExpression=new Expression(intDisplayPrecision);
 		//load the calculating precision
 		mMcOperate = new MathContext(intCalcPrecision);
@@ -78,6 +86,16 @@ public class Calculator implements OnConvertionListener{
 		return mCaculator;
 	}
 
+	public boolean saveResults(){
+		try {
+			mSerializer.saveCalcState(mResultList);
+			return true;
+		} catch (Exception e){
+			return false;
+		}
+	}
+	
+	
 	/**
 	 * Helper method used to initiate the array of various types of units
 	 */	

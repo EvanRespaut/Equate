@@ -179,7 +179,7 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 
 		if(mResultFragment == null){
 			mResultFragment = new ResultListFragment();
-			fm.beginTransaction().add(R.id.resultListfragmentContainer, mResultFragment).commit();			
+			fm.beginTransaction().add(R.id.resultListfragmentContainer, mResultFragment).commit();	
 		}
 
 
@@ -413,6 +413,12 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 				}
 			};			
 		});
+	}
+	
+	@Override
+	public void onPause() {
+		super.onPause();
+		Calculator.getCalculator(this).saveResults();
 	}
 
 

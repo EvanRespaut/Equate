@@ -1,6 +1,13 @@
 package com.llamacorp.unitcalc;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class Unit{
+    private static final String JSON_NAME = "name";
+    private static final String JSON_VALUE = "value";
+    private static final String JSON_INTERCEPT = "intecept";
+	
 	private String mDispName;
 	private double mValue;
 	//0 for most conversions; 32 and -160/9 for Celsius and Fahrenheit
@@ -21,6 +28,21 @@ public class Unit{
 	public Unit(){
 		this("", 0, 0);
 	}
+	
+    public Unit(JSONObject json) throws JSONException {
+    	this(json.getString(JSON_NAME), 
+    		 json.getDouble(JSON_VALUE), 
+    		 json.getDouble(JSON_INTERCEPT));
+		}
+
+    public JSONObject toJSON() throws JSONException {
+		JSONObject json = new JSONObject();
+		
+        json.put(JSON_NAME, toString());
+        json.put(JSON_VALUE, getValue());
+        json.put(JSON_INTERCEPT, getIntercept());
+        return json;
+    }
 
 	public double getValue() {
 		return mValue;

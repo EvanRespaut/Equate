@@ -1,7 +1,18 @@
 package com.llamacorp.unitcalc;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class Result {
-	private String mQuerry;
+	private static final String JSON_QUERY = "query";
+	private static final String JSON_ANSWER = "answer";
+	private static final String JSON_QUERY_UNIT = "query_unit";
+	private static final String JSON_ANSWER_UNIT = "answer_unit";
+	private static final String JSON_UNIT_TYPE_POS = "unit_type_pos";
+	private static final String JSON_CONTAINS_UNITS = "conatains_units";
+
+
+	private String mQuery;
 	private String mAnswer;
 	private Unit mQueryUnit;
 	private Unit mAnswerUnit;
@@ -9,8 +20,8 @@ public class Result {
 	boolean mContainsUnits;
 
 
-	public Result(String querry){
-		mQuerry=querry;
+	public Result(String query){
+		mQuery=query;
 		mAnswer="";
 		mQueryUnit = new Unit();
 		mAnswerUnit = new Unit();
@@ -21,12 +32,34 @@ public class Result {
 		this("");
 	}
 
-	public String getQuerry() {
-		return mQuerry;
+	public Result(JSONObject json) throws JSONException {
+		mQuery = json.getString(JSON_QUERY);
+		mAnswer = json.getString(JSON_ANSWER);
+		mQueryUnit = new Unit(json.getJSONObject(JSON_QUERY_UNIT)); 
+		mAnswerUnit = new Unit(json.getJSONObject(JSON_ANSWER_UNIT)); 
+		mUnitTypePos = json.getInt(JSON_UNIT_TYPE_POS);
+		mContainsUnits = json.getBoolean(JSON_CONTAINS_UNITS);
 	}
-	
+
+	public JSONObject toJSON() throws JSONException {
+		JSONObject json = new JSONObject();
+		
+		json.put(JSON_QUERY, getQuerry());
+		json.put(JSON_ANSWER, getAnswer());
+		json.put(JSON_QUERY_UNIT, mQueryUnit.toJSON());
+		json.put(JSON_ANSWER_UNIT, mAnswerUnit.toJSON());
+		json.put(JSON_UNIT_TYPE_POS, getUnitTypePos());
+		json.put(JSON_CONTAINS_UNITS, containsUnits());
+		
+		return json;
+	}
+
+	public String getQuerry() {
+		return mQuery;
+	}
+
 	public void setQuerry(String querry) {
-		mQuerry = querry;
+		mQuery = querry;
 	}
 
 	public String getAnswer() {
@@ -67,9 +100,9 @@ public class Result {
 
 	public String getTextQuerry() {
 		if(mContainsUnits)
-			return mQuerry + " " + mQueryUnit;
+			return mQuery + " " + mQueryUnit;
 		else
-			return mQuerry;	
+			return mQuery;	
 	}
 
 	public String getTextAnswer() {
