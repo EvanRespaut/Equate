@@ -3,7 +3,17 @@ package com.llamacorp.unitcalc;
 import java.math.BigDecimal;
 import java.math.MathContext;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class Expression {
+	private static final String JSON_EXPRESSION = "expression";
+	private static final String JSON_PRECISE = "precise";
+	private static final String JSON_START = "sel_start";
+	private static final String JSON_END = "sel_end";
+	private static final String JSON_SOLVED = "sel_end";
+	
+	
 	//the main expression string
 	private String mExpression;
 	//this string stores the more precise result after solving
@@ -54,7 +64,34 @@ public class Expression {
 		this(0);
 	}
 
+	public Expression(JSONObject json, int displayPrecision) throws JSONException {
+		this(displayPrecision);
+		replaceExpression(json.getString(JSON_EXPRESSION));
+		mPreciseResult = json.getString(JSON_PRECISE);
+		System.out.println("right before");
+		//TODO this is breaking
+//		mSelectionStart = json.getInt(JSON_START);
+//		mSelectionEnd = json.getInt(JSON_END);
 
+		System.out.println("mSelectionStart="+mSelectionStart);
+		System.out.println("mSelectionEnd="+mSelectionEnd);
+		setSolved(json.getBoolean(JSON_SOLVED));
+	}
+
+	public JSONObject toJSON()  throws JSONException {
+		JSONObject json = new JSONObject();
+		
+		json.put(JSON_EXPRESSION, toString());
+		json.put(JSON_PRECISE, mPreciseResult);
+		json.put(JSON_START, getSelectionStart());
+		json.put(JSON_END, getSelectionEnd());
+		json.put(JSON_SOLVED, isSolved());
+		
+		return json;
+	}
+	
+	
+	
 	/**
 	 * This function will try to add a number or operator, or entire result list to the current expression
 	 * Note that there is lots of error checking to be sure user can't entire an invalid operator/number

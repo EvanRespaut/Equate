@@ -1,4 +1,12 @@
 package com.llamacorp.unitcalc;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.util.ArrayList;
@@ -6,16 +14,24 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONTokener;
+
 import android.content.Context;
 
 import com.llamacorp.unitcalc.UnitType.OnConvertionListener;
 
 public class Calculator implements OnConvertionListener{
-    private static final String FILENAME = "saved_data.json";
+	private static final String FILENAME = "saved_data.json";
+	private static final String JSON_RESULT_LIST = "result_list";
+	private static final String JSON_EXPRESSION = "expression";
+	private static final String JSON_UNIT_TYPE = "unit_type";
+	
+
 	private static Calculator mCaculator;
 	private Context mAppContext; 
-	
-    private CalcJSONSerializer mSerializer;
 
 	//main expression
 	private Expression mExpression;
@@ -60,19 +76,20 @@ public class Calculator implements OnConvertionListener{
 	private Calculator(Context appContext){
 		//save our context
 		mAppContext = appContext;
-		mSerializer = new CalcJSONSerializer(mAppContext, FILENAME);
-	
-        try {
-            mResultList = mSerializer.loadResult();
-        } catch (Exception e) {	
+
+		try {
+			loadState();
+		} catch (Exception e) {	
 			mResultList = new ArrayList<Result>();
+			mExpression = new Expression(intDisplayPrecision);
+			//set the unit type to length by default
+			mUnitTypePos=2;
 		}
-		mExpression=new Expression(intDisplayPrecision);
+
 		//load the calculating precision
 		mMcOperate = new MathContext(intCalcPrecision);
 
-		//set the unit type to length by default
-		mUnitTypePos=2;
+
 		//call helper method to actually load in units
 		initiateUnits();
 	}
@@ -86,16 +103,70 @@ public class Calculator implements OnConvertionListener{
 		return mCaculator;
 	}
 
-	public boolean saveResults(){
+
+	private void loadState() throws IOException, JSONException {
+		ArrayList<Result> results = new ArrayList<Result>();
+		BufferedReader reader = null;
 		try {
-			mSerializer.saveCalcState(mResultList);
-			return true;
-		} catch (Exception e){
-			return false;
+			// open and read the file into a StringBuilder
+			InputStream in = mAppContext.openFileInput(FILENAME);
+			reader = new BufferedReader(new InputStreamReader(in));
+			StringBuilder jsonString = new StringBuilder();
+			String line = null;
+			while ((line = reader.readLine()) != null) {
+				// line breaks are omitted and irrelevant
+				jsonString.append(line);
+			}
+
+			// parse the JSON using JSONTokener
+			JSONObject jObjState = (JSONObject) new JSONTokener(jsonString.toString()).nextValue();
+			mExpression = new Expression(jObjState.getJSONObject(JSON_EXPRESSION), intDisplayPrecision);
+			mUnitTypePos = jObjState.getInt(JSON_UNIT_TYPE);
+
+			JSONArray jResultArray = jObjState.getJSONArray(JSON_RESULT_LIST);
+
+			// build the array of results from JSONObjects
+			for (int i = 0; i < jResultArray.length(); i++) {
+				results.add(new Result(jResultArray.getJSONObject(i)));
+			}
+			mResultList = results;
+		} catch (FileNotFoundException e) {
+			// we will ignore this one, since it happens when we start fresh
+		} finally {
+			if (reader != null)
+				reader.close();
 		}
 	}
-	
-	
+
+	public void saveState() throws JSONException, IOException {
+		//Main JSON object 
+		JSONObject jObjState = new JSONObject();
+		jObjState.put(JSON_EXPRESSION, mExpression.toJSON());
+		jObjState.put(JSON_UNIT_TYPE, mUnitTypePos);
+		
+		JSONArray jResultArray = new JSONArray();
+		for (Result result : mResultList)
+			jResultArray.put(result.toJSON());
+
+		jObjState.put(JSON_RESULT_LIST, jResultArray);
+
+		// write the file to disk
+		Writer writer = null;
+		try {
+			OutputStream out = mAppContext.openFileOutput(FILENAME, Context.MODE_PRIVATE);
+			writer = new OutputStreamWriter(out);
+			writer.write(jObjState.toString());
+		} finally {
+			if (writer != null)
+				writer.close();
+		}
+	}
+
+
+
+
+
+
 	/**
 	 * Helper method used to initiate the array of various types of units
 	 */	
@@ -116,7 +187,7 @@ public class Calculator implements OnConvertionListener{
 		unitsOfTemp.addUnit("°C", 1, 32);
 		mUnitTypeArray.add(unitsOfTemp);
 
-		
+
 		UnitType unitsOfWeight = new UnitType(this);
 		unitsOfWeight.addUnit("oz", 1/0.0283495);
 		unitsOfWeight.addUnit("lb", 1/0.453592);
@@ -131,7 +202,7 @@ public class Calculator implements OnConvertionListener{
 		unitsOfWeight.addUnit("metric ton", 1/1e3);
 		mUnitTypeArray.add(unitsOfWeight);
 
-		
+
 		UnitType unitsOfLength = new UnitType(this);
 		unitsOfLength.addUnit("in", 1/0.0254);
 		unitsOfLength.addUnit("ft", 1/0.3048);
@@ -146,7 +217,7 @@ public class Calculator implements OnConvertionListener{
 		unitsOfLength.addUnit("m", 1.0);
 		mUnitTypeArray.add(unitsOfLength);	
 
-		
+
 		UnitType unitsOfArea = new UnitType(this);
 		unitsOfArea.addUnit("in^2", 1/0.00064516);//0.0254^2
 		unitsOfArea.addUnit("ft^2", 1/0.09290304);//0.3048^2
@@ -224,7 +295,7 @@ public class Calculator implements OnConvertionListener{
 
 		//load in the precise result if possible
 		exp.loadPreciseResult();
-		
+
 		//deal with percent operators
 		exp.replacePercentOps();
 
@@ -513,15 +584,15 @@ public class Calculator implements OnConvertionListener{
 	public void setUnitTypePos(int pos){
 		mUnitTypePos = pos;
 	}
-	
+
 	public int getUnitTypePos() {
 		return mUnitTypePos;
 	}
-	
+
 	public void pasteIntoExpression(String str){
 		mExpression.pasteIntoExpression(str);
 	}
-	
+
 	public void setSolved(boolean solved){
 		mExpression.setSolved(solved);
 	}

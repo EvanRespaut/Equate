@@ -418,7 +418,11 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 	@Override
 	public void onPause() {
 		super.onPause();
-		Calculator.getCalculator(this).saveResults();
+		try {
+			Calculator.getCalculator(this).saveState();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 
 	}
 
 
