@@ -17,7 +17,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ListView;
 
 import com.llamacorp.unitcalc.ConvKeysFragment.OnConvertKeySelectedListener;
 import com.llamacorp.unitcalc.ResultListFragment.OnResultSelectedListener;
@@ -27,8 +26,8 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 	private ViewPager mConvKeysViewPager; 
 	private ResultListFragment mResultFragment;
 
-    private static final String[] CONTENT = new String[] { "Temp", "Weight", "Length", "Area", "Volume"};
-	
+	private static final String[] CONTENT = new String[] { "Temp", "Weight", "Length", "Area", "Volume"};
+
 	private List<Button> calcButton;
 	private EditTextCursorWatcher mDisplay;
 
@@ -122,8 +121,8 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 			ResultListFragment resultListFragment = (ResultListFragment)fm.findFragmentById(R.id.resultListfragmentContainer);
 			resultListFragment.refresh(instaScroll);
 
+			/*
 			//make a little gray divider above expression when prev expression hits it
-
 			View divider = findViewById(R.id.prev_curr_exp_divider);
 			ListView mResultListView = mResultFragment.getListView();
 			//don't try this unless result list has something there
@@ -134,6 +133,7 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 						mResultListView.getChildAt(mResultListView.getChildCount() - 1).getHeight() >= mResultListView.getHeight())
 					divider.setBackgroundColor(getResources().getColor(R.color.prev_curr_exp_divider));
 			}
+			 */
 		}
 	}
 
@@ -201,10 +201,10 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 				return ConvKeysFragment.newInstance(pos);
 			}
 
-	        @Override
-	        public CharSequence getPageTitle(int position) {
-	            return CONTENT[position % CONTENT.length];
-	        }
+			@Override
+			public CharSequence getPageTitle(int position) {
+				return CONTENT[position % CONTENT.length];
+			}
 		});
 
 		/*
@@ -212,10 +212,10 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 		viewPageIndicator.setViewPager(mConvKeysViewPager);
 		viewPageIndicator.setFillColor(Color.GRAY);
 		viewPageIndicator.setStrokeColor(Color.GRAY);
-		*/
+		 */
 		TabPageIndicator viewPageIndicator = (TabPageIndicator)findViewById(R.id.titles);
 		viewPageIndicator.setViewPager(mConvKeysViewPager);
-		
+
 		//need to tell calc when a new UnitType page is selected
 		viewPageIndicator.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 			//as the page is being scrolled to
@@ -414,7 +414,7 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 			};			
 		});
 	}
-	
+
 	@Override
 	public void onPause() {
 		super.onPause();
@@ -445,7 +445,7 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 		}
 	}
 
-	
+
 	/**
 	 * Clear the unit selection for convert key fragment at position pos
 	 * @param pos the position of the desired convert key fragment to clear selected units from 
@@ -455,8 +455,8 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 		if(currFragLeft!=null)
 			currFragLeft.clearButtonSelection();
 	}
-	
-	
+
+
 	/**
 	 * Helper function to return the convert key fragment at position pos
 	 * @param pos the position of the desired convert key fragment
@@ -471,9 +471,9 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 		}
 		else return null;
 	}
-	
-	
-	
+
+
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
