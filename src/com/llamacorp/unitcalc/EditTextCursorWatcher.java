@@ -87,7 +87,7 @@ public class EditTextCursorWatcher extends EditText {
 		//this was in the original function, keep for now
 		LAST_CUT_OR_COPY_TIME = SystemClock.uptimeMillis();
 
-		Toast.makeText(context, "Cut!", Toast.LENGTH_SHORT).show();
+		Toast.makeText(context, "Cut: \"" + copiedText + "\"", Toast.LENGTH_SHORT).show();
 	}
 
 
@@ -109,7 +109,7 @@ public class EditTextCursorWatcher extends EditText {
 				textToPaste = clipboard.getText().toString();
 			else return;
 		}
-		Toast.makeText(context, "Pasted text = " + textToPaste, Toast.LENGTH_SHORT).show();
+		Toast.makeText(context, "Pasted: \"" + textToPaste + "\"", Toast.LENGTH_SHORT).show();
 		mCalc.pasteIntoExpression(textToPaste);
 	}	
 
@@ -141,8 +141,13 @@ public class EditTextCursorWatcher extends EditText {
 		int selStart = mCalc.getSelectionStart();
 		int selEnd = mCalc.getSelectionEnd();
 
+		String text = mCalc.toString();
+		//if unit selected, display it after the expression
+		if(mCalc.getCurrUnitType().isUnitSelected())
+			text = text + " " + mCalc.getCurrUnitType().getSelectedUnit().toString();
+		
 		//update the main display
-		setText(mCalc.toString());
+		setText(text);
 		//updating the text restarts selection to 0,0, so load in the current selection
 		setSelection(selStart, selEnd);
 		if(selStart == mCalc.toString().length())
@@ -161,11 +166,24 @@ public class EditTextCursorWatcher extends EditText {
 
 	@Override   
 	protected void onSelectionChanged(int selStart, int selEnd) { 
-		//Toast.makeText(getContext(), "selStart is " + selStart + "selEnd is " + selEnd, Toast.LENGTH_LONG).show();
+//		Toast.makeText(getContext(), "selStart is " + selStart + "selEnd is " + selEnd, Toast.LENGTH_LONG).show();
 		if(mCalc!=null){
 			//if expression is empty, no need to set selection (happens if user clicks "UnicCalc")
 			if(mCalc.toString().equals(""))
 				return;
+			
+			int expLen = mCalc.toString().length();
+			//check to see if the unit part of the expression has been selected
+			if(selEnd > expLen){
+				setSelection(selStart, expLen);
+				return;
+			}
+			if(selStart > expLen){
+				setSelection(expLen, selEnd);
+				return;
+			}
+				
+			//save the new selection in the calc class
 			mCalc.setSelection(selStart, selEnd);
 			setCursorVisible(true);
 		}

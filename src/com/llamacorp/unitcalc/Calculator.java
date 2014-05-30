@@ -76,19 +76,20 @@ public class Calculator implements OnConvertionListener{
 	private Calculator(Context appContext){
 		//save our context
 		mAppContext = appContext;
-
+		
+		mResultList = new ArrayList<Result>();
+		mExpression = new Expression(intDisplayPrecision);
+		
+		//set the unit type to length by default
+		mUnitTypePos=2;
+		
+		//load the calculating precision
+		mMcOperate = new MathContext(intCalcPrecision);
+			
 		try {
 			loadState();
 		} catch (Exception e) {	
-			mResultList = new ArrayList<Result>();
-			mExpression = new Expression(intDisplayPrecision);
-			//set the unit type to length by default
-			mUnitTypePos=2;
 		}
-
-		//load the calculating precision
-		mMcOperate = new MathContext(intCalcPrecision);
-
 
 		//call helper method to actually load in units
 		initiateUnits();

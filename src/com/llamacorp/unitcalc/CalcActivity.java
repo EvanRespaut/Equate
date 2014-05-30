@@ -93,20 +93,6 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 
 
 	/**
-	 * Updates the current expression and result list
-	 * @param updateResult whether or not to update result
-	 */
-	public void updateScreen(boolean updateResult){
-		//no insta scroll for previous expression
-		updateScreenWithInstaScrollOption(updateResult, false);
-
-		//see if colored convert button should be not colored (if backspace or clear were pressed, or if expression solved)
-		if(!mCalc.isUnitIsSet())
-			clearConvKeyForFragPos(mConvKeysViewPager.getCurrentItem());
-	}
-
-
-	/**
 	 * Function 
 	 * @param updateResult
 	 * @param instaScroll
@@ -137,6 +123,20 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 		}
 	}
 
+	/**
+	 * Updates the current expression and result list
+	 * @param updateResult whether or not to update result
+	 */
+	public void updateScreen(boolean updateResult){
+		//no insta scroll for previous expression
+		updateScreenWithInstaScrollOption(updateResult, false);
+
+		//see if colored convert button should be not colored (if backspace or clear were pressed, or if expression solved)
+		if(!mCalc.isUnitIsSet())
+			clearConvKeyForFragPos(mConvKeysViewPager.getCurrentItem());
+	}
+
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
