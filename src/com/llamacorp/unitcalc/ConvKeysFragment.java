@@ -2,8 +2,6 @@ package com.llamacorp.unitcalc;
 
 import java.util.ArrayList;
 
-import com.llamacorp.unitcalc.R;
-
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -65,7 +63,7 @@ public class ConvKeysFragment extends Fragment {
 
 		mUnitType = Calculator.getCalculator(getActivity()).getUnitType(pos);
 	}
-	
+
 	@Override
 	public void onResume(){
 		super.onResume();
@@ -93,13 +91,13 @@ public class ConvKeysFragment extends Fragment {
 			//add to our list of conv buttons
 			mConvButton.add(button);			
 
-			
+
 			String displayText = mUnitType.getUnitDisplayName(i);
-			
+
 			//if button is empty, don't create OnClickListener for it
 			if(displayText.equals(""))
 				continue;
-			
+
 			//want to superscript text after a "^" character
 			String [] splitArray = displayText.split("\\^");
 			//only upper-case text if it exists
@@ -130,7 +128,7 @@ public class ConvKeysFragment extends Fragment {
 				}
 			});
 		}
-		
+
 		return v;
 	}
 
@@ -153,27 +151,31 @@ public class ConvKeysFragment extends Fragment {
 		boolean didConvert = mUnitType.selectUnit(buttonPos);
 
 		//if conversion performed, update screen
-		if(didConvert)
+		//if(didConvert)
+			//always update screen to add/remove unit from expression
 			mCallback.updateScreen(true);
-		
+
 		colorSelectedButton();
 	}
-	
+
 	public void colorSelectedButton(){
 		//is null when app's onResume calls it (convertkey's onCreate called after activity's onResume)
 		if(mUnitType==null)
 			return;
-		
+
 		//If new unit still selected, add color to newly selected convert button
 		if(mUnitType.isUnitSelected())
 			mConvButton.get(mUnitType.getCurrUnitPos()).setSelected(true);			
 	}
 
+	/** Clears the button unit selection */
 	public void clearButtonSelection(){
 		//function may be called before convert key array built, in which case, leave
 		if(mConvButton == null) return;
 		//Clear color from previously selected convert button
 		Button prevSelected = mConvButton.get(mUnitType.getCurrUnitPos());
 		prevSelected.setSelected(false);	
+		//clear the button in the calc
+	//	mUnitType.clearUnitSelection();
 	}
 }

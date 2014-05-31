@@ -213,11 +213,11 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 		viewPageIndicator.setFillColor(Color.GRAY);
 		viewPageIndicator.setStrokeColor(Color.GRAY);
 		 */
-		TabPageIndicator viewPageIndicator = (TabPageIndicator)findViewById(R.id.titles);
-		viewPageIndicator.setViewPager(mConvKeysViewPager);
+		TabPageIndicator convertPageIndicator = (TabPageIndicator)findViewById(R.id.titles);
+		convertPageIndicator.setViewPager(mConvKeysViewPager);
 
 		//need to tell calc when a new UnitType page is selected
-		viewPageIndicator.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+		convertPageIndicator.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 			//as the page is being scrolled to
 			@Override
 			public void onPageSelected(int pos) {
@@ -237,13 +237,17 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 				//clear selected unit from adjacent convert key fragment so you can't see a bit of them
 				int currConvKeyPos = mConvKeysViewPager.getCurrentItem();
 				clearConvKeyForFragPos(currConvKeyPos-1);
+				clearConvKeyForFragPos(currConvKeyPos);
 				clearConvKeyForFragPos(currConvKeyPos+1);
+				mCalc.getCurrUnitType().clearUnitSelection();
 
 				//if user clicks unit-ed result, scroll to that UnitType fragment
 				if(unitToSelectAfterScroll!=null){
 					getConvKeyFrag(mConvKeysViewPager.getCurrentItem()).selectUnit(unitToSelectAfterScroll);
 					unitToSelectAfterScroll=null;
 				}
+				//clear out the unit in expression if it's now cleared
+				updateScreen(false);
 			}
 
 			@Override
@@ -451,9 +455,9 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 	 * @param pos the position of the desired convert key fragment to clear selected units from 
 	 */
 	private void clearConvKeyForFragPos(int pos){
-		ConvKeysFragment currFragLeft = getConvKeyFrag(pos);
-		if(currFragLeft!=null)
-			currFragLeft.clearButtonSelection();
+		ConvKeysFragment currFragAtPos = getConvKeyFrag(pos);
+		if(currFragAtPos!=null)
+			currFragAtPos.clearButtonSelection();
 	}
 
 

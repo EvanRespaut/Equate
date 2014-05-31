@@ -142,8 +142,8 @@ public class EditTextCursorWatcher extends EditText {
 		int selEnd = mCalc.getSelectionEnd();
 
 		String text = mCalc.toString();
-		//if unit selected, display it after the expression
-		if(mCalc.getCurrUnitType().isUnitSelected())
+		//if expression not empty and unit selected, display it after the expression
+		if(!mCalc.toString().equals("") && mCalc.getCurrUnitType().isUnitSelected())
 			text = text + " " + mCalc.getCurrUnitType().getSelectedUnit().toString();
 		
 		//update the main display
@@ -166,12 +166,7 @@ public class EditTextCursorWatcher extends EditText {
 
 	@Override   
 	protected void onSelectionChanged(int selStart, int selEnd) { 
-//		Toast.makeText(getContext(), "selStart is " + selStart + "selEnd is " + selEnd, Toast.LENGTH_LONG).show();
 		if(mCalc!=null){
-			//if expression is empty, no need to set selection (happens if user clicks "UnicCalc")
-			if(mCalc.toString().equals(""))
-				return;
-			
 			int expLen = mCalc.toString().length();
 			//check to see if the unit part of the expression has been selected
 			if(selEnd > expLen){
