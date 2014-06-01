@@ -79,7 +79,6 @@ public class Calculator implements OnConvertionListener{
 		
 		mResultList = new ArrayList<Result>();
 		mExpression = new Expression(intDisplayPrecision);
-		
 		//set the unit type to length by default
 		mUnitTypePos=2;
 		
@@ -164,8 +163,13 @@ public class Calculator implements OnConvertionListener{
 	}
 
 
-
-
+	/** Clears the result list, expression, and unit selection */
+	public void resetCalc(){
+		mResultList.clear();
+		mExpression = new Expression(intDisplayPrecision);
+		//set the unit type to length by default
+		mUnitTypePos=2;
+	}
 
 
 	/**

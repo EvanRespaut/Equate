@@ -136,7 +136,7 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 			clearConvKeyForFragPos(mConvKeysViewPager.getCurrentItem());
 	}
 
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -215,7 +215,7 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 		 */
 		TabPageIndicator convertPageIndicator = (TabPageIndicator)findViewById(R.id.titles);
 		convertPageIndicator.setViewPager(mConvKeysViewPager);
-
+		
 		//need to tell calc when a new UnitType page is selected
 		convertPageIndicator.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 			//as the page is being scrolled to
@@ -346,7 +346,9 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 		ImageButton backspaceButton = (ImageButton) findViewById(R.id.backspace_button);
 		backspaceButton.setOnTouchListener(new View.OnTouchListener() {
 			private Handler mColorHoldHandler;
+			private Handler mResetHandler;			
 			private View mView;
+			private static final int CLEAR_HOLD_TIME=2200;			
 			//private int startTime;
 
 			@Override 
@@ -360,20 +362,35 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 					mColorHoldHandler = new Handler();
 					mColorHoldHandler.postDelayed(mBackspaceColor, 10);
 
-					//startTime = System.currentTimeMillis();
+					if (mResetHandler != null) return true;
+					mResetHandler = new Handler();
+					mResetHandler.postDelayed(mBackspaceReset, CLEAR_HOLD_TIME);
 
 					break;
 				case MotionEvent.ACTION_UP:
 					if (mColorHoldHandler == null) return true;
+					if (mResetHandler == null) return true;
 					numButtonPressed("b");
 					view.setBackgroundColor(getResources().getColor(R.color.op_button_normal));
 					mColorHoldHandler.removeCallbacks(mBackspaceColor);
 					mColorHoldHandler = null;
+					
+					mResetHandler.removeCallbacks(mBackspaceReset);
+					mResetHandler = null;
 					break;
 				}
 				return false;
 			}
 
+
+			Runnable mBackspaceReset = new Runnable() {
+				@Override 
+				public void run() {
+					mCalc.resetCalc();
+					updateScreen(true);
+					mConvKeysViewPager.setCurrentItem(mCalc.getUnitTypePos());
+				}
+			};			
 
 
 			private int mInc;
@@ -383,17 +400,18 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 				private int mEndColor = getResources().getColor(R.color.backspace_button_held);
 
 				private static final int NUM_COLOR_CHANGES=10;
-				private static final int BACKSPACE_HOLD_TIME=500;			
+				private static final int BACKSPACE_HOLD_TIME=500;	
 
 				@Override 
 				public void run() {
+					//after clear had been performed and 100ms is up, set color back to default
 					if(mInc==-1){
 						mView.setBackgroundColor(mEndColor);
 						return;
 					}
+					//color the button black for a second and then clear
 					if(mInc==NUM_COLOR_CHANGES){
 						numButtonPressed("c");
-						//System.out.println("TOTAL TIME =" + String.valueOf(System.currentTimeMillis()-startTime));
 						mView.setBackgroundColor(Color.argb(255, 0, 0, 0));
 						mColorHoldHandler.postDelayed(this, 100);
 						mInc=-1;
@@ -410,9 +428,9 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 					int deltaBlue= Color.blue(mStartColor) + ((Color.blue(mEndColor)-Color.blue(mStartColor))*mInc)/NUM_COLOR_CHANGES;
 
 					mView.setBackgroundColor(Color.argb(255, (int)deltaRed, deltaGreen, deltaBlue));
-					System.out.println("deltaRed="+deltaRed);
-					System.out.println("((Color.red(mEndColor)-Color.red(mStartColor))*mInc^3)"+((Color.red(mEndColor)-Color.red(mStartColor))*mInc^3));
-					System.out.println("mInc="+mInc);
+					//					System.out.println("deltaRed="+deltaRed);
+					//					System.out.println("((Color.red(mEndColor)-Color.red(mStartColor))*mInc^3)"+((Color.red(mEndColor)-Color.red(mStartColor))*mInc^3));
+					//					System.out.println("mInc="+mInc);
 					mInc++;
 				}
 			};			
