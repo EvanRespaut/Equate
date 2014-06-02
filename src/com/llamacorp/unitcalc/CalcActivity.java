@@ -26,8 +26,6 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 	private ViewPager mConvKeysViewPager; 
 	private ResultListFragment mResultFragment;
 
-	private static final String[] CONTENT = new String[] { "Temp", "Weight", "Length", "Area", "Volume"};
-
 	private List<Button> calcButton;
 	private EditTextCursorWatcher mDisplay;
 
@@ -202,8 +200,8 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 			}
 
 			@Override
-			public CharSequence getPageTitle(int position) {
-				return CONTENT[position % CONTENT.length];
+			public CharSequence getPageTitle(int pos) {
+				return mCalc.getUnitTypeName(pos % mCalc.getUnitTypeSize());
 			}
 		});
 

@@ -11,7 +11,7 @@ public class UnitType {
 		public void convertFromTo(Unit fromUnit, Unit toUnit);
 	}
 
-
+	private String mName;
 	private ArrayList<Unit> mUnitArray;
 	private int mCurrUnitPos;
 	private boolean mIsUnitSelected;
@@ -20,7 +20,7 @@ public class UnitType {
 	 * Constructor
 	 * @param hosting class must implement a function to do raw number conversion
 	 */	
-	public UnitType(Object parent){
+	public UnitType(Object parent, String name){
 		// This makes sure that the container activity has implemented
 		// the callback interface. If not, it throws an exception
 		try {
@@ -30,6 +30,7 @@ public class UnitType {
 					+ " must implement OnConvertKeySelectedListener");
 		}
 
+		mName = name;
 		mUnitArray = new ArrayList<Unit>();
 		mIsUnitSelected = false;
 	}
@@ -99,6 +100,10 @@ public class UnitType {
 		return mIsUnitSelected;
 	}
 
+	public String getUnitTypeName(){
+		return mName;
+	}
+	
 	/**
 	 * @param Index of Unit in the mUnitArray list
 	 * @return String name to be displayed on convert button

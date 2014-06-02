@@ -28,6 +28,7 @@ public class Calculator implements OnConvertionListener{
 	private static final String JSON_RESULT_LIST = "result_list";
 	private static final String JSON_EXPRESSION = "expression";
 	private static final String JSON_UNIT_TYPE = "unit_type";
+	private static final int RESULT_LIST_MAX_SIZE = 100;
 	
 
 	private static Calculator mCaculator;
@@ -178,7 +179,7 @@ public class Calculator implements OnConvertionListener{
 	private void initiateUnits(){
 		mUnitTypeArray = new ArrayList<UnitType>();
 
-		UnitType unitsOfTemp = new UnitType(this);
+		UnitType unitsOfTemp = new UnitType(this,"Temp");
 		unitsOfTemp.addUnit("",  0, 0);
 		unitsOfTemp.addUnit("",  0, 0);
 		unitsOfTemp.addUnit("",  0, 0);
@@ -193,7 +194,7 @@ public class Calculator implements OnConvertionListener{
 		mUnitTypeArray.add(unitsOfTemp);
 
 
-		UnitType unitsOfWeight = new UnitType(this);
+		UnitType unitsOfWeight = new UnitType(this,"Weight");
 		unitsOfWeight.addUnit("oz", 1/0.0283495);
 		unitsOfWeight.addUnit("lb", 1/0.453592);
 		unitsOfWeight.addUnit("short ton", 1/907.184);
@@ -208,7 +209,7 @@ public class Calculator implements OnConvertionListener{
 		mUnitTypeArray.add(unitsOfWeight);
 
 
-		UnitType unitsOfLength = new UnitType(this);
+		UnitType unitsOfLength = new UnitType(this,"Length");
 		unitsOfLength.addUnit("in", 1/0.0254);
 		unitsOfLength.addUnit("ft", 1/0.3048);
 		unitsOfLength.addUnit("yard", 1/0.9144);
@@ -223,7 +224,7 @@ public class Calculator implements OnConvertionListener{
 		mUnitTypeArray.add(unitsOfLength);	
 
 
-		UnitType unitsOfArea = new UnitType(this);
+		UnitType unitsOfArea = new UnitType(this,"Area");
 		unitsOfArea.addUnit("in^2", 1/0.00064516);//0.0254^2
 		unitsOfArea.addUnit("ft^2", 1/0.09290304);//0.3048^2
 		unitsOfArea.addUnit("yd^2", 1/0.83612736);//0.3048^2*9
@@ -238,7 +239,7 @@ public class Calculator implements OnConvertionListener{
 		mUnitTypeArray.add(unitsOfArea);
 
 
-		UnitType unitsOfVolume = new UnitType(this);
+		UnitType unitsOfVolume = new UnitType(this,"Volume");
 		unitsOfVolume.addUnit("tbsp", 1/0.000014786764765625);//gal/256
 		unitsOfVolume.addUnit("cup", 1/0.00023658823625);//gal/16
 		unitsOfVolume.addUnit("pint", 1/0.0004731764725);//gal/8
@@ -265,6 +266,9 @@ public class Calculator implements OnConvertionListener{
 		//save the expression temporarily, later save to prevExpression
 		if(!result.equals("")){
 			mResultList.add(new Result(result));
+			//be sure max result size not exceeded
+			if(mResultList.size() > RESULT_LIST_MAX_SIZE)
+				mResultList.remove(0);
 			//also set result's unit if it's selected
 			if(isUnitIsSet()){
 				//load units into result list (this will also set contains unit flag
@@ -582,6 +586,10 @@ public class Calculator implements OnConvertionListener{
 		return mUnitTypeArray.get(mUnitTypePos);
 	}
 
+	public String getUnitTypeName(int pos){
+		return mUnitTypeArray.get(pos).getUnitTypeName();
+	}
+	
 	public int getUnitTypeSize() {
 		return mUnitTypeArray.size();
 	}
