@@ -222,6 +222,7 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 				//update the calc with current UnitType selection
 				mCalc.setUnitTypePos(pos);
 
+				/*
 				//set the margins so that you can see a bit of the left and right pages
 				DisplayMetrics metrics = getResources().getDisplayMetrics();
 				int padLeft=(int) (metrics.density * 8f + 0.5f);
@@ -231,6 +232,7 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 				//				if(mViewPager.getCurrentItem()==mViewPager.getAdapter().getCount()-1)
 				//					padRight=0;
 				mConvKeysViewPager.setPadding(padLeft, 0, padRight, 0);
+				*/
 
 				//clear selected unit from adjacent convert key fragment so you can't see a bit of them
 				int currConvKeyPos = mConvKeysViewPager.getCurrentItem();
@@ -255,7 +257,7 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 			public void onPageScrollStateChanged(int state) {}
 		});
 
-
+		/*
 		DisplayMetrics metrics = getResources().getDisplayMetrics();
 
 		int padLeft=(int) (metrics.density * 8f + 0.5f);
@@ -271,6 +273,7 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 		mConvKeysViewPager.setClipToPadding(false);
 		//add a little break between pages
 		mConvKeysViewPager.setPageMargin(8);
+		*/
 		//set page back to the previously selected page
 		mConvKeysViewPager.setCurrentItem(mCalc.getUnitTypePos());
 
