@@ -436,6 +436,16 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 				}
 			};			
 		});
+		
+		float px = mDisplay.getTextSize();
+		
+		DisplayMetrics metrics = new DisplayMetrics();
+		getWindowManager().getDefaultDisplay().getMetrics(metrics);
+		float logicalDensity = metrics.density;
+
+		int dp = (int) Math.ceil(px / logicalDensity);
+		System.out.println("text size dp=" + dp);
+		System.out.println("text size px=" + px);
 	}
 
 	@Override

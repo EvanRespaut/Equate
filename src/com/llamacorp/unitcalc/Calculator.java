@@ -252,6 +252,77 @@ public class Calculator implements OnConvertionListener{
 		unitsOfVolume.addUnit("l", 1/0.001);
 		unitsOfVolume.addUnit("m^3", 1);
 		mUnitTypeArray.add(unitsOfVolume);
+		/*
+		UnitType unitsOfPower = new UnitType(this,"Power");
+		unitsOfPower.addUnit("tbsp", 1/0.000014786764765625);
+		unitsOfPower.addUnit("cup", 1/0.00023658823625);
+		unitsOfPower.addUnit("pint", 1/0.0004731764725);
+		unitsOfPower.addUnit("qt", 1/0.000946352945);
+		unitsOfPower.addUnit("gal", 1/0.00378541178);
+
+		unitsOfPower.addUnit("tsp", 1/4.92892158854166666667e-6);
+		unitsOfPower.addUnit("fl oz", 1/0.00002957352953125);
+		unitsOfPower.addUnit("ml", 1/1e-6);
+		unitsOfPower.addUnit("l", 1/0.001);
+		unitsOfPower.addUnit("m^3", 1);
+		mUnitTypeArray.add(unitsOfPower);
+		
+		UnitType unitsOfSpeed = new UnitType(this,"Speed");
+		unitsOfSpeed.addUnit("tbsp", 1/0.000014786764765625);
+		unitsOfSpeed.addUnit("cup", 1/0.00023658823625);
+		unitsOfSpeed.addUnit("pint", 1/0.0004731764725);
+		unitsOfSpeed.addUnit("qt", 1/0.000946352945);
+		unitsOfSpeed.addUnit("gal", 1/0.00378541178);
+
+		unitsOfSpeed.addUnit("tsp", 1/4.92892158854166666667e-6);
+		unitsOfSpeed.addUnit("fl oz", 1/0.00002957352953125);
+		unitsOfSpeed.addUnit("ml", 1/1e-6);
+		unitsOfSpeed.addUnit("l", 1/0.001);
+		unitsOfSpeed.addUnit("m^3", 1);
+		mUnitTypeArray.add(unitsOfSpeed);
+		
+		UnitType unitsOfasdfsdf = new UnitType(this,"Speed");
+		unitsOfasdfsdf.addUnit("tbsp", 1/0.000014786764765625);
+		unitsOfasdfsdf.addUnit("cup", 1/0.00023658823625);
+		unitsOfasdfsdf.addUnit("pint", 1/0.0004731764725);
+		unitsOfasdfsdf.addUnit("qt", 1/0.000946352945);
+		unitsOfasdfsdf.addUnit("gal", 1/0.00378541178);
+
+		unitsOfasdfsdf.addUnit("tsp", 1/4.92892158854166666667e-6);
+		unitsOfasdfsdf.addUnit("fl oz", 1/0.00002957352953125);
+		unitsOfasdfsdf.addUnit("ml", 1/1e-6);
+		unitsOfasdfsdf.addUnit("l", 1/0.001);
+		unitsOfasdfsdf.addUnit("m^3", 1);
+		mUnitTypeArray.add(unitsOfasdfsdf);
+		
+		UnitType unitsOfasds = new UnitType(this,"Speed");
+		unitsOfasds.addUnit("tbsp", 1/0.000014786764765625);
+		unitsOfasds.addUnit("cup", 1/0.00023658823625);
+		unitsOfasds.addUnit("pint", 1/0.0004731764725);
+		unitsOfasds.addUnit("qt", 1/0.000946352945);
+		unitsOfasds.addUnit("gal", 1/0.00378541178);
+
+		unitsOfasds.addUnit("tsp", 1/4.92892158854166666667e-6);
+		unitsOfasds.addUnit("fl oz", 1/0.00002957352953125);
+		unitsOfasds.addUnit("ml", 1/1e-6);
+		unitsOfasds.addUnit("l", 1/0.001);
+		unitsOfasds.addUnit("m^3", 1);
+		mUnitTypeArray.add(unitsOfasds);
+		
+		UnitType unitsOfdds = new UnitType(this,"Speed");
+		unitsOfdds.addUnit("tbsp", 1/0.000014786764765625);
+		unitsOfdds.addUnit("cup", 1/0.00023658823625);
+		unitsOfdds.addUnit("pint", 1/0.0004731764725);
+		unitsOfdds.addUnit("qt", 1/0.000946352945);
+		unitsOfdds.addUnit("gal", 1/0.00378541178);
+
+		unitsOfdds.addUnit("tsp", 1/4.92892158854166666667e-6);
+		unitsOfdds.addUnit("fl oz", 1/0.00002957352953125);
+		unitsOfdds.addUnit("ml", 1/1e-6);
+		unitsOfdds.addUnit("l", 1/0.001);
+		unitsOfdds.addUnit("m^3", 1);
+		mUnitTypeArray.add(unitsOfdds);
+		*/
 	}
 
 
