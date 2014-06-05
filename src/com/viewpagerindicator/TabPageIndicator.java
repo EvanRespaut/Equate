@@ -163,6 +163,8 @@ public class TabPageIndicator extends HorizontalScrollView implements PageIndica
             tabView.setCompoundDrawablesWithIntrinsicBounds(iconResId, 0, 0, 0);
         }
 
+        //with the original 0 set here, sometimes text would get cropped out; wrap content prevents this
+        //mTabLayout.addView(tabView, new LinearLayout.LayoutParams(0, MATCH_PARENT, 1));
         mTabLayout.addView(tabView, new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, MATCH_PARENT, 1));
     }
 

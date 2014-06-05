@@ -68,7 +68,6 @@ public class Expression {
 		this(displayPrecision);
 		replaceExpression(json.getString(JSON_EXPRESSION));
 		mPreciseResult = json.getString(JSON_PRECISE);
-		System.out.println("right before");
 		//TODO this is breaking
 //		mSelectionStart = json.getInt(JSON_START);
 //		mSelectionEnd = json.getInt(JSON_END);
@@ -202,7 +201,7 @@ public class Expression {
 	 */	
 	public void roundAndCleanExpression() {
 		//if expression was displaying error (with invalid chars) leave
-		if(isInvalid() || mExpression.equals(""))
+		if(isInvalid() || isEmpty())
 			return;
 
 		//if there's any messed formatting, or if number is too big, throw syntax error
@@ -230,10 +229,7 @@ public class Expression {
 	}
 
 
-	/**
-	 * Replaces % operators their respective evaluable operators
-	 */
-	//TODO this is still broken....
+	/** Replaces % operators their respective operators */
 	public void replacePercentOps() {
 		String str=mExpression.toString();
 		String subStr = "";
@@ -261,9 +257,6 @@ public class Expression {
 				str = subStr + str.substring(i+1, str.length());
 				//move up i by the diff between the new and old str
 				i = subStr.length();
-				System.out.println("i="+i);
-				System.out.println("str="+str);
-				System.out.println("subStr="+subStr);			
 			}
 		}
 		replaceExpression(str);

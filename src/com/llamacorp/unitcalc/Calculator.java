@@ -378,7 +378,6 @@ public class Calculator implements OnConvertionListener{
 
 		//deal with percent operators
 		exp.replacePercentOps();
-
 		//main calculation: first the P of PEMAS, this function then calls remaining EMAS 
 		String tempExp = collapsePara(exp.toString(), mcSolve);
 		//save solved expression away
@@ -451,13 +450,12 @@ public class Calculator implements OnConvertionListener{
 		Pattern ptn = Pattern.compile(Expression.regexGroupedNumber + regexOperatorType + Expression.regexGroupedNumber);
 		Matcher mat = ptn.matcher(str);
 		BigDecimal result;
-
 		//this loop will loop through each occurrence of the "# op #" sequence
 		while (mat.find()) {
 			BigDecimal operand1;
 			BigDecimal operand2;
 			String operator;
-
+			
 			//be sure string is formatted properly
 			try{
 				operand1 = new BigDecimal(mat.group(1));
@@ -469,12 +467,19 @@ public class Calculator implements OnConvertionListener{
 				str = strSyntaxError;
 				return str;
 			}
-
+			
 			//perform actual operation on found operator and operands
-			if(operator.equals("+"))
+			if(operator.equals("+")){
+				//crude fix for 1E999999+1, which hangs the app. Could be handled better with real infinity...
+				if(operand1.scale() < -9000 || operand2.scale() < -9000)
+					return strInfinityError;	
 				result = operand1.add(operand2, mcSolve);
-			else if(operator.equals("-"))
+			}
+			else if(operator.equals("-")){
+				if(operand1.scale() < -9000 || operand2.scale() < -9000)
+					return strInfinityError;	
 				result = operand1.subtract(operand2, mcSolve);
+			}
 			else if(operator.equals("*"))
 				result = operand1.multiply(operand2, mcSolve);
 			else if(operator.equals("^")){
@@ -521,15 +526,14 @@ public class Calculator implements OnConvertionListener{
 	 */		
 	public void convertFromTo(Unit fromUnit, Unit toUnit){
 		//if expression empty, or contains invalid chars, don't need to solve anything
-		if(mExpression.isEmpty() || mExpression.isInvalid())
+		if(isExpressionEmpty() || isExpressionInvalid())
 			return;
-
 		//first solve the function
 		boolean solveSuccess = solveAndLoadIntoResultList();
 		//if there solve failed because there was nothing to solve, just leave (this way result list isn't loaded)
 		if (!solveSuccess)
 			return;
-
+		
 		//this catches weird expressions like "-(-)-"
 		try{
 			//convert numbers into big decimals for more operation control over precision			
@@ -538,14 +542,18 @@ public class Calculator implements OnConvertionListener{
 			BigDecimal bdCurrUnitIntercept = new BigDecimal(fromUnit.getIntercept(),mMcOperate);			
 			BigDecimal bdResult   = new BigDecimal(mExpression.toString(),mMcOperate);
 			// perform actual unit conversion (result*currUnit/toUnit)
-			mExpression.replaceExpression(bdCurrUnitIntercept.add(bdResult.multiply(bdToUnit.divide(bdCurrUnit, mMcOperate),mMcOperate)).toString());
+			BigDecimal bdScaled = bdResult.multiply(bdToUnit.divide(bdCurrUnit, mMcOperate),mMcOperate);
+			if(bdScaled.scale() < -9000 || bdCurrUnitIntercept.scale() < -9000 )
+				throw new NumberFormatException(strInfinityError);
+			mExpression.replaceExpression(bdCurrUnitIntercept.add(bdScaled, mMcOperate).toString());
 		}
 		catch (NumberFormatException e){
-			//System.out.println("e.getMessage()= " + e.getMessage());
-			mExpression.replaceExpression(strSyntaxError);
+			if(e.getMessage().equals(strInfinityError))
+				mExpression.replaceExpression(strInfinityError);
+			else
+				mExpression.replaceExpression(strSyntaxError);
 			return;
 		}
-
 
 		//rounding operation may throw NumberFormatException
 		try{
@@ -569,8 +577,8 @@ public class Calculator implements OnConvertionListener{
 	 */
 	public void parseKeyPressed(String sKey){
 		//if expression was displaying "Syntax Error" or similar (containing invalid chars) clear it
-		if(mExpression.isInvalid())
-			mExpression.replaceExpression("");
+		if(isExpressionInvalid())
+			mExpression.clearExpression();
 
 		//check for equals key
 		if(sKey.equals("=")){
@@ -588,6 +596,7 @@ public class Calculator implements OnConvertionListener{
 			}			//load the final value into the result list
 			mResultList.get(mResultList.size()-1).setAnswer(mExpression.toString());
 		}
+		//check for plain text (want 
 		//check for backspace key
 		else if(sKey.equals("b"))
 			backspace();
@@ -671,6 +680,14 @@ public class Calculator implements OnConvertionListener{
 
 	public int getUnitTypePos() {
 		return mUnitTypePos;
+	}
+	
+	public boolean isExpressionEmpty(){
+		return mExpression.isEmpty();
+	}	
+	
+	public boolean isExpressionInvalid(){
+		return mExpression.isInvalid();
 	}
 
 	public void pasteIntoExpression(String str){

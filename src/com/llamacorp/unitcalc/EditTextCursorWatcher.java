@@ -142,8 +142,8 @@ public class EditTextCursorWatcher extends EditText {
 		int selEnd = mCalc.getSelectionEnd();
 
 		String text = mCalc.toString();
-		//if expression not empty and unit selected, display it after the expression
-		if(!mCalc.toString().equals("") && mCalc.getCurrUnitType().isUnitSelected())
+		//if expression not empty/invalid and unit selected, display it after the expression
+		if(!mCalc.isExpressionInvalid() && !mCalc.isExpressionEmpty() && mCalc.getCurrUnitType().isUnitSelected())
 			text = text + " " + mCalc.getCurrUnitType().getSelectedUnit().toString();
 		
 		//update the main display
