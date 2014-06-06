@@ -7,12 +7,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
-import java.math.BigDecimal;
-import java.math.MathContext;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -36,7 +32,10 @@ public class Calculator implements OnConvertionListener{
 
 	//main expression
 	private Expression mExpression;
-
+	
+	//object that handles all the math
+	private Solver mSolver;
+	
 	//string of results; this will be directly manipulated by ResultListFragment
 	private List<Result> mResultList;
 
@@ -45,25 +44,18 @@ public class Calculator implements OnConvertionListener{
 	//stores the current location in mUnitTypeArray
 	private int mUnitTypePos;
 
-	//we want the display precision to be a bit less than calculated
-	private MathContext mMcOperate;
 
 	//precision for all calculations
 	public static final int intDisplayPrecision = 8;
 	public static final int intCalcPrecision = intDisplayPrecision+2;
-
-	//error messages
-	private static final String strSyntaxError = "Syntax Error";
-	private static final String strDivideZeroError = "Divide By Zero Error";
-	private static final String strInfinityError = "Number Too Large";
-
 
 
 	//------THIS IS FOR TESTING ONLY-----------------
 	private Calculator(){
 		mResultList = new ArrayList<Result>();
 		mExpression=new Expression(intDisplayPrecision); 		
-		mMcOperate = new MathContext(intCalcPrecision); 
+		//mMcOperate = new MathContext(intCalcPrecision); 
+		mSolver = new Solver(intCalcPrecision);
 		mUnitTypePos=2;	
 		initiateUnits();	
 	}
@@ -84,7 +76,7 @@ public class Calculator implements OnConvertionListener{
 		mUnitTypePos=2;
 		
 		//load the calculating precision
-		mMcOperate = new MathContext(intCalcPrecision);
+		mSolver = new Solver(intCalcPrecision);
 			
 		try {
 			loadState();
@@ -326,250 +318,6 @@ public class Calculator implements OnConvertionListener{
 	}
 
 
-	/**
-	 * Function that is called after user hits the "=" key
-	 * Called by calculator for solving current expression
-	 * @param exp
-	 * @return solved expression
-	 */
-	private boolean solveAndLoadIntoResultList(){
-		String result = solve(mExpression, mMcOperate);
-		//save the expression temporarily, later save to prevExpression
-		if(!result.equals("")){
-			mResultList.add(new Result(result));
-			//be sure max result size not exceeded
-			if(mResultList.size() > RESULT_LIST_MAX_SIZE)
-				mResultList.remove(0);
-			//also set result's unit if it's selected
-			if(isUnitIsSet()){
-				//load units into result list (this will also set contains unit flag
-				Unit toUnit = getCurrUnitType().getSelectedUnit();
-				mResultList.get(mResultList.size()-1).setResultUnit(toUnit, toUnit, mUnitTypePos);
-			}
-			return true;
-		}
-		else 
-			return false;
-	}
-
-
-	/**
-	 * Solves a given Expression
-	 * Cleans off the expression, adds missing parentheses, then loads in more accurate result values if possible into expression
-	 * Iterates over expression using PEMAS order of operations
-	 * @param exp is the Expression to solve
-	 * @param mcSolve is the rounding to use to solve
-	 * @return the expression before conversion (potentially used for result list)
-	 */	
-	static private String solve(Expression exp, MathContext mcSolve){
-		//clean off any dangling operators and E's (not parentheses!!)
-		exp.cleanDanglingOps();
-
-		//if more open parentheses then close, add corresponding close para's
-		exp.closeOpenPar();
-
-		String result = exp.toString();
-		//if expression empty, don't need to solve anything
-		if(exp.isEmpty())
-			return "";
-
-		//load in the precise result if possible
-		exp.loadPreciseResult();
-
-		//deal with percent operators
-		exp.replacePercentOps();
-		//main calculation: first the P of PEMAS, this function then calls remaining EMAS 
-		String tempExp = collapsePara(exp.toString(), mcSolve);
-		//save solved expression away
-		exp.replaceExpression(tempExp);
-
-		//flag used to tell backspace and numbers to clear the expression when pressed
-		exp.setSolved(true);
-		return result;
-	}
-
-
-	/**
-	 * Recursively loop over all parentheses, invoke other operators in results found within
-	 * @param str is the String to loop the parentheses solving over
-	 */	
-	private static String collapsePara(String str, MathContext mcSolve) {
-		//find the first open parentheses
-		int firstPara = str.indexOf("(");
-
-		//if no open parentheses exists, move on
-		if(firstPara!=-1){
-			//loop over all parentheses
-			int paraCount=0;
-			int matchingPara=-1;
-			for(int i = firstPara; i<str.length(); i++){
-				if(str.charAt(i) == '(')
-					paraCount++;
-				else if (str.charAt(i) == ')'){
-					paraCount--;
-					if (paraCount==0){
-						matchingPara=i;
-						break;
-					}
-				}
-			}
-
-			//we didn't find the matching parentheses put up syntax error and quit
-			if(matchingPara==-1){
-				str = strSyntaxError;
-				return str;
-			}
-			else{
-				//this is the section before any parentheses, aka "25+" in "25+(9)", or just "" if "(9)"
-				String firstSection = str.substring(0, firstPara);
-				//this is the inside of the outermost parentheses set, recurse over inside to find more parentheses
-				String middleSection = collapsePara(str.substring(firstPara+1, matchingPara), mcSolve);
-				//this is after the close of the outermost found set, might be lots of operators/numbers or ""
-				String endSection = str.substring(matchingPara+1, str.length());
-
-				//all parentheses found, splice string back together
-				str = collapsePara(firstSection + middleSection + endSection, mcSolve);
-			}
-		}
-		//perform other operations in proper order of operations
-		str = collapseOps(Expression.regexGroupedExponent, str, mcSolve);
-		str = collapseOps(Expression.regexGroupedMultDiv, str, mcSolve);
-		str = collapseOps(Expression.regexGroupedAddSub, str, mcSolve);
-		return str;
-	}
-
-
-
-	/**
-	 * Loop over/collapse down input str, solves for either +- or /*.  places result in expression
-	 * @param regexOperatorType is the type of operators to look for in regex form
-	 * @param str is the string to operate upon
-	 */	
-	private static String collapseOps(String regexOperatorType, String str, MathContext mcSolve){
-		//find the first instance of operator in the str (we want left to right per order of operations)
-		Pattern ptn = Pattern.compile(Expression.regexGroupedNumber + regexOperatorType + Expression.regexGroupedNumber);
-		Matcher mat = ptn.matcher(str);
-		BigDecimal result;
-		//this loop will loop through each occurrence of the "# op #" sequence
-		while (mat.find()) {
-			BigDecimal operand1;
-			BigDecimal operand2;
-			String operator;
-			
-			//be sure string is formatted properly
-			try{
-				operand1 = new BigDecimal(mat.group(1));
-				operand2 = new BigDecimal(mat.group(3));
-				operator = mat.group(2);
-			}
-			catch (NumberFormatException e){
-				//throw syntax error if we have a weirdly formatted string
-				str = strSyntaxError;
-				return str;
-			}
-			
-			//perform actual operation on found operator and operands
-			if(operator.equals("+")){
-				//crude fix for 1E999999+1, which hangs the app. Could be handled better with real infinity...
-				if(operand1.scale() < -9000 || operand2.scale() < -9000)
-					return strInfinityError;	
-				result = operand1.add(operand2, mcSolve);
-			}
-			else if(operator.equals("-")){
-				if(operand1.scale() < -9000 || operand2.scale() < -9000)
-					return strInfinityError;	
-				result = operand1.subtract(operand2, mcSolve);
-			}
-			else if(operator.equals("*"))
-				result = operand1.multiply(operand2, mcSolve);
-			else if(operator.equals("^")){
-				//this is a temp hack, will most likely want to use a custom bigdecimal function to perform more accurate/bigger conversions
-				double dResult=Math.pow(operand1.doubleValue(), operand2.doubleValue());
-				//catch infinity errors could be neg or pos
-				try{
-					result = BigDecimal.valueOf(dResult);
-				} catch (NumberFormatException ex){
-					if (dResult==Double.POSITIVE_INFINITY || dResult==Double.NEGATIVE_INFINITY)
-						str = strInfinityError;	
-					//else case most likely shouldn't occur
-					else 
-						str = strSyntaxError;		
-					return str;
-				}
-			}
-			else if(operator.equals("/")){
-				//catch divide by zero errors
-				try{
-					result = operand1.divide(operand2, mcSolve);
-				} catch (ArithmeticException ex){
-					str = strDivideZeroError;
-					return str;
-				}
-			}
-			else
-				throw new IllegalArgumentException("In collapseOps, invalid operator...");
-			//save cut out the old str and save in the result
-			str = str.substring(0, mat.start()) + result + str.substring(mat.end());
-
-			//reset the matcher with a our new str
-			mat = ptn.matcher(str);
-		}
-		return str;
-	}
-
-
-
-	/**
-	 * Function used to convert from one unit to another
-	 * @param fromValue is standardized value of the unit being converted from
-	 * @param toValue is standardized value of the unit being converted to
-	 */		
-	public void convertFromTo(Unit fromUnit, Unit toUnit){
-		//if expression empty, or contains invalid chars, don't need to solve anything
-		if(isExpressionEmpty() || isExpressionInvalid())
-			return;
-		//first solve the function
-		boolean solveSuccess = solveAndLoadIntoResultList();
-		//if there solve failed because there was nothing to solve, just leave (this way result list isn't loaded)
-		if (!solveSuccess)
-			return;
-		
-		//this catches weird expressions like "-(-)-"
-		try{
-			//convert numbers into big decimals for more operation control over precision			
-			BigDecimal bdToUnit   = new BigDecimal(toUnit.getValue(),mMcOperate);
-			BigDecimal bdCurrUnit = new BigDecimal(fromUnit.getValue(),mMcOperate);			
-			BigDecimal bdCurrUnitIntercept = new BigDecimal(fromUnit.getIntercept(),mMcOperate);			
-			BigDecimal bdResult   = new BigDecimal(mExpression.toString(),mMcOperate);
-			// perform actual unit conversion (result*currUnit/toUnit)
-			BigDecimal bdScaled = bdResult.multiply(bdToUnit.divide(bdCurrUnit, mMcOperate),mMcOperate);
-			if(bdScaled.scale() < -9000 || bdCurrUnitIntercept.scale() < -9000 )
-				throw new NumberFormatException(strInfinityError);
-			mExpression.replaceExpression(bdCurrUnitIntercept.add(bdScaled, mMcOperate).toString());
-		}
-		catch (NumberFormatException e){
-			if(e.getMessage().equals(strInfinityError))
-				mExpression.replaceExpression(strInfinityError);
-			else
-				mExpression.replaceExpression(strSyntaxError);
-			return;
-		}
-
-		//rounding operation may throw NumberFormatException
-		try{
-			mExpression.roundAndCleanExpression();
-		}
-		catch (NumberFormatException e){
-			mExpression.replaceExpression(strSyntaxError);
-			return;
-		}
-
-		//load units into result list (this will also set contains unit flag) (overrides that from solve)
-		mResultList.get(mResultList.size()-1).setResultUnit(fromUnit, toUnit, mUnitTypePos);
-		//load the final value into the result list
-		mResultList.get(mResultList.size()-1).setAnswer(mExpression.toString());
-	}
-
 
 	/**
 	 * Passed a key from calculator (num/op/back/clear/eq) and distributes it to its proper function
@@ -582,19 +330,8 @@ public class Calculator implements OnConvertionListener{
 
 		//check for equals key
 		if(sKey.equals("=")){
-			//first solve the function
-			boolean solveSuccess = solveAndLoadIntoResultList();
-			//if there solve failed because there was nothing to solve, just leave (this way result list isn't loaded)
-			if (!solveSuccess)
-				return;
-			//rounding operation may throw NumberFormatException
-			try{
-				mExpression.roundAndCleanExpression();
-			}
-			catch (NumberFormatException e){
-				mExpression.replaceExpression(strSyntaxError);
-			}			//load the final value into the result list
-			mResultList.get(mResultList.size()-1).setAnswer(mExpression.toString());
+			//solve expression, load into result list if answer not empty
+			solveAndLoadIntoResultList();
 		}
 		//check for plain text (want 
 		//check for backspace key
@@ -614,7 +351,57 @@ public class Calculator implements OnConvertionListener{
 			mExpression.keyPresses(sKey);
 		}
 	}
+	
+	/**
+	 * Function used to convert from one unit to another
+	 * @param fromValue is standardized value of the unit being converted from
+	 * @param toValue is standardized value of the unit being converted to
+	 */		
+	public void convertFromTo(Unit fromUnit, Unit toUnit){
+		//if expression was displaying "Syntax Error" or similar (containing invalid chars) clear it
+		if(isExpressionInvalid())
+			mExpression.clearExpression();
+		//first solve the function
+		boolean solveSuccess = solveAndLoadIntoResultList();
+		//if there solve failed because there was nothing to solve, just leave (this way result list isn't loaded)
+		if (!solveSuccess)
+			return;
+		
+		mSolver.convertFromTo(fromUnit, toUnit, mExpression);
 
+		//load units into result list (this will also set contains unit flag) (overrides that from solve)
+		mResultList.get(mResultList.size()-1).setResultUnit(fromUnit, toUnit, mUnitTypePos);
+		//load the final value into the result list
+		mResultList.get(mResultList.size()-1).setAnswer(mExpression.toString());
+	}
+	
+	
+	/**
+	 * Function that is called after user hits the "=" key
+	 * Called by calculator for solving current expression
+	 * @param exp
+	 * @return solved expression
+	 */
+	private boolean solveAndLoadIntoResultList(){
+		//the answer will be loaded into mExpression directly
+		Result result = mSolver.solve(mExpression);
+		//skip result list handling if no result was created
+		if(result != null){
+			mResultList.add(result);
+			//if we hit size limit, remove oldest element 
+			if(mResultList.size() > RESULT_LIST_MAX_SIZE)
+				mResultList.remove(0);
+			//also set result's unit if it's selected
+			if(isUnitIsSet()){
+				//load units into result list (this will also set contains unit flag
+				Unit toUnit = getCurrUnitType().getSelectedUnit();
+				mResultList.get(mResultList.size()-1).setResultUnit(toUnit, toUnit, mUnitTypePos);
+			}
+			return true;
+		}
+		else 
+			return false;
+	}
 
 	/**
 	 * Clear function for the calculator

@@ -20,16 +20,20 @@ public class Result {
 	boolean mContainsUnits;
 
 
-	public Result(String query){
+	public Result(String query, String answer){
 		mQuery=query;
-		mAnswer="";
+		mAnswer=answer;
 		mQueryUnit = new Unit();
 		mAnswerUnit = new Unit();
 		mContainsUnits=false;
 	}
+	
+	public Result(String query){
+		this(query,"");
+	}
 
 	public Result(){
-		this("");
+		this("","");
 	}
 
 	public Result(JSONObject json) throws JSONException {
