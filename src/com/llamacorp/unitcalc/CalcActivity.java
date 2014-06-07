@@ -349,7 +349,8 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 			private Handler mColorHoldHandler;
 			private Handler mResetHandler;			
 			private View mView;
-			private static final int CLEAR_HOLD_TIME=2200;			
+			private static final int RESET_HOLD_TIME=2200;			
+			private static final int CLEAR_HOLD_TIME=300;	
 			//private int startTime;
 
 			@Override 
@@ -365,7 +366,7 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 
 					if (mResetHandler != null) return true;
 					mResetHandler = new Handler();
-					mResetHandler.postDelayed(mBackspaceReset, CLEAR_HOLD_TIME);
+					mResetHandler.postDelayed(mBackspaceReset, RESET_HOLD_TIME);
 
 					break;
 				case MotionEvent.ACTION_UP:
@@ -401,7 +402,6 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 				private int mEndColor = getResources().getColor(R.color.backspace_button_held);
 
 				private static final int NUM_COLOR_CHANGES=10;
-				private static final int BACKSPACE_HOLD_TIME=500;	
 
 				@Override 
 				public void run() {
@@ -418,7 +418,7 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 						mInc=-1;
 						return;
 					}
-					mColorHoldHandler.postDelayed(this, BACKSPACE_HOLD_TIME/NUM_COLOR_CHANGES);
+					mColorHoldHandler.postDelayed(this, CLEAR_HOLD_TIME/NUM_COLOR_CHANGES);
 
 					float deltaRed= (float)Color.red(mStartColor) + ((float)Color.red(mEndColor)-(float)Color.red(mStartColor))*((float)mInc*(float)mInc*(float)mInc)/((float)NUM_COLOR_CHANGES*(float)NUM_COLOR_CHANGES*(float)NUM_COLOR_CHANGES);
 					//					int deltaGreen= Color.green(mStartColor) + ((Color.green(mEndColor)-Color.green(mStartColor))*mInc^3)/NUM_COLOR_CHANGES^3;

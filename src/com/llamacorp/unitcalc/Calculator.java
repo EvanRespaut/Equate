@@ -182,6 +182,8 @@ public class Calculator implements OnConvertionListener{
 		unitsOfTemp.addUnit("",  0, 0);
 		unitsOfTemp.addUnit("",  0, 0);
 		unitsOfTemp.addUnit("",  0, 0);
+		//TODO temp conversion is not robust, only works for to and from F/C
+		//unitsOfTemp.addUnit("°K",  1, -273.15);
 		unitsOfTemp.addUnit("°C", 1, 32);
 		mUnitTypeArray.add(unitsOfTemp);
 
@@ -244,6 +246,23 @@ public class Calculator implements OnConvertionListener{
 		unitsOfVolume.addUnit("l", 1/0.001);
 		unitsOfVolume.addUnit("m^3", 1);
 		mUnitTypeArray.add(unitsOfVolume);
+		
+
+		UnitType unitsOfSpeed = new UnitType(this,"Speed");
+		unitsOfSpeed.addUnit("ft/s", 1/0.3048);
+		unitsOfSpeed.addUnit("mph", 1/0.44704);
+		unitsOfSpeed.addUnit("knot", 1/0.514444);
+		unitsOfSpeed.addUnit("", 0);
+		unitsOfSpeed.addUnit("", 0);
+		
+
+		unitsOfSpeed.addUnit("m/s", 1);
+		unitsOfSpeed.addUnit("kph", 3.6);
+		unitsOfSpeed.addUnit("", 0);
+		unitsOfSpeed.addUnit("", 0);
+		unitsOfSpeed.addUnit("", 0);
+		mUnitTypeArray.add(unitsOfSpeed);
+		
 		/*
 		UnitType unitsOfPower = new UnitType(this,"Power");
 		unitsOfPower.addUnit("tbsp", 1/0.000014786764765625);
@@ -258,21 +277,7 @@ public class Calculator implements OnConvertionListener{
 		unitsOfPower.addUnit("l", 1/0.001);
 		unitsOfPower.addUnit("m^3", 1);
 		mUnitTypeArray.add(unitsOfPower);
-		
-		UnitType unitsOfSpeed = new UnitType(this,"Speed");
-		unitsOfSpeed.addUnit("tbsp", 1/0.000014786764765625);
-		unitsOfSpeed.addUnit("cup", 1/0.00023658823625);
-		unitsOfSpeed.addUnit("pint", 1/0.0004731764725);
-		unitsOfSpeed.addUnit("qt", 1/0.000946352945);
-		unitsOfSpeed.addUnit("gal", 1/0.00378541178);
-
-		unitsOfSpeed.addUnit("tsp", 1/4.92892158854166666667e-6);
-		unitsOfSpeed.addUnit("fl oz", 1/0.00002957352953125);
-		unitsOfSpeed.addUnit("ml", 1/1e-6);
-		unitsOfSpeed.addUnit("l", 1/0.001);
-		unitsOfSpeed.addUnit("m^3", 1);
-		mUnitTypeArray.add(unitsOfSpeed);
-		
+				
 		UnitType unitsOfasdfsdf = new UnitType(this,"Speed");
 		unitsOfasdfsdf.addUnit("tbsp", 1/0.000014786764765625);
 		unitsOfasdfsdf.addUnit("cup", 1/0.00023658823625);
