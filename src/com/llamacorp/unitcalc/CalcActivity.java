@@ -73,13 +73,13 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 	}
 
 	//Crude fix: used to tell the ConvKeyViewPager what unit to select after scrolling to correct UnitType
-	private Unit unitToSelectAfterScroll;
+	private UnitScalar unitToSelectAfterScroll;
 
 	/**
 	 * Selects the a unit (used by result list)
 	 * @see com.llamacorp.unitcalc.ResultListFragment.OnResultSelectedListener#selectUnit(int)
 	 */
-	public void selectUnit(Unit unit, int unitTypePos){
+	public void selectUnit(UnitScalar unit, int unitTypePos){
 		//if not on right page, scroll there first
 		if(unitTypePos!=mConvKeysViewPager.getCurrentItem()){
 			unitToSelectAfterScroll=unit;

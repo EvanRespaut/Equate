@@ -38,15 +38,7 @@ public class UnitType {
 	/**
 	 * Used to build a UnitType
 	 */
-	public void addUnit(String title, double value){
-		addUnit(title, value, 0);
-	}
-
-	/**
-	 * Used to build a UnitType
-	 */
-	public void addUnit(String title, double value, double intercept){
-		Unit u = new Unit(title, value, intercept);
+	public void addUnit(Unit u){
 		mUnitArray.add(u);
 	}
 

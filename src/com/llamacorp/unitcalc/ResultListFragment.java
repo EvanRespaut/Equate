@@ -21,7 +21,7 @@ public class ResultListFragment extends ListFragment {
 	// Container Activity must implement this interface
 	public interface OnResultSelectedListener {
 		public void updateScreen(boolean updateResult);
-		public void selectUnit(Unit unit, int unitTypePos);
+		public void selectUnit(UnitScalar unit, int unitTypePos);
 	}
 
 	@Override
@@ -138,7 +138,7 @@ public class ResultListFragment extends ListFragment {
 
 					//if unit not selected in calc, and result has unit, set that unit
 					if(!calc.isUnitIsSet() && thisResult.containsUnits()){
-						Unit unitPassBack = new Unit();
+						UnitScalar unitPassBack = new UnitScalar();
 						if (viewID==R.id.list_item_result_textPrevQuery)
 							unitPassBack = thisResult.getQuerryUnit();
 						if (viewID==R.id.list_item_result_textPrevAnswer)

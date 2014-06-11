@@ -3,7 +3,26 @@ package com.llamacorp.unitcalc;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public abstract class Unit {
+public class UnitScalar extends Unit {
+	//intercept's only known need is temp conversions
+	public UnitScalar(String name, double value){
+		super(name, value);
+	}	
+
+	public UnitScalar(){
+		super();
+	}
+
+	public UnitScalar(JSONObject json) throws JSONException {
+		super(json);
+	}
+
+
+	public String convertFrom(Unit fromUnit, String toConv){
+		return toConv + "*" + getValue() + "/" + fromUnit.getValue();
+	}
+	
+	/*
 	private static final String JSON_NAME = "name";
 	private static final String JSON_VALUE = "value";
 
@@ -11,16 +30,16 @@ public abstract class Unit {
 	private double mValue;
 
 	//intercept's only known need is temp conversions
-	public Unit(String name, double value){
+	public UnitScalar(String name, double value){
 		mDispName = name;
 		mValue = value;
 	}	
 
-	public Unit(){
+	public UnitScalar(){
 		this("", 0);
 	}
 
-	public Unit(JSONObject json) throws JSONException {
+	public UnitScalar(JSONObject json) throws JSONException {
 		this(json.getString(JSON_NAME), 
 				json.getDouble(JSON_VALUE)); 
 	}
@@ -42,7 +61,9 @@ public abstract class Unit {
 	}
 
 
-	public abstract String convertFrom(Unit fromUnit, String toConv);
+	public String convertFrom(UnitScalar fromUnit, String toConv){
+		return toConv + "*" + getValue() + "/" + fromUnit.getValue();
+	}
 
 	@Override
 	public boolean equals(Object other){
@@ -53,4 +74,5 @@ public abstract class Unit {
 		return (otherUnit.getValue() == this.getValue() &&
 				otherUnit.toString().equals(this.toString()));
 	}
+	*/
 }

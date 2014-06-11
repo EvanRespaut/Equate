@@ -65,7 +65,17 @@ public class Solver {
 	 * @param fromValue is standardized value of the unit being converted from
 	 * @param toValue is standardized value of the unit being converted to
 	 */		
-	public void convertFromTo(Unit fromUnit, Unit toUnit, Expression exp){
+	public void convertFromTo(UnitScalar fromUnit, UnitScalar toUnit, Expression exp){
+		//TODO the new convert from to will just call the respective Unit's convert
+		//method.  This method will return a string expression that needs to be solved
+
+		
+		String toSolve = toUnit.convertFrom(fromUnit, exp.toString());
+		
+		
+		
+		
+		/*
 		//this catches weird expressions like "-(-)-"
 		try{
 			//convert numbers into big decimals for more operation control over precision			
@@ -85,9 +95,10 @@ public class Solver {
 			else
 				exp.replaceExpression(strSyntaxError);
 			return;
-		}
+		} 
 		
 		roundAndClean(exp);
+		*/
 	}
 
 	/**

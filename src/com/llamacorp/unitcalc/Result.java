@@ -23,8 +23,8 @@ public class Result {
 	public Result(String query, String answer){
 		mQuery=query;
 		mAnswer=answer;
-		mQueryUnit = new Unit();
-		mAnswerUnit = new Unit();
+		mQueryUnit = new UnitScalar();
+		mAnswerUnit = new UnitScalar();
 		mContainsUnits=false;
 	}
 	

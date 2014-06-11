@@ -172,152 +172,152 @@ public class Calculator implements OnConvertionListener{
 		mUnitTypeArray = new ArrayList<UnitType>();
 
 		UnitType unitsOfTemp = new UnitType(this,"Temp");
-		unitsOfTemp.addUnit("",  0, 0);
-		unitsOfTemp.addUnit("",  0, 0);
-		unitsOfTemp.addUnit("",  0, 0);
-		unitsOfTemp.addUnit("",  0, 0);
-		unitsOfTemp.addUnit("°F",  1.8, -17.77777777777777778);
+		unitsOfTemp.addUnit(new UnitTemperature("",  0));
+		unitsOfTemp.addUnit(new UnitTemperature("",  0));
+		unitsOfTemp.addUnit(new UnitTemperature("",  0));
+		unitsOfTemp.addUnit(new UnitTemperature("",  0));
+		unitsOfTemp.addUnit(new UnitTemperature("°F",  1.8));
 
-		unitsOfTemp.addUnit("",  0, 0);
-		unitsOfTemp.addUnit("",  0, 0);
-		unitsOfTemp.addUnit("",  0, 0);
-		unitsOfTemp.addUnit("",  0, 0);
+		unitsOfTemp.addUnit(new UnitTemperature("",  0));
+		unitsOfTemp.addUnit(new UnitTemperature("",  0));
+		unitsOfTemp.addUnit(new UnitTemperature("",  0));
+		unitsOfTemp.addUnit(new UnitTemperature("",  0));
 		//TODO temp conversion is not robust, only works for to and from F/C
 		//unitsOfTemp.addUnit("°K",  1, -273.15);
-		unitsOfTemp.addUnit("°C", 1, 32);
+		unitsOfTemp.addUnit(new UnitTemperature("°C", 1));
 		mUnitTypeArray.add(unitsOfTemp);
 
 
 		UnitType unitsOfWeight = new UnitType(this,"Weight");
-		unitsOfWeight.addUnit("oz", 1/0.0283495);
-		unitsOfWeight.addUnit("lb", 1/0.453592);
-		unitsOfWeight.addUnit("short ton", 1/907.184);
-		unitsOfWeight.addUnit("long ton", 1/1016.04608);
-		unitsOfWeight.addUnit("stone", 1/6.350288);
+		unitsOfWeight.addUnit(new UnitScalar("oz", 1/0.0283495));
+		unitsOfWeight.addUnit(new UnitScalar("lb", 1/0.453592));
+		unitsOfWeight.addUnit(new UnitScalar("short ton", 1/907.184));
+		unitsOfWeight.addUnit(new UnitScalar("long ton", 1/1016.04608));
+		unitsOfWeight.addUnit(new UnitScalar("stone", 1/6.350288));
 
-		unitsOfWeight.addUnit("µg", 1/1e-9);
-		unitsOfWeight.addUnit("mg", 1/1e-6);
-		unitsOfWeight.addUnit("g", 1/0.001);
-		unitsOfWeight.addUnit("kg", 1);
-		unitsOfWeight.addUnit("metric ton", 1/1e3);
+		unitsOfWeight.addUnit(new UnitScalar("µg", 1/1e-9));
+		unitsOfWeight.addUnit(new UnitScalar("mg", 1/1e-6));
+		unitsOfWeight.addUnit(new UnitScalar("g", 1/0.001));
+		unitsOfWeight.addUnit(new UnitScalar("kg", 1));
+		unitsOfWeight.addUnit(new UnitScalar("metric ton", 1/1e3));
 		mUnitTypeArray.add(unitsOfWeight);
 
 
 		UnitType unitsOfLength = new UnitType(this,"Length");
-		unitsOfLength.addUnit("in", 1/0.0254);
-		unitsOfLength.addUnit("ft", 1/0.3048);
-		unitsOfLength.addUnit("yard", 1/0.9144);
-		unitsOfLength.addUnit("mile", 1/1609.344);
-		unitsOfLength.addUnit("km", 1/1000.0);
+		unitsOfLength.addUnit(new UnitScalar("in", 1/0.0254));
+		unitsOfLength.addUnit(new UnitScalar("ft", 1/0.3048));
+		unitsOfLength.addUnit(new UnitScalar("yard", 1/0.9144));
+		unitsOfLength.addUnit(new UnitScalar("mile", 1/1609.344));
+		unitsOfLength.addUnit(new UnitScalar("km", 1/1000.0));
 
-		unitsOfLength.addUnit("nm", 1/0.000000001);
-		unitsOfLength.addUnit("µm", 1/0.000001);
-		unitsOfLength.addUnit("mm", 1/0.001);
-		unitsOfLength.addUnit("cm", 1/0.01);
-		unitsOfLength.addUnit("m", 1.0);
+		unitsOfLength.addUnit(new UnitScalar("nm", 1/0.000000001));
+		unitsOfLength.addUnit(new UnitScalar("µm", 1/0.000001));
+		unitsOfLength.addUnit(new UnitScalar("mm", 1/0.001));
+		unitsOfLength.addUnit(new UnitScalar("cm", 1/0.01));
+		unitsOfLength.addUnit(new UnitScalar("m", 1.0));
 		mUnitTypeArray.add(unitsOfLength);	
 
 
 		UnitType unitsOfArea = new UnitType(this,"Area");
-		unitsOfArea.addUnit("in^2", 1/0.00064516);//0.0254^2
-		unitsOfArea.addUnit("ft^2", 1/0.09290304);//0.3048^2
-		unitsOfArea.addUnit("yd^2", 1/0.83612736);//0.3048^2*9
-		unitsOfArea.addUnit("acre", 1/4046.8564224);//0.3048^2*9*4840
-		unitsOfArea.addUnit("mi^2", 1/2589988.110336);//1609.344^2
+		unitsOfArea.addUnit(new UnitScalar("in^2", 1/0.00064516));//0.0254^2
+		unitsOfArea.addUnit(new UnitScalar("ft^2", 1/0.09290304));//0.3048^2
+		unitsOfArea.addUnit(new UnitScalar("yd^2", 1/0.83612736));//0.3048^2*9
+		unitsOfArea.addUnit(new UnitScalar("acre", 1/4046.8564224));//0.3048^2*9*4840
+		unitsOfArea.addUnit(new UnitScalar("mi^2", 1/2589988.110336));//1609.344^2
 
-		unitsOfArea.addUnit("mm^2", 1/0.000001);
-		unitsOfArea.addUnit("cm^2", 1/0.0001);
-		unitsOfArea.addUnit("m^2", 1.0);
-		unitsOfArea.addUnit("km^2", 1/1000000.0);
-		unitsOfArea.addUnit("ha", 1/10000.0);
+		unitsOfArea.addUnit(new UnitScalar("mm^2", 1/0.000001));
+		unitsOfArea.addUnit(new UnitScalar("cm^2", 1/0.0001));
+		unitsOfArea.addUnit(new UnitScalar("m^2", 1.0));
+		unitsOfArea.addUnit(new UnitScalar("km^2", 1/1000000.0));
+		unitsOfArea.addUnit(new UnitScalar("ha", 1/10000.0));
 		mUnitTypeArray.add(unitsOfArea);
 
 
 		UnitType unitsOfVolume = new UnitType(this,"Volume");
-		unitsOfVolume.addUnit("tbsp", 1/0.000014786764765625);//gal/256
-		unitsOfVolume.addUnit("cup", 1/0.00023658823625);//gal/16
-		unitsOfVolume.addUnit("pint", 1/0.0004731764725);//gal/8
-		unitsOfVolume.addUnit("qt", 1/0.000946352945);//gal/4
-		unitsOfVolume.addUnit("gal", 1/0.00378541178);//found online; source of other conversions
+		unitsOfVolume.addUnit(new UnitScalar("tbsp", 1/0.000014786764765625));//gal/256
+		unitsOfVolume.addUnit(new UnitScalar("cup", 1/0.00023658823625));//gal/16
+		unitsOfVolume.addUnit(new UnitScalar("pint", 1/0.0004731764725));//gal/8
+		unitsOfVolume.addUnit(new UnitScalar("qt", 1/0.000946352945));//gal/4
+		unitsOfVolume.addUnit(new UnitScalar("gal", 1/0.00378541178));//found online; source of other conversions
 
-		unitsOfVolume.addUnit("tsp", 1/4.92892158854166666667e-6);//gal/768
-		unitsOfVolume.addUnit("fl oz", 1/0.00002957352953125);//gal/128
-		unitsOfVolume.addUnit("ml", 1/1e-6);
-		unitsOfVolume.addUnit("l", 1/0.001);
-		unitsOfVolume.addUnit("m^3", 1);
+		unitsOfVolume.addUnit(new UnitScalar("tsp", 1/4.92892158854166666667e-6));//gal/768
+		unitsOfVolume.addUnit(new UnitScalar("fl oz", 1/0.00002957352953125));//gal/128
+		unitsOfVolume.addUnit(new UnitScalar("ml", 1/1e-6));
+		unitsOfVolume.addUnit(new UnitScalar("l", 1/0.001));
+		unitsOfVolume.addUnit(new UnitScalar("m^3", 1));
 		mUnitTypeArray.add(unitsOfVolume);
 		
 
 		UnitType unitsOfSpeed = new UnitType(this,"Speed");
-		unitsOfSpeed.addUnit("ft/s", 1/0.3048);
-		unitsOfSpeed.addUnit("mph", 1/0.44704);
-		unitsOfSpeed.addUnit("knot", 1/0.514444);
-		unitsOfSpeed.addUnit("", 0);
-		unitsOfSpeed.addUnit("", 0);
+		unitsOfSpeed.addUnit(new UnitScalar("ft/s", 1/0.3048));
+		unitsOfSpeed.addUnit(new UnitScalar("mph", 1/0.44704));
+		unitsOfSpeed.addUnit(new UnitScalar("knot", 1/0.514444));
+		unitsOfSpeed.addUnit(new UnitScalar("", 0));
+		unitsOfSpeed.addUnit(new UnitScalar("", 0));
 		
 
-		unitsOfSpeed.addUnit("m/s", 1);
-		unitsOfSpeed.addUnit("kph", 3.6);
-		unitsOfSpeed.addUnit("", 0);
-		unitsOfSpeed.addUnit("", 0);
-		unitsOfSpeed.addUnit("", 0);
+		unitsOfSpeed.addUnit(new UnitScalar("m/s", 1));
+		unitsOfSpeed.addUnit(new UnitScalar("kph", 3.6));
+		unitsOfSpeed.addUnit(new UnitScalar("", 0));
+		unitsOfSpeed.addUnit(new UnitScalar("", 0));
+		unitsOfSpeed.addUnit(new UnitScalar("", 0));
 		mUnitTypeArray.add(unitsOfSpeed);
 		
 		/*
 		UnitType unitsOfPower = new UnitType(this,"Power");
-		unitsOfPower.addUnit("tbsp", 1/0.000014786764765625);
-		unitsOfPower.addUnit("cup", 1/0.00023658823625);
-		unitsOfPower.addUnit("pint", 1/0.0004731764725);
-		unitsOfPower.addUnit("qt", 1/0.000946352945);
-		unitsOfPower.addUnit("gal", 1/0.00378541178);
+		unitsOfPower.addUnit(new UnitScalar("tbsp", 1/0.000014786764765625));
+		unitsOfPower.addUnit(new UnitScalar("cup", 1/0.00023658823625));
+		unitsOfPower.addUnit(new UnitScalar("pint", 1/0.0004731764725));
+		unitsOfPower.addUnit(new UnitScalar("qt", 1/0.000946352945));
+		unitsOfPower.addUnit(new UnitScalar("gal", 1/0.00378541178));
 
-		unitsOfPower.addUnit("tsp", 1/4.92892158854166666667e-6);
-		unitsOfPower.addUnit("fl oz", 1/0.00002957352953125);
-		unitsOfPower.addUnit("ml", 1/1e-6);
-		unitsOfPower.addUnit("l", 1/0.001);
-		unitsOfPower.addUnit("m^3", 1);
+		unitsOfPower.addUnit(new UnitScalar("tsp", 1/4.92892158854166666667e-6));
+		unitsOfPower.addUnit(new UnitScalar("fl oz", 1/0.00002957352953125));
+		unitsOfPower.addUnit(new UnitScalar("ml", 1/1e-6));
+		unitsOfPower.addUnit(new UnitScalar("l", 1/0.001));
+		unitsOfPower.addUnit(new UnitScalar("m^3", 1));
 		mUnitTypeArray.add(unitsOfPower);
 				
 		UnitType unitsOfasdfsdf = new UnitType(this,"Speed");
-		unitsOfasdfsdf.addUnit("tbsp", 1/0.000014786764765625);
-		unitsOfasdfsdf.addUnit("cup", 1/0.00023658823625);
-		unitsOfasdfsdf.addUnit("pint", 1/0.0004731764725);
-		unitsOfasdfsdf.addUnit("qt", 1/0.000946352945);
-		unitsOfasdfsdf.addUnit("gal", 1/0.00378541178);
+		unitsOfasdfsdf.addUnit(new UnitScalar("tbsp", 1/0.000014786764765625));
+		unitsOfasdfsdf.addUnit(new UnitScalar("cup", 1/0.00023658823625));
+		unitsOfasdfsdf.addUnit(new UnitScalar("pint", 1/0.0004731764725));
+		unitsOfasdfsdf.addUnit(new UnitScalar("qt", 1/0.000946352945));
+		unitsOfasdfsdf.addUnit(new UnitScalar("gal", 1/0.00378541178));
 
-		unitsOfasdfsdf.addUnit("tsp", 1/4.92892158854166666667e-6);
-		unitsOfasdfsdf.addUnit("fl oz", 1/0.00002957352953125);
-		unitsOfasdfsdf.addUnit("ml", 1/1e-6);
-		unitsOfasdfsdf.addUnit("l", 1/0.001);
-		unitsOfasdfsdf.addUnit("m^3", 1);
+		unitsOfasdfsdf.addUnit(new UnitScalar("tsp", 1/4.92892158854166666667e-6));
+		unitsOfasdfsdf.addUnit(new UnitScalar("fl oz", 1/0.00002957352953125));
+		unitsOfasdfsdf.addUnit(new UnitScalar("ml", 1/1e-6));
+		unitsOfasdfsdf.addUnit(new UnitScalar("l", 1/0.001));
+		unitsOfasdfsdf.addUnit(new UnitScalar("m^3", 1));
 		mUnitTypeArray.add(unitsOfasdfsdf);
 		
 		UnitType unitsOfasds = new UnitType(this,"Speed");
-		unitsOfasds.addUnit("tbsp", 1/0.000014786764765625);
-		unitsOfasds.addUnit("cup", 1/0.00023658823625);
-		unitsOfasds.addUnit("pint", 1/0.0004731764725);
-		unitsOfasds.addUnit("qt", 1/0.000946352945);
-		unitsOfasds.addUnit("gal", 1/0.00378541178);
+		unitsOfasds.addUnit(new UnitScalar("tbsp", 1/0.000014786764765625));
+		unitsOfasds.addUnit(new UnitScalar("cup", 1/0.00023658823625));
+		unitsOfasds.addUnit(new UnitScalar("pint", 1/0.0004731764725));
+		unitsOfasds.addUnit(new UnitScalar("qt", 1/0.000946352945));
+		unitsOfasds.addUnit(new UnitScalar("gal", 1/0.00378541178));
 
-		unitsOfasds.addUnit("tsp", 1/4.92892158854166666667e-6);
-		unitsOfasds.addUnit("fl oz", 1/0.00002957352953125);
-		unitsOfasds.addUnit("ml", 1/1e-6);
-		unitsOfasds.addUnit("l", 1/0.001);
-		unitsOfasds.addUnit("m^3", 1);
+		unitsOfasds.addUnit(new UnitScalar("tsp", 1/4.92892158854166666667e-6));
+		unitsOfasds.addUnit(new UnitScalar("fl oz", 1/0.00002957352953125));
+		unitsOfasds.addUnit(new UnitScalar("ml", 1/1e-6));
+		unitsOfasds.addUnit(new UnitScalar("l", 1/0.001));
+		unitsOfasds.addUnit(new UnitScalar("m^3", 1));
 		mUnitTypeArray.add(unitsOfasds);
 		
 		UnitType unitsOfdds = new UnitType(this,"Speed");
-		unitsOfdds.addUnit("tbsp", 1/0.000014786764765625);
-		unitsOfdds.addUnit("cup", 1/0.00023658823625);
-		unitsOfdds.addUnit("pint", 1/0.0004731764725);
-		unitsOfdds.addUnit("qt", 1/0.000946352945);
-		unitsOfdds.addUnit("gal", 1/0.00378541178);
+		unitsOfdds.addUnit(new UnitScalar("tbsp", 1/0.000014786764765625));
+		unitsOfdds.addUnit(new UnitScalar("cup", 1/0.00023658823625));
+		unitsOfdds.addUnit(new UnitScalar("pint", 1/0.0004731764725));
+		unitsOfdds.addUnit(new UnitScalar("qt", 1/0.000946352945));
+		unitsOfdds.addUnit(new UnitScalar("gal", 1/0.00378541178));
 
-		unitsOfdds.addUnit("tsp", 1/4.92892158854166666667e-6);
-		unitsOfdds.addUnit("fl oz", 1/0.00002957352953125);
-		unitsOfdds.addUnit("ml", 1/1e-6);
-		unitsOfdds.addUnit("l", 1/0.001);
-		unitsOfdds.addUnit("m^3", 1);
+		unitsOfdds.addUnit(new UnitScalar("tsp", 1/4.92892158854166666667e-6));
+		unitsOfdds.addUnit(new UnitScalar("fl oz", 1/0.00002957352953125));
+		unitsOfdds.addUnit(new UnitScalar("ml", 1/1e-6));
+		unitsOfdds.addUnit(new UnitScalar("l", 1/0.001));
+		unitsOfdds.addUnit(new UnitScalar("m^3", 1));
 		mUnitTypeArray.add(unitsOfdds);
 		*/
 	}
@@ -399,7 +399,7 @@ public class Calculator implements OnConvertionListener{
 			//also set result's unit if it's selected
 			if(isUnitIsSet()){
 				//load units into result list (this will also set contains unit flag
-				Unit toUnit = getCurrUnitType().getSelectedUnit();
+				UnitScalar toUnit = getCurrUnitType().getSelectedUnit();
 				mResultList.get(mResultList.size()-1).setResultUnit(toUnit, toUnit, mUnitTypePos);
 			}
 			return true;
