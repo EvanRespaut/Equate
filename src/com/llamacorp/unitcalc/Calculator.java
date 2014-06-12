@@ -399,7 +399,7 @@ public class Calculator implements OnConvertionListener{
 			//also set result's unit if it's selected
 			if(isUnitIsSet()){
 				//load units into result list (this will also set contains unit flag
-				UnitScalar toUnit = getCurrUnitType().getSelectedUnit();
+				Unit toUnit = getCurrUnitType().getSelectedUnit();
 				mResultList.get(mResultList.size()-1).setResultUnit(toUnit, toUnit, mUnitTypePos);
 			}
 			return true;

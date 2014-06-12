@@ -39,8 +39,8 @@ public class Result {
 	public Result(JSONObject json) throws JSONException {
 		mQuery = json.getString(JSON_QUERY);
 		mAnswer = json.getString(JSON_ANSWER);
-		mQueryUnit = new Unit(json.getJSONObject(JSON_QUERY_UNIT)); 
-		mAnswerUnit = new Unit(json.getJSONObject(JSON_ANSWER_UNIT)); 
+		//mQueryUnit = new Unit(json.getJSONObject(JSON_QUERY_UNIT)); 
+		//mAnswerUnit = new Unit(json.getJSONObject(JSON_ANSWER_UNIT)); 
 		mUnitTypePos = json.getInt(JSON_UNIT_TYPE_POS);
 		mContainsUnits = json.getBoolean(JSON_CONTAINS_UNITS);
 	}
