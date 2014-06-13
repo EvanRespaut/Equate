@@ -148,7 +148,8 @@ public class ConvKeysFragment extends Fragment {
 		//Clear color from previously selected convert button
 		clearButtonSelection();
 		//Set select unit, also this will potentially call convert if we already have a selected unit
-		boolean didConvert = mUnitType.selectUnit(buttonPos);
+		//boolean didConvert = mUnitType.selectUnit(buttonPos);
+		mUnitType.selectUnit(buttonPos);
 
 		//if conversion performed, update screen
 		//if(didConvert)

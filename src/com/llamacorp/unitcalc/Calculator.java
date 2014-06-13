@@ -176,15 +176,13 @@ public class Calculator implements OnConvertionListener{
 		unitsOfTemp.addUnit(new UnitTemperature("",  0));
 		unitsOfTemp.addUnit(new UnitTemperature("",  0));
 		unitsOfTemp.addUnit(new UnitTemperature("",  0));
-		unitsOfTemp.addUnit(new UnitTemperature("°F",  1.8));
+		unitsOfTemp.addUnit(new UnitTemperature("°F",  UnitTemperature.FAHRENHEIT));
 
 		unitsOfTemp.addUnit(new UnitTemperature("",  0));
 		unitsOfTemp.addUnit(new UnitTemperature("",  0));
 		unitsOfTemp.addUnit(new UnitTemperature("",  0));
-		unitsOfTemp.addUnit(new UnitTemperature("",  0));
-		//TODO temp conversion is not robust, only works for to and from F/C
-		//unitsOfTemp.addUnit("°K",  1, -273.15);
-		unitsOfTemp.addUnit(new UnitTemperature("°C", 1));
+		unitsOfTemp.addUnit(new UnitTemperature("°K",  UnitTemperature.KELVIN));
+		unitsOfTemp.addUnit(new UnitTemperature("°C", UnitTemperature.CELSIUS));
 		mUnitTypeArray.add(unitsOfTemp);
 
 

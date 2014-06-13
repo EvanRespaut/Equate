@@ -66,40 +66,10 @@ public class Solver {
 	 * @param toValue is standardized value of the unit being converted to
 	 */		
 	public void convertFromTo(Unit fromUnit, Unit toUnit, Expression exp){
-		//TODO the new convert from to will just call the respective Unit's convert
-		//method.  This method will return a string expression that needs to be solved
-
-		
-		String toSolve = toUnit.convertFrom(fromUnit, exp.toString());
+		String toSolve = fromUnit.convertTo(toUnit, exp.getPreciseResult());
 		exp.replaceExpression(toSolve);
 
 		solve(exp);
-		
-		
-		/*
-		//this catches weird expressions like "-(-)-"
-		try{
-			//convert numbers into big decimals for more operation control over precision			
-			BigDecimal bdToUnit   = new BigDecimal(toUnit.getValue(),mMcOperate);
-			BigDecimal bdCurrUnit = new BigDecimal(fromUnit.getValue(),mMcOperate);			
-			BigDecimal bdCurrUnitIntercept = new BigDecimal(fromUnit.getIntercept(),mMcOperate);			
-			BigDecimal bdResult   = new BigDecimal(exp.toString(),mMcOperate);
-			// perform actual unit conversion (result*currUnit/toUnit)
-			BigDecimal bdScaled = bdResult.multiply(bdToUnit.divide(bdCurrUnit, mMcOperate),mMcOperate);
-			if(bdScaled.scale() < -9000 || bdCurrUnitIntercept.scale() < -9000 )
-				throw new NumberFormatException(strInfinityError);
-			exp.replaceExpression(bdCurrUnitIntercept.add(bdScaled, mMcOperate).toString());
-		}
-		catch (NumberFormatException e){
-			if(e.getMessage().equals(strInfinityError))
-				exp.replaceExpression(strInfinityError);
-			else
-				exp.replaceExpression(strSyntaxError);
-			return;
-		} 
-		
-		roundAndClean(exp);
-		*/
 	}
 
 	/**
