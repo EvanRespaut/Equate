@@ -3,6 +3,7 @@ package com.llamacorp.unitcalc;
 import java.util.ArrayList;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.SpannableString;
@@ -12,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView.BufferType;
+import android.widget.Toast;
 
 public class ConvKeysFragment extends Fragment {
 	//this is for communication with the parent activity
@@ -54,6 +56,9 @@ public class ConvKeysFragment extends Fragment {
 			R.id.convert_button9,
 			R.id.convert_button10};
 
+	
+	private Toast mConvertToast;
+	
 
 	@Override
 	public void onCreate(Bundle savedInstanceState){
@@ -145,16 +150,26 @@ public class ConvKeysFragment extends Fragment {
 	/** Used to pass selected unit to the UnitType model class
 	 * @param buttonPos the position in the list of buttons to select */
 	private void clickUnitButton(int buttonPos){
+		Unit oldUnit = mUnitType.getSelectedUnit();
 		//Clear color from previously selected convert button
 		clearButtonSelection();
 		//Set select unit, also this will potentially call convert if we already have a selected unit
-		//boolean didConvert = mUnitType.selectUnit(buttonPos);
-		mUnitType.selectUnit(buttonPos);
+		boolean didConvert = mUnitType.selectUnit(buttonPos);
+		
 
 		//if conversion performed, update screen
-		//if(didConvert)
-			//always update screen to add/remove unit from expression
-			mCallback.updateScreen(true);
+		if(didConvert){
+			//cancel previous toast if it's there
+			if(mConvertToast!=null)
+				mConvertToast.cancel();
+			Unit newUnit = mUnitType.getSelectedUnit();
+			String text = "Converting " + oldUnit.getLongName() + " to " + newUnit.getLongName();
+			mConvertToast = Toast.makeText((Context)mCallback, text, Toast.LENGTH_SHORT);
+			mConvertToast.show();
+		}
+			
+		//always update screen to add/remove unit from expression
+		mCallback.updateScreen(true);
 
 		colorSelectedButton();
 	}
@@ -177,6 +192,6 @@ public class ConvKeysFragment extends Fragment {
 		Button prevSelected = mConvButton.get(mUnitType.getCurrUnitPos());
 		prevSelected.setSelected(false);	
 		//clear the button in the calc
-	//	mUnitType.clearUnitSelection();
+		//	mUnitType.clearUnitSelection();
 	}
 }

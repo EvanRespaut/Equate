@@ -172,47 +172,47 @@ public class Calculator implements OnConvertionListener{
 		mUnitTypeArray = new ArrayList<UnitType>();
 
 		UnitType unitsOfTemp = new UnitType(this,"Temp");
-		unitsOfTemp.addUnit(new UnitTemperature("",  0));
-		unitsOfTemp.addUnit(new UnitTemperature("",  0));
-		unitsOfTemp.addUnit(new UnitTemperature("",  0));
-		unitsOfTemp.addUnit(new UnitTemperature("",  0));
-		unitsOfTemp.addUnit(new UnitTemperature("°F",  UnitTemperature.FAHRENHEIT));
+		unitsOfTemp.addUnit(new UnitTemperature());
+		unitsOfTemp.addUnit(new UnitTemperature());
+		unitsOfTemp.addUnit(new UnitTemperature());
+		unitsOfTemp.addUnit(new UnitTemperature());
+		unitsOfTemp.addUnit(new UnitTemperature("°F", "Fahrenheit", UnitTemperature.FAHRENHEIT));
 
-		unitsOfTemp.addUnit(new UnitTemperature("",  0));
-		unitsOfTemp.addUnit(new UnitTemperature("",  0));
-		unitsOfTemp.addUnit(new UnitTemperature("",  0));
-		unitsOfTemp.addUnit(new UnitTemperature("°K",  UnitTemperature.KELVIN));
-		unitsOfTemp.addUnit(new UnitTemperature("°C", UnitTemperature.CELSIUS));
+		unitsOfTemp.addUnit(new UnitTemperature());
+		unitsOfTemp.addUnit(new UnitTemperature());
+		unitsOfTemp.addUnit(new UnitTemperature());
+		unitsOfTemp.addUnit(new UnitTemperature("°K", "Kelvin", UnitTemperature.KELVIN));
+		unitsOfTemp.addUnit(new UnitTemperature("°C", "Celsius", UnitTemperature.CELSIUS));
 		mUnitTypeArray.add(unitsOfTemp);
 
 
 		UnitType unitsOfWeight = new UnitType(this,"Weight");
-		unitsOfWeight.addUnit(new UnitScalar("oz", 1/0.0283495));
-		unitsOfWeight.addUnit(new UnitScalar("lb", 1/0.453592));
-		unitsOfWeight.addUnit(new UnitScalar("short ton", 1/907.184));
-		unitsOfWeight.addUnit(new UnitScalar("long ton", 1/1016.04608));
-		unitsOfWeight.addUnit(new UnitScalar("stone", 1/6.350288));
+		unitsOfWeight.addUnit(new UnitScalar("oz", "ounces", 1/0.0283495));
+		unitsOfWeight.addUnit(new UnitScalar("lb", "pounds", 1/0.453592));
+		unitsOfWeight.addUnit(new UnitScalar("short ton", "short tons", 1/907.184));
+		unitsOfWeight.addUnit(new UnitScalar("long ton", "long tons", 1/1016.04608));
+		unitsOfWeight.addUnit(new UnitScalar("stone", "stones", 1/6.350288));
 
-		unitsOfWeight.addUnit(new UnitScalar("µg", 1/1e-9));
-		unitsOfWeight.addUnit(new UnitScalar("mg", 1/1e-6));
-		unitsOfWeight.addUnit(new UnitScalar("g", 1/0.001));
-		unitsOfWeight.addUnit(new UnitScalar("kg", 1));
-		unitsOfWeight.addUnit(new UnitScalar("metric ton", 1/1e3));
+		unitsOfWeight.addUnit(new UnitScalar("µg", "micrograms", 1/1e-9));
+		unitsOfWeight.addUnit(new UnitScalar("mg", "milligrams", 1/1e-6));
+		unitsOfWeight.addUnit(new UnitScalar("g", "grams", 1/0.001));
+		unitsOfWeight.addUnit(new UnitScalar("kg", "kilograms", 1));
+		unitsOfWeight.addUnit(new UnitScalar("metric ton", "metric tons", 1/1e3));
 		mUnitTypeArray.add(unitsOfWeight);
 
 
 		UnitType unitsOfLength = new UnitType(this,"Length");
-		unitsOfLength.addUnit(new UnitScalar("in", 1/0.0254));
-		unitsOfLength.addUnit(new UnitScalar("ft", 1/0.3048));
-		unitsOfLength.addUnit(new UnitScalar("yard", 1/0.9144));
-		unitsOfLength.addUnit(new UnitScalar("mile", 1/1609.344));
-		unitsOfLength.addUnit(new UnitScalar("km", 1/1000.0));
+		unitsOfLength.addUnit(new UnitScalar("in", "inches", 1/0.0254));
+		unitsOfLength.addUnit(new UnitScalar("ft", "feet", 1/0.3048));
+		unitsOfLength.addUnit(new UnitScalar("yard", "yards", 1/0.9144));
+		unitsOfLength.addUnit(new UnitScalar("mile", "miles", 1/1609.344));
+		unitsOfLength.addUnit(new UnitScalar("km", "kilometers", 1/1000.0));
 
-		unitsOfLength.addUnit(new UnitScalar("nm", 1/0.000000001));
-		unitsOfLength.addUnit(new UnitScalar("µm", 1/0.000001));
-		unitsOfLength.addUnit(new UnitScalar("mm", 1/0.001));
-		unitsOfLength.addUnit(new UnitScalar("cm", 1/0.01));
-		unitsOfLength.addUnit(new UnitScalar("m", 1.0));
+		unitsOfLength.addUnit(new UnitScalar("nm", "nanometers", 1/0.000000001));
+		unitsOfLength.addUnit(new UnitScalar("µm", "micrometers", 1/0.000001));
+		unitsOfLength.addUnit(new UnitScalar("mm", "millimeters", 1/0.001));
+		unitsOfLength.addUnit(new UnitScalar("cm", "centimeters", 1/0.01));
+		unitsOfLength.addUnit(new UnitScalar("m", "meters", 1.0));
 		mUnitTypeArray.add(unitsOfLength);	
 
 
@@ -232,30 +232,30 @@ public class Calculator implements OnConvertionListener{
 
 
 		UnitType unitsOfVolume = new UnitType(this,"Volume");
-		unitsOfVolume.addUnit(new UnitScalar("tbsp", 1/0.000014786764765625));//gal/256
-		unitsOfVolume.addUnit(new UnitScalar("cup", 1/0.00023658823625));//gal/16
-		unitsOfVolume.addUnit(new UnitScalar("pint", 1/0.0004731764725));//gal/8
-		unitsOfVolume.addUnit(new UnitScalar("qt", 1/0.000946352945));//gal/4
-		unitsOfVolume.addUnit(new UnitScalar("gal", 1/0.00378541178));//found online; source of other conversions
+		unitsOfVolume.addUnit(new UnitScalar("tbsp", "tablespoons", 1/0.000014786764765625));//gal/256
+		unitsOfVolume.addUnit(new UnitScalar("cup", "cups", 1/0.00023658823625));//gal/16
+		unitsOfVolume.addUnit(new UnitScalar("pint", "pints", 1/0.0004731764725));//gal/8
+		unitsOfVolume.addUnit(new UnitScalar("qt", "quarts", 1/0.000946352945));//gal/4
+		unitsOfVolume.addUnit(new UnitScalar("gal", "gallons", 1/0.00378541178));//found online; source of other conversions
 
-		unitsOfVolume.addUnit(new UnitScalar("tsp", 1/4.92892158854166666667e-6));//gal/768
-		unitsOfVolume.addUnit(new UnitScalar("fl oz", 1/0.00002957352953125));//gal/128
-		unitsOfVolume.addUnit(new UnitScalar("ml", 1/1e-6));
-		unitsOfVolume.addUnit(new UnitScalar("l", 1/0.001));
+		unitsOfVolume.addUnit(new UnitScalar("tsp", "teaspoons", 1/4.92892158854166666667e-6));//gal/768
+		unitsOfVolume.addUnit(new UnitScalar("fl oz", "fluid ounces", 1/0.00002957352953125));//gal/128
+		unitsOfVolume.addUnit(new UnitScalar("ml", "milliliters", 1/1e-6));
+		unitsOfVolume.addUnit(new UnitScalar("l", "liters", 1/0.001));
 		unitsOfVolume.addUnit(new UnitScalar("m^3", 1));
 		mUnitTypeArray.add(unitsOfVolume);
 		
 
 		UnitType unitsOfSpeed = new UnitType(this,"Speed");
 		unitsOfSpeed.addUnit(new UnitScalar("ft/s", 1/0.3048));
-		unitsOfSpeed.addUnit(new UnitScalar("mph", 1/0.44704));
+		unitsOfSpeed.addUnit(new UnitScalar("mph", "miles per hour", 1/0.44704));
 		unitsOfSpeed.addUnit(new UnitScalar("knot", 1/0.514444));
 		unitsOfSpeed.addUnit(new UnitScalar("", 0));
 		unitsOfSpeed.addUnit(new UnitScalar("", 0));
 		
 
 		unitsOfSpeed.addUnit(new UnitScalar("m/s", 1));
-		unitsOfSpeed.addUnit(new UnitScalar("kph", 3.6));
+		unitsOfSpeed.addUnit(new UnitScalar("kph", "kilometers per hour", 3.6));
 		unitsOfSpeed.addUnit(new UnitScalar("", 0));
 		unitsOfSpeed.addUnit(new UnitScalar("", 0));
 		unitsOfSpeed.addUnit(new UnitScalar("", 0));
@@ -276,7 +276,7 @@ public class Calculator implements OnConvertionListener{
 		unitsOfPower.addUnit(new UnitScalar("m^3", 1));
 		mUnitTypeArray.add(unitsOfPower);
 				
-		UnitType unitsOfasdfsdf = new UnitType(this,"Speed");
+		UnitType unitsOfasdfsdf = new UnitType(this,"Energy");
 		unitsOfasdfsdf.addUnit(new UnitScalar("tbsp", 1/0.000014786764765625));
 		unitsOfasdfsdf.addUnit(new UnitScalar("cup", 1/0.00023658823625));
 		unitsOfasdfsdf.addUnit(new UnitScalar("pint", 1/0.0004731764725));
@@ -290,7 +290,7 @@ public class Calculator implements OnConvertionListener{
 		unitsOfasdfsdf.addUnit(new UnitScalar("m^3", 1));
 		mUnitTypeArray.add(unitsOfasdfsdf);
 		
-		UnitType unitsOfasds = new UnitType(this,"Speed");
+		UnitType unitsOfasds = new UnitType(this,"Torque");
 		unitsOfasds.addUnit(new UnitScalar("tbsp", 1/0.000014786764765625));
 		unitsOfasds.addUnit(new UnitScalar("cup", 1/0.00023658823625));
 		unitsOfasds.addUnit(new UnitScalar("pint", 1/0.0004731764725));
@@ -304,7 +304,7 @@ public class Calculator implements OnConvertionListener{
 		unitsOfasds.addUnit(new UnitScalar("m^3", 1));
 		mUnitTypeArray.add(unitsOfasds);
 		
-		UnitType unitsOfdds = new UnitType(this,"Speed");
+		UnitType unitsOfdds = new UnitType(this,"Pressure");
 		unitsOfdds.addUnit(new UnitScalar("tbsp", 1/0.000014786764765625));
 		unitsOfdds.addUnit(new UnitScalar("cup", 1/0.00023658823625));
 		unitsOfdds.addUnit(new UnitScalar("pint", 1/0.0004731764725));
@@ -342,8 +342,9 @@ public class Calculator implements OnConvertionListener{
 			backspace();
 
 		//check for clear key
-		else if(sKey.equals("c"))
+		else if(sKey.equals("c")){
 			clear();
+		}
 
 		//else try all other potential numbers and operators, as well as result list
 		else{

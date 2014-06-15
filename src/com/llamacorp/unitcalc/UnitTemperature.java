@@ -9,12 +9,16 @@ public class UnitTemperature extends Unit {
 	public static final double CELSIUS = 2;
 	public static final double KELVIN = 3;
 
+	public UnitTemperature(String name, String longName, double tempType){
+		super(name, longName, tempType);
+	}
+
 	public UnitTemperature(String name, double tempType){
-		super(name, tempType);
+		super(name, name, tempType);
 	}
 
 	public UnitTemperature(){
-		super("", 0);
+		super("", "", 0);
 	}
 
 	public UnitTemperature(JSONObject json) throws JSONException {

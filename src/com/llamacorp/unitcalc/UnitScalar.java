@@ -6,10 +6,14 @@ import org.json.JSONObject;
 public class UnitScalar extends Unit {
 
 	//intercept's only known need is temp conversions
-	public UnitScalar(String name, double value){
-		super(name, value);
+	public UnitScalar(String name, String longName, double value){
+		super(name, longName, value);
 	}	
-
+	
+	public UnitScalar(String name, double value){
+		super(name, name, value);
+	}	
+	
 	public UnitScalar(){
 		super();
 	}
