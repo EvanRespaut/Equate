@@ -40,7 +40,11 @@
     <string name="convert_um_button">um</string>
     <string name="convert_nm_button">nm</string>
     <string name="convert_ly_button">light years</string>
-
+    
+    <string name="first_convert_message">Now tap the desired unit to perform conversion.</string>
+    <string name="first_convert_title_no_numbers">To perform conversion…</string>
+    <string name="first_convert_message_no_numbers">Now enter some numbers and tap the desired unit to perform conversion.</string>
+    
     <color name="equal_button_normal">#176B17</color>
     <color name="equal_button_pressed">#61AD61</color>
     <color name="equal_button_text_normal">#D4D4D4</color>

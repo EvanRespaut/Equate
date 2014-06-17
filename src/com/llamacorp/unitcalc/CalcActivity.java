@@ -134,6 +134,12 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 			clearConvKeyForFragPos(mConvKeysViewPager.getCurrentItem());
 	}
 
+	/*
+	public void openFirstConvertDialog(){
+		FragmentManager fm = getSupportFragmentManager();
+
+	}
+	*/
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

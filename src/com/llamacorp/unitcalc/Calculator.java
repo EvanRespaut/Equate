@@ -24,6 +24,7 @@ public class Calculator implements OnConvertionListener{
 	private static final String JSON_RESULT_LIST = "result_list";
 	private static final String JSON_EXPRESSION = "expression";
 	private static final String JSON_UNIT_TYPE = "unit_type";
+	private static final String JSON_HINTS = "hints";
 	private static final int RESULT_LIST_MAX_SIZE = 100;
 	
 
@@ -44,6 +45,7 @@ public class Calculator implements OnConvertionListener{
 	//stores the current location in mUnitTypeArray
 	private int mUnitTypePos;
 
+	public Hints mHints;
 
 	//precision for all calculations
 	public static final int intDisplayPrecision = 8;
@@ -57,7 +59,8 @@ public class Calculator implements OnConvertionListener{
 		//mMcOperate = new MathContext(intCalcPrecision); 
 		mSolver = new Solver(intCalcPrecision);
 		mUnitTypePos=2;	
-		initiateUnits();	
+		initiateUnits();
+		mHints = new Hints();
 	}
 	//------THIS IS FOR TESTING ONLY-----------------
 	public static Calculator getTestCalculator(){ mCaculator=new Calculator(); return mCaculator; }
@@ -74,14 +77,15 @@ public class Calculator implements OnConvertionListener{
 		mExpression = new Expression(intDisplayPrecision);
 		//set the unit type to length by default
 		mUnitTypePos=2;
+		mHints = new Hints();
 		
 		//load the calculating precision
 		mSolver = new Solver(intCalcPrecision);
 			
+		//over-right values above if this works
 		try {
 			loadState();
-		} catch (Exception e) {	
-		}
+		} catch (Exception e) {}
 
 		//call helper method to actually load in units
 		initiateUnits();
@@ -115,6 +119,8 @@ public class Calculator implements OnConvertionListener{
 			JSONObject jObjState = (JSONObject) new JSONTokener(jsonString.toString()).nextValue();
 			mExpression = new Expression(jObjState.getJSONObject(JSON_EXPRESSION), intDisplayPrecision);
 			mUnitTypePos = jObjState.getInt(JSON_UNIT_TYPE);
+			mHints = new Hints(jObjState.getJSONObject(JSON_HINTS));
+
 
 			JSONArray jResultArray = jObjState.getJSONArray(JSON_RESULT_LIST);
 
@@ -136,6 +142,7 @@ public class Calculator implements OnConvertionListener{
 		JSONObject jObjState = new JSONObject();
 		jObjState.put(JSON_EXPRESSION, mExpression.toJSON());
 		jObjState.put(JSON_UNIT_TYPE, mUnitTypePos);
+		jObjState.put(JSON_HINTS, mHints.toJSON());
 		
 		JSONArray jResultArray = new JSONArray();
 		for (Result result : mResultList)
@@ -160,6 +167,7 @@ public class Calculator implements OnConvertionListener{
 	public void resetCalc(){
 		mResultList.clear();
 		mExpression = new Expression(intDisplayPrecision);
+		mHints = new Hints();
 		//set the unit type to length by default
 		mUnitTypePos=2;
 	}

@@ -3,6 +3,8 @@ package com.llamacorp.unitcalc;
 import java.util.ArrayList;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -16,6 +18,7 @@ import android.widget.TextView.BufferType;
 import android.widget.Toast;
 
 public class ConvKeysFragment extends Fragment {
+
 	//this is for communication with the parent activity
 	OnConvertKeySelectedListener mCallback;
 
@@ -56,9 +59,9 @@ public class ConvKeysFragment extends Fragment {
 			R.id.convert_button9,
 			R.id.convert_button10};
 
-	
+
 	private Toast mConvertToast;
-	
+
 
 	@Override
 	public void onCreate(Bundle savedInstanceState){
@@ -156,18 +159,34 @@ public class ConvKeysFragment extends Fragment {
 		//Set select unit, also this will potentially call convert if we already have a selected unit
 		boolean didConvert = mUnitType.selectUnit(buttonPos);
 		
+		Calculator calc = Calculator.getCalculator(getActivity());
+		//for first time users
+		if(!calc.mHints.isHasClickedUnit()){
+			Builder dialog = new AlertDialog.Builder(getActivity())
+			.setPositiveButton(android.R.string.ok,null);
+
+			if(calc.isExpressionEmpty()){
+//				dialog.setTitle(R.string.first_convert_title_no_numbers);
+				dialog.setMessage(R.string.first_convert_message_no_numbers);
+			}
+			else
+				dialog.setMessage(R.string.first_convert_message);
+			dialog.show();
+			calc.mHints.setHasClickedUnitTrue();
+		}
+
 
 		//if conversion performed, update screen
 		if(didConvert){
 			//cancel previous toast if it's there
-			if(mConvertToast!=null)
+			if(mConvertToast!=null) 
 				mConvertToast.cancel();
 			Unit newUnit = mUnitType.getSelectedUnit();
 			String text = "Converting " + oldUnit.getLongName() + " to " + newUnit.getLongName();
 			mConvertToast = Toast.makeText((Context)mCallback, text, Toast.LENGTH_SHORT);
 			mConvertToast.show();
 		}
-			
+
 		//always update screen to add/remove unit from expression
 		mCallback.updateScreen(true);
 
