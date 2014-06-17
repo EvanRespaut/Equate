@@ -182,7 +182,14 @@ public class ConvKeysFragment extends Fragment {
 			if(mConvertToast!=null) 
 				mConvertToast.cancel();
 			Unit newUnit = mUnitType.getSelectedUnit();
-			String text = "Converting " + oldUnit.getLongName() + " to " + newUnit.getLongName();
+			String text;
+			if(calc.isExpressionEmpty())
+				text = getText(R.string.convert_toast_no_numbers).toString();
+			else
+				text = getText(R.string.convert_toast_converting) 
+					+ " " + oldUnit.getLongName() 
+					+ " " + getText(R.string.convert_toast_to) 
+					+ " " + newUnit.getLongName();
 			mConvertToast = Toast.makeText((Context)mCallback, text, Toast.LENGTH_SHORT);
 			mConvertToast.show();
 		}

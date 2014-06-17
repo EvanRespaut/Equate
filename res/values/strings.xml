@@ -42,8 +42,12 @@
     <string name="convert_ly_button">light years</string>
     
     <string name="first_convert_message">Now tap the desired unit to perform conversion.</string>
-    <string name="first_convert_title_no_numbers">To perform conversion…</string>
     <string name="first_convert_message_no_numbers">Now enter some numbers and tap the desired unit to perform conversion.</string>
+    
+    <string name="convert_toast_converting">Converting</string>
+    <string name="convert_toast_to">to</string>
+    <string name="convert_toast_no_numbers">No numbers to convert</string>
+    
     
     <color name="equal_button_normal">#176B17</color>
     <color name="equal_button_pressed">#61AD61</color>
