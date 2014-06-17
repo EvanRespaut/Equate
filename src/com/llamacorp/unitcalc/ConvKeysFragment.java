@@ -6,10 +6,13 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.SpannableString;
 import android.text.style.SuperscriptSpan;
+import android.util.DisplayMetrics;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -158,7 +161,7 @@ public class ConvKeysFragment extends Fragment {
 		clearButtonSelection();
 		//Set select unit, also this will potentially call convert if we already have a selected unit
 		boolean didConvert = mUnitType.selectUnit(buttonPos);
-		
+
 		Calculator calc = Calculator.getCalculator(getActivity());
 		//for first time users
 		if(!calc.mHints.isHasClickedUnit()){
@@ -166,7 +169,7 @@ public class ConvKeysFragment extends Fragment {
 			.setPositiveButton(android.R.string.ok,null);
 
 			if(calc.isExpressionEmpty()){
-//				dialog.setTitle(R.string.first_convert_title_no_numbers);
+				//				dialog.setTitle(R.string.first_convert_title_no_numbers);
 				dialog.setMessage(R.string.first_convert_message_no_numbers);
 			}
 			else
@@ -187,10 +190,24 @@ public class ConvKeysFragment extends Fragment {
 				text = getText(R.string.convert_toast_no_numbers).toString();
 			else
 				text = getText(R.string.convert_toast_converting) 
-					+ " " + oldUnit.getLongName() 
-					+ " " + getText(R.string.convert_toast_to) 
-					+ " " + newUnit.getLongName();
+				+ " " + oldUnit.getLongName() 
+				+ " " + getText(R.string.convert_toast_to) 
+				+ " " + newUnit.getLongName();
+
+
 			mConvertToast = Toast.makeText((Context)mCallback, text, Toast.LENGTH_SHORT);
+			
+			DisplayMetrics metrics = new DisplayMetrics();
+			getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
+			float logicalDensity = metrics.density;
+			int dp=0;
+			//nudge the toast so it's between keys
+			if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
+				dp = 70;
+			else 
+				dp = 40;
+			int px = (int) (dp * logicalDensity);
+			mConvertToast.setGravity(Gravity.BOTTOM,0,px);
 			mConvertToast.show();
 		}
 

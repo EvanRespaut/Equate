@@ -3,6 +3,7 @@ package com.llamacorp.unitcalc;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -11,18 +12,21 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.DisplayMetrics;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import com.llamacorp.unitcalc.ConvKeysFragment.OnConvertKeySelectedListener;
 import com.llamacorp.unitcalc.ResultListFragment.OnResultSelectedListener;
 import com.viewpagerindicator.TabPageIndicator;
 
 public class CalcActivity  extends FragmentActivity implements OnResultSelectedListener, OnConvertKeySelectedListener{
+	private Context mAppContext;
+	
 	private ViewPager mConvKeysViewPager; 
 	private ResultListFragment mResultFragment;
 
@@ -144,6 +148,7 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		mAppContext=this;
 		setContentView(R.layout.activity_calc);
 
 		//either get old calc or create a new one
@@ -397,6 +402,9 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 					mCalc.resetCalc();
 					updateScreen(true);
 					mConvKeysViewPager.setCurrentItem(mCalc.getUnitTypePos());
+					Toast toast = Toast.makeText(mAppContext, (CharSequence)"Calculator reset", Toast.LENGTH_SHORT);
+					toast.setGravity(Gravity.CENTER, 0, 0);
+					toast.show();
 				}
 			};			
 
@@ -442,7 +450,7 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 				}
 			};			
 		});
-		
+		/*
 		float px = mDisplay.getTextSize();
 		
 		DisplayMetrics metrics = new DisplayMetrics();
@@ -452,6 +460,7 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 		int dp = (int) Math.ceil(px / logicalDensity);
 		System.out.println("text size dp=" + dp);
 		System.out.println("text size px=" + px);
+		*/
 	}
 
 	@Override

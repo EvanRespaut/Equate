@@ -30,17 +30,6 @@
     <string name="multiply_button">×</string>
     <string name="divide_button">÷</string>
     
-    <string name="convert_in_button">in</string>
-    <string name="convert_ft_button">ft</string>
-    <string name="convert_m_button">m</string>
-    <string name="convert_cm_button">cm</string>
-    <string name="convert_mm_button">mm</string>
-    <string name="convert_miles_button">miles</string>
-    <string name="convert_km_button">km</string>
-    <string name="convert_um_button">um</string>
-    <string name="convert_nm_button">nm</string>
-    <string name="convert_ly_button">light years</string>
-    
     <string name="first_convert_message">Now tap the desired unit to perform conversion.</string>
     <string name="first_convert_message_no_numbers">Now enter some numbers and tap the desired unit to perform conversion.</string>
     
