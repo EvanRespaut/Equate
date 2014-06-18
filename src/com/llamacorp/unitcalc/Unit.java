@@ -1,6 +1,7 @@
 package com.llamacorp.unitcalc;
 
 import java.lang.reflect.Constructor;
+import java.util.Locale;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -62,9 +63,12 @@ public abstract class Unit  /*implements JsonSerializer<Unit>, JsonDeserializer<
 		return json;
 	}
 
-
 	public String getLongName() {
 		return mLongName;
+	}
+	
+	public String getLowercaseLongName(){
+		return getLongName().toLowerCase(Locale.US);
 	}
 
 	public double getValue() {

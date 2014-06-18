@@ -1,6 +1,7 @@
 package com.llamacorp.unitcalc;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class UnitType {
 	//this is for communication with the parent
@@ -40,6 +41,23 @@ public class UnitType {
 	 */
 	public void addUnit(Unit u){
 		mUnitArray.add(u);
+	}
+	
+	/** Swap positions of units */	
+	public void swapUnits(int pos1, int pos2){
+		/*ArrayList<Unit> al = new ArrayList<Unit>();
+		
+		al.add(new UnitScalar("bderp1",43));
+		al.add(new UnitScalar("bderp2",433));
+		al.add(new UnitScalar("bderp3",42343));
+		al.add(new UnitScalar("bderp4",14243));
+		al=mUnitArray;
+		System.out.println(al);
+		Collections.swap(al, 2, 1);
+		System.out.println(al);
+		*/
+		Collections.swap(mUnitArray, pos1, pos2);
+		System.out.println(mUnitArray);
 	}
 
 	/**
@@ -102,6 +120,25 @@ public class UnitType {
 	 */
 	public String getUnitDisplayName(int pos){
 		return mUnitArray.get(pos).toString();
+	}
+	
+	public String getLowercaseLongName(int pos){
+		return mUnitArray.get(pos).getLowercaseLongName();
+	}
+	
+	/** Method builds charSequence array of long names of undisplayed units
+	 * @param Array of long names of units not being displayed
+	 * @return Number of units being displayed, used to find undisplayed units
+	 */
+	public CharSequence[] getUndisplayedUnitNames(int numDispUnits){
+		//ArrayList<Unit> subList = mUnitArray.subList(numDispUnits, mUnitArray.size());
+		//return subList.toArray(new CharSequence[subList.size()]);
+		int arraySize = mUnitArray.size() - numDispUnits;
+		CharSequence[] cs = new CharSequence[arraySize];
+		for(int i=0;i<arraySize;i++){
+			cs[i] = mUnitArray.get(numDispUnits+i).getLongName();
+		}
+		return cs;
 	}
 	
 	public Unit getSelectedUnit(){

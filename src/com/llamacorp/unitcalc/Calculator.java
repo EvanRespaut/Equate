@@ -195,75 +195,96 @@ public class Calculator implements OnConvertionListener{
 
 
 		UnitType unitsOfWeight = new UnitType(this,"Weight");
-		unitsOfWeight.addUnit(new UnitScalar("oz", "ounces", 1/0.0283495));
-		unitsOfWeight.addUnit(new UnitScalar("lb", "pounds", 1/0.453592));
-		unitsOfWeight.addUnit(new UnitScalar("short ton", "short tons", 1/907.184));
-		unitsOfWeight.addUnit(new UnitScalar("long ton", "long tons", 1/1016.04608));
-		unitsOfWeight.addUnit(new UnitScalar("stone", "stones", 1/6.350288));
+		unitsOfWeight.addUnit(new UnitScalar("oz", "Ounces", 1/0.0283495));
+		unitsOfWeight.addUnit(new UnitScalar("lb", "Pounds", 1/0.453592));
+		unitsOfWeight.addUnit(new UnitScalar("ton us", "Short Tons", 1/907.184));
+		unitsOfWeight.addUnit(new UnitScalar("ton uk", "Long Tons", 1/1016.04608));
+		unitsOfWeight.addUnit(new UnitScalar("st", "Stones", 1/6.350288));
 
-		unitsOfWeight.addUnit(new UnitScalar("µg", "micrograms", 1/1e-9));
-		unitsOfWeight.addUnit(new UnitScalar("mg", "milligrams", 1/1e-6));
-		unitsOfWeight.addUnit(new UnitScalar("g", "grams", 1/0.001));
-		unitsOfWeight.addUnit(new UnitScalar("kg", "kilograms", 1));
-		unitsOfWeight.addUnit(new UnitScalar("metric ton", "metric tons", 1/1e3));
+		unitsOfWeight.addUnit(new UnitScalar("µg", "Micrograms", 1/1e-9));
+		unitsOfWeight.addUnit(new UnitScalar("mg", "Milligrams", 1/1e-6));
+		unitsOfWeight.addUnit(new UnitScalar("g", "Grams", 1/0.001));
+		unitsOfWeight.addUnit(new UnitScalar("kg", "Kilograms", 1));
+		unitsOfWeight.addUnit(new UnitScalar("ton", "Metric Tons", 1/1e3));
 		mUnitTypeArray.add(unitsOfWeight);
 
 
 		UnitType unitsOfLength = new UnitType(this,"Length");
-		unitsOfLength.addUnit(new UnitScalar("in", "inches", 1/0.0254));
-		unitsOfLength.addUnit(new UnitScalar("ft", "feet", 1/0.3048));
-		unitsOfLength.addUnit(new UnitScalar("yard", "yards", 1/0.9144));
-		unitsOfLength.addUnit(new UnitScalar("mile", "miles", 1/1609.344));
-		unitsOfLength.addUnit(new UnitScalar("km", "kilometers", 1/1000.0));
+		unitsOfLength.addUnit(new UnitScalar("in", "Inches", 1/0.0254));//exact
+		unitsOfLength.addUnit(new UnitScalar("ft", "Feet", 1/0.3048));//exact: in*12
+		unitsOfLength.addUnit(new UnitScalar("yd", "Yards", 1/0.9144));//exact: in*12*3
+		unitsOfLength.addUnit(new UnitScalar("mi", "Miles", 1/1609.344));//exact: in*12*5280
+		unitsOfLength.addUnit(new UnitScalar("km", "Kilometers", 1/1000.0));
 
-		unitsOfLength.addUnit(new UnitScalar("nm", "nanometers", 1/0.000000001));
-		unitsOfLength.addUnit(new UnitScalar("µm", "micrometers", 1/0.000001));
-		unitsOfLength.addUnit(new UnitScalar("mm", "millimeters", 1/0.001));
-		unitsOfLength.addUnit(new UnitScalar("cm", "centimeters", 1/0.01));
-		unitsOfLength.addUnit(new UnitScalar("m", "meters", 1.0));
+		unitsOfLength.addUnit(new UnitScalar("nm", "Nanometers", 1E9));
+		unitsOfLength.addUnit(new UnitScalar("µm", "Micrometer", 1E6));
+		unitsOfLength.addUnit(new UnitScalar("mm", "Millimeters", 1000));
+		unitsOfLength.addUnit(new UnitScalar("cm", "Centimeters", 100));
+		unitsOfLength.addUnit(new UnitScalar("m", "Meters", 1));
+
+		unitsOfLength.addUnit(new UnitScalar("Å", "Ångströms", 1E10));
+		unitsOfLength.addUnit(new UnitScalar("mil", "Thousandths of an Inch", 1/2.54E-5));
+		unitsOfLength.addUnit(new UnitScalar("fur", "Furlongs", 0.00497096954));
+		unitsOfLength.addUnit(new UnitScalar("nmi", "Nautical Miles", 1/1852));
+		unitsOfLength.addUnit(new UnitScalar("ly", "Light Years", 1/9.4607E15));
+		unitsOfLength.addUnit(new UnitScalar("pc", "Parsecs", 3.24078E-17));
 		mUnitTypeArray.add(unitsOfLength);	
 
 
 		UnitType unitsOfArea = new UnitType(this,"Area");
-		unitsOfArea.addUnit(new UnitScalar("in^2", 1/0.00064516));//0.0254^2
-		unitsOfArea.addUnit(new UnitScalar("ft^2", 1/0.09290304));//0.3048^2
-		unitsOfArea.addUnit(new UnitScalar("yd^2", 1/0.83612736));//0.3048^2*9
-		unitsOfArea.addUnit(new UnitScalar("acre", 1/4046.8564224));//0.3048^2*9*4840
-		unitsOfArea.addUnit(new UnitScalar("mi^2", 1/2589988.110336));//1609.344^2
+		unitsOfArea.addUnit(new UnitScalar("in^2", "Square Inches", 1/0.00064516));//exact: 0.0254^2
+		unitsOfArea.addUnit(new UnitScalar("ft^2", "Square Feet", 1/0.09290304));//0.3048^2
+		unitsOfArea.addUnit(new UnitScalar("yd^2", "Square Yards", 1/0.83612736));//0.3048^2*9
+		unitsOfArea.addUnit(new UnitScalar("acre", "Acres", 1/4046.8564224));//0.3048^2*9*4840
+		unitsOfArea.addUnit(new UnitScalar("mi^2", "Square Miles", 1/2589988.110336));//1609.344^2
 
-		unitsOfArea.addUnit(new UnitScalar("mm^2", 1/0.000001));
-		unitsOfArea.addUnit(new UnitScalar("cm^2", 1/0.0001));
-		unitsOfArea.addUnit(new UnitScalar("m^2", 1.0));
-		unitsOfArea.addUnit(new UnitScalar("km^2", 1/1000000.0));
-		unitsOfArea.addUnit(new UnitScalar("ha", 1/10000.0));
+		unitsOfArea.addUnit(new UnitScalar("mm^2", "Square Millimeters", 1/0.000001));
+		unitsOfArea.addUnit(new UnitScalar("cm^2", "Square Centimeters", 1/0.0001));
+		unitsOfArea.addUnit(new UnitScalar("m^2", "Square Meters", 1));
+		unitsOfArea.addUnit(new UnitScalar("km^2", "Square Kilometers", 1/1000000.0));
+		unitsOfArea.addUnit(new UnitScalar("ha", "Hectares", 1/10000.0));
+		
+		unitsOfArea.addUnit(new UnitScalar("a", "Ares", 0.01));
 		mUnitTypeArray.add(unitsOfArea);
 
 
 		UnitType unitsOfVolume = new UnitType(this,"Volume");
-		unitsOfVolume.addUnit(new UnitScalar("tbsp", "tablespoons", 1/0.000014786764765625));//gal/256
-		unitsOfVolume.addUnit(new UnitScalar("cup", "cups", 1/0.00023658823625));//gal/16
-		unitsOfVolume.addUnit(new UnitScalar("pint", "pints", 1/0.0004731764725));//gal/8
-		unitsOfVolume.addUnit(new UnitScalar("qt", "quarts", 1/0.000946352945));//gal/4
-		unitsOfVolume.addUnit(new UnitScalar("gal", "gallons", 1/0.00378541178));//found online; source of other conversions
+		unitsOfVolume.addUnit(new UnitScalar("tbsp", "Tablespoons", 1/0.00001478676478125));//exact: gal/256
+		unitsOfVolume.addUnit(new UnitScalar("cup", "Cups", 1/0.0002365882365));//exact: gal/16
+		unitsOfVolume.addUnit(new UnitScalar("pt", "Pints (US)", 1/0.000473176473));//exact: gal/8
+		unitsOfVolume.addUnit(new UnitScalar("qt", "Quarts (US)", 1/0.000946352946));//exact: gal/4
+		unitsOfVolume.addUnit(new UnitScalar("gal", "Gallons (US)", 1/0.003785411784));//exact: according to wiki
 
-		unitsOfVolume.addUnit(new UnitScalar("tsp", "teaspoons", 1/4.92892158854166666667e-6));//gal/768
-		unitsOfVolume.addUnit(new UnitScalar("fl oz", "fluid ounces", 1/0.00002957352953125));//gal/128
-		unitsOfVolume.addUnit(new UnitScalar("ml", "milliliters", 1/1e-6));
-		unitsOfVolume.addUnit(new UnitScalar("l", "liters", 1/0.001));
-		unitsOfVolume.addUnit(new UnitScalar("m^3", 1));
+		unitsOfVolume.addUnit(new UnitScalar("tsp", "Teaspoons", 1/0.00000492892159375));//exact: gal/768
+		unitsOfVolume.addUnit(new UnitScalar("fl oz", "Fluid Ounces (US)", 1/0.0000295735295625));//exact: gal/128
+		unitsOfVolume.addUnit(new UnitScalar("mL", "Milliliters", 1E6)); 
+		unitsOfVolume.addUnit(new UnitScalar("L", "Liters", 1000));
+		unitsOfVolume.addUnit(new UnitScalar("m^3", "Cubic Meters", 1));
+
+		unitsOfVolume.addUnit(new UnitScalar("in^3", "Cubic Inches", 1/0.000016387064));//exact: gal/231
+		unitsOfVolume.addUnit(new UnitScalar("ft^3", "Cubic Feet", 1/0.028316846592));//exact: gal/231*12^3
+		unitsOfVolume.addUnit(new UnitScalar("cm^3", "Cubic Centimeters", 1E6));
+		unitsOfVolume.addUnit(new UnitScalar("cL", "Centiliter", 1E5));
+		unitsOfVolume.addUnit(new UnitScalar("dL", "Deciliters", 1E4));
+		unitsOfVolume.addUnit(new UnitScalar("gal uk", "Gallons (UK)", 1000/4.54609));//exact: 4.54609L/gal uk
+		unitsOfVolume.addUnit(new UnitScalar("qt uk", "Quart (UK)", 1000/1.1365225));//exact: gal uk/4
+		unitsOfVolume.addUnit(new UnitScalar("pt uk", "Pints (UK)", 1000/0.56826125));//exact: gal uk/8
+		unitsOfVolume.addUnit(new UnitScalar("fl oz uk", "Fluid Ounces (UK)", 1000/0.0284130625));//exact: gal uk/160
+		unitsOfVolume.addUnit(new UnitScalar("shot", "Shots (US)", 1/0.00004436029434375));//exact for 1.5 fl oz
+
 		mUnitTypeArray.add(unitsOfVolume);
 		
 
 		UnitType unitsOfSpeed = new UnitType(this,"Speed");
-		unitsOfSpeed.addUnit(new UnitScalar("ft/s", 1/0.3048));
-		unitsOfSpeed.addUnit(new UnitScalar("mph", "miles per hour", 1/0.44704));
-		unitsOfSpeed.addUnit(new UnitScalar("knot", 1/0.514444));
+		unitsOfSpeed.addUnit(new UnitScalar("ft/s", "Feet per Second", 1/0.3048));
+		unitsOfSpeed.addUnit(new UnitScalar("mph", "Miles per Hour", 1/0.44704));
+		unitsOfSpeed.addUnit(new UnitScalar("knot", "Knots", 1/0.514444));
 		unitsOfSpeed.addUnit(new UnitScalar("", 0));
 		unitsOfSpeed.addUnit(new UnitScalar("", 0));
 		
 
-		unitsOfSpeed.addUnit(new UnitScalar("m/s", 1));
-		unitsOfSpeed.addUnit(new UnitScalar("kph", "kilometers per hour", 3.6));
+		unitsOfSpeed.addUnit(new UnitScalar("m/s", "Meters per Second", 1));
+		unitsOfSpeed.addUnit(new UnitScalar("kph", "Kilometers per Hour", 3.6));
 		unitsOfSpeed.addUnit(new UnitScalar("", 0));
 		unitsOfSpeed.addUnit(new UnitScalar("", 0));
 		unitsOfSpeed.addUnit(new UnitScalar("", 0));

@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -95,40 +96,25 @@ public class ConvKeysFragment extends Fragment {
 		View v = inflater.inflate(R.layout.fragment_convert_keys, parent, false);
 
 		mConvButton = new ArrayList<Button>();
+		final int numButtons = convertButtonIds.length;
 
-		for(int i = 0; i < mUnitType.size(); i++) {
+		for(int i=0; i<numButtons; i++) {
 			Button button = (Button)v.findViewById(convertButtonIds[i]);
 
 			//add to our list of conv buttons
 			mConvButton.add(button);			
 
-
-			String displayText = mUnitType.getUnitDisplayName(i);
-
 			//if button is empty, don't create OnClickListener for it
-			if(displayText.equals(""))
-				continue;
-
-			//want to superscript text after a "^" character
-			String [] splitArray = displayText.split("\\^");
-			//only upper-case text if it exists
-			if(splitArray.length>1){
-				//cut out the "^"
-				SpannableString spanText = new SpannableString(splitArray[0] + splitArray[1]);   
-				//superscript the portion after the "^"
-				spanText.setSpan(new SuperscriptSpan(), splitArray[0].length(), spanText.length(), 0);  
-				button.setText(spanText, BufferType.SPANNABLE);   
-			}
-			//otherwise just set it normally
-			else
-				button.setText(displayText);
-
+			if(mUnitType.getUnitDisplayName(i).equals(""))
+			continue;
+			
+			refreshButtonText(i);
 
 			button.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View view) {
 					int viewId = view.getId();
-					for (int i=0; i<convertButtonIds.length; i++){
+					for (int i=0; i<numButtons; i++){
 						if(convertButtonIds[i] == viewId){
 							//select key
 							clickUnitButton(i);
@@ -138,8 +124,35 @@ public class ConvKeysFragment extends Fragment {
 					}
 				}
 			});
+			
+			final int buttonPos = i;
+			button.setOnLongClickListener(new View.OnLongClickListener() {
+				@Override 
+				public boolean onLongClick(View view) {
+					//if there are less units to display than slots, move on
+					if(mUnitType.size() <= numButtons)
+						return true;
+				
+					AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+					builder.setTitle(getText(R.string.word_Change) 
+										+ " " + mUnitType.getLowercaseLongName(buttonPos) 
+										+ " " + getText(R.string.word_to) + ":");
+					builder.setItems(mUnitType.getUndisplayedUnitNames(numButtons), 
+						new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int item) {
+								 mUnitType.swapUnits(buttonPos, item+numButtons);
+								 refreshButtonText(buttonPos);
+							}
+						});
+					//null seems to do the same as canceling the dialog
+					builder.setNegativeButton(android.R.string.cancel,null);
+					AlertDialog alert = builder.create();
+					alert.show();
+					return false;
+				}
+			});
 		}
-
 		return v;
 	}
 
@@ -149,8 +162,27 @@ public class ConvKeysFragment extends Fragment {
 	public void selectUnit(Unit unit) {
 		int unitPos = mUnitType.findUnitPosition(unit);
 		//unitPos will be -1 if it wasn't found
-		if(unitPos != -1)
+		if(unitPos != -1 && unitPos < mConvButton.size())
 			clickUnitButton(unitPos);
+	}
+	
+	private void refreshButtonText(int buttonPos){
+		String displayText = mUnitType.getUnitDisplayName(buttonPos);
+		Button button = mConvButton.get(buttonPos);
+
+		//want to superscript text after a "^" character
+		String [] splitArray = displayText.split("\\^");
+		//only upper-case text if it exists
+		if(splitArray.length>1){
+			//cut out the "^"
+			SpannableString spanText = new SpannableString(splitArray[0] + splitArray[1]);   
+			//superscript the portion after the "^"
+			spanText.setSpan(new SuperscriptSpan(), splitArray[0].length(), spanText.length(), 0);  
+			button.setText(spanText, BufferType.SPANNABLE);   
+		}
+		//otherwise just set it normally
+		else
+			button.setText(displayText);
 	}
 
 	/** Used to pass selected unit to the UnitType model class
@@ -167,7 +199,6 @@ public class ConvKeysFragment extends Fragment {
 		if(!calc.mHints.isHasClickedUnit()){
 			Builder dialog = new AlertDialog.Builder(getActivity())
 			.setPositiveButton(android.R.string.ok,null);
-
 			if(calc.isExpressionEmpty()){
 				//				dialog.setTitle(R.string.first_convert_title_no_numbers);
 				dialog.setMessage(R.string.first_convert_message_no_numbers);
@@ -190,9 +221,9 @@ public class ConvKeysFragment extends Fragment {
 				text = getText(R.string.convert_toast_no_numbers).toString();
 			else
 				text = getText(R.string.convert_toast_converting) 
-				+ " " + oldUnit.getLongName() 
-				+ " " + getText(R.string.convert_toast_to) 
-				+ " " + newUnit.getLongName();
+				+ " " + oldUnit.getLowercaseLongName() 
+				+ " " + getText(R.string.word_to) 
+				+ " " + newUnit.getLowercaseLongName();
 
 
 			mConvertToast = Toast.makeText((Context)mCallback, text, Toast.LENGTH_SHORT);
