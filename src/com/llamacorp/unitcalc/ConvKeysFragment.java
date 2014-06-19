@@ -213,7 +213,7 @@ public class ConvKeysFragment extends Fragment {
 		}
 
 
-		//if conversion performed, update screen
+		//if conversion performed, show toast
 		if(didConvert){
 			//cancel previous toast if it's there
 			if(mConvertToast!=null) 
@@ -251,14 +251,17 @@ public class ConvKeysFragment extends Fragment {
 		colorSelectedButton();
 	}
 
-	public void colorSelectedButton(){
+	private void colorSelectedButton(){
 		//is null when app's onResume calls it (convertkey's onCreate called after activity's onResume)
 		if(mUnitType==null)
 			return;
 
-		//If new unit still selected, add color to newly selected convert button
-		if(mUnitType.isUnitSelected())
-			mConvButton.get(mUnitType.getCurrUnitPos()).setSelected(true);			
+		if(mUnitType.isUnitSelected()){
+			//Add color to newly selected convert button
+			mConvButton.get(mUnitType.getCurrUnitPos()).setSelected(true);	
+
+			//
+		}			
 	}
 
 	/** Clears the button unit selection */

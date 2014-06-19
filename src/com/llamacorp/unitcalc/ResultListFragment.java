@@ -46,30 +46,6 @@ public class ResultListFragment extends ListFragment {
 	}
 
 
-	//	@Override
-	//	public void onListItemClick(ListView l, View v, int position, long id){
-	//		Toast.makeText(getActivity(), "Cut!", Toast.LENGTH_SHORT).show();
-	//
-	//				String result = ((ResultAdapter)getListAdapter()).getItem(position);
-	//				System.out.println("position=" + position);
-	//				System.out.println("result= " + result);
-	//				System.out.println("id= " + id);
-	//		
-	//				String [] splitPrevExp;
-	//				splitPrevExp = result.split("\\s=\\s");
-	//		
-	//				if(splitPrevExp.length != 2)
-	//					throw new IllegalArgumentException("In resultlistfragment, splitPrevExpression is improperly formatted..."); 
-	//		
-	//				String query =  splitPrevExp[0];	
-	//				System.out.println("query= " + query);
-	//		
-	//				Calculator.getCalculator(getActivity()).parseKeyPressed(query);
-	//				mCallback.updateScreen(false);
-	//	}
-
-
-
 	private class ResultAdapter extends ArrayAdapter<Result> {
 		public ResultAdapter(List<Result> prevTest){
 			super(getActivity(), 0, prevTest);
@@ -101,7 +77,7 @@ public class ResultListFragment extends ListFragment {
 		 */
 		private void setUpResultTextView(TextView textView, String text){
 			//textView.setClickable(true);
-
+			/*
 			//want to superscript text after a "^" character
 			String [] splitArray = text.split("\\^");
 			//only upper-case text if it exists
@@ -115,6 +91,7 @@ public class ResultListFragment extends ListFragment {
 
 			//otherwise just set it normally
 			else
+			*/
 				textView.setText(text);
 
 			textView.setOnClickListener(new View.OnClickListener() {
@@ -150,15 +127,28 @@ public class ResultListFragment extends ListFragment {
 						mCallback.selectUnit(unitPassBack, thisResult.getUnitTypePos());
 					}
 
-
 					calc.parseKeyPressed(textPassBack);
 					mCallback.updateScreen(false);				
 				}
-
 			});
+			
+			textView.setOnLongClickListener(new View.OnLongClickListener() {
+				@Override 
+				public boolean onLongClick(View view) {
+					//get the listView position of this answer/query
+					int position = getListView().getPositionForView((View)view.getParent());
+					//delete associated previous expression
+					mResultArray.remove(position);
+					mCallback.updateScreen(true);				
+					
+					return false;
+				}
+			});
+
 		}
 	}
 
+	
 
 	/**
 	 * Gets called by the activity

@@ -245,6 +245,7 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 				mConvKeysViewPager.setPadding(padLeft, 0, padRight, 0);
 				*/
 
+				//TODO do we still need to do this?
 				//clear selected unit from adjacent convert key fragment so you can't see a bit of them
 				int currConvKeyPos = mConvKeysViewPager.getCurrentItem();
 				clearConvKeyForFragPos(currConvKeyPos-1);
@@ -252,13 +253,16 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 				clearConvKeyForFragPos(currConvKeyPos+1);
 				mCalc.getCurrUnitType().clearUnitSelection();
 
-				//if user clicks unit-ed result, scroll to that UnitType fragment
+				//this change UnitType was reult of unit-ed result, select that unit
 				if(unitToSelectAfterScroll!=null){
 					getConvKeyFrag(mConvKeysViewPager.getCurrentItem()).selectUnit(unitToSelectAfterScroll);
 					unitToSelectAfterScroll=null;
 				}
 				//clear out the unit in expression if it's now cleared
 				updateScreen(false);
+				
+				//move the cursor to the right end (helps usability a bit)
+				mDisplay.setSelectionToEnd();
 			}
 
 			@Override

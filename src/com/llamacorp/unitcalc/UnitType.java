@@ -3,9 +3,18 @@ package com.llamacorp.unitcalc;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class UnitType {
+	private static final String JSON_NAME = "name";
+	private static final String JSON_UNIT_ARRAY = "unit_array";
+	private static final String JSON_CURR_POS = "pos";
+	private static final String JSON_IS_SELECTED = "selected";
+
 	//this is for communication with the parent
-	OnConvertionListener mCallback;
+	private OnConvertionListener mCallback;
 
 	// Parent class must implement this interface
 	public interface OnConvertionListener {
@@ -36,6 +45,35 @@ public class UnitType {
 		mIsUnitSelected = false;
 	}
 
+	
+	public UnitType(Object parent, JSONObject json) throws JSONException {
+		this(parent, json.getString(JSON_NAME));
+		mCurrUnitPos = json.getInt(JSON_CURR_POS);
+		mIsUnitSelected = json.getBoolean(JSON_IS_SELECTED);
+		
+		JSONArray jUnitArray = json.getJSONArray(JSON_UNIT_ARRAY);
+		for (int i = 0; i < jUnitArray.length(); i++) {
+			mUnitArray.add(Unit.getUnit(jUnitArray.getJSONObject(i)));
+		}
+	}
+
+	public JSONObject toJSON() throws JSONException {
+		JSONObject json = new JSONObject();
+		
+		JSONArray jUnitArray = new JSONArray();
+		for (Unit unit : mUnitArray)
+			jUnitArray.put(unit.toJSON());
+		json.put(JSON_UNIT_ARRAY, jUnitArray);
+
+		json.put(JSON_NAME, mName);
+		json.put(JSON_CURR_POS, mCurrUnitPos);
+		json.put(JSON_IS_SELECTED, mIsUnitSelected);
+		return json;
+	}
+	
+	
+	
+	
 	/**
 	 * Used to build a UnitType
 	 */
@@ -45,17 +83,6 @@ public class UnitType {
 	
 	/** Swap positions of units */	
 	public void swapUnits(int pos1, int pos2){
-		/*ArrayList<Unit> al = new ArrayList<Unit>();
-		
-		al.add(new UnitScalar("bderp1",43));
-		al.add(new UnitScalar("bderp2",433));
-		al.add(new UnitScalar("bderp3",42343));
-		al.add(new UnitScalar("bderp4",14243));
-		al=mUnitArray;
-		System.out.println(al);
-		Collections.swap(al, 2, 1);
-		System.out.println(al);
-		*/
 		Collections.swap(mUnitArray, pos1, pos2);
 		System.out.println(mUnitArray);
 	}

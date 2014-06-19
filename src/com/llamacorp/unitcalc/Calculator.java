@@ -22,21 +22,22 @@ import com.llamacorp.unitcalc.UnitType.OnConvertionListener;
 public class Calculator implements OnConvertionListener{
 	private static final String FILENAME = "saved_data.json";
 	private static final String JSON_RESULT_LIST = "result_list";
+	private static final String JSON_UNIT_TYPE_ARRAY = "unit_type_array";
 	private static final String JSON_EXPRESSION = "expression";
 	private static final String JSON_UNIT_TYPE = "unit_type";
 	private static final String JSON_HINTS = "hints";
 	private static final int RESULT_LIST_MAX_SIZE = 100;
-	
+
 
 	private static Calculator mCaculator;
 	private Context mAppContext; 
 
 	//main expression
 	private Expression mExpression;
-	
+
 	//object that handles all the math
 	private Solver mSolver;
-	
+
 	//string of results; this will be directly manipulated by ResultListFragment
 	private List<Result> mResultList;
 
@@ -59,6 +60,7 @@ public class Calculator implements OnConvertionListener{
 		//mMcOperate = new MathContext(intCalcPrecision); 
 		mSolver = new Solver(intCalcPrecision);
 		mUnitTypePos=2;	
+		mUnitTypeArray = new ArrayList<UnitType>();
 		initiateUnits();
 		mHints = new Hints();
 	}
@@ -72,23 +74,24 @@ public class Calculator implements OnConvertionListener{
 	private Calculator(Context appContext){
 		//save our context
 		mAppContext = appContext;
-		
+
 		mResultList = new ArrayList<Result>();
 		mExpression = new Expression(intDisplayPrecision);
 		//set the unit type to length by default
 		mUnitTypePos=2;
 		mHints = new Hints();
-		
+
 		//load the calculating precision
 		mSolver = new Solver(intCalcPrecision);
-			
+
+		mUnitTypeArray = new ArrayList<UnitType>();
+		//call helper method to actually load in units
+		initiateUnits();
+
 		//over-right values above if this works
 		try {
 			loadState();
 		} catch (Exception e) {}
-
-		//call helper method to actually load in units
-		initiateUnits();
 	}
 
 	/**
@@ -102,7 +105,6 @@ public class Calculator implements OnConvertionListener{
 
 
 	private void loadState() throws IOException, JSONException {
-		ArrayList<Result> results = new ArrayList<Result>();
 		BufferedReader reader = null;
 		try {
 			// open and read the file into a StringBuilder
@@ -117,18 +119,26 @@ public class Calculator implements OnConvertionListener{
 
 			// parse the JSON using JSONTokener
 			JSONObject jObjState = (JSONObject) new JSONTokener(jsonString.toString()).nextValue();
-			mExpression = new Expression(jObjState.getJSONObject(JSON_EXPRESSION), intDisplayPrecision);
 			mUnitTypePos = jObjState.getInt(JSON_UNIT_TYPE);
+			mExpression = new Expression(jObjState.getJSONObject(JSON_EXPRESSION), intDisplayPrecision);
 			mHints = new Hints(jObjState.getJSONObject(JSON_HINTS));
 
 
 			JSONArray jResultArray = jObjState.getJSONArray(JSON_RESULT_LIST);
-
 			// build the array of results from JSONObjects
 			for (int i = 0; i < jResultArray.length(); i++) {
-				results.add(new Result(jResultArray.getJSONObject(i)));
+				mResultList.add(new Result(jResultArray.getJSONObject(i)));
 			}
-			mResultList = results;
+			
+			mUnitTypeArray.clear();
+			JSONArray jUnitTypeArray = jObjState.getJSONArray(JSON_UNIT_TYPE_ARRAY);
+			// build the array of results from JSONObjects
+			for (int i = 0; i < jUnitTypeArray.length(); i++) {
+				mUnitTypeArray.add(new UnitType(this,jUnitTypeArray.getJSONObject(i)));
+			}
+			
+
+
 		} catch (FileNotFoundException e) {
 			// we will ignore this one, since it happens when we start fresh
 		} finally {
@@ -138,17 +148,21 @@ public class Calculator implements OnConvertionListener{
 	}
 
 	public void saveState() throws JSONException, IOException {
-		//Main JSON object 
 		JSONObject jObjState = new JSONObject();
 		jObjState.put(JSON_EXPRESSION, mExpression.toJSON());
 		jObjState.put(JSON_UNIT_TYPE, mUnitTypePos);
 		jObjState.put(JSON_HINTS, mHints.toJSON());
-		
+
 		JSONArray jResultArray = new JSONArray();
 		for (Result result : mResultList)
 			jResultArray.put(result.toJSON());
-
 		jObjState.put(JSON_RESULT_LIST, jResultArray);
+
+
+		JSONArray jUnitTypeArray = new JSONArray();
+		for (UnitType unitType : mUnitTypeArray)
+			jUnitTypeArray.put(unitType.toJSON());
+		jObjState.put(JSON_UNIT_TYPE_ARRAY, jUnitTypeArray);
 
 		// write the file to disk
 		Writer writer = null;
@@ -170,6 +184,12 @@ public class Calculator implements OnConvertionListener{
 		mHints = new Hints();
 		//set the unit type to length by default
 		mUnitTypePos=2;
+		
+		//load the calculating precision
+		mSolver = new Solver(intCalcPrecision);
+
+		mUnitTypeArray.clear();
+		initiateUnits();
 	}
 
 
@@ -177,7 +197,7 @@ public class Calculator implements OnConvertionListener{
 	 * Helper method used to initiate the array of various types of units
 	 */	
 	private void initiateUnits(){
-		mUnitTypeArray = new ArrayList<UnitType>();
+
 
 		UnitType unitsOfTemp = new UnitType(this,"Temp");
 		unitsOfTemp.addUnit(new UnitTemperature());
@@ -243,7 +263,7 @@ public class Calculator implements OnConvertionListener{
 		unitsOfArea.addUnit(new UnitScalar("m^2", "Square Meters", 1));
 		unitsOfArea.addUnit(new UnitScalar("km^2", "Square Kilometers", 1/1000000.0));
 		unitsOfArea.addUnit(new UnitScalar("ha", "Hectares", 1/10000.0));
-		
+
 		unitsOfArea.addUnit(new UnitScalar("a", "Ares", 0.01));
 		mUnitTypeArray.add(unitsOfArea);
 
@@ -273,7 +293,7 @@ public class Calculator implements OnConvertionListener{
 		unitsOfVolume.addUnit(new UnitScalar("shot", "Shots (US)", 1/0.00004436029434375));//exact for 1.5 fl oz
 
 		mUnitTypeArray.add(unitsOfVolume);
-		
+
 
 		UnitType unitsOfSpeed = new UnitType(this,"Speed");
 		unitsOfSpeed.addUnit(new UnitScalar("ft/s", "Feet per Second", 1/0.3048));
@@ -281,7 +301,7 @@ public class Calculator implements OnConvertionListener{
 		unitsOfSpeed.addUnit(new UnitScalar("knot", "Knots", 1/0.514444));
 		unitsOfSpeed.addUnit(new UnitScalar("", 0));
 		unitsOfSpeed.addUnit(new UnitScalar("", 0));
-		
+
 
 		unitsOfSpeed.addUnit(new UnitScalar("m/s", "Meters per Second", 1));
 		unitsOfSpeed.addUnit(new UnitScalar("kph", "Kilometers per Hour", 3.6));
@@ -289,7 +309,7 @@ public class Calculator implements OnConvertionListener{
 		unitsOfSpeed.addUnit(new UnitScalar("", 0));
 		unitsOfSpeed.addUnit(new UnitScalar("", 0));
 		mUnitTypeArray.add(unitsOfSpeed);
-		
+
 		/*
 		UnitType unitsOfPower = new UnitType(this,"Power");
 		unitsOfPower.addUnit(new UnitScalar("tbsp", 1/0.000014786764765625));
@@ -304,7 +324,7 @@ public class Calculator implements OnConvertionListener{
 		unitsOfPower.addUnit(new UnitScalar("l", 1/0.001));
 		unitsOfPower.addUnit(new UnitScalar("m^3", 1));
 		mUnitTypeArray.add(unitsOfPower);
-				
+
 		UnitType unitsOfasdfsdf = new UnitType(this,"Energy");
 		unitsOfasdfsdf.addUnit(new UnitScalar("tbsp", 1/0.000014786764765625));
 		unitsOfasdfsdf.addUnit(new UnitScalar("cup", 1/0.00023658823625));
@@ -318,7 +338,7 @@ public class Calculator implements OnConvertionListener{
 		unitsOfasdfsdf.addUnit(new UnitScalar("l", 1/0.001));
 		unitsOfasdfsdf.addUnit(new UnitScalar("m^3", 1));
 		mUnitTypeArray.add(unitsOfasdfsdf);
-		
+
 		UnitType unitsOfasds = new UnitType(this,"Torque");
 		unitsOfasds.addUnit(new UnitScalar("tbsp", 1/0.000014786764765625));
 		unitsOfasds.addUnit(new UnitScalar("cup", 1/0.00023658823625));
@@ -332,7 +352,7 @@ public class Calculator implements OnConvertionListener{
 		unitsOfasds.addUnit(new UnitScalar("l", 1/0.001));
 		unitsOfasds.addUnit(new UnitScalar("m^3", 1));
 		mUnitTypeArray.add(unitsOfasds);
-		
+
 		UnitType unitsOfdds = new UnitType(this,"Pressure");
 		unitsOfdds.addUnit(new UnitScalar("tbsp", 1/0.000014786764765625));
 		unitsOfdds.addUnit(new UnitScalar("cup", 1/0.00023658823625));
@@ -346,7 +366,7 @@ public class Calculator implements OnConvertionListener{
 		unitsOfdds.addUnit(new UnitScalar("l", 1/0.001));
 		unitsOfdds.addUnit(new UnitScalar("m^3", 1));
 		mUnitTypeArray.add(unitsOfdds);
-		*/
+		 */
 	}
 
 
@@ -384,7 +404,7 @@ public class Calculator implements OnConvertionListener{
 			mExpression.keyPresses(sKey);
 		}
 	}
-	
+
 	/**
 	 * Function used to convert from one unit to another
 	 * @param fromValue is standardized value of the unit being converted from
@@ -399,7 +419,7 @@ public class Calculator implements OnConvertionListener{
 		//if there solve failed because there was nothing to solve, just leave (this way result list isn't loaded)
 		if (!solveSuccess)
 			return;
-		
+
 		mSolver.convertFromTo(fromUnit, toUnit, mExpression);
 
 		//load units into result list (this will also set contains unit flag) (overrides that from solve)
@@ -407,8 +427,8 @@ public class Calculator implements OnConvertionListener{
 		//load the final value into the result list
 		mResultList.get(mResultList.size()-1).setAnswer(mExpression.toString());
 	}
-	
-	
+
+
 	/**
 	 * Function that is called after user hits the "=" key
 	 * Called by calculator for solving current expression
@@ -489,7 +509,7 @@ public class Calculator implements OnConvertionListener{
 	public String getUnitTypeName(int pos){
 		return mUnitTypeArray.get(pos).getUnitTypeName();
 	}
-	
+
 	public int getUnitTypeSize() {
 		return mUnitTypeArray.size();
 	}
@@ -501,11 +521,11 @@ public class Calculator implements OnConvertionListener{
 	public int getUnitTypePos() {
 		return mUnitTypePos;
 	}
-	
+
 	public boolean isExpressionEmpty(){
 		return mExpression.isEmpty();
 	}	
-	
+
 	public boolean isExpressionInvalid(){
 		return mExpression.isInvalid();
 	}
