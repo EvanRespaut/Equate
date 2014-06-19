@@ -109,10 +109,11 @@ public class ConvKeysFragment extends Fragment {
 			continue;
 			
 			refreshButtonText(i);
-
+			
 			button.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View view) {
+					
 					int viewId = view.getId();
 					for (int i=0; i<numButtons; i++){
 						if(convertButtonIds[i] == viewId){
@@ -122,6 +123,7 @@ public class ConvKeysFragment extends Fragment {
 							break;
 						}
 					}
+					
 				}
 			});
 			
@@ -152,6 +154,7 @@ public class ConvKeysFragment extends Fragment {
 					return false;
 				}
 			});
+			
 		}
 		return v;
 	}

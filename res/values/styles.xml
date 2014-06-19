@@ -43,7 +43,7 @@
 
     <style name="ConvertButton" parent="CalcButton">
         <item name="android:background">@drawable/conv_button</item>
-        <item name="android:textColor">@color/button_text_normal</item>
+        <item name="android:textColor">@drawable/button_text_color</item>
         <item name="android:textSize">20sp</item>
     </style>
 
