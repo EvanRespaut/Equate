@@ -38,8 +38,8 @@
     <string name="convert_toast_converting">Converting</string>
     <string name="word_to">to</string>
     <string name="convert_toast_no_numbers">No numbers to convert</string>
+    <string name="conv_button_hint">...</string>
     
-  
     <color name="equal_button_normal">#176B17</color>
     <color name="equal_button_pressed">#61AD61</color>
     <color name="equal_button_text_normal">#D4D4D4</color>
