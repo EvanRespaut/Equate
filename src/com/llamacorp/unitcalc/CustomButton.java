@@ -17,7 +17,7 @@ import android.widget.Button;
 /**
  * Button with click-animation effect.
  */
-class ColorButton extends Button {
+class CustomButton extends Button {
 	static final int CLICK_FEEDBACK_INTERVAL = 10;
 	static final int CLICK_FEEDBACK_DURATION = 350;
 	float mTextX;
@@ -28,7 +28,7 @@ class ColorButton extends Button {
 	final Paint mHintPaint;
 	float mTextSize = 0f;
 
-	public ColorButton(Context context, AttributeSet attrs) {
+	public CustomButton(Context context, AttributeSet attrs) {
 		super(context, attrs);
 //		Calculator calc = (Calculator) context;
 		init();
@@ -63,13 +63,14 @@ class ColorButton extends Button {
 		if (mHintPaint != null)
 			mHintPaint.setTextSize(paint.getTextSize() * 70 / 100f);
 	}
-	/*
+	
+	
 	@Override
 	protected void onTextChanged(CharSequence text, int start, int before, int after) {
 		super.onTextChanged(text, start, before, after);
 		layoutText();
 	}
-	*/
+	
 	
 	@Override
 	protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
