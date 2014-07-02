@@ -129,14 +129,18 @@ public class Calculator implements OnConvertionListener{
 			for (int i = 0; i < jResultArray.length(); i++) {
 				mResultList.add(new Result(jResultArray.getJSONObject(i)));
 			}
-			
-			mUnitTypeArray.clear();
+
+			initiateUnits();
+			int newSize = mUnitTypeArray.size();	
 			JSONArray jUnitTypeArray = jObjState.getJSONArray(JSON_UNIT_TYPE_ARRAY);
-			// build the array of results from JSONObjects
-			for (int i = 0; i < jUnitTypeArray.length(); i++) {
-				mUnitTypeArray.add(new UnitType(this,jUnitTypeArray.getJSONObject(i)));
+			//only load in saved unit types only if same size as current
+			if(jUnitTypeArray.length()==newSize){
+				mUnitTypeArray.clear();
+				// build the array of results from JSONObjects
+				for (int i = 0; i < jUnitTypeArray.length(); i++) {
+					mUnitTypeArray.add(new UnitType(this,jUnitTypeArray.getJSONObject(i)));
+				}
 			}
-			
 
 
 		} catch (FileNotFoundException e) {
@@ -184,7 +188,7 @@ public class Calculator implements OnConvertionListener{
 		mHints = new Hints();
 		//set the unit type to length by default
 		mUnitTypePos=2;
-		
+
 		//load the calculating precision
 		mSolver = new Solver(intCalcPrecision);
 
@@ -197,7 +201,7 @@ public class Calculator implements OnConvertionListener{
 	 * Helper method used to initiate the array of various types of units
 	 */	
 	private void initiateUnits(){
-
+		mUnitTypeArray.clear();
 
 		UnitType unitsOfTemp = new UnitType(this,"Temp");
 		unitsOfTemp.addUnit(new UnitTemperature());
@@ -257,16 +261,16 @@ public class Calculator implements OnConvertionListener{
 
 
 		UnitType unitsOfArea = new UnitType(this,"Area");
-		unitsOfArea.addUnit(new UnitScalar("in^2", "Square Inches", 1/0.00064516));//exact: 0.0254^2
-		unitsOfArea.addUnit(new UnitScalar("ft^2", "Square Feet", 1/0.09290304));//0.3048^2
-		unitsOfArea.addUnit(new UnitScalar("yd^2", "Square Yards", 1/0.83612736));//0.3048^2*9
+		unitsOfArea.addUnit(new UnitScalar("in\u00B2", "Square Inches", 1/0.00064516));//exact: 0.0254^2
+		unitsOfArea.addUnit(new UnitScalar("ft\u00B2", "Square Feet", 1/0.09290304));//0.3048^2
+		unitsOfArea.addUnit(new UnitScalar("yd\u00B2", "Square Yards", 1/0.83612736));//0.3048^2*9
 		unitsOfArea.addUnit(new UnitScalar("acre", "Acres", 1/4046.8564224));//0.3048^2*9*4840
-		unitsOfArea.addUnit(new UnitScalar("mi^2", "Square Miles", 1/2589988.110336));//1609.344^2
+		unitsOfArea.addUnit(new UnitScalar("mi\u00B2", "Square Miles", 1/2589988.110336));//1609.344^2
 
-		unitsOfArea.addUnit(new UnitScalar("mm^2", "Square Millimeters", 1/0.000001));
-		unitsOfArea.addUnit(new UnitScalar("cm^2", "Square Centimeters", 1/0.0001));
-		unitsOfArea.addUnit(new UnitScalar("m^2", "Square Meters", 1));
-		unitsOfArea.addUnit(new UnitScalar("km^2", "Square Kilometers", 1/1000000.0));
+		unitsOfArea.addUnit(new UnitScalar("mm\u00B2", "Square Millimeters", 1/0.000001));
+		unitsOfArea.addUnit(new UnitScalar("cm\u00B2", "Square Centimeters", 1/0.0001));
+		unitsOfArea.addUnit(new UnitScalar("m\u00B2", "Square Meters", 1));
+		unitsOfArea.addUnit(new UnitScalar("km\u00B2", "Square Kilometers", 1/1000000.0));
 		unitsOfArea.addUnit(new UnitScalar("ha", "Hectares", 1/10000.0));
 
 		unitsOfArea.addUnit(new UnitScalar("a", "Ares", 0.01));
@@ -287,10 +291,10 @@ public class Calculator implements OnConvertionListener{
 		unitsOfVolume.addUnit(new UnitScalar("L", "Liters", 1000));
 		unitsOfVolume.addUnit(new UnitScalar("m^3", "Cubic Meters", 1));
 
-		unitsOfVolume.addUnit(new UnitScalar("in^3", "Cubic Inches", 1/0.000016387064));//exact: gal/231
-		unitsOfVolume.addUnit(new UnitScalar("ft^3", "Cubic Feet", 1/0.028316846592));//exact: gal/231*12^3
-		unitsOfVolume.addUnit(new UnitScalar("yd^3", "Cubic Yard", 1/0.764554857984));//exact: 3^3 ft^3
-		unitsOfVolume.addUnit(new UnitScalar("cm^3", "Cubic Centimeters", 1E6));
+		unitsOfVolume.addUnit(new UnitScalar("in\u00B3", "Cubic Inches", 1/0.000016387064));//exact: gal/231
+		unitsOfVolume.addUnit(new UnitScalar("ft\u00B3", "Cubic Feet", 1/0.028316846592));//exact: gal/231*12^3
+		unitsOfVolume.addUnit(new UnitScalar("yd\u00B3", "Cubic Yard", 1/0.764554857984));//exact: 3^3 ft^3
+		unitsOfVolume.addUnit(new UnitScalar("cm\u00B3", "Cubic Centimeters", 1E6));
 		unitsOfVolume.addUnit(new UnitScalar("cL", "Centiliter", 1E5));
 		unitsOfVolume.addUnit(new UnitScalar("dL", "Deciliters", 1E4));
 		unitsOfVolume.addUnit(new UnitScalar("gal uk", "Gallons (UK)", 1000/4.54609));//exact: 4.54609L/gal uk
@@ -309,7 +313,6 @@ public class Calculator implements OnConvertionListener{
 		unitsOfSpeed.addUnit(new UnitScalar("", 0));
 		unitsOfSpeed.addUnit(new UnitScalar("", 0));
 
-
 		unitsOfSpeed.addUnit(new UnitScalar("m/s", "Meters per Second", 1));
 		unitsOfSpeed.addUnit(new UnitScalar("kph", "Kilometers per Hour", 3.6));
 		unitsOfSpeed.addUnit(new UnitScalar("", 0));
@@ -317,11 +320,11 @@ public class Calculator implements OnConvertionListener{
 		unitsOfSpeed.addUnit(new UnitScalar("", 0));
 		mUnitTypeArray.add(unitsOfSpeed);
 
-		
+
 		UnitType unitsOfPower = new UnitType(this,"Power");
 		unitsOfPower.addUnit(new UnitScalar("W", "Watts", 1));
 		unitsOfPower.addUnit(new UnitScalar("kW", "Kilowatts", 1E-3));
-		unitsOfPower.addUnit(new UnitScalar("hp", "Hoursepower", 1/745.699872)); //don't think it's exact
+		unitsOfPower.addUnit(new UnitScalar("hp", "Horsepower", 1/745.699872)); //don't think it's exact
 		unitsOfPower.addUnit(new UnitScalar("", 0));
 		unitsOfPower.addUnit(new UnitScalar("", 0));
 
@@ -331,49 +334,58 @@ public class Calculator implements OnConvertionListener{
 		unitsOfPower.addUnit(new UnitScalar("", 0));
 		unitsOfPower.addUnit(new UnitScalar("", 0));
 		mUnitTypeArray.add(unitsOfPower);
-/*
-		UnitType unitsOfasdfsdf = new UnitType(this,"Energy");
-		unitsOfasdfsdf.addUnit(new UnitScalar("tbsp", 1/0.000014786764765625));
-		unitsOfasdfsdf.addUnit(new UnitScalar("cup", 1/0.00023658823625));
-		unitsOfasdfsdf.addUnit(new UnitScalar("pint", 1/0.0004731764725));
-		unitsOfasdfsdf.addUnit(new UnitScalar("qt", 1/0.000946352945));
-		unitsOfasdfsdf.addUnit(new UnitScalar("gal", 1/0.00378541178));
 
-		unitsOfasdfsdf.addUnit(new UnitScalar("tsp", 1/4.92892158854166666667e-6));
-		unitsOfasdfsdf.addUnit(new UnitScalar("fl oz", 1/0.00002957352953125));
-		unitsOfasdfsdf.addUnit(new UnitScalar("ml", 1/1e-6));
-		unitsOfasdfsdf.addUnit(new UnitScalar("l", 1/0.001));
-		unitsOfasdfsdf.addUnit(new UnitScalar("m^3", 1));
-		mUnitTypeArray.add(unitsOfasdfsdf);
 
-		UnitType unitsOfasds = new UnitType(this,"Torque");
-		unitsOfasds.addUnit(new UnitScalar("tbsp", 1/0.000014786764765625));
-		unitsOfasds.addUnit(new UnitScalar("cup", 1/0.00023658823625));
-		unitsOfasds.addUnit(new UnitScalar("pint", 1/0.0004731764725));
-		unitsOfasds.addUnit(new UnitScalar("qt", 1/0.000946352945));
-		unitsOfasds.addUnit(new UnitScalar("gal", 1/0.00378541178));
+		UnitType unitsOfEnergy = new UnitType(this,"Energy");
+		unitsOfEnergy.addUnit(new UnitScalar("cal", "Calories", 0.239005736)); //approx
+		unitsOfEnergy.addUnit(new UnitScalar("kCal", "Kilocalories", 0.239005736/1E3)); //approx, but exact comp to cal
+		unitsOfEnergy.addUnit(new UnitScalar("BTU", "British Thermal Units", 0.00094781712)); //approx
+		unitsOfEnergy.addUnit(new UnitScalar("ft-lb", "Foot-pounds", 1/1.3558179483314)); //approx
+		unitsOfEnergy.addUnit(new UnitScalar("in-lb", "Inch-pounds", 12/1.3558179483314)); //approx
 
-		unitsOfasds.addUnit(new UnitScalar("tsp", 1/4.92892158854166666667e-6));
-		unitsOfasds.addUnit(new UnitScalar("fl oz", 1/0.00002957352953125));
-		unitsOfasds.addUnit(new UnitScalar("ml", 1/1e-6));
-		unitsOfasds.addUnit(new UnitScalar("l", 1/0.001));
-		unitsOfasds.addUnit(new UnitScalar("m^3", 1));
-		mUnitTypeArray.add(unitsOfasds);
+		unitsOfEnergy.addUnit(new UnitScalar("kJ", "Kilojoules", 0.001));
+		unitsOfEnergy.addUnit(new UnitScalar("J", "Joules", 1));
+		unitsOfEnergy.addUnit(new UnitScalar("Wh", "Watt-Hours", 1/3.6E3)); //exact
+		unitsOfEnergy.addUnit(new UnitScalar("kWh", "Kilowatt-Hours", 1/3.6E6)); //exact
+		unitsOfEnergy.addUnit(new UnitScalar("Nm", "Newton-Meters", 1));
 
-		UnitType unitsOfdds = new UnitType(this,"Pressure");
-		unitsOfdds.addUnit(new UnitScalar("tbsp", 1/0.000014786764765625));
-		unitsOfdds.addUnit(new UnitScalar("cup", 1/0.00023658823625));
-		unitsOfdds.addUnit(new UnitScalar("pint", 1/0.0004731764725));
-		unitsOfdds.addUnit(new UnitScalar("qt", 1/0.000946352945));
-		unitsOfdds.addUnit(new UnitScalar("gal", 1/0.00378541178));
+		unitsOfEnergy.addUnit(new UnitScalar("MJ", "Megajoules", 1E-6));
+		unitsOfEnergy.addUnit(new UnitScalar("eV", "Electronvolts", 6.241509E18));
+		mUnitTypeArray.add(unitsOfEnergy);
 
-		unitsOfdds.addUnit(new UnitScalar("tsp", 1/4.92892158854166666667e-6));
-		unitsOfdds.addUnit(new UnitScalar("fl oz", 1/0.00002957352953125));
-		unitsOfdds.addUnit(new UnitScalar("ml", 1/1e-6));
-		unitsOfdds.addUnit(new UnitScalar("l", 1/0.001));
-		unitsOfdds.addUnit(new UnitScalar("m^3", 1));
-		mUnitTypeArray.add(unitsOfdds);
-		 */
+
+		UnitType unitsOfTorque = new UnitType(this,"Torque");
+		unitsOfTorque.addUnit(new UnitScalar("Nm", "Newton Meters", 1)); 
+		unitsOfTorque.addUnit(new UnitScalar("Ncm", "Newton Centimeters", 100)); 
+		unitsOfTorque.addUnit(new UnitScalar("kgf m", "Kilogram-Force Meters", 1/9.80665)); //exact
+		unitsOfTorque.addUnit(new UnitScalar("kgf cm", "Kilogram-Force Centimeters", 100/9.80665)); //exact
+		unitsOfTorque.addUnit(new UnitScalar("dyn m", "Dyne Meters", 1E5)); 
+
+		unitsOfTorque.addUnit(new UnitScalar("lbf in", "Pound-Force Inches", 12/1.3558179483314004));  //exact
+		unitsOfTorque.addUnit(new UnitScalar("lbf ft", "Pound-Force Feet", 1/1.3558179483314004));  //exact
+		unitsOfTorque.addUnit(new UnitScalar("ozf in", "Ounce-Force Inches", 192/1.3558179483314004));  //exact
+		unitsOfTorque.addUnit(new UnitScalar("ozf ft", "Ounce-Force Feet", 16/1.3558179483314004));  //exact
+		unitsOfTorque.addUnit(new UnitScalar("dyn cm", "Dyne Centimeters", 1));
+		mUnitTypeArray.add(unitsOfTorque);
+		/*
+		//note the use of singular tense, not sure what is the best
+		UnitType unitsOfPressure = new UnitType(this,"Pressure");
+		unitsOfPressure.addUnit(new UnitScalar("N/m\u00B2", "Newton/Square Meter", 1));
+		unitsOfPressure.addUnit(new UnitScalar("lb/ft\u00B2", "Pounds/Square Foot", 144/6894.757293168));  //approx
+		unitsOfPressure.addUnit(new UnitScalar("psi", "Pounds/Square Inch", 1/6894.757293168)); //approx
+		unitsOfPressure.addUnit(new UnitScalar("atm", "Atmospheres", 1/101325.0));  //exact
+		unitsOfPressure.addUnit(new UnitScalar("dfsdfN/m\u00B2", "Newton/Square Meters", 1));
+
+		unitsOfPressure.addUnit(new UnitScalar("N/m\u00B2", "Newton/Square Meters", 1));
+		unitsOfPressure.addUnit(new UnitScalar("N/m\u00B2", "Newton/Square Meters", 1));
+		unitsOfPressure.addUnit(new UnitScalar("N/m\u00B2", "Newton/Square Meters", 1));
+		unitsOfPressure.addUnit(new UnitScalar("N/m\u00B2", "Newton/Square Meters", 1));
+		unitsOfPressure.addUnit(new UnitScalar("N/m\u00B2", "Newton/Square Meters", 1));
+
+		unitsOfPressure.addUnit(new UnitScalar("N/cm\u00B2", "Newton/Square Centimeters", 1E-4));
+		unitsOfPressure.addUnit(new UnitScalar("N/mm\u00B2", "Newton/Square Millimeters", 1E-6));
+		mUnitTypeArray.add(unitsOfPressure);
+		*/
 	}
 
 
