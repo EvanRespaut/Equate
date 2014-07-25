@@ -367,25 +367,27 @@ public class Calculator implements OnConvertionListener{
 		unitsOfTorque.addUnit(new UnitScalar("ozf ft", "Ounce-Force Feet", 16/1.3558179483314004));  //exact
 		unitsOfTorque.addUnit(new UnitScalar("dyn cm", "Dyne Centimeters", 1));
 		mUnitTypeArray.add(unitsOfTorque);
-		/*
+		
 		//note the use of singular tense, not sure what is the best
 		UnitType unitsOfPressure = new UnitType(this,"Pressure");
 		unitsOfPressure.addUnit(new UnitScalar("N/m\u00B2", "Newton/Square Meter", 1));
 		unitsOfPressure.addUnit(new UnitScalar("lb/ft\u00B2", "Pounds/Square Foot", 144/6894.757293168));  //approx
 		unitsOfPressure.addUnit(new UnitScalar("psi", "Pounds/Square Inch", 1/6894.757293168)); //approx
 		unitsOfPressure.addUnit(new UnitScalar("atm", "Atmospheres", 1/101325.0));  //exact
-		unitsOfPressure.addUnit(new UnitScalar("dfsdfN/m\u00B2", "Newton/Square Meters", 1));
+		unitsOfPressure.addUnit(new UnitScalar("bar", "Bars", 0.00001));  //exact
 
-		unitsOfPressure.addUnit(new UnitScalar("N/m\u00B2", "Newton/Square Meters", 1));
-		unitsOfPressure.addUnit(new UnitScalar("N/m\u00B2", "Newton/Square Meters", 1));
-		unitsOfPressure.addUnit(new UnitScalar("N/m\u00B2", "Newton/Square Meters", 1));
-		unitsOfPressure.addUnit(new UnitScalar("N/m\u00B2", "Newton/Square Meters", 1));
-		unitsOfPressure.addUnit(new UnitScalar("N/m\u00B2", "Newton/Square Meters", 1));
+		unitsOfPressure.addUnit(new UnitScalar("kg/m\u00B2", "Kilogram/Square Meter", 1/9.80665)); //approx?
+		unitsOfPressure.addUnit(new UnitScalar("kPa", "Kilopascals", 0.001)); //exact
+		unitsOfPressure.addUnit(new UnitScalar("Pa", "Pascal", 1)); //exact
+		unitsOfPressure.addUnit(new UnitScalar("inHg", "Inches of Mercury", 1/3386.388640341)); //exact using cmHg - 1/(1333.22387415*2.54)
+		unitsOfPressure.addUnit(new UnitScalar("cmHg", "Centimeters of Mercury", 1/1333.22387415)); //exact
 
+		unitsOfPressure.addUnit(new UnitScalar("mmHg", "Millimeters of Mercury", 1/133.322387415)); //exact
 		unitsOfPressure.addUnit(new UnitScalar("N/cm\u00B2", "Newton/Square Centimeters", 1E-4));
 		unitsOfPressure.addUnit(new UnitScalar("N/mm\u00B2", "Newton/Square Millimeters", 1E-6));
+		unitsOfPressure.addUnit(new UnitScalar("kg/cm\u00B2", "Kilogram/Square Centimeter", 1/98066.5)); //approx?
 		mUnitTypeArray.add(unitsOfPressure);
-		*/
+		
 	}
 
 

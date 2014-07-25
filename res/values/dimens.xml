@@ -3,7 +3,7 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
-   <dimen name="button_hint_offset_x">30dp</dimen>
-       <dimen name="button_hint_offset_y">20dp</dimen>
+   <dimen name="button_ellipses_additional_offset_x">0dp</dimen>
+       <dimen name="button_ellipses_additional_offset_y">3dp</dimen>
    
 </resources>
