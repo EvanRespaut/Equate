@@ -98,6 +98,9 @@ import android.widget.Toast;
 			for(int i=0; i<numButtons; i++) {
 				Button button = (Button)v.findViewById(convertButtonIds[i]);
 	
+				if(mUnitType.size()>10)
+					button.setHint(getText(R.string.conv_button_hint));
+				
 				//add to our list of conv buttons
 				mConvButton.add(button);			
 	
