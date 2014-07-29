@@ -42,8 +42,11 @@ public class Expression {
 	public static final String regexAnyOpExceptPercent = regexAnyValidOperator.replace("%","");
 	public static final String regexAnyOperatorOrE = "[E" + regexOperators + "]";
 	public static final String regexGroupedNumber = "(\\-?\\d*\\.?\\d+\\.?(?:E[\\-\\+]?\\d+)?)";
-	public static final String regexGroupedNonNegNumber = "(\\d*\\.?\\d+\\.?(?:E[\\-\\+]?\\d+)?)";
-	public static final int numGroupsInregexGroupedNumber = 1;
+	//TODO not sure if we will ever need to capture negatives after an operator
+	//public static final String regexGroupedNonNegNumber = "(((?<=^)\\-)?((?<=[*+/])\\-)?\\d*\\.?\\d+\\.?(?:E[\\-\\+]?\\d+)?)";
+	//public static final int numGroupsInregexGroupedNumber = 3;
+	public static final String regexGroupedNonNegNumber = "(((?<=^)\\-)?\\d*\\.?\\d+\\.?(?:E[\\-\\+]?\\d+)?)";
+	public static final int numGroupsInregexGroupedNumber = 2;
 
 	private String[][] substituteChars = new String[][]{{"[\u00f7·]", "/"}, //alt-246
 			{"[x\u00d7]", "*"},//alt-0215,249,250 
