@@ -44,9 +44,11 @@ public class Solver {
 		//load in the precise result if possible
 		exp.loadPreciseResult();
 
-		System.out.println(exp.toString());
 		//deal with percent operators
 		exp.replacePercentOps();
+		
+		//put parenthesis around ^ expressions; -(1)^2 to -((1)^2)
+		exp.groupPowerOperand();
 
 		//main calculation: first the P of PEMAS, this function then calls remaining EMAS 
 		String strExp = collapsePara(exp.toString());

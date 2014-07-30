@@ -12,8 +12,8 @@ public class Expression {
 	private static final String JSON_START = "sel_start";
 	private static final String JSON_END = "sel_end";
 	private static final String JSON_SOLVED = "sel_end";
-	
-	
+
+
 	//the main expression string
 	private String mExpression;
 	//this string stores the more precise result after solving
@@ -74,8 +74,8 @@ public class Expression {
 		replaceExpression(json.getString(JSON_EXPRESSION));
 		mPreciseResult = json.getString(JSON_PRECISE);
 		//TODO this is breaking
-//		mSelectionStart = json.getInt(JSON_START);
-//		mSelectionEnd = json.getInt(JSON_END);
+		//		mSelectionStart = json.getInt(JSON_START);
+		//		mSelectionEnd = json.getInt(JSON_END);
 
 		System.out.println("mSelectionStart="+mSelectionStart);
 		System.out.println("mSelectionEnd="+mSelectionEnd);
@@ -84,18 +84,18 @@ public class Expression {
 
 	public JSONObject toJSON()  throws JSONException {
 		JSONObject json = new JSONObject();
-		
+
 		json.put(JSON_EXPRESSION, toString());
 		json.put(JSON_PRECISE, mPreciseResult);
 		json.put(JSON_START, getSelectionStart());
 		json.put(JSON_END, getSelectionEnd());
 		json.put(JSON_SOLVED, isSolved());
-		
+
 		return json;
 	}
-	
-	
-	
+
+
+
 	/**
 	 * This function will try to add a number or operator, or entire result list to the current expression
 	 * Note that there is lots of error checking to be sure user can't entire an invalid operator/number
@@ -157,7 +157,7 @@ public class Expression {
 		//don't allow "--" or "65E--"
 		if(sKey.matches("[-]") && expresssionToSelection().matches(".*E?[-]"))
 			return;	
-			
+
 		//don't allow two %'s in a row
 		if(sKey.matches("%") && expresssionToSelection().matches(".*%$"))
 			return;
@@ -231,6 +231,56 @@ public class Expression {
 
 		//finally clean the result off
 		replaceExpression(cleanFormatting(mExpression));
+	}
+
+	/** Adds parenthesis around power operations */
+	public void groupPowerOperand(){
+		String str=mExpression.toString();
+		//search to find "^" (start at 1 so no NPE later; "^3" invalid anyway)
+		for(int i=1; i<str.length(); i++){
+			if(str.charAt(i) == '^'){
+				int openPareIndex = 0;
+				int closePareIndex = 0;
+				//first find where to add (
+				//first case is (###)^
+				if(str.charAt(i-1) == ')'){
+					for(int k=i-2;k>0;k--){
+						if(numOpenPara(str.substring(k, i))==0){
+							openPareIndex = k;
+							break;
+						}
+					}
+				}
+				//second case is just #^
+				else {
+					String lastNumb = getLastNumb(str.substring(0, i));
+					openPareIndex = i - lastNumb.length();
+				}
+				//next find where to add )
+				//first case is ^(###)
+				if(str.charAt(i+1) == '('){
+					for(int k=i+2;k<=str.length();k++){
+						if(numOpenPara(str.substring(i, k))==0){
+							closePareIndex = k;
+							break;
+						}
+					}
+				}
+				//second case is just #^
+				else {
+					String firstNum = getFirstNumb(str.substring(i+1,str.length()));
+					closePareIndex = i + 1 + firstNum.length();
+				}
+
+				//actually add in pares
+				str = str.substring(0, openPareIndex)
+						+ "(" + str.substring(openPareIndex, closePareIndex) + ")"
+						+  str.substring(closePareIndex, str.length());
+				//advanced index beyond ^#)
+				i=closePareIndex;
+			}
+		}
+		replaceExpression(str);
 	}
 
 
@@ -470,16 +520,25 @@ public class Expression {
 	}
 
 	/**
-	 * Counts the number of open vs number of closed parentheses in the given 
+	 * Counts the number of open vs. number of closed parentheses in expresssionToSelection()
 	 * @return 0 if equal num of open/close para, positive # if more open, neg # if more close
 	 */
 	private int numOpenPara() {
+		return numOpenPara(expresssionToSelection());
+	}
+
+	/**
+	 * Counts the number of open vs. number of closed parentheses in the given string
+	 * @param String containing parenthesis to count 
+	 * @return 0 if equal num of open/close para, positive # if more open, neg # if more close
+	 */
+	private int numOpenPara(String str) {
 		int numOpen = 0;
 		int numClose = 0;
-		for(int i=0; i<expresssionToSelection().length(); i++){
-			if (expresssionToSelection().charAt(i) == '(')
+		for(int i=0; i<str.length(); i++){
+			if (str.charAt(i) == '(')
 				numOpen++;
-			if (expresssionToSelection().charAt(i) == ')')
+			if (str.charAt(i) == ')')
 				numClose++;
 		}
 
@@ -501,13 +560,23 @@ public class Expression {
 
 
 	/**
+	 * Gets the first number (returned as a String) of string
+	 * @param string in which to find first number
+	 * @return anything before the first valid operator, or "" if expression empty, 
+	 * or entire expression if doesn't contain regexAnyValidOperator
+	 */
+	private String getFirstNumb(String str){
+		String [] strA = str.split(regexAnyValidOperator);
+		return strA[0];
+	}
+
+	/**
 	 * Gets the first number (returned as a String) at selection in current expression
 	 * @return anything before the first valid operator, or "" if expression empty, 
 	 * or entire expression if doesn't contain regexAnyValidOperator
 	 */
 	private String getFirstNumb(){
-		String [] strA = expresssionToSelection().split(regexAnyValidOperator);
-		return strA[0];
+		return getFirstNumb(expresssionToSelection());
 	}
 
 	/**
