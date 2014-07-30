@@ -1,0 +1,91 @@
+------------------ToDo Next--------------------
+- Move keys around, want clear again 
+- Add other unit types
+- Currency Conversion
+- Add preferences 
+- Tap equals after solve for scientific notation (hold equals for sci notation preferences)?
+
+
+-----Stuff to Test (squashed bugs, etc)-----
+- Dialog boxes for first unit conversion 
+- When syntax error thrown make sure unit is not displayed, aka not "Syntax Error in"
+- 1E99999 should just throw number too large error
+- Select input it in weight, hit back, come back, still selected. 
+- Select key at left and right most convkeys and swipe away, make sure key is not selected any more
+- Select key at left+1 and right-1 convkey pos and move to left and right respectively, make sure no key is selected
+- Hold click empty expression brings up menu (dunno how to test this...)
+- Hold click full expression selects all text and brings up menu
+- When app is closed (or whatever backspace does) make sure UnitType pos and Unit selection are preserved
+- When unit type is switched, set cursor pos to end
+- Be sure convert that are empty don't break things
+- Hold click on empty expression should pop up paste dialog (maybe clicking or down press brings up cursor?)
+- ResultList has a max size
+
+----------------------Fix----------------------
+- TRY TO ADD UNIT TESTING FOR ALL PROBLEMS FIXED
+- getLastNumb is just broken in general
+- For every solve or unit convert, save app state
+- Make syntax error result not load into expression
+- Perhaps make query and answer TextViews length a bit resizeable so they don't always run onto two lines
+- Font size issues with large text sizes (also run the emulator for a few diff size screens and resolutions. 
+- 1^2+1^2 is displayed wrong in result list
+- When prev expression exists, operators should take last expression it back instead of doing nothing even when current expression is empty 
+- 1 m to mm back to m back to mm is 1.E9 instead of 1E9
+- Type out 100000000 is 1.e8
+- Black flash seems to happen after clear operation?
+- Construct results out of expressions such that 1/3, then delete, then recall 0.33333*3 == 1
+- (fixed?) If its been a while since open, app crashes 
+- Reduce redundant case checking before an big number addition/subtraction
+- Backspace drawable selected turns white instead of dark
+- Maybe change backspace button to clear when its going to clear
+- Single character vs multi character results are treated differently when clicked with Unit
+- Use of AndroidManifest file to change styles seems crude, investigate this
+- Perhaps selection access should be revisited--should it be initiated from the model side or the controller side?
+
+----------------------Features----------------------
+- Hold click convert button brings up dialog list of alternative unit conversions
+	- If select unit that's already listed, swap them (rearranging is now possible) 
+	- Also allow for custom unit
+	
+- Implement infinity properly instead of just saying number too large
+- If hit in without any numbers, add highlighted "1" for unit to unit conv
+- Kitkat now has arrows at bottom. To move cursor, add these to calc
+- More units (Energy, force, power, currency?)
+- Maybe add sqrt and possibly trig
+- Add phantom close paren after open? Goes away with any selection, close/equals makes permanent, 
+- Use spannables to auto highlight para closes, also maybe operators vs numbers?
+- Hold a convert button down to bring up a dialogue to customize it's name and value thus redefining it
+- Pinch zoom to change size of prev expression's text
+- Re-factor and clean code (make an expression class)
+- Use gridlayout and support library instead of nested weights and linear layouts
+- Split units support for both weight and temp for example
+- Perhaps squish para operators into one key and add large clear key?
+- Copy and maybe paste buttons (maybe left side of expression's text box) show copy button after solve and paste if properly formatted thing in clipboard?
+- Maybe copy and paste in status bar, although this is going to take a lot of vertical space
+- Add more math operators like sqrt, and trig functions, then might was well add solve meaning of life
+- Add hold options for lots of keys (add indicating names for these) eg Clear, +/-, sqrt, !, mod
+- Explore adding another coloum of keys to main calc app, might be too cluttered, but also might be nice (maybe make it an option?)
+- Swipe down on units to hide
+- Use animation to move expression up and to the left after ='s; also make answer bold or something for a second
+- Commas between numbers?
+- Use spannable to create custom colors for operators and numbers 
+- Swipe out left from numbers to access options menu (flip EE/^, maybe custom units, default units open or closed)
+- Add programming conversions (binary, hex, oct etc)
+- Add fractional mode 
+
+----Usability Upgrades----
+- Add "Convert to" and "Unit set to" and "Set to" in convert unit buttons
+- If user hits equals with unit selected maybe another toast? (Otherwise result is (1+2m = 3m)
+- For first time opening show how the units can be slide left and right and other not obvious features
+- If user hits backspace >3 times (and then expression="", show a popup once to instead hold to clear all (don't show if user has pressed clear at least once)
+
+
+- Change event flow (1. User input in controller, 2. Controller calls model with basic user input, model updates some stuff maybe 3. Controller updates screen liberally) model classes should be usable in iOS app
+
+Why singleton:
+- Just get this done, make it cleaner when it's finished.
+- What are you really loosing this way?
+- The book did it
+- Where would calc live otherwise (in the activity seems like a dumb place for it)
+- How would fragments access it easily (passing between frag to activity seems uncessarily difficult)
+- This also somewhat solves saving issues
