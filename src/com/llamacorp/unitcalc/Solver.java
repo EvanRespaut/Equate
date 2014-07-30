@@ -48,7 +48,7 @@ public class Solver {
 		exp.replacePercentOps();
 		
 		//put parenthesis around ^ expressions; -(1)^2 to -((1)^2)
-		exp.groupPowerOperand();
+		exp.groupPowerOperands();
 
 		//main calculation: first the P of PEMAS, this function then calls remaining EMAS 
 		String strExp = collapsePara(exp.toString());

@@ -41,12 +41,13 @@ public class Expression {
 	public static final String regexAnyValidOperator = "[" + regexOperators + "]";
 	public static final String regexAnyOpExceptPercent = regexAnyValidOperator.replace("%","");
 	public static final String regexAnyOperatorOrE = "[E" + regexOperators + "]";
-	public static final String regexGroupedNumber = "(\\-?\\d*\\.?\\d+\\.?(?:E[\\-\\+]?\\d+)?)";
-	//TODO not sure if we will ever need to capture negatives after an operator
-	public static final String regexGroupedNonNegNumber = "(((?<=^)\\-)?((?<=[*+/])\\-)?\\d*\\.?\\d+\\.?(?:E[\\-\\+]?\\d+)?)";
-	public static final int numGroupsInregexGroupedNumber = 3;
-	//public static final String regexGroupedNonNegNumber = "(((?<=^)\\-)?\\d*\\.?\\d+\\.?(?:E[\\-\\+]?\\d+)?)";
-	//public static final int numGroupsInregexGroupedNumber = 2;
+	public static final String regexGroupedNumber = "([-]?\\d*[.]?\\d+[.]?(?:E[+-]?\\d+)?)";
+	public static final String regexGroupedNonNegNumber = "((?:(?<=^)[-])?(?:(?<=[*+/-])[-])?\\d*[.]?\\d+[.]?(?:E[+-]?\\d+)?)";
+	//this isn't really needed anymore, if want non capturing group, use ?:"
+	public static final int numGroupsInregexGroupedNumber = 1; 
+
+	//the following is a more concise version, but doesn't work with NP++ due to the | in the lookbehind
+	//public static final String regexGroupedNonNegNumber = "((?:(?<=^|[*+/])\\-)?\\d*\\.?\\d+\\.?(?:E[\\-\\+]?\\d+)?)";
 
 	private String[][] substituteChars = new String[][]{{"[\u00f7·]", "/"}, //alt-246
 			{"[x\u00d7]", "*"},//alt-0215,249,250 
@@ -77,8 +78,8 @@ public class Expression {
 		//		mSelectionStart = json.getInt(JSON_START);
 		//		mSelectionEnd = json.getInt(JSON_END);
 
-		System.out.println("mSelectionStart="+mSelectionStart);
-		System.out.println("mSelectionEnd="+mSelectionEnd);
+		//System.out.println("mSelectionStart="+mSelectionStart);
+		//System.out.println("mSelectionEnd="+mSelectionEnd);
 		setSolved(json.getBoolean(JSON_SOLVED));
 	}
 
@@ -99,7 +100,7 @@ public class Expression {
 	/**
 	 * This function will try to add a number or operator, or entire result list to the current expression
 	 * Note that there is lots of error checking to be sure user can't entire an invalid operator/number
-	 * @param sKey should only be single vaild number or operator character, or longer previous results
+	 * @param sKey should only be single valid number or operator character, or longer previous results
 	 */
 	public void keyPresses(String sKey){
 		//for now, if we're adding a previous result, just add it without error checking
@@ -115,7 +116,7 @@ public class Expression {
 			throw new IllegalArgumentException("In addToExpression, invalid sKey..."); 
 
 		//don't start with [*/^E] when the expression string is empty or if we opened a para
-		if(sKey.matches(regexInvalidStartChar) && (getLastPartialNumb().equals("") || expresssionToSelection().matches(".*\\($")))
+		if(sKey.matches(regexInvalidStartChar) && expresssionToSelection().matches("(^[-]?$)|(.*[(]$)"))
 			return;
 
 		//if just hit equals, and we hit [.0-9(], then clear expression
@@ -127,7 +128,7 @@ public class Expression {
 			sKey = "*" + sKey;
 
 		//when adding # after ), add multiply
-		if(sKey.matches("[.0-9]") && expresssionToSelection().matches(".*\\)$"))
+		if(sKey.matches("[.0-9]") && expresssionToSelection().matches(".*[)]$"))
 			sKey = "*" + sKey;
 
 		//add auto completion for close parentheses
@@ -145,15 +146,15 @@ public class Expression {
 		if(sKey.equals("E") && (getLastPartialNumb().contains("E") || expresssionToSelection().matches(".*" + regexAnyValidOperator + "$")))
 			return;		
 
-		//if E was last pressed, only allow [1-9+-(]
-		if(getLastPartialNumb().matches(".*E$"))
+		//if "E" or "E-" was last pressed, only allow [0-9(-]
+		if(getLastPartialNumb().matches(".*E[-]?$"))
 			if(sKey.matches("[^\\d(-]"))
 				return;
 
 		//if last digit was only a decimal, don't add any operator or E
 		if(sKey.matches(regexAnyOperatorOrE) && getLastPartialNumb().equals("."))
 			return;	
-
+		
 		//don't allow "--" or "65E--"
 		if(sKey.matches("[-]") && expresssionToSelection().matches(".*E?[-]"))
 			return;	
@@ -164,14 +165,14 @@ public class Expression {
 
 		//if we have "84*-", replace both the * and the - with the operator
 		if(sKey.matches(regexAnyValidOperator) && expresssionToSelection().matches(".*" + regexAnyOpExceptPercent + regexAnyValidOperator + "$")){
-			//if we have something higlighted, delete it first
+			//if we have something highlighted, delete it first
 			if(getSelectionEnd()>getSelectionStart()) backspaceAtSelection();
 			backspaceAtSelection();
 			backspaceAtSelection();
 		}
 		//if there's already an operator, replace it with the new operator, except for -, let that stack up
 		else if(sKey.matches(regexInvalidStartChar) && expresssionToSelection().matches(".*" + regexAnyOpExceptPercent + "$")){
-			//if we have something higlighted, delete it first
+			//if we have something highlighted, delete it first
 			if(getSelectionEnd()>getSelectionStart()) backspaceAtSelection();
 			backspaceAtSelection();
 		}
@@ -234,7 +235,7 @@ public class Expression {
 	}
 
 	/** Adds parenthesis around power operations */
-	public void groupPowerOperand(){
+	public void groupPowerOperands(){
 		String str=mExpression.toString();
 		//search to find "^" (start at 1 so no NPE later; "^3" invalid anyway)
 		for(int i=1; i<str.length(); i++){
@@ -271,7 +272,6 @@ public class Expression {
 				}
 				//second case is just #^
 				else {
-					System.out.println("sdfsd");
 					String firstNum = getFirstNumb(str.substring(i+1,str.length()));
 					closePareIndex = i + 1 + firstNum.length();
 				}
@@ -284,7 +284,6 @@ public class Expression {
 				i=closePareIndex;
 			}
 		}
-		System.out.println("finished string = " + str);
 		replaceExpression(str);
 	}
 
@@ -568,7 +567,7 @@ public class Expression {
 	 * Gets the first number (returned as a String) of string
 	 * @param string in which to find first number
 	 * @return anything before the first valid operator, or "" if expression empty, 
-	 * or entire expression if doesn't contain regexAnyValidOperator
+	 * or entire expression if doesn't contain regexAnyValidOperator (for "-3E-4-5" returns "-3E-4")
 	 */
 	private String getFirstNumb(String str){
 		//TODO Fix this so it will work on "-2E-3"
@@ -581,7 +580,7 @@ public class Expression {
 			return strA[strA.length-1];
 		}
 		 */
-		String [] strA = str.split(regexAnyValidOperator);
+		String [] strA = str.split("(?<!^|E)" + regexAnyValidOperator);
 		return strA[0];
 	}
 
@@ -595,23 +594,23 @@ public class Expression {
 	}
 
 	/**
-	 * Gets the last double (returned as a String) at selection in current expression
-	 * @return anything after last valid operator, or "" if expression empty, or entire expression 
-	 * if doesn't contain regexAnyValidOperator. Note if expression is "1+-5" it will return "-5"
+	 * Gets the last partial number (returned as a String) at selection in current expression
+	 * @return last partial number, invalid or not, or "" if expression empty, or entire expression 
+	 * if doesn't contain regexAnyValidOperator. Note if expression is "1+-5*" it will return "-5"
+	 * This number might be valid (eg "1E3") or invalid, (eg "1E", "1.E-" or "34)")
 	 */
 	private String getLastPartialNumb(){
-		/*
-		String [] strA = expresssionToSelection().split("[^E]" + regexAnyValidOperator);
+		String [] strA = expresssionToSelection().split("(?<!^|[E*^/%+])" + regexAnyValidOperator);
 		if(strA.length==0) return "";
 		else return strA[strA.length-1];
-		*/
+		/*
 		String [] strA = expresssionToSelection().split("(?<!E)" + regexAnyValidOperator);
 		if(strA.length==0) return "";
 		else {
 			if (expresssionToSelection().matches(".*"+regexAnyValidOperator+regexAnyValidOperator+regexGroupedNumber))
 				return expresssionToSelection().replaceAll(".*?"+regexAnyValidOperator+regexGroupedNumber+"$", "$1");
 			return strA[strA.length-1];
-		}
+		}*/
 	}
 
 
