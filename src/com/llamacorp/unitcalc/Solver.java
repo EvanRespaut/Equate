@@ -118,7 +118,6 @@ public class Solver {
 				str = collapsePara(firstSection + middleSection + endSection);
 			}
 		}
-		System.out.println("after collaps para: " + str);
 		//perform other operations in proper order of operations
 		str = collapseOps(Expression.regexGroupedExponent, str);
 		str = collapseOps(Expression.regexGroupedMultDiv, str);
@@ -134,7 +133,6 @@ public class Solver {
 	 * @param str is the string to operate upon
 	 */	
 	private String collapseOps(String regexOperatorType, String str){
-		System.out.println("here for: " + regexOperatorType);
 		//find the first instance of operator in the str (we want left to right per order of operations)
 		Pattern ptn = Pattern.compile(Expression.regexGroupedNonNegNumber + regexOperatorType + Expression.regexGroupedNumber);
 		Matcher mat = ptn.matcher(str);
@@ -147,10 +145,6 @@ public class Solver {
 			
 			//be sure string is formatted properly
 			try{
-				System.out.println("group1 = " + mat.group(1));
-				System.out.println("group2 = " + mat.group(2));
-				//System.out.println("group3 = " + mat.group(3));
-				//System.out.println("group4 = " + mat.group(4));
 				operand1 = new BigDecimal(mat.group(1));
 				operand2 = new BigDecimal(mat.group(Expression.numGroupsInregexGroupedNumber+2));
 				operator = mat.group(Expression.numGroupsInregexGroupedNumber+1);
@@ -160,9 +154,6 @@ public class Solver {
 				str = strSyntaxError;
 				return str;
 			}
-			
-			System.out.println("operand1 = " + operand1.toString());
-			System.out.println("operand2 = " + operand2.toString());
 			
 			//perform actual operation on found operator and operands
 			if(operator.equals("+")){
