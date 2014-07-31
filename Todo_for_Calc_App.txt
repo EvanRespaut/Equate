@@ -1,10 +1,12 @@
 ------------------ToDo Next--------------------
+- Make calculation text bigger
 - Move keys around, want clear again 
 - Add other unit types
 - Currency Conversion
 - Add preferences 
+- Experiment with stylized row 1 says "Converter inches to feet" and row 2 "12 in *space* 1 ft"
 - Tap equals after solve for scientific notation (hold equals for sci notation preferences)?
-
+- Commas for large numbers?
 
 -----Stuff to Test (squashed bugs, etc)-----
 - Dialog boxes for first unit conversion 
@@ -23,7 +25,6 @@
 
 ----------------------Fix----------------------
 - TRY TO ADD UNIT TESTING FOR ALL PROBLEMS FIXED
-- getLastNumb is just broken in general
 - For every solve or unit convert, save app state
 - Make syntax error result not load into expression
 - Perhaps make query and answer TextViews length a bit resizeable so they don't always run onto two lines
@@ -42,15 +43,12 @@
 - Use of AndroidManifest file to change styles seems crude, investigate this
 - Perhaps selection access should be revisited--should it be initiated from the model side or the controller side?
 
-----------------------Features----------------------
-- Hold click convert button brings up dialog list of alternative unit conversions
-	- If select unit that's already listed, swap them (rearranging is now possible) 
+-------------------Features----------------------
 	- Also allow for custom unit
 	
 - Implement infinity properly instead of just saying number too large
 - If hit in without any numbers, add highlighted "1" for unit to unit conv
 - Kitkat now has arrows at bottom. To move cursor, add these to calc
-- More units (Energy, force, power, currency?)
 - Maybe add sqrt and possibly trig
 - Add phantom close paren after open? Goes away with any selection, close/equals makes permanent, 
 - Use spannables to auto highlight para closes, also maybe operators vs numbers?
@@ -65,7 +63,7 @@
 - Add more math operators like sqrt, and trig functions, then might was well add solve meaning of life
 - Add hold options for lots of keys (add indicating names for these) eg Clear, +/-, sqrt, !, mod
 - Explore adding another coloum of keys to main calc app, might be too cluttered, but also might be nice (maybe make it an option?)
-- Swipe down on units to hide
+- Swipe down on units to hide; use three horz lines to signify swipeable. When hidden only show unittypes 
 - Use animation to move expression up and to the left after ='s; also make answer bold or something for a second
 - Commas between numbers?
 - Use spannable to create custom colors for operators and numbers 

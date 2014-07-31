@@ -367,7 +367,7 @@ public class Calculator implements OnConvertionListener{
 		unitsOfTorque.addUnit(new UnitScalar("ozf ft", "Ounce-Force Feet", 16/1.3558179483314004));  //exact
 		unitsOfTorque.addUnit(new UnitScalar("dyn cm", "Dyne Centimeters", 1));
 		mUnitTypeArray.add(unitsOfTorque);
-		
+
 		//note the use of singular tense, not sure what is the best
 		UnitType unitsOfPressure = new UnitType(this,"Pressure");
 		unitsOfPressure.addUnit(new UnitScalar("N/m\u00B2", "Newton/Square Meter", 1));
@@ -387,7 +387,7 @@ public class Calculator implements OnConvertionListener{
 		unitsOfPressure.addUnit(new UnitScalar("N/mm\u00B2", "Newton/Square Millimeters", 1E-6));
 		unitsOfPressure.addUnit(new UnitScalar("kg/cm\u00B2", "Kilogram/Square Centimeter", 1/98066.5)); //approx?
 		mUnitTypeArray.add(unitsOfPressure);
-		
+
 	}
 
 
@@ -441,6 +441,7 @@ public class Calculator implements OnConvertionListener{
 		if (!solveSuccess)
 			return;
 
+		//next perform numerical unit conversion
 		mSolver.convertFromTo(fromUnit, toUnit, mExpression);
 
 		//load units into result list (this will also set contains unit flag) (overrides that from solve)
@@ -465,6 +466,9 @@ public class Calculator implements OnConvertionListener{
 			//if we hit size limit, remove oldest element 
 			if(mResultList.size() > RESULT_LIST_MAX_SIZE)
 				mResultList.remove(0);
+			//if result had an error, leave before setting units
+			if(result.getAnswer().matches(Expression.regexHasInvalidChars))
+				return false;
 			//also set result's unit if it's selected
 			if(isUnitIsSet()){
 				//load units into result list (this will also set contains unit flag

@@ -245,12 +245,12 @@ import android.widget.Toast;
 				DisplayMetrics metrics = new DisplayMetrics();
 				getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
 				float logicalDensity = metrics.density;
-				int dp=0;
+				int dp;
 				//nudge the toast so it's between keys
 				if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
 					dp = 70;
 				else 
-					dp = 40;
+					dp = 220;
 				int px = (int) (dp * logicalDensity);
 				mConvertToast.setGravity(Gravity.BOTTOM,0,px);
 				mConvertToast.show();

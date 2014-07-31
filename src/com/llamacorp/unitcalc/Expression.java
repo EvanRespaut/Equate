@@ -570,16 +570,6 @@ public class Expression {
 	 * or entire expression if doesn't contain regexAnyValidOperator (for "-3E-4-5" returns "-3E-4")
 	 */
 	private String getFirstNumb(String str){
-		//TODO Fix this so it will work on "-2E-3"
-		/*
-		String [] strA = expStr.split(regexAnyValidOperator);
-		if(strA.length==0) return "";
-		else {
-			if (expStr.matches(".*"+regexAnyValidOperator+regexAnyValidOperator+regexGroupedNumber))
-				return expStr.replaceAll(".*?"+regexAnyValidOperator+regexGroupedNumber+"$", "$1");
-			return strA[strA.length-1];
-		}
-		 */
 		String [] strA = str.split("(?<!^|E)" + regexAnyValidOperator);
 		return strA[0];
 	}
