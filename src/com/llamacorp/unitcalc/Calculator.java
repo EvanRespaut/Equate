@@ -467,7 +467,7 @@ public class Calculator implements OnConvertionListener{
 			if(mResultList.size() > RESULT_LIST_MAX_SIZE)
 				mResultList.remove(0);
 			//if result had an error, leave before setting units
-			if(result.getAnswer().matches(Expression.regexHasInvalidChars))
+			if(Expression.isInvalid(result.getAnswer()))
 				return false;
 			//also set result's unit if it's selected
 			if(isUnitIsSet()){

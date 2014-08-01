@@ -105,6 +105,8 @@ public class Expression {
 	public void keyPresses(String sKey){
 		//for now, if we're adding a previous result, just add it without error checking
 		if(sKey.length()>1){
+			//don't load in errors
+			if(isInvalid(sKey)) return;
 			if(mSolved) replaceExpression(sKey);
 			else insertAtSelection(sKey);
 			mSolved=false;
@@ -372,13 +374,18 @@ public class Expression {
 
 
 	/** Returns if this expression is has invalid characters */
-	public boolean isInvalid(){
-		if(mExpression.matches(regexHasInvalidChars)) 
+	public static boolean isInvalid(String str){
+		if(str.matches(regexHasInvalidChars)) 
 			return true;
 		else 
 			return false;
 	}
 
+
+	/** Returns if this expression is has invalid characters */
+	public boolean isInvalid(){
+		return isInvalid(mExpression);
+	}
 
 	/** Returns the post rounded result */
 	public String getPreciseResult(){

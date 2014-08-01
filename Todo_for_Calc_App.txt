@@ -1,4 +1,5 @@
 ------------------ToDo Next--------------------
+- Add check/click results functionality to ConsoleTester
 - Make calculation text bigger
 - Move keys around, want clear again 
 - Add other unit types
@@ -21,12 +22,12 @@
 - When unit type is switched, set cursor pos to end
 - Be sure convert that are empty don't break things
 - Hold click on empty expression should pop up paste dialog (maybe clicking or down press brings up cursor?)
+- Check all unit values
 - ResultList has a max size
 
 ----------------------Fix----------------------
 - TRY TO ADD UNIT TESTING FOR ALL PROBLEMS FIXED
 - For every solve or unit convert, save app state
-- Make syntax error result not load into expression
 - Perhaps make query and answer TextViews length a bit resizeable so they don't always run onto two lines
 - Font size issues with large text sizes (also run the emulator for a few diff size screens and resolutions. 
 - 1^2+1^2 is displayed wrong in result list
