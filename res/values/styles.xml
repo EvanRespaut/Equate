@@ -36,11 +36,17 @@
     </style>
 
     <style name="EqualsButton" parent="CalcButton">
-        <item name="android:background">@drawable/eq_button_shape</item>
+        <item name="android:background">@drawable/eq_button</item>
         <item name="android:textColor">@drawable/eq_button_text_color</item>
         <item name="android:textSize">30sp</item>
     </style>
 
+    <style name="ClearButton" parent="CalcButton">
+        <item name="android:background">@drawable/clear_button</item>
+        <item name="android:textColor">@drawable/button_text_color</item>
+        <item name="android:textSize">30sp</item>
+    </style>
+    
     <style name="ConvertButton" parent="CalcButton">
         <item name="android:background">@drawable/conv_button</item>
         <item name="android:textColor">@drawable/button_text_color</item>

@@ -12,6 +12,8 @@
     <string name="open_para_button">(</string>
     <string name="close_para_button">)</string>
     <string name="percent_button">%</string>
+    <string name="clear_button">C</string>
+    
     
     
     <string name="zero_button">0</string>
@@ -44,6 +46,9 @@
     <color name="equal_button_pressed">#61AD61</color>
     <color name="equal_button_text_normal">#D4D4D4</color>
     <color name="equal_button_text_pressed">#232323</color>
+    
+    <color name="clear_button_normal">#B23535</color>
+    <color name="clear_button_pressed">#EA8888</color>
     
     <color name="num_button_normal">#191919</color>
     <color name="num_button_pressed">#93795B</color>
