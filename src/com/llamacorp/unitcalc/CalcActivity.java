@@ -341,6 +341,10 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 				}
 			});
 
+			if(id==R.id.multiply_button){
+				button.setText(getText(R.string.multiply_button));
+				
+			}
 			//custom text for EE button
 			//if(id==R.id.ee_button){
 			/*SpannableString text = new SpannableString("    EE  ^\n");   

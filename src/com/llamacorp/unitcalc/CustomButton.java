@@ -2,6 +2,7 @@ package com.llamacorp.unitcalc;
 import java.util.EventListener;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -18,16 +19,27 @@ class CustomButton extends Button {
 	EventListener mListener;
 	Paint mFeedbackPaint;
 	final Paint mHintPaint;
+	final Paint mSecondaryPaint;
+	String mSecondaryText;
 	float mTextSize = 0f;
 
 	public CustomButton(Context context, AttributeSet attrs) {
 		super(context, attrs);
+		
+	    TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.CustomButton, 0, 0);
+	    try {
+	    	mSecondaryText = ta.getString(R.styleable.CustomButton_secondary_text);
+	    } finally {
+	        ta.recycle();
+	    }
+		
 //		Calculator calc = (Calculator) context;
 		init();
 //		mListener = calc.mListener;
 //		setOnClickListener(mListener);
 //		setOnLongClickListener(mListener);
 		mHintPaint = new Paint(getPaint());
+		mSecondaryPaint = new Paint(getPaint());
 	}
 	
 	private void init() {
@@ -54,6 +66,8 @@ class CustomButton extends Button {
 		mTextY = (getHeight() - paint.ascent() - paint.descent()) / 2;
 		if (mHintPaint != null)
 			mHintPaint.setTextSize(paint.getTextSize() * 70 / 100f);
+		if (mSecondaryPaint != null)
+			mSecondaryPaint.setTextSize(paint.getTextSize() * 85 / 100f);
 	}
 	
 	
@@ -74,31 +88,33 @@ class CustomButton extends Button {
 	@Override
 	protected void onDraw(Canvas canvas) {
 		mHintPaint.setColor(Color.GRAY);
+		mSecondaryPaint.setColor(getResources().getColor(R.color.button_secondary_text));
 		CharSequence hint = getHint();
-		if (hint != null) {
-//			int offsetX = getContext().getResources().getDimensionPixelSize(R.dimen.button_hint_offset_x);
-//			int offsetY = (int) ((mTextY + getContext().getResources().getDimensionPixelSize(R.dimen.button_hint_offset_y)
-//					- mHintPaint.getTextSize()) / 2) - getPaddingTop();
-//
-//			float textWidth = mHintPaint.measureText(hint.toString());
-//			float width = getWidth() - getPaddingLeft() - getPaddingRight() - mTextX - offsetX;
-//			float textSize = mHintPaint.getTextSize();
-//			if (textWidth > width) {
-//				mHintPaint.setTextSize(textSize * width / textWidth);
-//			}
-//			canvas.drawText(getHint(), 0, getHint().length(), mTextX + offsetX, mTextY - offsetY, mHintPaint);
+		float buttonHeight = getHeight() - getPaddingTop() - getPaddingBottom();
+		float buttonWidth = getWidth() - getPaddingLeft() - getPaddingRight();
 
-			float buttonWidth = getWidth() - getPaddingLeft() - getPaddingRight();
+		if (hint != null) {
+			
 			float hintTextWidth = mHintPaint.measureText(getHint().toString());
 			float hintAdditionalXOffset = getContext().getResources().getDimensionPixelSize(R.dimen.button_ellipses_additional_offset_x);
 			
-			float buttonHeight = getHeight() - getPaddingTop() - getPaddingBottom();
 			float hintTextHeight = 0f; //mHintPaint.getTextSize();//TODO this is wrong...
 			float hintAdditionalYOffset = getContext().getResources().getDimensionPixelSize(R.dimen.button_ellipses_additional_offset_y);
 
 			canvas.drawText(getHint(), 0, getHint().length(), buttonWidth - hintTextWidth - hintAdditionalXOffset, 
 					buttonHeight - hintTextHeight - hintAdditionalYOffset, mHintPaint);
+		}
+		if(mSecondaryText != null){
+			float secondaryTextWidth = mSecondaryPaint.measureText(mSecondaryText);
+			float secondaryAdditionalXOffset = getContext().getResources().getDimensionPixelSize(R.dimen.button_secondary_text_additional_offset_x);
+			
+			float secondaryTextHeight = mSecondaryPaint.getTextSize();
+			float secondaryAdditionalYOffset = getContext().getResources().getDimensionPixelSize(R.dimen.button_secondary_text_additional_offset_y);
 
+			canvas.drawText(mSecondaryText, 0, mSecondaryText.length(), 
+					buttonWidth - secondaryTextWidth - secondaryAdditionalXOffset, 
+					0 + secondaryTextHeight + secondaryAdditionalYOffset, 
+					mSecondaryPaint);
 		}
 
 		getPaint().setColor(getCurrentTextColor());

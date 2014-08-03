@@ -17,11 +17,13 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1" />
+
         <View
             android:id="@+id/prev_curr_exp_divider"
             android:layout_width="match_parent"
             android:layout_height="2dp"
             android:background="@color/prev_curr_exp_divider" />
+
         <com.llamacorp.unitcalc.EditTextCursorWatcher
             android:id="@+id/textDisplay"
             android:layout_width="match_parent"
@@ -66,6 +68,11 @@
                 android:layout_weight="1"
                 android:background="@color/app_background" >
 
+                <Button
+                    android:id="@+id/clear_button"
+                    style="@style/ClearButton"
+                    android:text="@string/clear_button" />
+
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
@@ -85,11 +92,6 @@
                         android:layout_marginLeft="1dp"
                         android:text="@string/close_para_button" />
                 </LinearLayout>
-
-                <Button
-                    android:id="@+id/percent_button"
-                    style="@style/OpButton"
-                    android:text="@string/percent_button" />
 
                 <Button
                     android:id="@+id/divide_button"
@@ -124,10 +126,11 @@
                     style="@style/NumButton"
                     android:text="@string/nine_button" />
 
-                <Button
+                <com.llamacorp.unitcalc.CustomButton
+                    xmlns:customNS="http://schemas.android.com/apk/res/com.llamacorp.unitcalc"
                     android:id="@+id/multiply_button"
                     style="@style/OpButton"
-                    android:text="@string/multiply_button" />
+                    customNS:secondary_text="%" />
             </LinearLayout>
 
             <LinearLayout

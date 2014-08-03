@@ -37,10 +37,10 @@
     </LinearLayout>
 
     <com.viewpagerindicator.TabPageIndicator
-	android:id="@+id/titles"
-	android:layout_height="wrap_content"
-	android:layout_width="fill_parent" />
-    
+        android:id="@+id/titles"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
+
     <android.support.v4.view.ViewPager
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/convertKeyPager"
@@ -65,7 +65,7 @@
                 android:id="@+id/clear_button"
                 style="@style/ClearButton"
                 android:text="@string/clear_button" />
-            
+
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -119,10 +119,11 @@
                 style="@style/NumButton"
                 android:text="@string/nine_button" />
 
-            <Button
+            <com.llamacorp.unitcalc.CustomButton
+                xmlns:customNS="http://schemas.android.com/apk/res/com.llamacorp.unitcalc"
                 android:id="@+id/multiply_button"
                 style="@style/OpButton"
-                android:text="@string/multiply_button" />
+                customNS:secondary_text="@string/percent_button" />
         </LinearLayout>
 
         <LinearLayout

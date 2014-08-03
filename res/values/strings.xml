@@ -58,11 +58,13 @@
     
     <color name="backspace_button_held">#E10000</color>
     
-    <color name="conv_button_normal">#001D20</color>
+    <color name="conv_button_normal">#191919</color>
     <color name="conv_button_selected">#007782</color>
-    <color name="conv_button_pressed">#97C0C4</color>
+    <color name="conv_button_pressed">#93795B</color>
     
-   
+    
+    <color name="button_secondary_text">#636363</color>
+    
     <color name="button_text_normal">#D4D4D4</color>
     <color name="button_text_pressed">#232323</color>
     
