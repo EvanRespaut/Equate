@@ -54,7 +54,8 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 		R.id.equals_button,
 		R.id.ee_button,
 		R.id.power_button,
-		R.id.percent_button,
+		
+		R.id.clear_button,
 
 		R.id.open_para_button,
 		R.id.close_para_button,
@@ -321,7 +322,7 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 					break;
 					case R.id.power_button: buttonValue="^";
 					break;
-					case R.id.percent_button: buttonValue="%";
+					case R.id.clear_button: buttonValue="c";
 					break;
 					case R.id.open_para_button: buttonValue="(";
 					break;

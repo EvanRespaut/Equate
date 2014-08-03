@@ -65,18 +65,26 @@
                 android:id="@+id/clear_button"
                 style="@style/ClearButton"
                 android:text="@string/clear_button" />
+            
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_margin="1dp"
+                android:layout_weight="1"
+                android:background="@color/app_background" >
 
-            <Button
+                <Button
                     android:id="@+id/open_para_button"
-                    style="@style/OpButton"
+                    style="@style/SmallOpButton"
                     android:layout_marginRight="1dp"
                     android:text="@string/open_para_button" />
 
                 <Button
                     android:id="@+id/close_para_button"
-                    style="@style/OpButton"
+                    style="@style/SmallOpButton"
                     android:layout_marginLeft="1dp"
                     android:text="@string/close_para_button" />
+            </LinearLayout>
 
             <Button
                 android:id="@+id/divide_button"
@@ -95,11 +103,6 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:background="@color/app_background" >
-
-            <Button
-                android:id="@+id/percent_button"
-                style="@style/OpButton"
-                android:text="@string/percent_button" />
 
             <Button
                 android:id="@+id/seven_button"
@@ -129,11 +132,6 @@
             android:background="@color/app_background" >
 
             <Button
-                android:id="@+id/percent_button"
-                style="@style/OpButton"
-                android:text="@string/percent_button" />
-
-             <Button
                 android:id="@+id/four_button"
                 style="@style/NumButton"
                 android:text="@string/four_button" />
@@ -160,12 +158,7 @@
             android:layout_weight="1"
             android:background="@color/app_background" >
 
-           <Button
-                android:id="@+id/percent_button"
-                style="@style/OpButton"
-                android:text="@string/percent_button" />
-
-             <Button
+            <Button
                 android:id="@+id/one_button"
                 style="@style/NumButton"
                 android:text="@string/one_button" />
@@ -192,18 +185,25 @@
             android:layout_weight="1"
             android:background="@color/app_background" >
 
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_margin="1dp"
+                android:layout_weight="1"
+                android:background="@color/app_background" >
 
                 <Button
                     android:id="@+id/ee_button"
-                    style="@style/OpButton"
+                    style="@style/SmallOpButton"
                     android:layout_marginRight="1dp"
                     android:text="@string/ee_button" />
 
                 <Button
                     android:id="@+id/power_button"
-                    style="@style/OpButton"
+                    style="@style/SmallOpButton"
                     android:layout_marginLeft="1dp"
                     android:text="@string/power_button" />
+            </LinearLayout>
 
             <Button
                 android:id="@+id/zero_button"
