@@ -36,9 +36,10 @@
     <string name="first_convert_message_no_numbers">Now enter some numbers and tap the desired unit to perform conversion.</string>
  
 	<string name="word_Change">Change</string>
-    
-    <string name="convert_toast_converting">Converting</string>
+	<string name="word_Convert">Convert</string>
     <string name="word_to">to</string>
+   
+    <string name="convert_toast_converting">Converting</string>
     <string name="convert_toast_no_numbers">No numbers to convert</string>
     <string name="conv_button_hint">...</string>
     
@@ -47,8 +48,8 @@
     <color name="equal_button_text_normal">#D4D4D4</color>
     <color name="equal_button_text_pressed">#232323</color>
     
-    <color name="clear_button_normal">#B23535</color>
-    <color name="clear_button_pressed">#EA8888</color>
+    <color name="clear_button_normal">#232323</color>
+    <color name="clear_button_pressed">#B23535</color>
     
     <color name="num_button_normal">#191919</color>
     <color name="num_button_pressed">#93795B</color>

@@ -563,6 +563,11 @@ public class Calculator implements OnConvertionListener{
 		mExpression.setSolved(solved);
 	}
 
+	/** Returns if current Expresion is solved (equals/conversion was last operation) */
+	public boolean isSolved(){
+		return mExpression.isSolved();
+	}
+	
 	public int getSelectionEnd(){
 		return mExpression.getSelectionEnd();
 	}	
