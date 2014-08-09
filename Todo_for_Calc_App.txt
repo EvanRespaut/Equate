@@ -13,6 +13,7 @@
 - Commas for large numbers?
 
 -----Stuff to Test (squashed bugs, etc)-----
+- Reset then hit num and then unit, unit doesn't appear
 - Dialog boxes for first unit conversion 
 - When syntax error thrown make sure unit is not displayed, aka not "Syntax Error in"
 - 1E99999 should just throw number too large error
@@ -30,7 +31,7 @@
 
 ----------------------Fix----------------------
 - TRY TO ADD UNIT TESTING FOR ALL PROBLEMS FIXED
-- Reset then hit num and then unit 
+- Screen rotation clears unit
 - For every solve or unit convert, save app state
 - Perhaps make query and answer TextViews length a bit resizeable so they don't always run onto two lines
 - Font size issues with large text sizes (also run the emulator for a few diff size screens and resolutions. 

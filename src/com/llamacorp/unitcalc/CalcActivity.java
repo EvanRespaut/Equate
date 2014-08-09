@@ -191,108 +191,8 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 			mResultFragment = new ResultListFragment();
 			fm.beginTransaction().add(R.id.resultListfragmentContainer, mResultFragment).commit();	
 		}
-
-
-		mConvKeysViewPager = (ViewPager)findViewById(R.id.convertKeyPager);
-
-		mConvKeysViewPager.setAdapter(new FragmentStatePagerAdapter(fm) {
-			@Override
-			public int getCount(){
-				//return 10000;
-				return mCalc.getUnitTypeSize();
-			}
-
-			@Override
-			public Fragment getItem(int pos){
-				//				System.out.println("pos="+pos);
-				//				System.out.println("pos % mCalc.getUnitTypeSize()"+pos % mCalc.getUnitTypeSize());
-				//				return ConvKeysFragment.newInstance(pos % mCalc.getUnitTypeSize());
-				//				//TODO try debugging this 
-				return ConvKeysFragment.newInstance(pos);
-			}
-
-			@Override
-			public CharSequence getPageTitle(int pos) {
-				return mCalc.getUnitTypeName(pos % mCalc.getUnitTypeSize());
-			}
-		});
-
-		/*
-		CirclePageIndicator viewPageIndicator = (CirclePageIndicator)findViewById(R.id.titles);
-		viewPageIndicator.setViewPager(mConvKeysViewPager);
-		viewPageIndicator.setFillColor(Color.GRAY);
-		viewPageIndicator.setStrokeColor(Color.GRAY);
-		 */
-		TabPageIndicator convertPageIndicator = (TabPageIndicator)findViewById(R.id.titles);
-		convertPageIndicator.setViewPager(mConvKeysViewPager);
 		
-		//need to tell calc when a new UnitType page is selected
-		convertPageIndicator.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-			//as the page is being scrolled to
-			@Override
-			public void onPageSelected(int pos) {
-				//update the calc with current UnitType selection
-				mCalc.setUnitTypePos(pos);
-
-				/*
-				//set the margins so that you can see a bit of the left and right pages
-				DisplayMetrics metrics = getResources().getDisplayMetrics();
-				int padLeft=(int) (metrics.density * 8f + 0.5f);
-				int padRight=(int) (metrics.density * 8f + 0.5f);
-				//				if(mViewPager.getCurrentItem()==0)
-				//					padLeft=0;
-				//				if(mViewPager.getCurrentItem()==mViewPager.getAdapter().getCount()-1)
-				//					padRight=0;
-				mConvKeysViewPager.setPadding(padLeft, 0, padRight, 0);
-				*/
-
-				//TODO do we still need to do this?
-				//clear selected unit from adjacent convert key fragment so you can't see a bit of them
-				int currConvKeyPos = mConvKeysViewPager.getCurrentItem();
-				clearConvKeyForFragPos(currConvKeyPos-1);
-				clearConvKeyForFragPos(currConvKeyPos);
-				clearConvKeyForFragPos(currConvKeyPos+1);
-				mCalc.getCurrUnitType().clearUnitSelection();
-
-				//this change UnitType was reult of unit-ed result, select that unit
-				if(unitToSelectAfterScroll!=null){
-					getConvKeyFrag(mConvKeysViewPager.getCurrentItem()).selectUnit(unitToSelectAfterScroll);
-					unitToSelectAfterScroll=null;
-				}
-				//clear out the unit in expression if it's now cleared
-				updateScreen(false);
-				
-				//move the cursor to the right end (helps usability a bit)
-				mDisplay.setSelectionToEnd();
-			}
-
-			@Override
-			public void onPageScrolled(int pos, float posOffset, int posOffsetPixels) {}
-
-			@Override
-			public void onPageScrollStateChanged(int state) {}
-		});
-
-		/*
-		DisplayMetrics metrics = getResources().getDisplayMetrics();
-
-		int padLeft=(int) (metrics.density * 8f + 0.5f);
-		int padRight=padLeft;
-		//		if(mViewPager.getCurrentItem()==0)
-		//			padLeft=0;
-		//		if(mViewPager.getCurrentItem()==mViewPager.getAdapter().getCount()-1)
-		//			padRight=0;
-
-		mConvKeysViewPager.setPadding(padLeft, 0, padRight, 0);
-
-		//this shows the edges of the next page work
-		mConvKeysViewPager.setClipToPadding(false);
-		//add a little break between pages
-		mConvKeysViewPager.setPageMargin(8);
-		*/
-		//set page back to the previously selected page
-		mConvKeysViewPager.setCurrentItem(mCalc.getUnitTypePos());
-
+		setupConverKeyPager();
 
 		calcButton = new ArrayList<Button>();
 
@@ -409,8 +309,8 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 				@Override 
 				public void run() {
 					mCalc.resetCalc();
+					setupConverKeyPager();
 					updateScreen(true);
-					mConvKeysViewPager.setCurrentItem(mCalc.getUnitTypePos());
 					Toast toast = Toast.makeText(mAppContext, (CharSequence)"Calculator reset", Toast.LENGTH_SHORT);
 					toast.setGravity(Gravity.CENTER, 0, 0);
 					toast.show();
@@ -471,6 +371,108 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 		System.out.println("text size px=" + px);
 		*/
 	}
+	
+	
+	private void setupConverKeyPager(){
+		//use fragment manager to make the result list
+		FragmentManager fm = getSupportFragmentManager();
+
+		mConvKeysViewPager = (ViewPager)findViewById(R.id.convertKeyPager);
+
+		mConvKeysViewPager.setAdapter(new FragmentStatePagerAdapter(fm) {
+			@Override
+			public int getCount(){
+				//return 10000;
+				return mCalc.getUnitTypeSize();
+			}
+
+			@Override
+			public Fragment getItem(int pos){
+				//				System.out.println("pos="+pos);
+				//				System.out.println("pos % mCalc.getUnitTypeSize()"+pos % mCalc.getUnitTypeSize());
+				//				return ConvKeysFragment.newInstance(pos % mCalc.getUnitTypeSize());
+				//				//TODO try debugging this 
+				return ConvKeysFragment.newInstance(pos);
+			}
+
+			@Override
+			public CharSequence getPageTitle(int pos) {
+				return mCalc.getUnitTypeName(pos % mCalc.getUnitTypeSize());
+			}
+		});
+
+		TabPageIndicator convertPageIndicator = (TabPageIndicator)findViewById(R.id.titles);
+		convertPageIndicator.setViewPager(mConvKeysViewPager);
+		
+		//need to tell calc when a new UnitType page is selected
+		convertPageIndicator.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+			//as the page is being scrolled to
+			@Override
+			public void onPageSelected(int pos) {
+				//update the calc with current UnitType selection
+				mCalc.setUnitTypePos(pos);
+
+				/*
+				//set the margins so that you can see a bit of the left and right pages
+				DisplayMetrics metrics = getResources().getDisplayMetrics();
+				int padLeft=(int) (metrics.density * 8f + 0.5f);
+				int padRight=(int) (metrics.density * 8f + 0.5f);
+				//				if(mViewPager.getCurrentItem()==0)
+				//					padLeft=0;
+				//				if(mViewPager.getCurrentItem()==mViewPager.getAdapter().getCount()-1)
+				//					padRight=0;
+				mConvKeysViewPager.setPadding(padLeft, 0, padRight, 0);
+				*/
+
+				//TODO do we still need to do this?
+				//clear selected unit from adjacent convert key fragment so you can't see a bit of them
+				int currConvKeyPos = mConvKeysViewPager.getCurrentItem();
+				clearConvKeyForFragPos(currConvKeyPos-1);
+				clearConvKeyForFragPos(currConvKeyPos);
+				clearConvKeyForFragPos(currConvKeyPos+1);
+				mCalc.getCurrUnitType().clearUnitSelection();
+
+				//this change UnitType was result of unit-ed result, select that unit
+				if(unitToSelectAfterScroll!=null){
+					getConvKeyFrag(mConvKeysViewPager.getCurrentItem()).selectUnit(unitToSelectAfterScroll);
+					unitToSelectAfterScroll=null;
+				}
+				//clear out the unit in expression if it's now cleared
+				updateScreen(false);
+				
+				//move the cursor to the right end (helps usability a bit)
+				mDisplay.setSelectionToEnd();
+			}
+
+			@Override
+			public void onPageScrolled(int pos, float posOffset, int posOffsetPixels) {}
+
+			@Override
+			public void onPageScrollStateChanged(int state) {}
+		});
+
+		/*
+		DisplayMetrics metrics = getResources().getDisplayMetrics();
+
+		int padLeft=(int) (metrics.density * 8f + 0.5f);
+		int padRight=padLeft;
+		//		if(mViewPager.getCurrentItem()==0)
+		//			padLeft=0;
+		//		if(mViewPager.getCurrentItem()==mViewPager.getAdapter().getCount()-1)
+		//			padRight=0;
+
+		mConvKeysViewPager.setPadding(padLeft, 0, padRight, 0);
+
+		//this shows the edges of the next page work
+		mConvKeysViewPager.setClipToPadding(false);
+		//add a little break between pages
+		mConvKeysViewPager.setPageMargin(8);
+		*/
+		//set page back to the previously selected page
+		mConvKeysViewPager.setCurrentItem(mCalc.getUnitTypePos());
+	}
+	
+	
 
 	@Override
 	public void onPause() {

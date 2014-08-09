@@ -4,7 +4,6 @@
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Configuration;
@@ -207,6 +206,7 @@ import android.widget.Toast;
 			boolean didConvert = mUnitType.selectUnit(buttonPos);
 	
 			Calculator calc = Calculator.getCalculator(getActivity());
+			/*
 			//for first time users
 			if(!calc.mHints.isHasClickedUnit()){
 				Builder builder = new AlertDialog.Builder(getActivity())
@@ -222,7 +222,7 @@ import android.widget.Toast;
 				dialog.show();
 				calc.mHints.setHasClickedUnitTrue();
 			}
-	
+			 */
 	
 			//if conversion performed, show toast
 			if(didConvert){
