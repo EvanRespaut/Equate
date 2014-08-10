@@ -5,13 +5,10 @@ import java.util.List;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
-import android.text.SpannableString;
-import android.text.style.SuperscriptSpan;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
-import android.widget.TextView.BufferType;
 
 public class ResultListFragment extends ListFragment {
 	//this is for communication with the parent activity

@@ -26,7 +26,7 @@ import com.viewpagerindicator.TabPageIndicator;
 
 public class CalcActivity  extends FragmentActivity implements OnResultSelectedListener, OnConvertKeySelectedListener{
 	private Context mAppContext;
-	
+
 	private ViewPager mConvKeysViewPager; 
 	private ResultListFragment mResultFragment;
 
@@ -54,7 +54,7 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 		R.id.equals_button,
 		R.id.ee_button,
 		R.id.power_button,
-		
+
 		R.id.clear_button,
 
 		R.id.open_para_button,
@@ -144,7 +144,7 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 		FragmentManager fm = getSupportFragmentManager();
 
 	}
-	*/
+	 */
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -191,7 +191,7 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 			mResultFragment = new ResultListFragment();
 			fm.beginTransaction().add(R.id.resultListfragmentContainer, mResultFragment).commit();	
 		}
-		
+
 		setupConverKeyPager();
 
 		calcButton = new ArrayList<Button>();
@@ -200,7 +200,6 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 		for(int id : BUTTON_IDS) {
 			Button button = (Button)findViewById(id);
 			button.setOnClickListener(new View.OnClickListener() {
-
 				@Override
 				public void onClick(View view) {
 					int buttonId = view.getId();
@@ -241,24 +240,74 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 				}
 			});
 
-			if(id==R.id.multiply_button){
-				button.setText(getText(R.string.multiply_button));
-				
+
+
+			button.setOnLongClickListener(new View.OnLongClickListener() {
+				@Override 
+				public boolean onLongClick(View view) {
+					int buttonId = view.getId();
+					String buttonValue="";
+					switch(buttonId){
+					case R.id.multiply_button: buttonValue="%";
+					break;
+					default: 					
+						break;
+					}
+					//pass button to calc, change conv key colors (maybe) and update screen
+					numButtonPressed(buttonValue);
+					return true;
+				}
+			});
+
+
+			/*
+			if(button instanceof CustomButton){
+				button.setOnTouchListener(new View.OnTouchListener() {
+					private View mView;
+					private Handler mSecondaryHandler;	
+					private Boolean mEventConsumed;
+
+					public boolean onTouch(View view, MotionEvent event) {
+						switch(event.getAction()) {
+						case MotionEvent.ACTION_DOWN:
+							mEventConsumed=false;
+							mView=view;
+							if (mSecondaryHandler != null) return true;
+							mSecondaryHandler = new Handler();
+							mSecondaryHandler.postDelayed(mSecondaryRun, 300);
+							break;
+						case MotionEvent.ACTION_UP:
+							if (mSecondaryHandler == null) return true;
+							mSecondaryHandler.removeCallbacks(mSecondaryRun);
+							mSecondaryHandler = null;
+							break;
+						} 
+						return mEventConsumed;
+					}
+
+					Runnable mSecondaryRun = new Runnable() {
+						@Override 
+						public void run() {
+							mEventConsumed=true;
+							int buttonId = mView.getId();
+							String buttonValue="";
+							switch(buttonId){
+							case R.id.multiply_button: buttonValue="%";
+							break;
+							default: 					
+								break;
+							}
+							//pass button to calc, change conv key colors (maybe) and update screen
+							numButtonPressed(buttonValue);
+						}
+					};	
+				});
 			}
-			//custom text for EE button
-			//if(id==R.id.ee_button){
-			/*SpannableString text = new SpannableString("    EE  ^\n");   
-
-
-				// make "Lorem" (characters 0 to 5) red   
-				text.setSpan(new ForegroundColorSpan(Color.GRAY), text.length()-2, text.length()-1, 0);   
-				text.setSpan(new SuperscriptSpan(), text.length()-2, text.length()-1, 0);  
-				text.setSpan(new RelativeSizeSpan(1.1f), text.length()-2, text.length()-1, 0);  
-
-				// shove our styled text into the TextView           
-				button.setText(text, BufferType.SPANNABLE);  
 			 */
-			//}
+
+			if(id==R.id.multiply_button)
+				button.setText(getText(R.string.multiply_button));
+
 			//add to our list of num buttons
 			calcButton.add(button);
 		}
@@ -296,7 +345,7 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 					view.setBackgroundColor(getResources().getColor(R.color.op_button_normal));
 					mColorHoldHandler.removeCallbacks(mBackspaceColor);
 					mColorHoldHandler = null;
-					
+
 					mResetHandler.removeCallbacks(mBackspaceReset);
 					mResetHandler = null;
 					break;
@@ -361,7 +410,7 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 		});
 		/*
 		float px = mDisplay.getTextSize();
-		
+
 		DisplayMetrics metrics = new DisplayMetrics();
 		getWindowManager().getDefaultDisplay().getMetrics(metrics);
 		float logicalDensity = metrics.density;
@@ -369,10 +418,10 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 		int dp = (int) Math.ceil(px / logicalDensity);
 		System.out.println("text size dp=" + dp);
 		System.out.println("text size px=" + px);
-		*/
+		 */
 	}
-	
-	
+
+
 	private void setupConverKeyPager(){
 		//use fragment manager to make the result list
 		FragmentManager fm = getSupportFragmentManager();
@@ -403,7 +452,7 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 
 		TabPageIndicator convertPageIndicator = (TabPageIndicator)findViewById(R.id.titles);
 		convertPageIndicator.setViewPager(mConvKeysViewPager);
-		
+
 		//need to tell calc when a new UnitType page is selected
 		convertPageIndicator.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 			//as the page is being scrolled to
@@ -422,7 +471,7 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 				//				if(mViewPager.getCurrentItem()==mViewPager.getAdapter().getCount()-1)
 				//					padRight=0;
 				mConvKeysViewPager.setPadding(padLeft, 0, padRight, 0);
-				*/
+				 */
 
 				//TODO do we still need to do this?
 				//clear selected unit from adjacent convert key fragment so you can't see a bit of them
@@ -439,7 +488,7 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 				}
 				//clear out the unit in expression if it's now cleared
 				updateScreen(false);
-				
+
 				//move the cursor to the right end (helps usability a bit)
 				mDisplay.setSelectionToEnd();
 			}
@@ -467,12 +516,12 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 		mConvKeysViewPager.setClipToPadding(false);
 		//add a little break between pages
 		mConvKeysViewPager.setPageMargin(8);
-		*/
+		 */
 		//set page back to the previously selected page
 		mConvKeysViewPager.setCurrentItem(mCalc.getUnitTypePos());
 	}
-	
-	
+
+
 
 	@Override
 	public void onPause() {
