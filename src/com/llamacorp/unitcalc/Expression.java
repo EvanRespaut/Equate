@@ -161,8 +161,8 @@ public class Expression {
 		if(sKey.matches("[-]") && expresssionToSelection().matches(".*E?[-]"))
 			return;	
 
-		//don't allow two %'s in a row
-		if(sKey.matches("%") && expresssionToSelection().matches(".*%$"))
+		//don't allow two %'s in a row, or "5%*" then another "%"
+		if(sKey.matches("%") && expresssionToSelection().matches(".*%" + regexAnyValidOperator + "?$"))
 			return;
 
 		//if we have "84*-", replace both the * and the - with the operator

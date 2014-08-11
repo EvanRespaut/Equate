@@ -223,7 +223,7 @@ import android.widget.Toast;
 				calc.mHints.setHasClickedUnitTrue();
 			}
 			 */
-	
+			
 			//if conversion performed, show toast
 			if(didConvert){
 				//cancel previous toast if it's there
@@ -270,13 +270,12 @@ import android.widget.Toast;
 			if(mUnitType.isUnitSelected()){
 				for(int i=0;i<mConvButton.size();i++){
 					if(i != mUnitType.getCurrUnitPos()){
+						//\u2192 is an ascii arrow
 						refreshButtonText("\u2192 ", i);
 					}
 				}
 				//Add color to newly selected convert button
 				mConvButton.get(mUnitType.getCurrUnitPos()).setSelected(true);	
-	
-				//
 			}			
 		}
 	

@@ -16,7 +16,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
-import android.view.View;
 import android.widget.Button;
 
 class CustomButton extends Button {
@@ -147,7 +146,7 @@ class CustomButton extends Button {
 			case MotionEvent.ACTION_DOWN:
 				mColorFadeAnim = ObjectAnimator.ofObject(this, "backgroundColor", new ArgbEvaluator(), 
 						getResources().getColor(R.color.op_button_pressed), 0xff000000);
-				mColorFadeAnim.setDuration(1000);
+				mColorFadeAnim.setDuration(500);
 				mColorFadeAnim.addListener(new AnimatorListenerAdapter() {
 	                @Override
 	                public void onAnimationEnd(Animator animation) {

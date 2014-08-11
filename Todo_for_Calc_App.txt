@@ -30,7 +30,6 @@
 
 ----------------------Fix----------------------
 - TRY TO ADD UNIT TESTING FOR ALL PROBLEMS FIXED
-- 5%* then add %
 - Screen rotation clears unit
 - For every solve or unit convert, save app state
 - Perhaps make query and answer TextViews length a bit resizeable so they don't always run onto two lines
