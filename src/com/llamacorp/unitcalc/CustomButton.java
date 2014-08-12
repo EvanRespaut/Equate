@@ -1,10 +1,6 @@
 package com.llamacorp.unitcalc;
 import java.util.EventListener;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.animation.ArgbEvaluator;
-import android.animation.ObjectAnimator;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -14,6 +10,7 @@ import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.widget.Button;
@@ -31,6 +28,11 @@ class CustomButton extends Button {
 	final Paint mSecondaryPaint;
 	String mSecondaryText;
 	float mTextSize = 0f;
+	private OnClickListener mClickListen = null;
+	private OnLongClickListener mLongClickListen = null;
+	private Handler mColorHoldHandler;
+	private boolean mLongClickPerformed=false;
+
 
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	public CustomButton(Context context, AttributeSet attrs) {
@@ -50,9 +52,10 @@ class CustomButton extends Button {
 		//		setOnLongClickListener(mListener);
 
 		mBackground = getBackground();
-		
+
 		mHintPaint = new Paint(getPaint());
 		mSecondaryPaint = new Paint(getPaint());
+
 	}
 
 	private void init() {
@@ -136,38 +139,103 @@ class CustomButton extends Button {
 	}
 
 	
-	private ObjectAnimator mColorFadeAnim;
+	private int mInc;
+	private static final int CLICK_HOLD_TIME=300;	
 
-	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	public boolean onTouchEvent(MotionEvent event) {
-		boolean result = super.onTouchEvent(event);
-		if(mSecondaryText != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB){
-			switch (event.getAction()) {
-			case MotionEvent.ACTION_DOWN:
-				mColorFadeAnim = ObjectAnimator.ofObject(this, "backgroundColor", new ArgbEvaluator(), 
-						getResources().getColor(R.color.op_button_pressed), 0xff000000);
-				mColorFadeAnim.setDuration(500);
-				mColorFadeAnim.addListener(new AnimatorListenerAdapter() {
-	                @Override
-	                public void onAnimationEnd(Animator animation) {
-	                	setBackgroundColorToDefault();
-	                }
-	            });
-				mColorFadeAnim.start();
-				break;
-			case MotionEvent.ACTION_UP:
-				if(mColorFadeAnim!=null)
-					mColorFadeAnim.cancel();
-				//setBackgroundColorToDefault();
-				break;
-			}
+		switch (event.getAction()) {
+		case MotionEvent.ACTION_DOWN:
+			mInc=0;
+			mLongClickPerformed = false;
+			
+			if (mColorHoldHandler != null) return true;
+			mColorHoldHandler = new Handler();
+			mColorHoldHandler.postDelayed(mColorRunnable, 10);
+			break;
+		case MotionEvent.ACTION_UP:
+			if (mColorHoldHandler == null) return true;
+			if(!mLongClickPerformed) 
+				myClickButton();
+
+			setBackgroundColor(getResources().getColor(R.color.op_button_normal));
+			mColorHoldHandler.removeCallbacks(mColorRunnable);
+			mColorHoldHandler = null;
+
+			break;
 		}
-		return result;
+		return true;
 	}
+	
+
+
+	//set up the runnable for when backspace is held down
+	Runnable mColorRunnable = new Runnable() {
+		private int mGradStartCol = getResources().getColor(R.color.op_button_pressed);
+		private int mGradEndCol = getResources().getColor(R.color.op_button_long_press_accent);
+		private int mAccentColor = getResources().getColor(R.color.op_button_pressed);
+		private int mFinalColor = getResources().getColor(R.color.op_button_pressed);
+
+		private static final int NUM_COLOR_CHANGES=10;
+
+		@Override 
+		public void run() {
+			//after clear had been performed and 100ms is up, set color to final
+			if(mInc==-1){
+				setBackgroundColor(mFinalColor);
+				return;
+			}
+			//color the button black for a second and then clear
+			if(mInc==NUM_COLOR_CHANGES){
+				myLongClickButton();
+				mLongClickPerformed = true;
+				setBackgroundColor(mAccentColor);
+				//only post again so it runs to catch the final bit of code
+				mColorHoldHandler.postDelayed(this, 100);
+				mInc=-1;
+				return;
+			}
+			mColorHoldHandler.postDelayed(this, CLICK_HOLD_TIME/NUM_COLOR_CHANGES);
+
+			float deltaRed= (float)Color.red(mGradStartCol) + ((float)Color.red(mGradEndCol)-(float)Color.red(mGradStartCol))*((float)mInc)/((float)NUM_COLOR_CHANGES);
+			float deltaGreen= (float)Color.green(mGradStartCol) + ((float)Color.green(mGradEndCol)-(float)Color.green(mGradStartCol))*((float)mInc)/((float)NUM_COLOR_CHANGES);
+			float deltaBlue= (float)Color.blue(mGradStartCol) + ((float)Color.blue(mGradEndCol)-(float)Color.blue(mGradStartCol))*((float)mInc)/((float)NUM_COLOR_CHANGES);
+//			int deltaGreen= Color.green(mStartColor) + ((Color.green(mEndColor)-Color.green(mStartColor))*mInc)/NUM_COLOR_CHANGES;
+//			int deltaBlue= Color.blue(mStartColor) + ((Color.blue(mEndColor)-Color.blue(mStartColor))*mInc)/NUM_COLOR_CHANGES;
+
+			setBackgroundColor(Color.argb(255, (int)deltaRed, (int)deltaGreen, (int)deltaBlue));
+			mInc++;
+		}
+	};		
+	
+	
+
+	
 	
 	@SuppressWarnings("deprecation")
 	public void setBackgroundColorToDefault(){
 		setBackgroundDrawable(mBackground);
+	}
+
+
+	private void myClickButton(){
+		if(mClickListen != null)
+			mClickListen.onClick(this);
+	}
+
+	private void myLongClickButton(){
+		if(mLongClickListen != null)
+			mLongClickListen.onLongClick(this);
+	}
+	
+	@Override
+	public void setOnClickListener(OnClickListener l){
+		mClickListen = l;
+	}
+
+
+	@Override
+	public void setOnLongClickListener(OnLongClickListener l){
+		mLongClickListen = l;
 	}
 
 	/*

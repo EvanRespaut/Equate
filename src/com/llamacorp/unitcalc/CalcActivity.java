@@ -241,7 +241,7 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 			});
 
 
-
+			
 			button.setOnLongClickListener(new View.OnLongClickListener() {
 				@Override 
 				public boolean onLongClick(View view) {
