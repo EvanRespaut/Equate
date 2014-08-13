@@ -1,14 +1,10 @@
 package com.llamacorp.unitcalc;
-import java.util.EventListener;
-
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Paint.Style;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Handler;
 import android.util.AttributeSet;
@@ -16,14 +12,8 @@ import android.view.MotionEvent;
 import android.widget.Button;
 
 class CustomButton extends Button {
-	static final int CLICK_FEEDBACK_INTERVAL = 10;
-	static final int CLICK_FEEDBACK_DURATION = 350;
 	float mTextX;
 	float mTextY;
-	long mAnimStart;
-	EventListener mListener;
-	Paint mFeedbackPaint;
-	private Drawable mBackground;
 	final Paint mHintPaint;
 	final Paint mSecondaryPaint;
 	String mSecondaryText;
@@ -45,25 +35,8 @@ class CustomButton extends Button {
 			ta.recycle();
 		}
 
-		//		Calculator calc = (Calculator) context;
-		init();
-		//		mListener = calc.mListener;
-		//		setOnClickListener(mListener);
-		//		setOnLongClickListener(mListener);
-
-		mBackground = getBackground();
-
 		mHintPaint = new Paint(getPaint());
 		mSecondaryPaint = new Paint(getPaint());
-
-	}
-
-	private void init() {
-		mFeedbackPaint = new Paint();
-		mFeedbackPaint.setStyle(Style.STROKE);
-		mFeedbackPaint.setStrokeWidth(2);
-
-		mAnimStart = -1;
 	}
 
 	private void layoutText() {
@@ -199,23 +172,12 @@ class CustomButton extends Button {
 			float deltaRed= (float)Color.red(mGradStartCol) + ((float)Color.red(mGradEndCol)-(float)Color.red(mGradStartCol))*((float)mInc)/((float)NUM_COLOR_CHANGES);
 			float deltaGreen= (float)Color.green(mGradStartCol) + ((float)Color.green(mGradEndCol)-(float)Color.green(mGradStartCol))*((float)mInc)/((float)NUM_COLOR_CHANGES);
 			float deltaBlue= (float)Color.blue(mGradStartCol) + ((float)Color.blue(mGradEndCol)-(float)Color.blue(mGradStartCol))*((float)mInc)/((float)NUM_COLOR_CHANGES);
-//			int deltaGreen= Color.green(mStartColor) + ((Color.green(mEndColor)-Color.green(mStartColor))*mInc)/NUM_COLOR_CHANGES;
-//			int deltaBlue= Color.blue(mStartColor) + ((Color.blue(mEndColor)-Color.blue(mStartColor))*mInc)/NUM_COLOR_CHANGES;
 
 			setBackgroundColor(Color.argb(255, (int)deltaRed, (int)deltaGreen, (int)deltaBlue));
 			mInc++;
 		}
 	};		
 	
-	
-
-	
-	
-	@SuppressWarnings("deprecation")
-	public void setBackgroundColorToDefault(){
-		setBackgroundDrawable(mBackground);
-	}
-
 
 	private void myClickButton(){
 		if(mClickListen != null)
@@ -231,7 +193,6 @@ class CustomButton extends Button {
 	public void setOnClickListener(OnClickListener l){
 		mClickListen = l;
 	}
-
 
 	@Override
 	public void setOnLongClickListener(OnLongClickListener l){
