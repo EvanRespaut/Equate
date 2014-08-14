@@ -119,7 +119,7 @@
                 style="@style/NumButton"
                 android:text="@string/nine_button" />
 
-            <com.llamacorp.unitcalc.CustomButton
+            <com.llamacorp.unitcalc.AnimatedHoldButton
                 xmlns:customNS="http://schemas.android.com/apk/res/com.llamacorp.unitcalc"
                 android:id="@+id/multiply_button"
                 style="@style/OpButton"

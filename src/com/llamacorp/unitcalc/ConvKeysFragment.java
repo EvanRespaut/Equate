@@ -98,7 +98,7 @@ import android.widget.Toast;
 				Button button = (Button)v.findViewById(convertButtonIds[i]);
 	
 				if(mUnitType.size()>10)
-					((SubscriptTextButton)button).setSecondaryText((String) getText(R.string.conv_button_hint));
+					((SecondaryTextButton)button).setSecondaryText((String) getText(R.string.conv_button_hint));
 				
 				//add to our list of conv buttons
 				mConvButton.add(button);			
