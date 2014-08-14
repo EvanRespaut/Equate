@@ -9,6 +9,7 @@ import android.view.MotionEvent;
 
 class AnimatedHoldButton extends SecondaryTextButton {
 	protected static final int SECONDARY_FONT_PERCENTAGE = 85;
+	private static final int CLICK_HOLD_TIME = 300;	
 
 	protected float mSecAdditionalXOffset = getContext().getResources().
 			getDimensionPixelSize(R.dimen.button_secondary_text_additional_offset_x);
@@ -21,8 +22,8 @@ class AnimatedHoldButton extends SecondaryTextButton {
 	private Handler mColorHoldHandler;
 	private boolean mLongClickPerformed=false;
 
-	private int mInc;
-	private static final int CLICK_HOLD_TIME=300;	
+	//used to count up holding time
+	private int mHoldInc;
 
 
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
@@ -36,11 +37,15 @@ class AnimatedHoldButton extends SecondaryTextButton {
 		mSecYCoord = 0 + mSecTextHeight + mSecAdditionalYOffset;
 	}
 
-
+	/** Setup custom clicking and long clicking handlers
+	 * Click will be performed if button is pressed down and released
+	 * before the long click timeout.  As the long click timeout is 
+	 * expiring, button's color will change and finally flash at the timeout
+	 * event, at which point the long click function will be called. */
 	public boolean onTouchEvent(MotionEvent event) {
 		switch (event.getAction()) {
 		case MotionEvent.ACTION_DOWN:
-			mInc=0;
+			mHoldInc=0;
 			mLongClickPerformed = false;
 
 			if (mColorHoldHandler != null) return true;
@@ -50,7 +55,7 @@ class AnimatedHoldButton extends SecondaryTextButton {
 		case MotionEvent.ACTION_UP:
 			if (mColorHoldHandler == null) return true;
 			if(!mLongClickPerformed) 
-				myClickButton();
+				clickButton();
 
 			setBackgroundColor(getResources().getColor(R.color.op_button_normal));
 			mColorHoldHandler.removeCallbacks(mColorRunnable);
@@ -63,7 +68,7 @@ class AnimatedHoldButton extends SecondaryTextButton {
 
 
 
-	//set up the runnable for when backspace is held down
+	//set up the runnable for when button is held down
 	Runnable mColorRunnable = new Runnable() {
 		private int mGradStartCol = getResources().getColor(R.color.op_button_pressed);
 		private int mGradEndCol = getResources().getColor(R.color.op_button_long_press_accent);
@@ -74,39 +79,40 @@ class AnimatedHoldButton extends SecondaryTextButton {
 
 		@Override 
 		public void run() {
-			//after clear had been performed and 100ms is up, set color to final
-			if(mInc==-1){
+			//after hold operation has been performed and 100ms is up, set final color
+			if(mHoldInc==-1){
 				setBackgroundColor(mFinalColor);
 				return;
 			}
-			//color the button black for a second and then clear
-			if(mInc==NUM_COLOR_CHANGES){
-				myLongClickButton();
+			//color the button black for a second and perform long click operation
+			if(mHoldInc==NUM_COLOR_CHANGES){
+				longClickButton();
 				mLongClickPerformed = true;
 				setBackgroundColor(mAccentColor);
 				//only post again so it runs to catch the final bit of code
 				mColorHoldHandler.postDelayed(this, 100);
-				mInc=-1;
+				mHoldInc=-1;
 				return;
 			}
 			mColorHoldHandler.postDelayed(this, CLICK_HOLD_TIME/NUM_COLOR_CHANGES);
 
-			float deltaRed= (float)Color.red(mGradStartCol) + ((float)Color.red(mGradEndCol)-(float)Color.red(mGradStartCol))*((float)mInc)/((float)NUM_COLOR_CHANGES);
-			float deltaGreen= (float)Color.green(mGradStartCol) + ((float)Color.green(mGradEndCol)-(float)Color.green(mGradStartCol))*((float)mInc)/((float)NUM_COLOR_CHANGES);
-			float deltaBlue= (float)Color.blue(mGradStartCol) + ((float)Color.blue(mGradEndCol)-(float)Color.blue(mGradStartCol))*((float)mInc)/((float)NUM_COLOR_CHANGES);
+			float deltaRed= (float)Color.red(mGradStartCol) + ((float)Color.red(mGradEndCol)-(float)Color.red(mGradStartCol))*((float)mHoldInc)/((float)NUM_COLOR_CHANGES);
+			float deltaGreen= (float)Color.green(mGradStartCol) + ((float)Color.green(mGradEndCol)-(float)Color.green(mGradStartCol))*((float)mHoldInc)/((float)NUM_COLOR_CHANGES);
+			float deltaBlue= (float)Color.blue(mGradStartCol) + ((float)Color.blue(mGradEndCol)-(float)Color.blue(mGradStartCol))*((float)mHoldInc)/((float)NUM_COLOR_CHANGES);
 
 			setBackgroundColor(Color.argb(255, (int)deltaRed, (int)deltaGreen, (int)deltaBlue));
-			mInc++;
+			mHoldInc++;
 		}
 	};		
 
-
-	private void myClickButton(){
+	/** Calls listener's onClick, which gets setup by code controlling button */
+	private void clickButton(){
 		if(mClickListen != null)
 			mClickListen.onClick(this);
 	}
-
-	private void myLongClickButton(){
+	
+	/** Calls listener's onLongClick, which gets setup by code controlling button */
+	private void longClickButton(){
 		if(mLongClickListen != null)
 			mLongClickListen.onLongClick(this);
 	}

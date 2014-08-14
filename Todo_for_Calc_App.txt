@@ -1,5 +1,4 @@
 ------------------ToDo Next--------------------
-- Make backspace inherit new custom button code
 - Add "Convert milimeters to..." and make it blink or something cool
 - Only have arrows if expression not empty
 - Make arrows pulse when waiting to convert

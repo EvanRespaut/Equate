@@ -15,6 +15,7 @@ class SecondaryTextButton extends Button {
 	protected Paint mSecondaryPaint;
 	protected String mSecondaryText;
 
+	//the following are used to determine where to place the secondary text
 	protected float mButtonHeight;
 	protected float mButtonWidth;
 	protected float mSecTextWidth;
@@ -22,6 +23,7 @@ class SecondaryTextButton extends Button {
 	protected float mSecTextHeight;
 	protected float mSecAdditionalYOffset;
 
+	//x and y coordinates for the seconday text
 	protected float mSecXCoord;
 	protected float mSecYCoord;
 
@@ -29,6 +31,7 @@ class SecondaryTextButton extends Button {
 	public SecondaryTextButton(Context context, AttributeSet attrs) {
 		super(context, attrs);
 
+		//grab custom resource variable
 		TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.SecondaryTextButton, 0, 0);
 		try {
 			mSecondaryText = ta.getString(R.styleable.SecondaryTextButton_secondary_text);
@@ -40,6 +43,7 @@ class SecondaryTextButton extends Button {
 	}
 
 
+	/** Set secondary text string */
 	public void setSecondaryText(String text){
 		mSecondaryText = text;
 	}
@@ -105,6 +109,9 @@ class SecondaryTextButton extends Button {
 		canvas.drawText(text, 0, text.length(), mTextX, mTextY, getPaint());
 	}
 	
+	
+	/** Calculate where to put secondary text
+	 * This method should get overloaded to change text location */
 	protected void findSecondaryTextCoord(){
 		mSecXCoord = mButtonWidth - mSecTextWidth - mSecAdditionalXOffset;
 		mSecYCoord = mButtonHeight - 0 - mSecAdditionalYOffset;
