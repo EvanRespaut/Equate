@@ -16,6 +16,12 @@ public class EditTextCursorWatcher extends EditText {
 	private Calculator mCalc;
 	private final Context context;
 
+	private String mTextPrefex="";
+	private String mExpressionText="";
+	private String mTextSuffix="";
+	
+	
+
 	// (This was in the original TextView) System wide time for last cut or copy action.
 	static long LAST_CUT_OR_COPY_TIME;
 
@@ -133,7 +139,7 @@ public class EditTextCursorWatcher extends EditText {
 	
 	
 	/**
-	 * Updates the text with current value from calc.
+	 * Updates the text with current value from calc
 	 * Preserves calc's cursor selections
 	 */
 	public void updateTextFromCalc(){
@@ -141,18 +147,21 @@ public class EditTextCursorWatcher extends EditText {
 		int selStart = mCalc.getSelectionStart();
 		int selEnd = mCalc.getSelectionEnd();
 
-		String expressionText = mCalc.toString();
+		mTextPrefex = "";
+		mExpressionText = mCalc.toString();
+		mTextSuffix = "";
 		//if expression not empty/invalid and unit selected, display it after the expression
 		if(!mCalc.isExpressionInvalid() && !mCalc.isExpressionEmpty() && mCalc.getCurrUnitType().isUnitSelected()){
-			expressionText = expressionText + " " + mCalc.getCurrUnitType().getSelectedUnit().toString();
-			if(!mCalc.isSolved())
-				expressionText = getResources().getString(R.string.word_Convert) 
-								+ " " + expressionText + " " 
-								+ getResources().getString(R.string.word_to) + ":";
+			mTextSuffix = " " + mCalc.getCurrUnitType().getSelectedUnit().toString();
+			//about to do conversion
+			if(!mCalc.isSolved()){
+				mTextPrefex = getResources().getString(R.string.word_Convert) + " ";
+				mTextSuffix = mTextSuffix + " " + getResources().getString(R.string.word_to) + ":";
+			}
 		}
 		
 		//update the main display
-		setText(expressionText);
+		setText(mTextPrefex + mExpressionText + mTextSuffix);
 		//updating the text restarts selection to 0,0, so load in the current selection
 		setSelection(selStart, selEnd);
 		if(selStart == mCalc.toString().length())
@@ -172,19 +181,22 @@ public class EditTextCursorWatcher extends EditText {
 	@Override   
 	protected void onSelectionChanged(int selStart, int selEnd) { 
 		if(mCalc!=null){
-			int expLen = mCalc.toString().length();
+			int preLen = mTextPrefex.length();
+			int expLen = mExpressionText.length();
+			int sufLen = mTextSuffix.length();
+			//TODO still very broken here
 			//check to see if the unit part of the expression has been selected
-			if(selEnd > expLen){
-				setSelection(selStart, expLen);
+			if(selEnd > expLen+preLen){
+				setSelection(selStart, expLen+preLen);
 				return;
 			}
-			if(selStart > expLen){
-				setSelection(expLen, selEnd);
+			if(selStart > expLen+preLen){
+				setSelection(expLen+preLen, selEnd);
 				return;
 			}
-				
+			
 			//save the new selection in the calc class
-			mCalc.setSelection(selStart, selEnd);
+			mCalc.setSelection(selStart-preLen, selEnd-preLen);
 			setCursorVisible(true);
 		}
 	}
