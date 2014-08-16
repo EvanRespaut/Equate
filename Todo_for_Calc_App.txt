@@ -1,5 +1,4 @@
 ------------------ToDo Next--------------------
-- Finish debugging convert 324 in to bug
 - Add "Convert milimeters to..." and make it blink or something cool
 - Only have arrows if expression not empty
 - Make arrows pulse when waiting to convert
@@ -14,6 +13,7 @@
 
 -----Stuff to Test (squashed bugs, etc)-----
 - Reset then hit num and then unit, unit doesn't appear
+- Make sure tapping "Convert" doesn't select text or break, also try entering text after that
 - Dialog boxes for first unit conversion 
 - When syntax error thrown make sure unit is not displayed, aka not "Syntax Error in"
 - 1E99999 should just throw number too large error
@@ -31,7 +31,6 @@
 
 ----------------------Fix----------------------
 - TRY TO ADD UNIT TESTING FOR ALL PROBLEMS FIXED
-- Tapping screen when Convert 212 in to: is broken
 - Screen rotation clears unit
 - For every solve or unit convert, save app state
 - Perhaps make query and answer TextViews length a bit resizeable so they don't always run onto two lines

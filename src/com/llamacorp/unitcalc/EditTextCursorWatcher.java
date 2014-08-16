@@ -159,9 +159,11 @@ public class EditTextCursorWatcher extends EditText {
 				mTextSuffix = mTextSuffix + " " + getResources().getString(R.string.word_to) + ":";
 			}
 		}
-		
 		//update the main display
 		setText(mTextPrefex + mExpressionText + mTextSuffix);
+		
+		selStart = selStart + mTextPrefex.length();
+		selEnd = selEnd + mTextPrefex.length();
 		//updating the text restarts selection to 0,0, so load in the current selection
 		setSelection(selStart, selEnd);
 		if(selStart == mCalc.toString().length())
@@ -172,7 +174,7 @@ public class EditTextCursorWatcher extends EditText {
 	
 	/** Sets the current selection to the end of the expression */
 	public void setSelectionToEnd(){
-		int expLen = mCalc.toString().length();
+		int expLen = mCalc.toString().length() + mTextPrefex.length();
 		setSelection(expLen, expLen);
 		setCursorVisible(false);
 	}
@@ -183,8 +185,6 @@ public class EditTextCursorWatcher extends EditText {
 		if(mCalc!=null){
 			int preLen = mTextPrefex.length();
 			int expLen = mExpressionText.length();
-			int sufLen = mTextSuffix.length();
-			//TODO still very broken here
 			//check to see if the unit part of the expression has been selected
 			if(selEnd > expLen+preLen){
 				setSelection(selStart, expLen+preLen);
@@ -194,6 +194,14 @@ public class EditTextCursorWatcher extends EditText {
 				setSelection(expLen+preLen, selEnd);
 				return;
 			}
+			if(selEnd < preLen){
+				setSelection(selStart, preLen);
+				return;
+			}
+			if(selStart < preLen){
+				setSelection(preLen, selEnd);
+				return;
+			}	
 			
 			//save the new selection in the calc class
 			mCalc.setSelection(selStart-preLen, selEnd-preLen);
