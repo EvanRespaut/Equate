@@ -57,6 +57,17 @@ public class ResultListFragment extends ListFragment {
 
 			// Configure the view for this result
 			Result result = getItem(position);
+			
+			TextView textViewUnitDesc = (TextView)convertView.findViewById(R.id.list_item_result_convertUnitDesc);	
+			if(result.containsUnits()){
+				String text = getResources().getString(R.string.word_Converting) + 
+						" " + result.getQuerryUnit().getLowercaseLongName() +
+						" " + getResources().getString(R.string.word_to) + 
+						" " + result.getAnswerUnit().getLowercaseLongName() + ":";
+				textViewUnitDesc.setText(text);
+			}
+			else
+				textViewUnitDesc.setVisibility(View.GONE);
 
 			TextView textViewQuerry = (TextView)convertView.findViewById(R.id.list_item_result_textPrevQuery);	
 			setUpResultTextView(textViewQuerry, result.getTextQuerry());
@@ -89,7 +100,7 @@ public class ResultListFragment extends ListFragment {
 			//otherwise just set it normally
 			else
 			*/
-				textView.setText(text);
+			textView.setText(text);
 
 			textView.setOnClickListener(new View.OnClickListener() {
 				@Override
@@ -141,7 +152,6 @@ public class ResultListFragment extends ListFragment {
 					return false;
 				}
 			});
-
 		}
 	}
 

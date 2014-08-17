@@ -246,7 +246,7 @@ public class Calculator implements OnConvertionListener{
 		unitsOfLength.addUnit(new UnitScalar("km", "Kilometers", 1/1000.0));
 
 		unitsOfLength.addUnit(new UnitScalar("nm", "Nanometers", 1E9));
-		unitsOfLength.addUnit(new UnitScalar("µm", "Micrometer", 1E6));
+		unitsOfLength.addUnit(new UnitScalar("µm", "Micrometers", 1E6));
 		unitsOfLength.addUnit(new UnitScalar("mm", "Millimeters", 1000));
 		unitsOfLength.addUnit(new UnitScalar("cm", "Centimeters", 100));
 		unitsOfLength.addUnit(new UnitScalar("m", "Meters", 1));

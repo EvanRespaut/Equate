@@ -37,7 +37,8 @@
  
 	<string name="word_Change">Change</string>
 	<string name="word_Convert">Convert</string>
-    <string name="word_to">to</string>
+	<string name="word_Converting">Converting</string>
+	<string name="word_to">to</string>
    
     <string name="convert_toast_converting">Converting</string>
     <string name="convert_toast_no_numbers">No numbers to convert</string>
