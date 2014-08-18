@@ -4,14 +4,13 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <TextView
+    <com.llamacorp.unitcalc.DynamicFontSizeTextView
         android:id="@+id/list_item_result_convertUnitDesc"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:textColor="@drawable/result_textview_text_color"
-        android:textSize="20sp" >
-    </TextView>
+        android:textSize="18sp" />
 
     <LinearLayout
         android:layout_width="match_parent"

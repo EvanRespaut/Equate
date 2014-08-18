@@ -1,6 +1,6 @@
 ------------------ToDo Next--------------------
-- Make "Converting inches to feet" font size scale dynamically down to a point
-- Add "Convert milimeters to..." and make it blink or something cool
+- "Converting inches to feet" only sometimes appears, code is broken in DynamicFontSizeTextView
+- Make "Convert milimeters to..." blink or something cool
 - Only have arrows if expression not empty
 - Make arrows pulse when waiting to convert
 - Make calculation text bigger
