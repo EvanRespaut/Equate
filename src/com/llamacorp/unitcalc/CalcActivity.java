@@ -159,7 +159,7 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 		mDisplay = (EditTextCursorWatcher)findViewById(R.id.textDisplay);
 		mDisplay.setCalc(mCalc);
 		mDisplay.disableSoftInputFromAppearing();
-
+		
 		//hold click will select all text
 		mDisplay.setOnLongClickListener(new View.OnLongClickListener() {
 			@Override
@@ -189,6 +189,7 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 
 		if(mResultFragment == null){
 			mResultFragment = new ResultListFragment();
+			//TODO this line is what causes cursor not to display at startup
 			fm.beginTransaction().add(R.id.resultListfragmentContainer, mResultFragment).commit();	
 		}
 
@@ -545,12 +546,13 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 		//only set display to UnitCalc if no expression is there yet
 		if(mCalc.toString().equals("") && mCalc.getResultList().size()==0){
 			mDisplay.setText(R.string.app_name);
-			mDisplay.setCursorVisible(false);
 		}
 		else{
 			updateScreenWithInstaScrollOption(true, true);
 			mDisplay.setSelectionToEnd();
 		}
+		//pull focus from ListFrag and on the EditText so cursor blinks
+		mDisplay.requestFocus();
 	}
 
 

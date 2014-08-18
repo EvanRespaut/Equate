@@ -1,7 +1,7 @@
 ------------------ToDo Next--------------------
 - "Converting inches to feet" only sometimes appears, code is broken in DynamicFontSizeTextView
 - Make "Convert milimeters to..." blink or something cool
-- Only have arrows if expression not empty
+- If no numbers were selected before convert, use 1
 - Make arrows pulse when waiting to convert
 - Make calculation text bigger
 - Add other unit types
@@ -34,7 +34,6 @@
 - TRY TO ADD UNIT TESTING FOR ALL PROBLEMS FIXED
 - Screen rotation clears unit
 - For every solve or unit convert, save app state
-- Perhaps make query and answer TextViews length a bit resizeable so they don't always run onto two lines
 - Font size issues with large text sizes (also run the emulator for a few diff size screens and resolutions. 
 - 1^2+1^2 is displayed wrong in result list
 - When prev expression exists, operators should take last expression it back instead of doing nothing even when current expression is empty 
@@ -42,7 +41,7 @@
 - Type out 100000000 is 1.e8
 - Black flash seems to happen after clear operation?
 - Construct results out of expressions such that 1/3, then delete, then recall 0.33333*3 == 1
-- (fixed?) If its been a while since open, app crashes 
+- (fixed?) If its been a while since open, app crashes
 - Reduce redundant case checking before an big number addition/subtraction
 - Backspace drawable selected turns white instead of dark
 - Maybe change backspace button to clear when its going to clear

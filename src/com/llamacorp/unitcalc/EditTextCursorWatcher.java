@@ -166,7 +166,7 @@ public class EditTextCursorWatcher extends EditText {
 		selEnd = selEnd + mTextPrefex.length();
 		//updating the text restarts selection to 0,0, so load in the current selection
 		setSelection(selStart, selEnd);
-		if(selStart == mCalc.toString().length())
+		if(mCalc.isSolved())
 			setCursorVisible(false);
 		else 
 			setCursorVisible(true);
@@ -176,7 +176,7 @@ public class EditTextCursorWatcher extends EditText {
 	public void setSelectionToEnd(){
 		int expLen = mCalc.toString().length() + mTextPrefex.length();
 		setSelection(expLen, expLen);
-		setCursorVisible(false);
+		//setCursorVisible(false);
 	}
 	
 
