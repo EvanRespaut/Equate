@@ -23,7 +23,7 @@ class SecondaryTextButton extends Button {
 	protected float mSecTextHeight;
 	protected float mSecAdditionalYOffset;
 
-	//x and y coordinates for the seconday text
+	//x and y coordinates for the secondary text
 	protected float mSecXCoord;
 	protected float mSecYCoord;
 
