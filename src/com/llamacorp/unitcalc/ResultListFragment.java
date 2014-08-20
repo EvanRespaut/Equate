@@ -65,6 +65,8 @@ public class ResultListFragment extends ListFragment {
 						" " + getResources().getString(R.string.word_to) + 
 						" " + result.getAnswerUnit().getLowercaseLongName() + ":";
 				textViewUnitDesc.setText(text);
+				//ListView reuses old textViewUnitDesc sometimes; make sure old one isn't still invisible
+				textViewUnitDesc.setVisibility(View.VISIBLE);
 			}
 			else
 				textViewUnitDesc.setVisibility(View.GONE);
