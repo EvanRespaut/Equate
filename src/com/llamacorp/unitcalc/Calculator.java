@@ -17,9 +17,8 @@ import org.json.JSONTokener;
 
 import android.content.Context;
 
-import com.llamacorp.unitcalc.UnitType.OnConvertionListener;
 
-public class Calculator implements OnConvertionListener{
+public class Calculator{
 	private static final String FILENAME = "saved_data.json";
 	private static final String JSON_RESULT_LIST = "result_list";
 	private static final String JSON_UNIT_TYPE_ARRAY = "unit_type_array";
@@ -329,7 +328,7 @@ public class Calculator implements OnConvertionListener{
 		unitsOfPower.addUnit(new UnitScalar("hp", "Horsepower", 1/745.699872)); //don't think it's exact
 
 		unitsOfPower.addUnit(new UnitScalar("", 0));
-		unitsOfPower.addUnit(new UnitScalar("", 0));
+		unitsOfPower.addUnit(new UnitScalar("Btu/hr", "Btus/Hour", 3.412141632)); //approx
 		unitsOfPower.addUnit(new UnitScalar("Btu/min", "Btus/Minute", 0.0568690272)); //approx
 		unitsOfPower.addUnit(new UnitScalar("ft-lb/min", "Foot-Pounds/Minute", 44.2537289)); //most likely approx
 		unitsOfPower.addUnit(new UnitScalar("ft-lb/sec", "Foot-Pounds/Second", 0.73756215)); //most likely approx
@@ -477,7 +476,7 @@ public class Calculator implements OnConvertionListener{
 			//also set result's unit if it's selected
 			if(isUnitIsSet()){
 				//load units into result list (this will also set contains unit flag
-				Unit toUnit = getCurrUnitType().getSelectedUnit();
+				Unit toUnit = getCurrUnitType().getCurrUnit();
 				mResultList.get(mResultList.size()-1).setResultUnit(toUnit, toUnit, mUnitTypePos);
 			}
 			return true;

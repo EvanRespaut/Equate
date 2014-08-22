@@ -13,16 +13,9 @@ public class UnitType {
 	private static final String JSON_CURR_POS = "pos";
 	private static final String JSON_IS_SELECTED = "selected";
 
-	//this is for communication with the parent
-	private OnConvertionListener mCallback;
-
-	// Parent class must implement this interface
-	public interface OnConvertionListener {
-		public void convertFromTo(Unit fromUnit, Unit toUnit);
-	}
-
 	private String mName;
 	private ArrayList<Unit> mUnitArray;
+	private int mPrevUnitPos;
 	private int mCurrUnitPos;
 	private boolean mIsUnitSelected;
 
@@ -31,26 +24,17 @@ public class UnitType {
 	 * @param hosting class must implement a function to do raw number conversion
 	 */	
 	public UnitType(Object parent, String name){
-		// This makes sure that the container activity has implemented
-		// the callback interface. If not, it throws an exception
-		try {
-			mCallback = (OnConvertionListener) parent;
-		} catch (ClassCastException e) {
-			throw new ClassCastException(parent.toString()
-					+ " must implement OnConvertKeySelectedListener");
-		}
-
 		mName = name;
 		mUnitArray = new ArrayList<Unit>();
 		mIsUnitSelected = false;
 	}
 
-	
+
 	public UnitType(Object parent, JSONObject json) throws JSONException {
 		this(parent, json.getString(JSON_NAME));
 		mCurrUnitPos = json.getInt(JSON_CURR_POS);
 		mIsUnitSelected = json.getBoolean(JSON_IS_SELECTED);
-		
+
 		JSONArray jUnitArray = json.getJSONArray(JSON_UNIT_ARRAY);
 		for (int i = 0; i < jUnitArray.length(); i++) {
 			mUnitArray.add(Unit.getUnit(jUnitArray.getJSONObject(i)));
@@ -59,7 +43,7 @@ public class UnitType {
 
 	public JSONObject toJSON() throws JSONException {
 		JSONObject json = new JSONObject();
-		
+
 		JSONArray jUnitArray = new JSONArray();
 		for (Unit unit : mUnitArray)
 			jUnitArray.put(unit.toJSON());
@@ -70,17 +54,15 @@ public class UnitType {
 		json.put(JSON_IS_SELECTED, mIsUnitSelected);
 		return json;
 	}
-	
-	
-	
-	
+
+
 	/**
 	 * Used to build a UnitType
 	 */
 	public void addUnit(Unit u){
 		mUnitArray.add(u);
 	}
-	
+
 	/** Swap positions of units */	
 	public void swapUnits(int pos1, int pos2){
 		Collections.swap(mUnitArray, pos1, pos2);
@@ -106,23 +88,25 @@ public class UnitType {
 	 */		
 	public boolean selectUnit(int pos){
 		//used to tell caller if we needed to do a conversion
-		boolean didConvert = false;
+		boolean requestConvert = false;
 		//If we've already selected a unit, do conversion
 		if(mIsUnitSelected){
 			//if the unit is the same as before, de-select it
 			if(mCurrUnitPos==pos){
 				mIsUnitSelected=false;
-				return didConvert;
+				return requestConvert;
 			}
-			convert(pos);
-			didConvert = true;
+			else {
+				mPrevUnitPos = mCurrUnitPos;
+				requestConvert = true;
+			}
 		}
 
 		//Select new unit regardless
 		mCurrUnitPos = pos;
 		//Engage set flag
 		mIsUnitSelected = true;
-		return didConvert;
+		return requestConvert;
 	}
 
 
@@ -140,7 +124,7 @@ public class UnitType {
 	public String getUnitTypeName(){
 		return mName;
 	}
-	
+
 	/**
 	 * @param Index of Unit in the mUnitArray list
 	 * @return String name to be displayed on convert button
@@ -148,18 +132,18 @@ public class UnitType {
 	public String getUnitDisplayName(int pos){
 		return mUnitArray.get(pos).toString();
 	}
-	
+
 	public String getLowercaseLongName(int pos){
 		return mUnitArray.get(pos).getLowercaseLongName();
 	}
-	
+
 	/** Method builds charSequence array of long names of undisplayed units
 	 * @param Array of long names of units not being displayed
 	 * @return Number of units being displayed, used to find undisplayed units
 	 */
 	public CharSequence[] getUndisplayedUnitNames(int numDispUnits){
 		//ArrayList<Unit> subList = mUnitArray.subList(numDispUnits, mUnitArray.size());
-		//return subList.toArray(new CharSequence[subList.size()]);
+		//return subList.toArray(new CharSequence[subLists.size()]);
 		int arraySize = mUnitArray.size() - numDispUnits;
 		CharSequence[] cs = new CharSequence[arraySize];
 		for(int i=0;i<arraySize;i++){
@@ -168,7 +152,11 @@ public class UnitType {
 		return cs;
 	}
 	
-	public Unit getSelectedUnit(){
+	public Unit getPrevUnit(){
+		return mUnitArray.get(mPrevUnitPos);
+	}
+
+	public Unit getCurrUnit(){
 		return mUnitArray.get(mCurrUnitPos);
 	}
 
@@ -178,16 +166,5 @@ public class UnitType {
 
 	public int getCurrUnitPos(){
 		return mCurrUnitPos;
-	}
-
-	/**
-	 * Used to gather values to convert to and from and then call parent class to do raw conversion
-	 * Convert from unit is specified by the current Unit
-	 * @param newUnitPos is the Unit position to convert to
-	 */
-	private void convert(int newUnitPos){
-		Unit fromUnit = mUnitArray.get(mCurrUnitPos);
-		Unit toUnit = mUnitArray.get(newUnitPos);
-		mCallback.convertFromTo(fromUnit, toUnit);
 	}
 }
