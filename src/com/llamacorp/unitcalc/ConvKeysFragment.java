@@ -202,71 +202,21 @@ public class ConvKeysFragment extends Fragment {
 		//unit previously selected, we pressed another, do a convert
 		if(requestConvert){
 			calc.convertFromTo(mUnitType.getPrevUnit(), mUnitType.getCurrUnit());
-			mUnitType.clearUnitSelection();
+			clearButtonSelection();
 		}
 		//no unit previously selected and now one is...
-		else if(mUnitType.isUnitSelected() && calc.isExpressionEmpty()){
-			//add in a 1 for user's convenience 
-			calc.parseKeyPressed("1");
-			//highlight it
-			calc.setSelection(0, calc.toString().length());
+		else if(mUnitType.isUnitSelected()){
+			if(calc.isExpressionEmpty()){
+				//add in a 1 for user's convenience 
+				calc.parseKeyPressed("1");
+				//highlight it
+				calc.setSelection(0, calc.toString().length());
+			}
+			colorSelectedButton();
 		}
-		/*
-			//for first time users
-			if(!calc.mHints.isHasClickedUnit()){
-				Builder builder = new AlertDialog.Builder(getActivity())
-				.setPositiveButton(android.R.string.ok,null);
-				if(calc.isExpressionEmpty()){
-					//				builder.setTitle(R.string.first_convert_title_no_numbers);
-					builder.setMessage(R.string.first_convert_message_no_numbers);
-				}
-				else
-					builder.setMessage(R.string.first_convert_message);
-				AlertDialog dialog = builder.create();
-				dialog.setCanceledOnTouchOutside(false);
-				dialog.show();
-				calc.mHints.setHasClickedUnitTrue();
-			}
-		 */
-
-		/*
-			//if conversion performed, show toast
-			if(didConvert){
-				//cancel previous toast if it's there
-				if(mConvertToast!=null) 
-					mConvertToast.cancel();
-				Unit newUnit = mUnitType.getSelectedUnit();
-				String text;
-				if(calc.isExpressionEmpty())
-					text = getText(R.string.convert_toast_no_numbers).toString();
-				else
-					text = getText(R.string.convert_toast_converting) 
-					+ " " + oldUnit.getLowercaseLongName() 
-					+ " " + getText(R.string.word_to) 
-					+ " " + newUnit.getLowercaseLongName();
-
-
-				mConvertToast = Toast.makeText((Context)mCallback, text, Toast.LENGTH_SHORT);
-
-				DisplayMetrics metrics = new DisplayMetrics();
-				getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
-				float logicalDensity = metrics.density;
-				int dp;
-				//nudge the toast so it's between keys
-				if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
-					dp = 70;
-				else 
-					dp = 220;
-				int px = (int) (dp * logicalDensity);
-				mConvertToast.setGravity(Gravity.BOTTOM,0,px);
-				mConvertToast.show();
-			}
-		 */
 
 		//always update screen to add/remove unit from expression
 		mCallback.updateScreen(true);
-
-		colorSelectedButton();
 	}
 
 	private void colorSelectedButton(){

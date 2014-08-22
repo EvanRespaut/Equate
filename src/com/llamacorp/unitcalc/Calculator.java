@@ -399,6 +399,11 @@ public class Calculator{
 		//if expression was displaying "Syntax Error" or similar (containing invalid chars) clear it
 		if(isExpressionInvalid())
 			mExpression.clearExpression();
+		
+		//if a convert was just done, main display will show "16 in", but no button will be colored
+		//want this treated the same as 16 (as if no unit is actually selected)
+		if(isSolved() && isUnitIsSet())
+			clearSelectedUnit();
 
 		//check for equals key
 		if(sKey.equals("=")){
@@ -419,7 +424,7 @@ public class Calculator{
 		else{
 			//if just hit equals, and we hit [.0-9(], then clear current unit type
 			if(mExpression.isSolved() && sKey.matches("[.0-9(]"))
-				mUnitTypeArray.get(mUnitTypePos).clearUnitSelection();
+				clearSelectedUnit();
 
 			mExpression.keyPresses(sKey);
 		}
@@ -493,7 +498,7 @@ public class Calculator{
 		mExpression.clearExpression();
 
 		//reset current unit
-		mUnitTypeArray.get(mUnitTypePos).clearUnitSelection();
+		clearSelectedUnit();
 	}   
 
 
@@ -503,7 +508,7 @@ public class Calculator{
 	private void backspace(){
 		//clear out unit selection and expression if we just solved or if expression empty
 		if(mExpression.isSolved() || mExpression.isEmpty()){
-			mUnitTypeArray.get(mUnitTypePos).clearUnitSelection();
+			clearSelectedUnit();
 			mExpression.clearExpression();
 			//we're done. don't want to execute code below
 			return;
@@ -514,8 +519,12 @@ public class Calculator{
 			mExpression.backspaceAtSelection();
 			//if we just cleared the expression out, also clear currUnit
 			if(mExpression.isEmpty())
-				mUnitTypeArray.get(mUnitTypePos).clearUnitSelection();
+				clearSelectedUnit();
 		}	
+	}
+	
+	private void clearSelectedUnit(){
+		mUnitTypeArray.get(mUnitTypePos).clearUnitSelection();
 	}
 
 	public List<Result> getResultList() {

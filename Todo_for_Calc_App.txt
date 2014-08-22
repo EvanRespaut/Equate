@@ -1,7 +1,6 @@
 ------------------ToDo Next--------------------
 - "Converting inches to feet" bug still there; do unit coverts, back, then open app again
 - Make "Convert milimeters to..." blink or something cool
-- If no numbers were selected before convert, use 1
 - Make arrows pulse when waiting to convert
 - Make calculation text bigger
 - Add other unit types
@@ -35,7 +34,6 @@
 - Screen rotation clears unit
 - For every solve or unit convert, save app state
 - Font size issues with large text sizes (also run the emulator for a few diff size screens and resolutions. 
-- 1^2+1^2 is displayed wrong in result list
 - When prev expression exists, operators should take last expression it back instead of doing nothing even when current expression is empty 
 - 1 m to mm back to m back to mm is 1.E9 instead of 1E9
 - Type out 100000000 is 1.e8
@@ -50,12 +48,12 @@
 - Perhaps selection access should be revisited--should it be initiated from the model side or the controller side?
 
 -------------------Features----------------------
-	- Also allow for custom unit
-	
+- Also allow for custom unit
 - Implement infinity properly instead of just saying number too large
 - If hit in without any numbers, add highlighted "1" for unit to unit conv
 - Kitkat now has arrows at bottom. To move cursor, add these to calc
 - Maybe add sqrt and possibly trig
+- Try to implement pretty print, or at least superscript ^'s
 - Add phantom close paren after open? Goes away with any selection, close/equals makes permanent, 
 - Use spannables to auto highlight para closes, also maybe operators vs numbers?
 - Hold a convert button down to bring up a dialogue to customize it's name and value thus redefining it
