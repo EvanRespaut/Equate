@@ -36,6 +36,7 @@ public class DynamicFontSizeTextView extends TextView {
 		float width = getWidth() - getPaddingLeft() - getPaddingRight();
 		float textSize = getTextSize();
 		if (textWidth > width) {
+			//TODO this seems to cause the not refreshing problem
 			paint.setTextSize(textSize * width / textWidth);
 			mTextX = getPaddingLeft();
 			mTextSize = textSize;
@@ -45,13 +46,11 @@ public class DynamicFontSizeTextView extends TextView {
 		mTextY = (getHeight() - paint.ascent() - paint.descent()) / 2;
 	}
 
-
 	@Override
 	protected void onTextChanged(CharSequence text, int start, int before, int after) {
 		super.onTextChanged(text, start, before, after);
 		layoutText();
 	}
-
 
 	@Override
 	protected void onLayout(boolean changed, int left, int top, int right, int bottom) {

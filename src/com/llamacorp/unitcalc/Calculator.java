@@ -307,32 +307,32 @@ public class Calculator implements OnConvertionListener{
 
 
 		UnitType unitsOfSpeed = new UnitType(this,"Speed");
+		unitsOfSpeed.addUnit(new UnitScalar("", 0));
+		unitsOfSpeed.addUnit(new UnitScalar("", 0));
 		unitsOfSpeed.addUnit(new UnitScalar("ft/s", "Feet per Second", 1/0.3048));
 		unitsOfSpeed.addUnit(new UnitScalar("mph", "Miles per Hour", 1/0.44704));
 		unitsOfSpeed.addUnit(new UnitScalar("knot", "Knots", 1/0.514444));
-		unitsOfSpeed.addUnit(new UnitScalar("", 0));
-		unitsOfSpeed.addUnit(new UnitScalar("", 0));
 
+		unitsOfSpeed.addUnit(new UnitScalar("", 0));
+		unitsOfSpeed.addUnit(new UnitScalar("", 0));
+		unitsOfSpeed.addUnit(new UnitScalar("", 0));
 		unitsOfSpeed.addUnit(new UnitScalar("m/s", "Meters per Second", 1));
 		unitsOfSpeed.addUnit(new UnitScalar("kph", "Kilometers per Hour", 3.6));
-		unitsOfSpeed.addUnit(new UnitScalar("", 0));
-		unitsOfSpeed.addUnit(new UnitScalar("", 0));
-		unitsOfSpeed.addUnit(new UnitScalar("", 0));
 		mUnitTypeArray.add(unitsOfSpeed);
 
 
 		UnitType unitsOfPower = new UnitType(this,"Power");
+		unitsOfPower.addUnit(new UnitScalar("", 0));
+		unitsOfPower.addUnit(new UnitScalar("", 0));
 		unitsOfPower.addUnit(new UnitScalar("W", "Watts", 1));
 		unitsOfPower.addUnit(new UnitScalar("kW", "Kilowatts", 1E-3));
 		unitsOfPower.addUnit(new UnitScalar("hp", "Horsepower", 1/745.699872)); //don't think it's exact
-		unitsOfPower.addUnit(new UnitScalar("", 0));
-		unitsOfPower.addUnit(new UnitScalar("", 0));
 
+		unitsOfPower.addUnit(new UnitScalar("", 0));
+		unitsOfPower.addUnit(new UnitScalar("", 0));
 		unitsOfPower.addUnit(new UnitScalar("Btu/min", "Btus/Minute", 0.0568690272)); //approx
 		unitsOfPower.addUnit(new UnitScalar("ft-lb/min", "Foot-Pounds/Minute", 44.2537289)); //most likely approx
 		unitsOfPower.addUnit(new UnitScalar("ft-lb/sec", "Foot-Pounds/Second", 0.73756215)); //most likely approx
-		unitsOfPower.addUnit(new UnitScalar("", 0));
-		unitsOfPower.addUnit(new UnitScalar("", 0));
 		mUnitTypeArray.add(unitsOfPower);
 
 
@@ -433,8 +433,13 @@ public class Calculator implements OnConvertionListener{
 	 */		
 	public void convertFromTo(Unit fromUnit, Unit toUnit){
 		//if expression was displaying "Syntax Error" or similar (containing invalid chars) clear it
-		if(isExpressionInvalid())
+		if(isExpressionInvalid()){
 			mExpression.clearExpression();
+			return;
+		}
+		//want to add a 1 if we just hit one unit and another
+		if(isExpressionEmpty())
+			parseKeyPressed("1");
 		//first solve the function
 		boolean solveSuccess = solveAndLoadIntoResultList();
 		//if there solve failed because there was nothing to solve, just leave (this way result list isn't loaded)

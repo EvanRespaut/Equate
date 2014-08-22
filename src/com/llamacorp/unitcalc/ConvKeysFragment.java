@@ -199,13 +199,14 @@ import android.widget.Toast;
 		/** Used to pass selected unit to the UnitType model class
 		 * @param buttonPos the position in the list of buttons to select */
 		private void clickUnitButton(int buttonPos){
-			Unit oldUnit = mUnitType.getSelectedUnit();
+			//Unit oldUnit = mUnitType.getSelectedUnit();
 			//Clear color from previously selected convert button
 			clearButtonSelection();
 			//Set select unit, also this will potentially call convert if we already have a selected unit
-			boolean didConvert = mUnitType.selectUnit(buttonPos);
+			//boolean didConvert = mUnitType.selectUnit(buttonPos);
+			mUnitType.selectUnit(buttonPos);
 	
-			Calculator calc = Calculator.getCalculator(getActivity());
+			//Calculator calc = Calculator.getCalculator(getActivity());
 			/*
 			//for first time users
 			if(!calc.mHints.isHasClickedUnit()){
@@ -224,6 +225,7 @@ import android.widget.Toast;
 			}
 			 */
 			
+			/*
 			//if conversion performed, show toast
 			if(didConvert){
 				//cancel previous toast if it's there
@@ -255,6 +257,7 @@ import android.widget.Toast;
 				mConvertToast.setGravity(Gravity.BOTTOM,0,px);
 				mConvertToast.show();
 			}
+			*/
 	
 			//always update screen to add/remove unit from expression
 			mCallback.updateScreen(true);

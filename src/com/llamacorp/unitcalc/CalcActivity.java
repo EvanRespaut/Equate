@@ -546,6 +546,7 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 		//only set display to UnitCalc if no expression is there yet
 		if(mCalc.toString().equals("") && mCalc.getResultList().size()==0){
 			mDisplay.setText(R.string.app_name);
+			mDisplay.setCursorVisible(false);
 		}
 		else{
 			updateScreenWithInstaScrollOption(true, true);

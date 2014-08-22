@@ -1,5 +1,5 @@
 ------------------ToDo Next--------------------
-- "Converting inches to feet" only sometimes appears, code is broken in DynamicFontSizeTextView
+- "Converting inches to feet" bug still there; do unit coverts, back, then open app again
 - Make "Convert milimeters to..." blink or something cool
 - If no numbers were selected before convert, use 1
 - Make arrows pulse when waiting to convert
