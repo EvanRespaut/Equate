@@ -15,7 +15,7 @@ public abstract class Unit  /*implements JsonSerializer<Unit>, JsonDeserializer<
 
 	private String mDispName;
 	private String mLongName;
-	private double mValue;
+	protected double mValue;
 
 	//intercept's only known need is temp conversions
 	public Unit(String name, String longName, double value){
@@ -35,9 +35,13 @@ public abstract class Unit  /*implements JsonSerializer<Unit>, JsonDeserializer<
 
 	}
 
-
+	/**
+	 * Convert a JSON array into it's proper Unit
+	 * @param json is they array to convert into Unit
+	 * @return generic Unit class contacting a subclasses Unit
+	 * @throws JSONException if exception is found
+	 */
 	static public Unit getUnit(JSONObject json) throws JSONException {
-		System.out.println(json.toString());
 		String unitType = json.getString(JSON_TYPE);
 		String packageName = Unit.class.getPackage().getName();
 		Unit u =null;
@@ -53,6 +57,11 @@ public abstract class Unit  /*implements JsonSerializer<Unit>, JsonDeserializer<
 		return u;
 	}
 
+	/**
+	 * Save the current Unit into a JSON object
+	 * @return JSON object encapsulating Unit
+	 * @throws JSONException
+	 */
 	public JSONObject toJSON() throws JSONException {
 		JSONObject json = new JSONObject();
 

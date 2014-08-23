@@ -1,6 +1,7 @@
 ------------------ToDo Next--------------------
 - "Converting inches to feet" bug still there; do unit coverts, back, then open app again
 - Make "Convert milimeters to..." blink or something cool
+- Make arrows in a circle instead of line
 - Make arrows pulse when waiting to convert
 - Make calculation text bigger
 - Add other unit types
@@ -12,6 +13,7 @@
 - Commas for large numbers?
 
 -----Stuff to Test (squashed bugs, etc)-----
+- Test min/mile to mph and back again
 - Reset then hit num and then unit, unit doesn't appear
 - Make sure tapping "Convert" doesn't select text or break, also try entering text after that
 - Dialog boxes for first unit conversion 
@@ -31,6 +33,9 @@
 
 ----------------------Fix----------------------
 - TRY TO ADD UNIT TESTING FOR ALL PROBLEMS FIXED
+- Tap previous result with unit, adds a one
+- Type "(30+3%" and put cursor before 0, displays "(3)0+3
+- Type "54+43)" and delete auto close para --> syntax error
 - Screen rotation clears unit
 - For every solve or unit convert, save app state
 - Font size issues with large text sizes (also run the emulator for a few diff size screens and resolutions. 

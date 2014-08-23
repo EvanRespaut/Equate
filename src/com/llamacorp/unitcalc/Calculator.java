@@ -306,8 +306,8 @@ public class Calculator{
 
 
 		UnitType unitsOfSpeed = new UnitType(this,"Speed");
-		unitsOfSpeed.addUnit(new UnitScalar("", 0));
-		unitsOfSpeed.addUnit(new UnitScalar("", 0));
+		unitsOfSpeed.addUnit(new UnitScalar("mi/min","Miles per minute", 1/26.8224));
+		unitsOfSpeed.addUnit(new UnitScalar("min/mi","Minute miles", 1/26.8224, true));
 		unitsOfSpeed.addUnit(new UnitScalar("ft/s", "Feet per Second", 1/0.3048));
 		unitsOfSpeed.addUnit(new UnitScalar("mph", "Miles per Hour", 1/0.44704));
 		unitsOfSpeed.addUnit(new UnitScalar("knot", "Knots", 1/0.514444));

@@ -192,7 +192,6 @@ public class ConvKeysFragment extends Fragment {
 	/** Used to pass selected unit to the UnitType model class
 	 * @param buttonPos the position in the list of buttons to select */
 	private void clickUnitButton(int buttonPos){
-		//Unit oldUnit = mUnitType.getSelectedUnit();
 		//Clear color and arrows from previously selected convert buttons
 		clearButtonSelection();
 		//Set select unit, also this will potentially call convert if we already have a selected unit
