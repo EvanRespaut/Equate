@@ -20,6 +20,7 @@ public class UnitScalar extends Unit {
 		super(name, longName, value);
 	}	
 	
+	//TODO do we need this?
 	public UnitScalar(String name, double value){
 		super(name, name, value);
 	}	

@@ -109,7 +109,18 @@ public class UnitType {
 		return requestConvert;
 	}
 
-
+	/**
+	 * Update values of units that are not static (currency) via
+	 * each unit's own HTTP/JSON api call. Note that this refresh
+	 * is asychronous and will only happen sometime in the future 
+	 * internet connection permitting.
+	 */	
+	 public void refreshDynamicUnits(){
+		if(mUnitArray.get(1) instanceof UnitCurrency)
+			for(Unit uc : mUnitArray)
+				((UnitCurrency) uc).asyncRefresh();
+	}
+	
 	/**
 	 * Resets mIsUnitSelected flag
 	 */		

@@ -102,99 +102,7 @@ public class Calculator{
 		return mCaculator;
 	}
 
-
-	private void loadState() throws IOException, JSONException {
-		BufferedReader reader = null;
-		try {
-			// open and read the file into a StringBuilder
-			InputStream in = mAppContext.openFileInput(FILENAME);
-			reader = new BufferedReader(new InputStreamReader(in));
-			StringBuilder jsonString = new StringBuilder();
-			String line = null;
-			while ((line = reader.readLine()) != null) {
-				// line breaks are omitted and irrelevant
-				jsonString.append(line);
-			}
-
-			// parse the JSON using JSONTokener
-			JSONObject jObjState = (JSONObject) new JSONTokener(jsonString.toString()).nextValue();
-			mUnitTypePos = jObjState.getInt(JSON_UNIT_TYPE);
-			mExpression = new Expression(jObjState.getJSONObject(JSON_EXPRESSION), intDisplayPrecision);
-			mHints = new Hints(jObjState.getJSONObject(JSON_HINTS));
-
-
-			JSONArray jResultArray = jObjState.getJSONArray(JSON_RESULT_LIST);
-			// build the array of results from JSONObjects
-			for (int i = 0; i < jResultArray.length(); i++) {
-				mResultList.add(new Result(jResultArray.getJSONObject(i)));
-			}
-
-			initiateUnits();
-			int newSize = mUnitTypeArray.size();	
-			JSONArray jUnitTypeArray = jObjState.getJSONArray(JSON_UNIT_TYPE_ARRAY);
-			//only load in saved unit types only if same size as current
-			if(jUnitTypeArray.length()==newSize){
-				mUnitTypeArray.clear();
-				// build the array of results from JSONObjects
-				for (int i = 0; i < jUnitTypeArray.length(); i++) {
-					mUnitTypeArray.add(new UnitType(jUnitTypeArray.getJSONObject(i)));
-				}
-			}
-
-
-		} catch (FileNotFoundException e) {
-			// we will ignore this one, since it happens when we start fresh
-		} finally {
-			if (reader != null)
-				reader.close();
-		}
-	}
-
-	public void saveState() throws JSONException, IOException {
-		JSONObject jObjState = new JSONObject();
-		jObjState.put(JSON_EXPRESSION, mExpression.toJSON());
-		jObjState.put(JSON_UNIT_TYPE, mUnitTypePos);
-		jObjState.put(JSON_HINTS, mHints.toJSON());
-
-		JSONArray jResultArray = new JSONArray();
-		for (Result result : mResultList)
-			jResultArray.put(result.toJSON());
-		jObjState.put(JSON_RESULT_LIST, jResultArray);
-
-
-		JSONArray jUnitTypeArray = new JSONArray();
-		for (UnitType unitType : mUnitTypeArray)
-			jUnitTypeArray.put(unitType.toJSON());
-		jObjState.put(JSON_UNIT_TYPE_ARRAY, jUnitTypeArray);
-
-		// write the file to disk
-		Writer writer = null;
-		try {
-			OutputStream out = mAppContext.openFileOutput(FILENAME, Context.MODE_PRIVATE);
-			writer = new OutputStreamWriter(out);
-			writer.write(jObjState.toString());
-		} finally {
-			if (writer != null)
-				writer.close();
-		}
-	}
-
-
-	/** Clears the result list, expression, and unit selection */
-	public void resetCalc(){
-		mResultList.clear();
-		mExpression = new Expression(intDisplayPrecision);
-		mHints = new Hints();
-		//set the unit type to length by default
-		mUnitTypePos=2;
-
-		//load the calculating precision
-		mSolver = new Solver(intCalcPrecision);
-
-		mUnitTypeArray.clear();
-		initiateUnits();
-	}
-
+	
 
 	/**
 	 * Helper method used to initiate the array of various types of units
@@ -387,6 +295,116 @@ public class Calculator{
 		unitsOfPressure.addUnit(new UnitScalar("kg/cm\u00B2", "Kilogram/Square Centimeter", 1/98066.5)); //approx?
 		mUnitTypeArray.add(unitsOfPressure);
 
+		
+		UnitType unitsOfCurrency = new UnitType("Currency");
+		unitsOfCurrency.addUnit(new UnitCurrency("USD", "Dollars", 1));
+		unitsOfCurrency.addUnit(new UnitCurrency("EUR", "Euros", 6.76)); 
+		unitsOfCurrency.addUnit(new UnitCurrency("CAD", "Canadian Dollars", 9.08)); 
+		unitsOfCurrency.addUnit(new UnitCurrency("", 0)); 
+		unitsOfCurrency.addUnit(new UnitCurrency("", 0)); 
+
+		unitsOfCurrency.addUnit(new UnitCurrency("", 0)); 
+		unitsOfCurrency.addUnit(new UnitCurrency("", 0)); 
+		unitsOfCurrency.addUnit(new UnitCurrency("", 0)); 
+		unitsOfCurrency.addUnit(new UnitCurrency("", 0)); 
+		unitsOfCurrency.addUnit(new UnitCurrency("", 0)); 
+		mUnitTypeArray.add(unitsOfCurrency);
+		
+		refreshAllDynamicUnits();
+	}
+
+	
+
+	private void loadState() throws IOException, JSONException {
+		BufferedReader reader = null;
+		try {
+			// open and read the file into a StringBuilder
+			InputStream in = mAppContext.openFileInput(FILENAME);
+			reader = new BufferedReader(new InputStreamReader(in));
+			StringBuilder jsonString = new StringBuilder();
+			String line = null;
+			while ((line = reader.readLine()) != null) {
+				// line breaks are omitted and irrelevant
+				jsonString.append(line);
+			}
+
+			// parse the JSON using JSONTokener
+			JSONObject jObjState = (JSONObject) new JSONTokener(jsonString.toString()).nextValue();
+			mUnitTypePos = jObjState.getInt(JSON_UNIT_TYPE);
+			mExpression = new Expression(jObjState.getJSONObject(JSON_EXPRESSION), intDisplayPrecision);
+			mHints = new Hints(jObjState.getJSONObject(JSON_HINTS));
+
+
+			JSONArray jResultArray = jObjState.getJSONArray(JSON_RESULT_LIST);
+			// build the array of results from JSONObjects
+			for (int i = 0; i < jResultArray.length(); i++) {
+				mResultList.add(new Result(jResultArray.getJSONObject(i)));
+			}
+
+			initiateUnits();
+			int newSize = mUnitTypeArray.size();	
+			JSONArray jUnitTypeArray = jObjState.getJSONArray(JSON_UNIT_TYPE_ARRAY);
+			//only load in saved unit types only if same size as current
+			if(jUnitTypeArray.length()==newSize){
+				mUnitTypeArray.clear();
+				// build the array of results from JSONObjects
+				for (int i = 0; i < jUnitTypeArray.length(); i++) {
+					mUnitTypeArray.add(new UnitType(jUnitTypeArray.getJSONObject(i)));
+				}
+			}
+
+
+		} catch (FileNotFoundException e) {
+			// we will ignore this one, since it happens when we start fresh
+		} finally {
+			if (reader != null)
+				reader.close();
+		}
+	}
+
+	public void saveState() throws JSONException, IOException {
+		JSONObject jObjState = new JSONObject();
+		jObjState.put(JSON_EXPRESSION, mExpression.toJSON());
+		jObjState.put(JSON_UNIT_TYPE, mUnitTypePos);
+		jObjState.put(JSON_HINTS, mHints.toJSON());
+
+		JSONArray jResultArray = new JSONArray();
+		for (Result result : mResultList)
+			jResultArray.put(result.toJSON());
+		jObjState.put(JSON_RESULT_LIST, jResultArray);
+
+
+		JSONArray jUnitTypeArray = new JSONArray();
+		for (UnitType unitType : mUnitTypeArray)
+			jUnitTypeArray.put(unitType.toJSON());
+		jObjState.put(JSON_UNIT_TYPE_ARRAY, jUnitTypeArray);
+
+		// write the file to disk
+		Writer writer = null;
+		try {
+			OutputStream out = mAppContext.openFileOutput(FILENAME, Context.MODE_PRIVATE);
+			writer = new OutputStreamWriter(out);
+			writer.write(jObjState.toString());
+		} finally {
+			if (writer != null)
+				writer.close();
+		}
+	}
+
+
+	/** Clears the result list, expression, and unit selection */
+	public void resetCalc(){
+		mResultList.clear();
+		mExpression = new Expression(intDisplayPrecision);
+		mHints = new Hints();
+		//set the unit type to length by default
+		mUnitTypePos=2;
+
+		//load the calculating precision
+		mSolver = new Solver(intCalcPrecision);
+
+		mUnitTypeArray.clear();
+		initiateUnits();
 	}
 
 
@@ -527,6 +545,19 @@ public class Calculator{
 		mUnitTypeArray.get(mUnitTypePos).clearUnitSelection();
 	}
 
+
+	/**
+	 * Update values of units that are not static (currency) via
+	 * each unit's own HTTP/JSON api call. Note that this refresh
+	 * is asychronous and will only happen sometime in the future 
+	 * internet connection permitting.
+	 */		
+	public void refreshAllDynamicUnits(){
+		for(UnitType ut : mUnitTypeArray)
+			ut.refreshDynamicUnits();
+	}
+	
+	
 	public List<Result> getResultList() {
 		return mResultList;
 	}
