@@ -137,7 +137,7 @@ public class Calculator{
 				mUnitTypeArray.clear();
 				// build the array of results from JSONObjects
 				for (int i = 0; i < jUnitTypeArray.length(); i++) {
-					mUnitTypeArray.add(new UnitType(this,jUnitTypeArray.getJSONObject(i)));
+					mUnitTypeArray.add(new UnitType(jUnitTypeArray.getJSONObject(i)));
 				}
 			}
 
@@ -202,7 +202,7 @@ public class Calculator{
 	private void initiateUnits(){
 		mUnitTypeArray.clear();
 
-		UnitType unitsOfTemp = new UnitType(this,"Temp");
+		UnitType unitsOfTemp = new UnitType("Temp");
 		unitsOfTemp.addUnit(new UnitTemperature());
 		unitsOfTemp.addUnit(new UnitTemperature());
 		unitsOfTemp.addUnit(new UnitTemperature());
@@ -217,7 +217,7 @@ public class Calculator{
 		mUnitTypeArray.add(unitsOfTemp);
 
 
-		UnitType unitsOfWeight = new UnitType(this,"Weight");
+		UnitType unitsOfWeight = new UnitType("Weight");
 		unitsOfWeight.addUnit(new UnitScalar("oz", "Ounces", 1/0.0283495));
 		unitsOfWeight.addUnit(new UnitScalar("lb", "Pounds", 1/0.453592));
 		unitsOfWeight.addUnit(new UnitScalar("ton us", "Short Tons", 1/907.184));
@@ -237,7 +237,7 @@ public class Calculator{
 		mUnitTypeArray.add(unitsOfWeight);
 
 
-		UnitType unitsOfLength = new UnitType(this,"Length");
+		UnitType unitsOfLength = new UnitType("Length");
 		unitsOfLength.addUnit(new UnitScalar("in", "Inches", 1/0.0254));//exact
 		unitsOfLength.addUnit(new UnitScalar("ft", "Feet", 1/0.3048));//exact: in*12
 		unitsOfLength.addUnit(new UnitScalar("yd", "Yards", 1/0.9144));//exact: in*12*3
@@ -259,7 +259,7 @@ public class Calculator{
 		mUnitTypeArray.add(unitsOfLength);	
 
 
-		UnitType unitsOfArea = new UnitType(this,"Area");
+		UnitType unitsOfArea = new UnitType("Area");
 		unitsOfArea.addUnit(new UnitScalar("in\u00B2", "Square Inches", 1/0.00064516));//exact: 0.0254^2
 		unitsOfArea.addUnit(new UnitScalar("ft\u00B2", "Square Feet", 1/0.09290304));//0.3048^2
 		unitsOfArea.addUnit(new UnitScalar("yd\u00B2", "Square Yards", 1/0.83612736));//0.3048^2*9
@@ -277,7 +277,7 @@ public class Calculator{
 		mUnitTypeArray.add(unitsOfArea);
 
 
-		UnitType unitsOfVolume = new UnitType(this,"Volume");
+		UnitType unitsOfVolume = new UnitType("Volume");
 		unitsOfVolume.addUnit(new UnitScalar("tbsp", "Tablespoons", 1/0.00001478676478125));//exact: gal/256
 		unitsOfVolume.addUnit(new UnitScalar("cup", "Cups", 1/0.0002365882365));//exact: gal/16
 		unitsOfVolume.addUnit(new UnitScalar("pt", "Pints (US)", 1/0.000473176473));//exact: gal/8
@@ -305,7 +305,7 @@ public class Calculator{
 		mUnitTypeArray.add(unitsOfVolume);
 
 
-		UnitType unitsOfSpeed = new UnitType(this,"Speed");
+		UnitType unitsOfSpeed = new UnitType("Speed");
 		unitsOfSpeed.addUnit(new UnitScalar("mi/min","Miles per minute", 1/26.8224));
 		unitsOfSpeed.addUnit(new UnitScalar("min/mi","Minute miles", 1/26.8224, true));
 		unitsOfSpeed.addUnit(new UnitScalar("ft/s", "Feet per Second", 1/0.3048));
@@ -320,7 +320,7 @@ public class Calculator{
 		mUnitTypeArray.add(unitsOfSpeed);
 
 
-		UnitType unitsOfPower = new UnitType(this,"Power");
+		UnitType unitsOfPower = new UnitType("Power");
 		unitsOfPower.addUnit(new UnitScalar("", 0));
 		unitsOfPower.addUnit(new UnitScalar("", 0));
 		unitsOfPower.addUnit(new UnitScalar("W", "Watts", 1));
@@ -335,7 +335,7 @@ public class Calculator{
 		mUnitTypeArray.add(unitsOfPower);
 
 
-		UnitType unitsOfEnergy = new UnitType(this,"Energy");
+		UnitType unitsOfEnergy = new UnitType("Energy");
 		unitsOfEnergy.addUnit(new UnitScalar("cal", "Calories", 0.239005736)); //approx
 		unitsOfEnergy.addUnit(new UnitScalar("kCal", "Kilocalories", 0.239005736/1E3)); //approx, but exact comp to cal
 		unitsOfEnergy.addUnit(new UnitScalar("BTU", "British Thermal Units", 0.00094781712)); //approx
@@ -353,7 +353,7 @@ public class Calculator{
 		mUnitTypeArray.add(unitsOfEnergy);
 
 
-		UnitType unitsOfTorque = new UnitType(this,"Torque");
+		UnitType unitsOfTorque = new UnitType("Torque");
 		unitsOfTorque.addUnit(new UnitScalar("Nm", "Newton Meters", 1)); 
 		unitsOfTorque.addUnit(new UnitScalar("Ncm", "Newton Centimeters", 100)); 
 		unitsOfTorque.addUnit(new UnitScalar("kgf m", "Kilogram-Force Meters", 1/9.80665)); //exact
@@ -368,7 +368,7 @@ public class Calculator{
 		mUnitTypeArray.add(unitsOfTorque);
 
 		//note the use of singular tense, not sure what is the best
-		UnitType unitsOfPressure = new UnitType(this,"Pressure");
+		UnitType unitsOfPressure = new UnitType("Pressure");
 		unitsOfPressure.addUnit(new UnitScalar("N/m\u00B2", "Newton/Square Meter", 1));
 		unitsOfPressure.addUnit(new UnitScalar("lb/ft\u00B2", "Pounds/Square Foot", 144/6894.757293168));  //approx
 		unitsOfPressure.addUnit(new UnitScalar("psi", "Pounds/Square Inch", 1/6894.757293168)); //approx

@@ -23,15 +23,15 @@ public class UnitType {
 	 * Constructor
 	 * @param hosting class must implement a function to do raw number conversion
 	 */	
-	public UnitType(Object parent, String name){
+	public UnitType(String name){
 		mName = name;
 		mUnitArray = new ArrayList<Unit>();
 		mIsUnitSelected = false;
 	}
 
 
-	public UnitType(Object parent, JSONObject json) throws JSONException {
-		this(parent, json.getString(JSON_NAME));
+	public UnitType(JSONObject json) throws JSONException {
+		this(json.getString(JSON_NAME));
 		mCurrUnitPos = json.getInt(JSON_CURR_POS);
 		mIsUnitSelected = json.getBoolean(JSON_IS_SELECTED);
 

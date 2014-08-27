@@ -32,6 +32,7 @@
 - ResultList has a max size
 
 ----------------------Fix----------------------
+- Catch JSON read errors and do a reset calc
 - TRY TO ADD UNIT TESTING FOR ALL PROBLEMS FIXED
 - Tap previous result with unit, adds a one
 - Type "(30+3%" and put cursor before 0, displays "(3)0+3
