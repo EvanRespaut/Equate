@@ -110,6 +110,22 @@ public class Calculator{
 	private void initiateUnits(){
 		mUnitTypeArray.clear();
 
+		UnitType unitsOfCurrency = new UnitType("Currency");
+		unitsOfCurrency.addUnit(new UnitCurrency("USD", "Dollars", 1));
+		unitsOfCurrency.addUnit(new UnitCurrency("EUR", "Euros", 0.76)); 
+		unitsOfCurrency.addUnit(new UnitCurrency("CAD", "Canadian Dollars", 1.08)); 
+		unitsOfCurrency.addUnit(new UnitCurrency("GBP", "Pounds", 0.6)); 
+		unitsOfCurrency.addUnit(new UnitCurrency("JPY", "Yen", 103.9)); 
+
+		unitsOfCurrency.addUnit(new UnitCurrency("CHF", "Swiss Francs", 0.91)); 
+		unitsOfCurrency.addUnit(new UnitCurrency("AUD", "Australian Dollars", 1.07)); 
+		unitsOfCurrency.addUnit(new UnitCurrency("HKD", "Hong Kong Dollars", 7.75)); 
+		unitsOfCurrency.addUnit(new UnitCurrency("SGD", "Singapore Dollars", 1.25)); 
+		unitsOfCurrency.addUnit(new UnitCurrency("CNY", "Chinese Yuans", 6.15)); 
+		mUnitTypeArray.add(unitsOfCurrency);
+		
+		refreshAllDynamicUnits();		
+		
 		UnitType unitsOfTemp = new UnitType("Temp");
 		unitsOfTemp.addUnit(new UnitTemperature());
 		unitsOfTemp.addUnit(new UnitTemperature());
@@ -295,22 +311,6 @@ public class Calculator{
 		unitsOfPressure.addUnit(new UnitScalar("kg/cm\u00B2", "Kilogram/Square Centimeter", 1/98066.5)); //approx?
 		mUnitTypeArray.add(unitsOfPressure);
 
-		
-		UnitType unitsOfCurrency = new UnitType("Currency");
-		unitsOfCurrency.addUnit(new UnitCurrency("USD", "Dollars", 1));
-		unitsOfCurrency.addUnit(new UnitCurrency("EUR", "Euros", 6.76)); 
-		unitsOfCurrency.addUnit(new UnitCurrency("CAD", "Canadian Dollars", 9.08)); 
-		unitsOfCurrency.addUnit(new UnitCurrency("", 0)); 
-		unitsOfCurrency.addUnit(new UnitCurrency("", 0)); 
-
-		unitsOfCurrency.addUnit(new UnitCurrency("", 0)); 
-		unitsOfCurrency.addUnit(new UnitCurrency("", 0)); 
-		unitsOfCurrency.addUnit(new UnitCurrency("", 0)); 
-		unitsOfCurrency.addUnit(new UnitCurrency("", 0)); 
-		unitsOfCurrency.addUnit(new UnitCurrency("", 0)); 
-		mUnitTypeArray.add(unitsOfCurrency);
-		
-		refreshAllDynamicUnits();
 	}
 
 	

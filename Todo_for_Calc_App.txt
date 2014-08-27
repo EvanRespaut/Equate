@@ -5,7 +5,6 @@
 - Make arrows pulse when waiting to convert
 - Make calculation text bigger
 - Add other unit types
-- Currency Conversion
 - Add preferences 
 - Experiment with stylized row 1 says "Converter inches to feet" and row 2 "12 in *space* 1 ft"
 - Tap equals after solve for scientific notation (hold equals for sci notation preferences)?
