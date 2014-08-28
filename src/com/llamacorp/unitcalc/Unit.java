@@ -18,21 +18,20 @@ public abstract class Unit  /*implements JsonSerializer<Unit>, JsonDeserializer<
 	protected double mValue;
 
 	//intercept's only known need is temp conversions
-	public Unit(String name, String longName, double value){
+	protected Unit(String name, String longName, double value){
 		mDispName = name;
 		mLongName = longName;
 		mValue = value;
 	}	
 
-	public Unit(){
+	protected Unit(){
 		this("", "", 0);
 	}
 
-	public Unit(JSONObject json) throws JSONException {
+	protected Unit(JSONObject json) throws JSONException {
 		this(json.getString(JSON_NAME),
 				json.getString(JSON_LONG_NAME),
 				json.getDouble(JSON_VALUE)); 
-
 	}
 
 	/**
@@ -41,7 +40,7 @@ public abstract class Unit  /*implements JsonSerializer<Unit>, JsonDeserializer<
 	 * @return generic Unit class contacting a subclasses Unit
 	 * @throws JSONException if exception is found
 	 */
-	static public Unit getUnit(JSONObject json) throws JSONException {
+	static protected Unit getUnit(JSONObject json) throws JSONException {
 		String unitType = json.getString(JSON_TYPE);
 		String packageName = Unit.class.getPackage().getName();
 		Unit u =null;
@@ -49,10 +48,12 @@ public abstract class Unit  /*implements JsonSerializer<Unit>, JsonDeserializer<
 			Class<?> c = Class.forName(packageName + "." + unitType);
 			Constructor<?> con = c.getConstructor(JSONObject.class);
 			u = (Unit) con.newInstance(json);
-		}
-		catch (Exception e){
-			//probably bad form, this catches a bunch of exceptions
-			e.printStackTrace();
+		} catch (ClassNotFoundException e) { //for Class.forName(packageName + "." + unitType);
+			throw new IllegalAccessError(unitType + " was not found");
+		}   catch (NoSuchMethodException e){ //for u = (Unit) con.newInstance(json);
+			throw new NoSuchMethodError(unitType + " doesn't have a JSONObject constructor");
+		} catch (Exception e){//for c.getConstructor(JSONObject.class);
+			throw new IllegalAccessError("problem with " + unitType + " class");
 		}
 		return u;
 	}
@@ -62,7 +63,7 @@ public abstract class Unit  /*implements JsonSerializer<Unit>, JsonDeserializer<
 	 * @return JSON object encapsulating Unit
 	 * @throws JSONException
 	 */
-	public JSONObject toJSON() throws JSONException {
+	protected JSONObject toJSON() throws JSONException {
 		JSONObject json = new JSONObject();
 
 		json.put(JSON_TYPE, this.getClass().getSimpleName());
@@ -72,15 +73,15 @@ public abstract class Unit  /*implements JsonSerializer<Unit>, JsonDeserializer<
 		return json;
 	}
 
-	public String getLongName() {
+	protected String getLongName() {
 		return mLongName;
 	}
 	
-	public String getLowercaseLongName(){
+	protected String getLowercaseLongName(){
 		return getLongName().toLowerCase(Locale.US);
 	}
 
-	public double getValue() {
+	protected double getValue() {
 		return mValue;
 	}
 
@@ -89,7 +90,7 @@ public abstract class Unit  /*implements JsonSerializer<Unit>, JsonDeserializer<
 	}
 
 
-	public abstract String convertTo(Unit toUnit, String expressionToConv);
+	protected abstract String convertTo(Unit toUnit, String expressionToConv);
 
 	@Override
 	public boolean equals(Object other){

@@ -35,6 +35,10 @@ public class UnitCurrency extends Unit {
 		super();
 	}
 
+	public UnitCurrency(JSONObject json) throws JSONException {
+		super(json);
+	}
+	
 	@Override
 	public String convertTo(Unit toUnit, String expressionToConv) {
 		return expressionToConv + "*" + toUnit.getValue() + "/" + getValue();
