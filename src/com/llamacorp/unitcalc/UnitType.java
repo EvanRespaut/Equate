@@ -112,15 +112,30 @@ public class UnitType {
 	/**
 	 * Update values of units that are not static (currency) via
 	 * each unit's own HTTP/JSON api call. Note that this refresh
-	 * is asychronous and will only happen sometime in the future 
-	 * internet connection permitting.
+	 * is asynchronous and will only happen sometime in the future 
+	 * Internet connection permitting.
 	 */	
-	 public void refreshDynamicUnits(){
-		if(mUnitArray.get(1) instanceof UnitCurrency)
+	public void refreshDynamicUnits(){
+		if(isDynamicUnit())
 			for(Unit uc : mUnitArray)
 				((UnitCurrency) uc).asyncRefresh();
 	}
-	
+
+	/**
+	 * Check to see if this UnitType holds units that have values that
+	 * need to be refreshed via the Internet
+	 */
+	public boolean isDynamicUnit(){
+		return mUnitArray.get(1) instanceof UnitCurrency;
+	}
+
+	public boolean isUnitUpdating(int pos){
+		if(isDynamicUnit())
+			return ((UnitCurrency)mUnitArray.get(pos)).isUpdating();
+		else
+			return false;
+	}
+
 	/**
 	 * Resets mIsUnitSelected flag
 	 */		
@@ -162,7 +177,7 @@ public class UnitType {
 		}
 		return cs;
 	}
-	
+
 	public Unit getPrevUnit(){
 		return mUnitArray.get(mPrevUnitPos);
 	}
