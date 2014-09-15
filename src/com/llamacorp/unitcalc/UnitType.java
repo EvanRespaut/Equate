@@ -7,6 +7,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.llamacorp.unitcalc.UnitCurrency.OnConvertKeyUpdateFinishedListener;
+
 public class UnitType {
 	private static final String JSON_NAME = "name";
 	private static final String JSON_UNIT_ARRAY = "unit_array";
@@ -135,6 +137,13 @@ public class UnitType {
 		else
 			return false;
 	}
+	
+
+	public void setDynamicUnitCallback(OnConvertKeyUpdateFinishedListener callback) {
+		if(isDynamicUnit())
+			for(int i=0; i<size(); i++)
+				((UnitCurrency)mUnitArray.get(i)).setCallback(callback);
+	}
 
 	/**
 	 * Resets mIsUnitSelected flag
@@ -193,4 +202,6 @@ public class UnitType {
 	public int getCurrUnitPos(){
 		return mCurrUnitPos;
 	}
+
+
 }

@@ -20,10 +20,10 @@ public class UnitCurrency extends Unit {
 
 	private static String mURLPrefix = "http://rate-exchange.appspot.com/currency?from=USD&to=";
 	private static String mURLSuffix = "";
-	
+
 	//this is for communication with fragment hosting convert keys
 	OnConvertKeyUpdateFinishedListener mCallback;
-	
+
 	public interface OnConvertKeyUpdateFinishedListener {
 		public void updateDynamicUnitButtons();
 	}
@@ -47,9 +47,14 @@ public class UnitCurrency extends Unit {
 	public UnitCurrency(JSONObject json) throws JSONException {
 		super(json);
 	}
-	
+
 	public boolean isUpdating(){
 		return mUpdating;
+	}
+
+
+	public void setCallback(OnConvertKeyUpdateFinishedListener callback) {
+		mCallback = callback;
 	}
 
 	@Override
@@ -66,7 +71,8 @@ public class UnitCurrency extends Unit {
 	 */
 	public void asyncRefresh(){
 		mUpdating = true;
-		mCallback.updateDynamicUnitButtons();
+		if(mCallback != null)
+			mCallback.updateDynamicUnitButtons();
 		new HttpAsyncTask().execute(getURL());
 	}
 
@@ -99,7 +105,8 @@ public class UnitCurrency extends Unit {
 
 			//updating is complete
 			mUpdating = false;
-			mCallback.updateDynamicUnitButtons();
+			if(mCallback != null)
+				mCallback.updateDynamicUnitButtons();
 		}
 
 		/**
@@ -156,5 +163,6 @@ public class UnitCurrency extends Unit {
 
 		}
 	}
+
 }
 

@@ -65,6 +65,7 @@ public class ConvKeysFragment extends Fragment implements OnConvertKeyUpdateFini
 		int pos = getArguments().getInt(EXTRA_UNIT_TYPE_POS);
 
 		mUnitType = Calculator.getCalculator(getActivity()).getUnitType(pos);
+		mUnitType.setDynamicUnitCallback(this);
 	}
 
 	@Override
