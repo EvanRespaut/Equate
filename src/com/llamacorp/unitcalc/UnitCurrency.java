@@ -17,19 +17,28 @@ import android.util.Log;
 
 public class UnitCurrency extends Unit {
 	private static String JSON_URL_RATE_TAG = "rate";
-	
+
 	private static String mURLPrefix = "http://rate-exchange.appspot.com/currency?from=USD&to=";
 	private static String mURLSuffix = "";
-	
-	
+
+	//this is for communication with fragment hosting convert keys
+	OnConvertKeyUpdateFinishedListener mCallback;
+
+	public interface OnConvertKeyUpdateFinishedListener {
+		public void updateDynamicUnitButtons();
+	}
+
+	//used to tell parent classes if the asyncRefresh is currently running
+	private boolean mUpdating = false;
+
 	public UnitCurrency(String name, String longName, double value){
 		super(name, longName, value);
 	}	
-	
+
 	public UnitCurrency(String name, double value){
 		super(name, name, value);
 	}	
-		
+
 	//TODO do we need this?
 	public UnitCurrency(){
 		super();
@@ -38,23 +47,35 @@ public class UnitCurrency extends Unit {
 	public UnitCurrency(JSONObject json) throws JSONException {
 		super(json);
 	}
-	
+
+	public boolean isUpdating(){
+		return mUpdating;
+	}
+
+
+	public void setCallback(OnConvertKeyUpdateFinishedListener callback) {
+		mCallback = callback;
+	}
+
 	@Override
 	public String convertTo(Unit toUnit, String expressionToConv) {
 		return expressionToConv + "*" + toUnit.getValue() + "/" + getValue();
 	}
-		
+
 	/**
 	 * Asynchronously try to update the currency rate by fetching the
 	 * value via an HTTP JSON API call.  Note that this call will take 
 	 * some time to update the value, since it runs in the background.
 	 * Also note that the value may or may not even be updated, dependent
-	 * on internet connection.  
+	 * on Internet connection.  
 	 */
 	public void asyncRefresh(){
+		mUpdating = true;
+		if(mCallback != null)
+			mCallback.updateDynamicUnitButtons();
 		new HttpAsyncTask().execute(getURL());
 	}
-	
+
 	private String getURL(){
 		return mURLPrefix + toString() + mURLSuffix;
 	}
@@ -63,31 +84,37 @@ public class UnitCurrency extends Unit {
 	private void setValue(double val) {
 		mValue = val;
 	}
-	
-	
+
+
 	/**
 	 * This class is used to create a background task that handles 
 	 * the actual HTTP getting and JSON parsing
 	 */
-    private class HttpAsyncTask extends AsyncTask<String, Void, String> {
-        @Override
-        protected String doInBackground(String... urls) {
-            return GET(urls[0]);
-        }
-		
-        // This method is called after doInBackground completes
-        @Override
-        protected void onPostExecute(String result) {
-        	//Toast.makeText(appContext, "Received!", Toast.LENGTH_LONG).show();
+	private class HttpAsyncTask extends AsyncTask<String, Void, String> {
+		//This method is called first
+		@Override
+		protected String doInBackground(String... urls) {
+			return GET(urls[0]);
+		}
+
+		// This method is called after doInBackground completes
+		@Override
+		protected void onPostExecute(String result) {
+			//Toast.makeText(appContext, "Received!", Toast.LENGTH_LONG).show();
 			parseRateFromJSONString(result);
- 		}
-	   	
+
+			//updating is complete
+			mUpdating = false;
+			if(mCallback != null)
+				mCallback.updateDynamicUnitButtons();
+		}
+
 		/**
 		 * Attempt to take a JSON string, parse it, and set the value
 		 * of this current Currency Unit
 		 */		
 		private void parseRateFromJSONString(String result){
-            try {
+			try {
 				JSONObject json = new JSONObject(result);
 				double rate = json.getDouble(JSON_URL_RATE_TAG);
 				setValue(rate);
@@ -95,7 +122,7 @@ public class UnitCurrency extends Unit {
 				e.printStackTrace();
 			}
 		}
-		
+
 		/** Helper function for above method*/
 		private String GET(String url){
 			InputStream inputStream = null;
@@ -135,6 +162,7 @@ public class UnitCurrency extends Unit {
 			return result;
 
 		}
-    }
+	}
+
 }
 

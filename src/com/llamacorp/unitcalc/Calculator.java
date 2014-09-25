@@ -26,6 +26,7 @@ public class Calculator{
 	private static final String JSON_UNIT_TYPE = "unit_type";
 	private static final String JSON_HINTS = "hints";
 	private static final int RESULT_LIST_MAX_SIZE = 100;
+	private static final int UNIT_TYPE_DEFAULT_POS = 3;
 
 
 	private static Calculator mCaculator;
@@ -52,14 +53,17 @@ public class Calculator{
 	public static final int intCalcPrecision = intDisplayPrecision+2;
 
 
+	private boolean mIsTestCalc = false;
+
 	//------THIS IS FOR TESTING ONLY-----------------
 	private Calculator(){
 		mResultList = new ArrayList<Result>();
 		mExpression=new Expression(intDisplayPrecision); 		
 		//mMcOperate = new MathContext(intCalcPrecision); 
 		mSolver = new Solver(intCalcPrecision);
-		mUnitTypePos=2;	
+		mUnitTypePos=UNIT_TYPE_DEFAULT_POS;	
 		mUnitTypeArray = new ArrayList<UnitType>();
+		mIsTestCalc=true;
 		initiateUnits();
 		mHints = new Hints();
 	}
@@ -68,7 +72,8 @@ public class Calculator{
 
 
 	/**
-	 * Method turns calculator class into a singleton class (one instance allowed)
+	 * Method turns calculator class into a singleton class 
+	 * (one instance allowed)
 	 */
 	private Calculator(Context appContext){
 		//save our context
@@ -77,7 +82,7 @@ public class Calculator{
 		mResultList = new ArrayList<Result>();
 		mExpression = new Expression(intDisplayPrecision);
 		//set the unit type to length by default
-		mUnitTypePos=2;
+		mUnitTypePos=UNIT_TYPE_DEFAULT_POS;
 		mHints = new Hints();
 
 		//load the calculating precision
@@ -102,7 +107,7 @@ public class Calculator{
 		return mCaculator;
 	}
 
-	
+
 
 	/**
 	 * Helper method used to initiate the array of various types of units
@@ -123,9 +128,9 @@ public class Calculator{
 		unitsOfCurrency.addUnit(new UnitCurrency("SGD", "Singapore Dollars", 1.25)); 
 		unitsOfCurrency.addUnit(new UnitCurrency("CNY", "Chinese Yuans", 6.15)); 
 		mUnitTypeArray.add(unitsOfCurrency);
-		
+
 		refreshAllDynamicUnits();		
-		
+
 		UnitType unitsOfTemp = new UnitType("Temp");
 		unitsOfTemp.addUnit(new UnitTemperature());
 		unitsOfTemp.addUnit(new UnitTemperature());
@@ -313,7 +318,7 @@ public class Calculator{
 
 	}
 
-	
+
 
 	private void loadState() throws IOException, JSONException {
 		BufferedReader reader = null;
@@ -398,7 +403,7 @@ public class Calculator{
 		mExpression = new Expression(intDisplayPrecision);
 		mHints = new Hints();
 		//set the unit type to length by default
-		mUnitTypePos=2;
+		mUnitTypePos=UNIT_TYPE_DEFAULT_POS;
 
 		//load the calculating precision
 		mSolver = new Solver(intCalcPrecision);
@@ -417,7 +422,7 @@ public class Calculator{
 		//if expression was displaying "Syntax Error" or similar (containing invalid chars) clear it
 		if(isExpressionInvalid())
 			mExpression.clearExpression();
-		
+
 		//if a convert was just done, main display will show "16 in", but no button will be colored
 		//want this treated the same as 16 (as if no unit is actually selected)
 		if(isSolved() && isUnitIsSet())
@@ -540,7 +545,7 @@ public class Calculator{
 				clearSelectedUnit();
 		}	
 	}
-	
+
 	private void clearSelectedUnit(){
 		mUnitTypeArray.get(mUnitTypePos).clearUnitSelection();
 	}
@@ -548,16 +553,18 @@ public class Calculator{
 
 	/**
 	 * Update values of units that are not static (currency) via
-	 * each unit's own HTTP/JSON api call. Note that this refresh
-	 * is asychronous and will only happen sometime in the future 
-	 * internet connection permitting.
+	 * each unit's own HTTP/JSON API call. Note that this refresh
+	 * is asynchronous and will only happen sometime in the future 
+	 * Internet connection permitting.
 	 */		
 	public void refreshAllDynamicUnits(){
-		for(UnitType ut : mUnitTypeArray)
-			ut.refreshDynamicUnits();
+		//JUnit tests can't find AsynTask class, so skip it for test calc
+		if(!mIsTestCalc)
+			for(UnitType ut : mUnitTypeArray)
+				ut.refreshDynamicUnits();
 	}
-	
-	
+
+
 	public List<Result> getResultList() {
 		return mResultList;
 	}
@@ -611,7 +618,7 @@ public class Calculator{
 	public boolean isSolved(){
 		return mExpression.isSolved();
 	}
-	
+
 	public int getSelectionEnd(){
 		return mExpression.getSelectionEnd();
 	}	

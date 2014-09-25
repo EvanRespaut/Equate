@@ -257,7 +257,7 @@ public class Expression {
 				//second case is just #^
 				else {
 					String lastNumb = getLastNumb(str.substring(0, i));
-					//make nonneg
+					//make nonneg (^ is beginning of, not power operator)
 					lastNumb = lastNumb.replaceAll("^\\-", "");
 					openPareIndex = i - lastNumb.length();
 				}

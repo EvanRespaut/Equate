@@ -12,7 +12,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-public class ConvKeysFragment extends Fragment {
+import com.llamacorp.unitcalc.UnitCurrency.OnConvertKeyUpdateFinishedListener;
+
+public class ConvKeysFragment extends Fragment implements OnConvertKeyUpdateFinishedListener {
 
 	//this is for communication with the parent activity
 	OnConvertKeySelectedListener mCallback;
@@ -63,6 +65,7 @@ public class ConvKeysFragment extends Fragment {
 		int pos = getArguments().getInt(EXTRA_UNIT_TYPE_POS);
 
 		mUnitType = Calculator.getCalculator(getActivity()).getUnitType(pos);
+		mUnitType.setDynamicUnitCallback(this);
 	}
 
 	@Override
@@ -160,6 +163,19 @@ public class ConvKeysFragment extends Fragment {
 		if(unitPos != -1 && unitPos < mConvButton.size())
 			clickUnitButton(unitPos);
 	}
+	
+	public void updateDynamicUnitButtons(){
+		if(!mUnitType.isDynamicUnit())
+			return;
+		//add or remove dynamic unit updating indicator
+		for(int i=0;i<mConvButton.size();i++){
+			if(mUnitType.isUnitUpdating(i))
+				mConvButton.get(i).setText("Updating");
+			else
+				refreshButtonText(i);
+		}
+	}
+
 
 	private void refreshButtonText(int buttonPos){
 		refreshButtonText("", buttonPos);
@@ -235,6 +251,8 @@ public class ConvKeysFragment extends Fragment {
 		}			
 	}
 
+
+	
 	/** Clears the button unit selection */
 	public void clearButtonSelection(){
 		//function may be called before convert key array built, in which case, leave
