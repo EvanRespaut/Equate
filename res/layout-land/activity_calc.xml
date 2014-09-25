@@ -32,7 +32,7 @@
             android:background="@color/app_background"
             android:gravity="right"
             android:inputType="textNoSuggestions"
-            android:textSize="30sp" />
+            android:textSize="40sp" />
     </LinearLayout>
 
     <LinearLayout

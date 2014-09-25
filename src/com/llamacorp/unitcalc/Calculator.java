@@ -221,8 +221,9 @@ public class Calculator{
 
 		unitsOfVolume.addUnit(new UnitScalar("in\u00B3", "Cubic Inches", 1/0.000016387064));//exact: gal/231
 		unitsOfVolume.addUnit(new UnitScalar("ft\u00B3", "Cubic Feet", 1/0.028316846592));//exact: gal/231*12^3
-		unitsOfVolume.addUnit(new UnitScalar("yd\u00B3", "Cubic Yard", 1/0.764554857984));//exact: 3^3 ft^3
+		unitsOfVolume.addUnit(new UnitScalar("yd\u00B3", "Cubic Yards", 1/0.764554857984));//exact: 3^3 ft^3
 		unitsOfVolume.addUnit(new UnitScalar("cm\u00B3", "Cubic Centimeters", 1E6));
+		unitsOfVolume.addUnit(new UnitScalar("cm\u00B3", "Cubic Millimeters", 1E9));
 		unitsOfVolume.addUnit(new UnitScalar("cL", "Centiliter", 1E5));
 		unitsOfVolume.addUnit(new UnitScalar("dL", "Deciliters", 1E4));
 		unitsOfVolume.addUnit(new UnitScalar("gal uk", "Gallons (UK)", 1000/4.54609));//exact: 4.54609L/gal uk
