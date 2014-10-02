@@ -123,7 +123,7 @@
                 xmlns:customNS="http://schemas.android.com/apk/res/com.llamacorp.unitcalc"
                 android:id="@+id/multiply_button"
                 style="@style/OpButton"
-                customNS:secondary_text="@string/percent_button" />
+                customNS:secondary_text="@string/percent_button"  />
         </LinearLayout>
 
         <LinearLayout

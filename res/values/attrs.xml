@@ -2,5 +2,6 @@
 <resources>
     <declare-styleable name="SecondaryTextButton">
         <attr name="secondary_text" format="string"/>
+		<attr name="secondary_text_font_size" format="dimension"/>
     </declare-styleable>
 </resources>

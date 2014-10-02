@@ -127,6 +127,10 @@ public class Calculator{
 		unitsOfCurrency.addUnit(new UnitCurrency("HKD", "Hong Kong Dollars", 7.75)); 
 		unitsOfCurrency.addUnit(new UnitCurrency("SGD", "Singapore Dollars", 1.25)); 
 		unitsOfCurrency.addUnit(new UnitCurrency("CNY", "Chinese Yuans", 6.15)); 
+		
+		unitsOfCurrency.addUnit(new UnitCurrency("BTC", "Bitcoins", 0.003, 
+												"http://blockchain.info/tobtc?currency=USD&value=1")); 
+		unitsOfCurrency.addUnit(new UnitCurrency("RUB", "Russian Rubles", 39.7)); 
 		mUnitTypeArray.add(unitsOfCurrency);
 
 		refreshAllDynamicUnits();		
@@ -136,13 +140,13 @@ public class Calculator{
 		unitsOfTemp.addUnit(new UnitTemperature());
 		unitsOfTemp.addUnit(new UnitTemperature());
 		unitsOfTemp.addUnit(new UnitTemperature());
-		unitsOfTemp.addUnit(new UnitTemperature("°F", "Fahrenheit", UnitTemperature.FAHRENHEIT));
+		unitsOfTemp.addUnit(new UnitTemperature("\u00B0F", "Fahrenheit", UnitTemperature.FAHRENHEIT));
 
 		unitsOfTemp.addUnit(new UnitTemperature());
 		unitsOfTemp.addUnit(new UnitTemperature());
 		unitsOfTemp.addUnit(new UnitTemperature());
-		unitsOfTemp.addUnit(new UnitTemperature("°K", "Kelvin", UnitTemperature.KELVIN));
-		unitsOfTemp.addUnit(new UnitTemperature("°C", "Celsius", UnitTemperature.CELSIUS));
+		unitsOfTemp.addUnit(new UnitTemperature("\u00B0K", "Kelvin", UnitTemperature.KELVIN));
+		unitsOfTemp.addUnit(new UnitTemperature("\u00B0C", "Celsius", UnitTemperature.CELSIUS));
 		mUnitTypeArray.add(unitsOfTemp);
 
 
@@ -153,7 +157,7 @@ public class Calculator{
 		unitsOfWeight.addUnit(new UnitScalar("ton uk", "Long Tons", 1/1016.04608));
 		unitsOfWeight.addUnit(new UnitScalar("st", "Stones", 1/6.350288));
 
-		unitsOfWeight.addUnit(new UnitScalar("µg", "Micrograms", 1/1e-9));
+		unitsOfWeight.addUnit(new UnitScalar("\u00B5g", "Micrograms", 1/1e-9));
 		unitsOfWeight.addUnit(new UnitScalar("mg", "Milligrams", 1/1e-6));
 		unitsOfWeight.addUnit(new UnitScalar("g", "Grams", 1/0.001));
 		unitsOfWeight.addUnit(new UnitScalar("kg", "Kilograms", 1));
@@ -174,7 +178,7 @@ public class Calculator{
 		unitsOfLength.addUnit(new UnitScalar("km", "Kilometers", 1/1000.0));
 
 		unitsOfLength.addUnit(new UnitScalar("nm", "Nanometers", 1E9));
-		unitsOfLength.addUnit(new UnitScalar("µm", "Micrometers", 1E6));
+		unitsOfLength.addUnit(new UnitScalar("\u00B5m", "Micrometers", 1E6));
 		unitsOfLength.addUnit(new UnitScalar("mm", "Millimeters", 1000));
 		unitsOfLength.addUnit(new UnitScalar("cm", "Centimeters", 100));
 		unitsOfLength.addUnit(new UnitScalar("m", "Meters", 1));

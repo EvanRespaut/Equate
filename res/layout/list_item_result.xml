@@ -29,6 +29,21 @@
             android:gravity="right"
             android:paddingLeft="15dp" >
         </TextView>
+		
+        <TextView
+            android:id="@+id/list_item_result_currencyTimestamp"
+            style="@style/ResultText"
+            android:gravity="right"
+            android:paddingLeft="5dp" 
+			android:layout_weight="0"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@drawable/result_textview"
+			android:textColor="@color/prev_result_text_timestamp"
+			android:textSize="14sp"
+            android:text="[3:26 pm]"
+			>
+        </TextView>		
     </LinearLayout>
 
 </LinearLayout>

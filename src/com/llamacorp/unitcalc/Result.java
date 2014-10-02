@@ -10,6 +10,7 @@ public class Result {
 	private static final String JSON_ANSWER_UNIT = "answer_unit";
 	private static final String JSON_UNIT_TYPE_POS = "unit_type_pos";
 	private static final String JSON_CONTAINS_UNITS = "conatains_units";
+	private static final String JSON_TIMESTAMP = "timestamp";
 
 
 	private String mQuery;
@@ -18,7 +19,7 @@ public class Result {
 	private Unit mAnswerUnit;
 	private int mUnitTypePos;
 	boolean mContainsUnits;
-
+	private String mTimestamp;
 
 	public Result(String query, String answer){
 		mQuery=query;
@@ -26,6 +27,7 @@ public class Result {
 		mQueryUnit = new UnitScalar();
 		mAnswerUnit = new UnitScalar();
 		mContainsUnits=false;
+		mTimestamp="";
 	}
 	
 	public Result(String query){
@@ -43,6 +45,7 @@ public class Result {
 		mAnswerUnit = Unit.getUnit(json.getJSONObject(JSON_ANSWER_UNIT)); 
 		mUnitTypePos = json.getInt(JSON_UNIT_TYPE_POS);
 		mContainsUnits = json.getBoolean(JSON_CONTAINS_UNITS);
+		mTimestamp = json.getString(JSON_TIMESTAMP);
 	}
 
 	public JSONObject toJSON() throws JSONException {
@@ -54,6 +57,7 @@ public class Result {
 		json.put(JSON_ANSWER_UNIT, mAnswerUnit.toJSON());
 		json.put(JSON_UNIT_TYPE_POS, getUnitTypePos());
 		json.put(JSON_CONTAINS_UNITS, containsUnits());
+		json.put(JSON_TIMESTAMP, getTimestamp());
 		
 		return json;
 	}
@@ -87,6 +91,8 @@ public class Result {
 		mAnswerUnit = answerUnit;
 		mUnitTypePos = unitTypePos;
 		mContainsUnits=true;
+		if(queryUnit.isDynamic())
+			mTimestamp="[1:11 pm]";
 	}
 
 	public int getUnitTypePos() {
@@ -100,7 +106,10 @@ public class Result {
 	public boolean containsUnits() {
 		return mContainsUnits;
 	}
-
+	
+	public String getTimestamp(){
+		return mTimestamp;
+	}
 
 	public String getTextQuerry() {
 		if(mContainsUnits)

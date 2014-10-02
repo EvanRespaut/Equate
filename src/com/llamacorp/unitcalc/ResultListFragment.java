@@ -59,6 +59,8 @@ public class ResultListFragment extends ListFragment {
 			Result result = getItem(position);
 			
 			TextView textViewUnitDesc = (TextView)convertView.findViewById(R.id.list_item_result_convertUnitDesc);	
+			TextView textViewUnitTimestamp = (TextView)convertView.findViewById(R.id.list_item_result_currencyTimestamp);
+			textViewUnitTimestamp.setVisibility(View.GONE);
 			if(result.containsUnits()){
 				String text = getResources().getString(R.string.word_Converting) + 
 						" " + result.getQuerryUnit().getLowercaseLongName() +
@@ -67,9 +69,17 @@ public class ResultListFragment extends ListFragment {
 				textViewUnitDesc.setText(text);
 				//ListView reuses old textViewUnitDesc sometimes; make sure old one isn't still invisible
 				textViewUnitDesc.setVisibility(View.VISIBLE);
+				
+				//see if the result was dynamic and therefore has a timestamp to display
+				String timestamp = result.getTimestamp();
+				if(!timestamp.equals("")){
+					textViewUnitTimestamp.setText(timestamp);
+					textViewUnitTimestamp.setVisibility(View.VISIBLE);
+				}
 			}
-			else
+			else {
 				textViewUnitDesc.setVisibility(View.GONE);
+			}	
 
 			TextView textViewQuerry = (TextView)convertView.findViewById(R.id.list_item_result_textPrevQuery);	
 			setUpResultTextView(textViewQuerry, result.getTextQuerry());

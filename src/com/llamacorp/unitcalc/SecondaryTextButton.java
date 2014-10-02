@@ -14,6 +14,7 @@ class SecondaryTextButton extends Button {
 	private float mTextSize = 0f;
 	protected Paint mSecondaryPaint;
 	protected String mSecondaryText;
+	protected float mSecondaryTextSize;
 
 	//the following are used to determine where to place the secondary text
 	protected float mButtonHeight;
@@ -31,10 +32,14 @@ class SecondaryTextButton extends Button {
 	public SecondaryTextButton(Context context, AttributeSet attrs) {
 		super(context, attrs);
 
+		final float defaultSecondaryTextSize = getPaint().getTextSize() * SECONDARY_FONT_PERCENTAGE / 100f;
+		
 		//grab custom resource variable
 		TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.SecondaryTextButton, 0, 0);
 		try {
 			mSecondaryText = ta.getString(R.styleable.SecondaryTextButton_secondary_text);
+			mSecondaryTextSize = ta.getDimension(R.styleable.SecondaryTextButton_secondary_text_font_size,
+												 defaultSecondaryTextSize);
 		} finally {
 			ta.recycle();
 		}
@@ -64,7 +69,7 @@ class SecondaryTextButton extends Button {
 		}
 		mTextY = (getHeight() - paint.ascent() - paint.descent()) / 2;
 		if (mSecondaryPaint != null)
-			mSecondaryPaint.setTextSize(paint.getTextSize() * SECONDARY_FONT_PERCENTAGE / 100f);
+			mSecondaryPaint.setTextSize(mSecondaryTextSize);
 	}
 
 

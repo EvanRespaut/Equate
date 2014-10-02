@@ -128,7 +128,7 @@ public class UnitType {
 	 * need to be refreshed via the Internet
 	 */
 	public boolean isDynamicUnit(){
-		return mUnitArray.get(1) instanceof UnitCurrency;
+		return mUnitArray.get(1).isDynamic();
 	}
 
 	public boolean isUnitUpdating(int pos){

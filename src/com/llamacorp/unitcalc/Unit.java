@@ -89,6 +89,10 @@ public abstract class Unit  /*implements JsonSerializer<Unit>, JsonDeserializer<
 		return mDispName;
 	}
 
+	public boolean isDynamic(){
+		return this instanceof UnitCurrency;
+	}
+	
 
 	protected abstract String convertTo(Unit toUnit, String expressionToConv);
 

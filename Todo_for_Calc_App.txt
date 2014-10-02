@@ -1,15 +1,11 @@
 ------------------ToDo Next--------------------
-- "Converting inches to feet" bug still there; do unit coverts, back, then open app again
-- Make "Convert milimeters to..." blink or something cool
-- Make arrows in a circle instead of line
-- Make arrows pulse when waiting to convert
-- Make calculation text bigger
-- Add other unit types
-- Add preferences 
-- Experiment with stylized row 1 says "Converter inches to feet" and row 2 "12 in *space* 1 ft"
-- Tap equals after solve for scientific notation (hold equals for sci notation preferences)?
-- Add check/click results functionality to ConsoleTester
-- Commas for large numbers?
+- Make "..." in Unit buttons bigger
+- Restructure file system, need view and model folder and model/unit folder
+- Add timestamps to currencies
+- Make dynamically sized button into dynamically sized TextView, have button inherrit this
+- Attempt to force "Converting __ to __" text to one line and dynamically sized 
+- Add historical USD
+- Add BTC (and custom constructor for it)
 
 -----Stuff to Test (squashed bugs, etc)-----
 - Test min/mile to mph and back again
@@ -31,12 +27,12 @@
 - ResultList has a max size
 
 ----------------------Fix----------------------
-- When prog first starts, cursor is on with Unitcalc on screen
-- Catch JSON read errors and do a reset calc
-- TRY TO ADD UNIT TESTING FOR ALL PROBLEMS FIXED
-- Tap previous result with unit, adds a one
+---- TRY TO ADD UNIT TESTING FOR ALL PROBLEMS FIXED -----
+- Empty expression, tap previous result with unit, adds a one
 - Type "(30+3%" and put cursor before 0, displays "(3)0+3
 - Type "54+43)" and delete auto close para --> syntax error
+- When prog first starts, cursor is on with Unitcalc on screen
+- Catch JSON read errors and do a reset calc
 - Screen rotation clears unit
 - For every solve or unit convert, save app state
 - Font size issues with large text sizes (also run the emulator for a few diff size screens and resolutions. 
@@ -45,6 +41,7 @@
 - Type out 100000000 is 1.e8
 - Black flash seems to happen after clear operation?
 - Construct results out of expressions such that 1/3, then delete, then recall 0.33333*3 == 1
+- "Converting inches to feet" bug still there; do unit coverts, back, then open app again
 - (fixed?) If its been a while since open, app crashes
 - Reduce redundant case checking before an big number addition/subtraction
 - Backspace drawable selected turns white instead of dark
@@ -54,6 +51,14 @@
 - Perhaps selection access should be revisited--should it be initiated from the model side or the controller side?
 
 -------------------Features----------------------
+- Add check/click results functionality to ConsoleTester
+- Add sqrt, +/-
+- Tap equals after solve for scientific notation (hold equals for sci notation preferences)?
+- Add preferences 
+- Make "Convert milimeters to..." blink or something cool
+- Make arrows in a circle instead of line
+- Commas for large numbers?
+- Make arrows pulse when waiting to convert
 - Also allow for custom unit
 - Implement infinity properly instead of just saying number too large
 - If hit in without any numbers, add highlighted "1" for unit to unit conv
@@ -70,7 +75,6 @@
 - Perhaps squish para operators into one key and add large clear key?
 - Copy and maybe paste buttons (maybe left side of expression's text box) show copy button after solve and paste if properly formatted thing in clipboard?
 - Maybe copy and paste in status bar, although this is going to take a lot of vertical space
-- Add more math operators like sqrt, and trig functions, then might was well add solve meaning of life
 - Add hold options for lots of keys (add indicating names for these) eg Clear, +/-, sqrt, !, mod
 - Explore adding another coloum of keys to main calc app, might be too cluttered, but also might be nice (maybe make it an option?)
 - Swipe down on units to hide; use three horz lines to signify swipeable. When hidden only show unittypes 

@@ -18,8 +18,8 @@ import android.util.Log;
 public class UnitCurrency extends Unit {
 	private static String JSON_URL_RATE_TAG = "rate";
 
-	private static String mURLPrefix = "http://rate-exchange.appspot.com/currency?from=USD&to=";
-	private static String mURLSuffix = "";
+	private String mURLPrefix = "http://rate-exchange.appspot.com/currency?from=USD&to=";
+	private String mURLSuffix = "";
 
 	//this is for communication with fragment hosting convert keys
 	OnConvertKeyUpdateFinishedListener mCallback;
@@ -31,6 +31,11 @@ public class UnitCurrency extends Unit {
 	//used to tell parent classes if the asyncRefresh is currently running
 	private boolean mUpdating = false;
 
+	public UnitCurrency(String name, String longName, double value, String URL){
+		super(name, longName, value);
+		mURLPrefix = URL;
+	}	
+	
 	public UnitCurrency(String name, String longName, double value){
 		super(name, longName, value);
 	}	
@@ -77,12 +82,20 @@ public class UnitCurrency extends Unit {
 	}
 
 	private String getURL(){
-		return mURLPrefix + toString() + mURLSuffix;
+		//crude method, want something better later
+		if(getName().equals("BTC"))
+			return mURLPrefix;
+		else
+			return mURLPrefix + toString() + mURLSuffix;
 	}
 
 	/** Set value (presumably after HTTP API call)*/
 	private void setValue(double val) {
 		mValue = val;
+	}
+	
+	private String getName(){
+		return toString();
 	}
 
 
@@ -101,7 +114,14 @@ public class UnitCurrency extends Unit {
 		@Override
 		protected void onPostExecute(String result) {
 			//Toast.makeText(appContext, "Received!", Toast.LENGTH_LONG).show();
-			parseRateFromJSONString(result);
+			
+			//this is crude, but works until we have more URLs each with unique formats
+			Log.e("TESTING", "getName() = " + getName());
+			Log.e("TESTING", "result = " + result);
+			if(getName().equals("BTC"))
+				setValue(Double.parseDouble(result));
+			else
+				parseRateFromJSONString(result);
 
 			//updating is complete
 			mUpdating = false;
