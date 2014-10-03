@@ -53,13 +53,16 @@ public class ResultListFragment extends ListFragment {
 		public View getView(int position, View convertView, ViewGroup parent){
 			// If we weren't given a view, inflate one
 			if (convertView == null)
-				convertView = getActivity().getLayoutInflater().inflate(R.layout.list_item_result, null);
+				convertView = getActivity().getLayoutInflater().
+					inflate(R.layout.list_item_result, null);
 
 			// Configure the view for this result
 			Result result = getItem(position);
-			
-			TextView textViewUnitDesc = (TextView)convertView.findViewById(R.id.list_item_result_convertUnitDesc);	
-			TextView textViewUnitTimestamp = (TextView)convertView.findViewById(R.id.list_item_result_currencyTimestamp);
+
+			TextView textViewUnitDesc = (TextView)convertView.
+					findViewById(R.id.list_item_result_convertUnitDesc);	
+			TextView textViewUnitTimestamp = (TextView)convertView.
+					findViewById(R.id.list_item_result_currencyTimestamp);
 			textViewUnitTimestamp.setVisibility(View.GONE);
 			if(result.containsUnits()){
 				String text = getResources().getString(R.string.word_Converting) + 
@@ -69,7 +72,7 @@ public class ResultListFragment extends ListFragment {
 				textViewUnitDesc.setText(text);
 				//ListView reuses old textViewUnitDesc sometimes; make sure old one isn't still invisible
 				textViewUnitDesc.setVisibility(View.VISIBLE);
-				
+
 				//see if the result was dynamic and therefore has a timestamp to display
 				String timestamp = result.getTimestamp();
 				if(!timestamp.equals("")){
@@ -81,10 +84,12 @@ public class ResultListFragment extends ListFragment {
 				textViewUnitDesc.setVisibility(View.GONE);
 			}	
 
-			TextView textViewQuerry = (TextView)convertView.findViewById(R.id.list_item_result_textPrevQuery);	
+			TextView textViewQuerry = (TextView)convertView.
+					findViewById(R.id.list_item_result_textPrevQuery);	
 			setUpResultTextView(textViewQuerry, result.getTextQuerry());
 
-			TextView textViewAnswer = (TextView)convertView.findViewById(R.id.list_item_result_textPrevAnswer);
+			TextView textViewAnswer = (TextView)convertView.
+					findViewById(R.id.list_item_result_textPrevAnswer);
 			setUpResultTextView(textViewAnswer, result.getTextAnswer());
 
 			return convertView; 
@@ -111,7 +116,7 @@ public class ResultListFragment extends ListFragment {
 
 			//otherwise just set it normally
 			else
-			*/
+			 */
 			textView.setText(text);
 
 			textView.setOnClickListener(new View.OnClickListener() {
@@ -151,7 +156,7 @@ public class ResultListFragment extends ListFragment {
 					mCallback.updateScreen(false);				
 				}
 			});
-			
+
 			textView.setOnLongClickListener(new View.OnLongClickListener() {
 				@Override 
 				public boolean onLongClick(View view) {
@@ -160,14 +165,14 @@ public class ResultListFragment extends ListFragment {
 					//delete associated previous expression
 					mResultArray.remove(position);
 					mCallback.updateScreen(true);				
-					
+
 					return false;
 				}
 			});
 		}
 	}
 
-	
+
 
 	/**
 	 * Gets called by the activity

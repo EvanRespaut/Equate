@@ -91,8 +91,8 @@ public class Result {
 		mAnswerUnit = answerUnit;
 		mUnitTypePos = unitTypePos;
 		mContainsUnits=true;
-		if(queryUnit.isDynamic())
-			mTimestamp="[1:11 pm]";
+		if(mAnswerUnit instanceof UnitCurrency)
+			mTimestamp = ((UnitCurrency)mAnswerUnit).getUpdateTime();
 	}
 
 	public int getUnitTypePos() {

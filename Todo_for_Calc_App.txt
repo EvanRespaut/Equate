@@ -1,11 +1,9 @@
 ------------------ToDo Next--------------------
-- Make "..." in Unit buttons bigger
 - Restructure file system, need view and model folder and model/unit folder
 - Add timestamps to currencies
 - Make dynamically sized button into dynamically sized TextView, have button inherrit this
 - Attempt to force "Converting __ to __" text to one line and dynamically sized 
 - Add historical USD
-- Add BTC (and custom constructor for it)
 
 -----Stuff to Test (squashed bugs, etc)-----
 - Test min/mile to mph and back again
