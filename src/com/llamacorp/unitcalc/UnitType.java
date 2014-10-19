@@ -7,6 +7,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.Context;
+
 import com.llamacorp.unitcalc.UnitCurrency.OnConvertKeyUpdateFinishedListener;
 
 public class UnitType {
@@ -117,10 +119,10 @@ public class UnitType {
 	 * is asynchronous and will only happen sometime in the future 
 	 * Internet connection permitting.
 	 */	
-	public void refreshDynamicUnits(){
+	public void refreshDynamicUnits(Context c){
 		if(isDynamicUnit())
 			for(Unit uc : mUnitArray)
-				((UnitCurrency) uc).asyncRefresh();
+				((UnitCurrency) uc).asyncRefresh(c);
 	}
 
 	/**

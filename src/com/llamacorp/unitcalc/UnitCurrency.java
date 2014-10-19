@@ -14,11 +14,14 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
 public class UnitCurrency extends Unit {
 	private static String JSON_URL_RATE_TAG = "rate";
+	private static int UPDATE_TIMEOUT_MIN = 5;
 
 	private Date mTimeLastUpdated;
 	private String mURLPrefix = "http://rate-exchange.appspot.com/currency?from=USD&to=";
@@ -26,6 +29,7 @@ public class UnitCurrency extends Unit {
 
 	//this is for communication with fragment hosting convert keys
 	OnConvertKeyUpdateFinishedListener mCallback;
+	Context mContext;
 
 	public interface OnConvertKeyUpdateFinishedListener {
 		public void updateDynamicUnitButtons();
@@ -34,22 +38,23 @@ public class UnitCurrency extends Unit {
 	//used to tell parent classes if the asyncRefresh is currently running
 	private boolean mUpdating = false;
 
-	public UnitCurrency(String name, String longName, double value, String URL){
+	public UnitCurrency(String name, String longName, double value){
 		super(name, longName, value);
+	//	mTimeLastUpdated = new Date(2013,1,2,3,45);
+	}	
+
+	public UnitCurrency(String name, String longName, double value, String URL){
+		this(name, longName, value);
 		mURLPrefix = URL;
 	}	
 
-	public UnitCurrency(String name, String longName, double value){
-		super(name, longName, value);
-	}	
-
 	public UnitCurrency(String name, double value){
-		super(name, name, value);
+		this(name, name, value);
 	}	
 
 	//TODO do we need this?
 	public UnitCurrency(){
-		super();
+		this("","",0);
 	}
 
 	public UnitCurrency(JSONObject json) throws JSONException {
@@ -62,8 +67,6 @@ public class UnitCurrency extends Unit {
 					format(mTimeLastUpdated);
 		else
 			return "";
-
-
 	}
 
 	public boolean isUpdating(){
@@ -87,7 +90,21 @@ public class UnitCurrency extends Unit {
 	 * Also note that the value may or may not even be updated, dependent
 	 * on Internet connection.  
 	 */
-	public void asyncRefresh(){
+	public void asyncRefresh(Context c){
+		if(mUpdating) return;
+		Date now = new Date();
+		if(mTimeLastUpdated != null && (now.getTime() - mTimeLastUpdated.getTime()) < (60*1000*UPDATE_TIMEOUT_MIN)){ 
+			System.out.println("Not ready to update " + getName() + " yet, wait " + (now.getTime() - mTimeLastUpdated.getTime())/(1000) + " seconds");
+			Toast toast = Toast.makeText(mContext, (CharSequence)"Timeout not reached for " + getName(), Toast.LENGTH_SHORT);
+			toast.show();
+			return;
+		}
+		if(mTimeLastUpdated == null)
+			System.out.println("Update will be peformed: mTimeLastUpdated = null - " + getName());
+		else
+			System.out.println("Update will be peformed: TIMEOUT REACHED, last update = " + getUpdateTime());
+		
+		mContext = c;
 		mUpdating = true;
 		if(mCallback != null)
 			mCallback.updateDynamicUnitButtons();
@@ -126,16 +143,29 @@ public class UnitCurrency extends Unit {
 		// This method is called after doInBackground completes
 		@Override
 		protected void onPostExecute(String result) {
-			//Toast.makeText(appContext, "Received!", Toast.LENGTH_LONG).show();
+
+			boolean updateSuccess = false;
 
 			//this is crude, but works until we have more URLs each with unique formats
 			if(getName().equals("BTC"))
-				setValue(Double.parseDouble(result));
+				try{
+					setValue(Double.parseDouble(result));
+					updateSuccess = true;
+				} catch (Exception e){
+					System.out.println("------------ ");
+					System.out.println("Tried BTC. result = " + result);
+					System.out.println("------------ ");
+				}
 			else
-				parseRateFromJSONString(result);
+				updateSuccess = parseRateFromJSONString(result);
 
-			//record time of update
-			mTimeLastUpdated = new Date(); 
+			//record time of update only if we actually updated
+			if(updateSuccess){
+				mTimeLastUpdated = new Date(); 
+				System.out.println("BTC updated at " + DateFormat.getDateTimeInstance().format(mTimeLastUpdated));
+				Toast toast = Toast.makeText(mContext, (CharSequence)"BTC updated at "+ DateFormat.getInstance().format(mTimeLastUpdated), Toast.LENGTH_SHORT);
+				toast.show();
+			}
 
 			//updating is complete
 			mUpdating = false;
@@ -147,14 +177,21 @@ public class UnitCurrency extends Unit {
 		 * Attempt to take a JSON string, parse it, and set the value
 		 * of this current Currency Unit
 		 */		
-		private void parseRateFromJSONString(String result){
+		private boolean parseRateFromJSONString(String result){
+			boolean updateSuccess = false;
 			try {
 				JSONObject json = new JSONObject(result);
 				double rate = json.getDouble(JSON_URL_RATE_TAG);
 				setValue(rate);
+				updateSuccess = true;
 			} catch (JSONException e) {
-				e.printStackTrace();
+				if(result.contains("Over Quota")){
+					System.out.println("OVER QUOTA - " + getName());
+				}
+				else
+					System.out.println("Result didn't parse. result = " + result);
 			}
+			return updateSuccess;
 		}
 
 		/** Helper function for above method*/

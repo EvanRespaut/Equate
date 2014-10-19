@@ -566,7 +566,7 @@ public class Calculator{
 		//JUnit tests can't find AsynTask class, so skip it for test calc
 		if(!mIsTestCalc)
 			for(UnitType ut : mUnitTypeArray)
-				ut.refreshDynamicUnits();
+				ut.refreshDynamicUnits(mAppContext);
 	}
 
 
