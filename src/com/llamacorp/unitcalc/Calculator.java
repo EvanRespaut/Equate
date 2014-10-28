@@ -127,6 +127,14 @@ public class Calculator{
 		unitsOfCurrency.addUnit(new UnitCurrency("HKD", "Hong Kong Dollars", 7.75)); 
 		unitsOfCurrency.addUnit(new UnitCurrency("SGD", "Singapore Dollars", 1.25)); 
 		unitsOfCurrency.addUnit(new UnitCurrency("CNY", "Chinese Yuans", 6.15)); 
+//		unitsOfCurrency.addUnit(new UnitCurrency()); 
+//		unitsOfCurrency.addUnit(new UnitCurrency()); 
+//		unitsOfCurrency.addUnit(new UnitCurrency()); 
+//
+//		unitsOfCurrency.addUnit(new UnitCurrency()); 
+//		unitsOfCurrency.addUnit(new UnitCurrency()); 
+//		unitsOfCurrency.addUnit(new UnitCurrency()); 
+//		unitsOfCurrency.addUnit(new UnitCurrency()); 
 		
 		unitsOfCurrency.addUnit(new UnitCurrency("BTC", "Bitcoins", 0.003, 
 												"http://blockchain.info/tobtc?currency=USD&value=1")); 
@@ -351,7 +359,6 @@ public class Calculator{
 				mResultList.add(new Result(jResultArray.getJSONObject(i)));
 			}
 
-			initiateUnits();
 			int newSize = mUnitTypeArray.size();	
 			JSONArray jUnitTypeArray = jObjState.getJSONArray(JSON_UNIT_TYPE_ARRAY);
 			//only load in saved unit types only if same size as current

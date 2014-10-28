@@ -250,6 +250,7 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 					String buttonValue="";
 					switch(buttonId){
 					case R.id.multiply_button: buttonValue="%";
+					case R.id.nine_button: mCalc.refreshAllDynamicUnits();;
 					break;
 					default: 					
 						break;

@@ -20,11 +20,13 @@ import android.util.Log;
 import android.widget.Toast;
 
 public class UnitCurrency extends Unit {
-	private static String JSON_URL_RATE_TAG = "rate";
+//	private static String JSON_URL_RATE_TAG = "rate";
+	private static String JSON_URL_RATE_TAG = "Rate";
 	private static int UPDATE_TIMEOUT_MIN = 5;
 
 	private Date mTimeLastUpdated;
-	private String mURLPrefix = "http://rate-exchange.appspot.com/currency?from=USD&to=";
+//	private String mURLPrefix = "http://rate-exchange.appspot.com/currency?from=USD&to=";
+	private String mURLPrefix = "http://rate-exchange.herokuapp.com/fetchRate?from=USD&to=";
 	private String mURLSuffix = "";
 
 	//this is for communication with fragment hosting convert keys
@@ -40,7 +42,7 @@ public class UnitCurrency extends Unit {
 
 	public UnitCurrency(String name, String longName, double value){
 		super(name, longName, value);
-	//	mTimeLastUpdated = new Date(2013,1,2,3,45);
+		//	mTimeLastUpdated = new Date(2013,1,2,3,45);
 	}	
 
 	public UnitCurrency(String name, String longName, double value, String URL){
@@ -91,7 +93,10 @@ public class UnitCurrency extends Unit {
 	 * on Internet connection.  
 	 */
 	public void asyncRefresh(Context c){
+		if(getName().equals("")) return;
 		if(mUpdating) return;
+		if(getName().equals("BTC"))
+			System.out.println("-----------------asyncRefresh for BTC");
 		Date now = new Date();
 		if(mTimeLastUpdated != null && (now.getTime() - mTimeLastUpdated.getTime()) < (60*1000*UPDATE_TIMEOUT_MIN)){ 
 			System.out.println("Not ready to update " + getName() + " yet, wait " + (now.getTime() - mTimeLastUpdated.getTime())/(1000) + " seconds");
@@ -103,7 +108,7 @@ public class UnitCurrency extends Unit {
 			System.out.println("Update will be peformed: mTimeLastUpdated = null - " + getName());
 		else
 			System.out.println("Update will be peformed: TIMEOUT REACHED, last update = " + getUpdateTime());
-		
+
 		mContext = c;
 		mUpdating = true;
 		if(mCallback != null)
@@ -152,9 +157,7 @@ public class UnitCurrency extends Unit {
 					setValue(Double.parseDouble(result));
 					updateSuccess = true;
 				} catch (Exception e){
-					System.out.println("------------ ");
-					System.out.println("Tried BTC. result = " + result);
-					System.out.println("------------ ");
+					System.out.println("Parsing Exception for BTC, result = " + result);
 				}
 			else
 				updateSuccess = parseRateFromJSONString(result);
@@ -162,9 +165,11 @@ public class UnitCurrency extends Unit {
 			//record time of update only if we actually updated
 			if(updateSuccess){
 				mTimeLastUpdated = new Date(); 
-				System.out.println("BTC updated at " + DateFormat.getDateTimeInstance().format(mTimeLastUpdated));
-				Toast toast = Toast.makeText(mContext, (CharSequence)"BTC updated at "+ DateFormat.getInstance().format(mTimeLastUpdated), Toast.LENGTH_SHORT);
-				toast.show();
+				if(getName().equals("BTC"))	{		
+					System.out.println("BTC updated at " + DateFormat.getDateTimeInstance().format(mTimeLastUpdated));
+					Toast toast = Toast.makeText(mContext, (CharSequence)"BTC updated at "+ DateFormat.getInstance().format(mTimeLastUpdated), Toast.LENGTH_SHORT);
+					toast.show();
+				}
 			}
 
 			//updating is complete
@@ -180,16 +185,17 @@ public class UnitCurrency extends Unit {
 		private boolean parseRateFromJSONString(String result){
 			boolean updateSuccess = false;
 			try {
+				//System.out.println("Trying to parse \"" + result + "\"");
 				JSONObject json = new JSONObject(result);
 				double rate = json.getDouble(JSON_URL_RATE_TAG);
 				setValue(rate);
 				updateSuccess = true;
 			} catch (JSONException e) {
 				if(result.contains("Over Quota")){
-					System.out.println("OVER QUOTA - " + getName());
+					System.out.println("Over quota for " + getName());
 				}
 				else
-					System.out.println("Result didn't parse. result = " + result);
+					System.out.println("Result didn't parse, result = " + result);
 			}
 			return updateSuccess;
 		}

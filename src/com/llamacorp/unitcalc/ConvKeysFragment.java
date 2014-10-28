@@ -90,9 +90,9 @@ public class ConvKeysFragment extends Fragment implements OnConvertKeyUpdateFini
 		mConvButton = new ArrayList<Button>();
 		final int numButtons = convertButtonIds.length;
 
-		if(mUnitType.isDynamicUnit()){
-			mUnitType.refreshDynamicUnits(getActivity().getApplicationContext());
-		}		
+//		if(mUnitType.isDynamicUnit()){
+//			mUnitType.refreshDynamicUnits(getActivity().getApplicationContext());
+//		}		
 		
 		for(int i=0; i<numButtons; i++) {
 			Button button = (Button)v.findViewById(convertButtonIds[i]);
