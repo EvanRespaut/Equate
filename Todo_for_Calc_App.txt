@@ -1,4 +1,5 @@
 ------------------ToDo Next--------------------
+- When to try a curr refresh (timeout still enabled): when curr unit tab switched to + when app opens and curr tab open
 - Restructure file system, need view and model folder and model/unit folder
 - Add timestamps to currencies
 - Make dynamically sized button into dynamically sized TextView, have button inherit this

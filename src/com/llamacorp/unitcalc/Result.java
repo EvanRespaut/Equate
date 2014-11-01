@@ -91,8 +91,13 @@ public class Result {
 		mAnswerUnit = answerUnit;
 		mUnitTypePos = unitTypePos;
 		mContainsUnits=true;
-		if(mAnswerUnit instanceof UnitCurrency)
-			mTimestamp = ((UnitCurrency)mAnswerUnit).getUpdateTime();
+		if(mAnswerUnit instanceof UnitCurrency){
+			//the default unit (USD) doesn't get updated
+			if(mAnswerUnit.toString().equals(UnitCurrency.DEFAULT_CURRENCY))
+				mTimestamp = ((UnitCurrency)mQueryUnit).getUpdateTime();
+			else
+				mTimestamp = ((UnitCurrency)mAnswerUnit).getUpdateTime();
+		}
 	}
 
 	public int getUnitTypePos() {

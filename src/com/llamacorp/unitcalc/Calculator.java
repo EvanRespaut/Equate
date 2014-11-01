@@ -141,7 +141,7 @@ public class Calculator{
 		unitsOfCurrency.addUnit(new UnitCurrency("RUB", "Russian Rubles", 39.7)); 
 		mUnitTypeArray.add(unitsOfCurrency);
 
-		refreshAllDynamicUnits();		
+		//refreshAllDynamicUnits();		
 
 		UnitType unitsOfTemp = new UnitType("Temp");
 		unitsOfTemp.addUnit(new UnitTemperature());
