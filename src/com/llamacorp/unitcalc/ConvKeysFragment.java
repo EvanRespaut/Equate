@@ -168,13 +168,13 @@ public class ConvKeysFragment extends Fragment implements OnConvertKeyUpdateFini
 			clickUnitButton(unitPos);
 	}
 	
-	public void updateDynamicUnitButtons(){
+	public void updateDynamicUnitButtons(String text){
 		if(!mUnitType.isDynamicUnit())
 			return;
 		//add or remove dynamic unit updating indicator
 		for(int i=0;i<mConvButton.size();i++){
 			if(mUnitType.isUnitUpdating(i))
-				mConvButton.get(i).setText("Updating");
+				mConvButton.get(i).setText(text);
 			else
 				refreshButtonText(i);
 		}

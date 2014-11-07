@@ -90,6 +90,7 @@ public abstract class Unit  /*implements JsonSerializer<Unit>, JsonDeserializer<
 	}
 
 	public boolean isDynamic(){
+		//TODO this should be replaced with an interface
 		return this instanceof UnitCurrency;
 	}
 	

@@ -474,7 +474,11 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 				//					padRight=0;
 				mConvKeysViewPager.setPadding(padLeft, 0, padRight, 0);
 				 */
-
+				
+				//if we just switched to a dynamic unit, attempt an update
+				if(mCalc.getCurrUnitType().isDynamicUnit())
+					mCalc.refreshAllDynamicUnits();
+				
 				//TODO do we still need to do this?
 				//clear selected unit from adjacent convert key fragment so you can't see a bit of them
 				int currConvKeyPos = mConvKeysViewPager.getCurrentItem();
@@ -544,6 +548,11 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 		if(mCalc==null)
 			return;
 
+		//if we open app to dynamic unit, attempt an update
+		if(mCalc.getCurrUnitType().isDynamicUnit())
+			mCalc.refreshAllDynamicUnits();
+
+		
 		//only set display to UnitCalc if no expression is there yet
 		if(mCalc.toString().equals("") && mCalc.getResultList().size()==0){
 			mDisplay.setText(R.string.app_name);

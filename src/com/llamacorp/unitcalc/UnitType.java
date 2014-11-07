@@ -121,8 +121,12 @@ public class UnitType {
 	 */	
 	public void refreshDynamicUnits(Context c){
 		if(isDynamicUnit())
-			for(Unit uc : mUnitArray)
-				((UnitCurrency) uc).asyncRefresh(c);
+			for(Unit uc : mUnitArray){
+				UnitCurrency u = ((UnitCurrency) uc);
+				//check to see if the update timeout has been reached
+				if(u.isTimeoutReached(c))
+					u.asyncRefresh(c);
+			}
 	}
 
 	/**
