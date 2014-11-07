@@ -5,10 +5,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.Locale;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -80,18 +78,11 @@ public class UnitCurrency extends Unit {
 		return json;
 	}
 
-	public String getUpdateTime(){
-		String dateText = "";
-		if(mTimeLastUpdated != null){
-			//if older than one day
-			Date now = new Date();
-			if((now.getTime() - mTimeLastUpdated.getTime()) > (1000*60*60*24))
-				dateText = new SimpleDateFormat("MMM d",Locale.US).format(mTimeLastUpdated);
-			else 
-				dateText = DateFormat.getTimeInstance(DateFormat.SHORT).format(mTimeLastUpdated);
-		}
-		return dateText;
-
+	public long getTimeOfUpdate(){
+		if(mTimeLastUpdated != null)
+			return mTimeLastUpdated.getTime();
+		else
+			return 0;
 	}
 
 	public boolean isUpdating(){ 

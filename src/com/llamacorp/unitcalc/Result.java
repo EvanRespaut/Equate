@@ -1,5 +1,10 @@
 package com.llamacorp.unitcalc;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -19,7 +24,7 @@ public class Result {
 	private Unit mAnswerUnit;
 	private int mUnitTypePos;
 	boolean mContainsUnits;
-	private String mTimestamp;
+	private long mTimestamp;
 
 	public Result(String query, String answer){
 		mQuery=query;
@@ -27,9 +32,9 @@ public class Result {
 		mQueryUnit = new UnitScalar();
 		mAnswerUnit = new UnitScalar();
 		mContainsUnits=false;
-		mTimestamp="";
+		mTimestamp=0;
 	}
-	
+
 	public Result(String query){
 		this(query,"");
 	}
@@ -45,12 +50,12 @@ public class Result {
 		mAnswerUnit = Unit.getUnit(json.getJSONObject(JSON_ANSWER_UNIT)); 
 		mUnitTypePos = json.getInt(JSON_UNIT_TYPE_POS);
 		mContainsUnits = json.getBoolean(JSON_CONTAINS_UNITS);
-		mTimestamp = json.getString(JSON_TIMESTAMP);
+		mTimestamp = json.getLong(JSON_TIMESTAMP);
 	}
 
 	public JSONObject toJSON() throws JSONException {
 		JSONObject json = new JSONObject();
-		
+
 		json.put(JSON_QUERY, getQuerry());
 		json.put(JSON_ANSWER, getAnswer());
 		json.put(JSON_QUERY_UNIT, mQueryUnit.toJSON());
@@ -58,7 +63,7 @@ public class Result {
 		json.put(JSON_UNIT_TYPE_POS, getUnitTypePos());
 		json.put(JSON_CONTAINS_UNITS, containsUnits());
 		json.put(JSON_TIMESTAMP, getTimestamp());
-		
+
 		return json;
 	}
 
@@ -94,10 +99,21 @@ public class Result {
 		if(mAnswerUnit instanceof UnitCurrency){
 			//the default unit (USD) doesn't get updated
 			if(mAnswerUnit.toString().equals(UnitCurrency.DEFAULT_CURRENCY))
-				mTimestamp = ((UnitCurrency)mQueryUnit).getUpdateTime();
+				mTimestamp = ((UnitCurrency)mQueryUnit).getTimeOfUpdate();
 			else
-				mTimestamp = ((UnitCurrency)mAnswerUnit).getUpdateTime();
+				mTimestamp = ((UnitCurrency)mAnswerUnit).getTimeOfUpdate();
 		}
+	}
+
+	private String formatDate(Long ld){
+		String dateText = "";
+		if(ld==0) return dateText;
+		Date now = new Date();
+		if((now.getTime() - ld) > (1000*60*60*24))
+			dateText = new SimpleDateFormat("MMM d",Locale.US).format(new Date(ld));
+		else 
+			dateText = DateFormat.getTimeInstance(DateFormat.SHORT).format(new Date(ld));
+		return dateText;
 	}
 
 	public int getUnitTypePos() {
@@ -111,9 +127,9 @@ public class Result {
 	public boolean containsUnits() {
 		return mContainsUnits;
 	}
-	
+
 	public String getTimestamp(){
-		return mTimestamp;
+		return formatDate(mTimestamp);
 	}
 
 	public String getTextQuerry() {
