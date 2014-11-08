@@ -223,8 +223,9 @@ public class ConvKeysFragment extends Fragment implements OnConvertKeyUpdateFini
 			calc.convertFromTo(mUnitType.getPrevUnit(), mUnitType.getCurrUnit());
 			clearButtonSelection();
 		}
-		//no unit previously selected and now one is...
+		//unit not previously selected, now select one
 		else if(mUnitType.isUnitSelected()){
+			//if expression was blank, add a highlighted "1"
 			if(calc.isExpressionEmpty()){
 				//add in a 1 for user's convenience 
 				calc.parseKeyPressed("1");

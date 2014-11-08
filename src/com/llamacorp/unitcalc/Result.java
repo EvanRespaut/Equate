@@ -62,7 +62,7 @@ public class Result {
 		json.put(JSON_ANSWER_UNIT, mAnswerUnit.toJSON());
 		json.put(JSON_UNIT_TYPE_POS, getUnitTypePos());
 		json.put(JSON_CONTAINS_UNITS, containsUnits());
-		json.put(JSON_TIMESTAMP, getTimestamp());
+		json.put(JSON_TIMESTAMP, mTimestamp); 
 
 		return json;
 	}

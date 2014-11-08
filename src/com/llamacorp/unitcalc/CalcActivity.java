@@ -3,7 +3,9 @@ package com.llamacorp.unitcalc;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -70,6 +72,16 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 	 * @param keyPressed ASCII representation of the key pressed ("1", "=" "*", etc)
 	 */
 	public void numButtonPressed(String keyPressed){
+		//TODO this logic really belongs in calc, but then passing back
+		//to display a dialog becomes hard
+		if(keyPressed.equals("=") && mCalc.isUnitSelected() && !mCalc.isSolved()){
+			new AlertDialog.Builder(this)
+		    .setMessage("Click a different unit to convert")
+		    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+		        public void onClick(DialogInterface dialog, int which) {}})
+		        .show();
+		}
+		
 		//pass button value to CalcAcitvity to pass to calc
 		mCalc.parseKeyPressed(keyPressed);
 
@@ -135,7 +147,7 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 		updateScreenWithInstaScrollOption(updateResult, false);
 
 		//see if colored convert button should be not colored (if backspace or clear were pressed, or if expression solved)
-		if(!mCalc.isUnitIsSet())
+		if(!mCalc.isUnitSelected())
 			clearConvKeyForFragPos(mConvKeysViewPager.getCurrentItem());
 	}
 

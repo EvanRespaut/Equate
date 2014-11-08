@@ -95,7 +95,12 @@ public class Calculator{
 		//over-right values above if this works
 		try {
 			loadState();
-		} catch (Exception e) {}
+		} catch (Exception e) {
+			System.out.println("-----------");
+			System.out.println("Exception in Calculator.loadState():");
+			System.out.println(e.toString());
+			System.out.println("-----------");
+		}
 	}
 
 	/**
@@ -127,17 +132,17 @@ public class Calculator{
 		unitsOfCurrency.addUnit(new UnitCurrency("HKD", "Hong Kong Dollars", 7.75)); 
 		unitsOfCurrency.addUnit(new UnitCurrency("SGD", "Singapore Dollars", 1.25)); 
 		unitsOfCurrency.addUnit(new UnitCurrency("CNY", "Chinese Yuans", 6.15)); 
-//		unitsOfCurrency.addUnit(new UnitCurrency()); 
-//		unitsOfCurrency.addUnit(new UnitCurrency()); 
-//		unitsOfCurrency.addUnit(new UnitCurrency()); 
-//
-//		unitsOfCurrency.addUnit(new UnitCurrency()); 
-//		unitsOfCurrency.addUnit(new UnitCurrency()); 
-//		unitsOfCurrency.addUnit(new UnitCurrency()); 
-//		unitsOfCurrency.addUnit(new UnitCurrency()); 
-		
+		//		unitsOfCurrency.addUnit(new UnitCurrency()); 
+		//		unitsOfCurrency.addUnit(new UnitCurrency()); 
+		//		unitsOfCurrency.addUnit(new UnitCurrency()); 
+		//
+		//		unitsOfCurrency.addUnit(new UnitCurrency()); 
+		//		unitsOfCurrency.addUnit(new UnitCurrency()); 
+		//		unitsOfCurrency.addUnit(new UnitCurrency()); 
+		//		unitsOfCurrency.addUnit(new UnitCurrency()); 
+
 		unitsOfCurrency.addUnit(new UnitCurrency("BTC", "Bitcoins", 0.003, 
-												"http://blockchain.info/tobtc?currency=USD&value=1")); 
+				"http://blockchain.info/tobtc?currency=USD&value=1")); 
 		unitsOfCurrency.addUnit(new UnitCurrency("RUB", "Russian Rubles", 39.7)); 
 		mUnitTypeArray.add(unitsOfCurrency);
 
@@ -437,11 +442,17 @@ public class Calculator{
 
 		//if a convert was just done, main display will show "16 in", but no button will be colored
 		//want this treated the same as 16 (as if no unit is actually selected)
-		if(isSolved() && isUnitIsSet())
+		if(isSolved() && isUnitSelected())
 			clearSelectedUnit();
 
 		//check for equals key
 		if(sKey.equals("=")){
+			//if "Convert 3 in to..." is showing, help user out
+			if(isUnitSelected()){
+				//don't follow through with solve
+				return;
+			}
+
 			//solve expression, load into result list if answer not empty
 			solveAndLoadIntoResultList();
 		}
@@ -514,7 +525,7 @@ public class Calculator{
 			if(Expression.isInvalid(result.getAnswer()))
 				return false;
 			//also set result's unit if it's selected
-			if(isUnitIsSet()){
+			if(isUnitSelected()){
 				//load units into result list (this will also set contains unit flag
 				Unit toUnit = getCurrUnitType().getCurrUnit();
 				mResultList.get(mResultList.size()-1).setResultUnit(toUnit, toUnit, mUnitTypePos);
@@ -581,8 +592,8 @@ public class Calculator{
 		return mResultList;
 	}
 
-	/** Used by the controller to determine if any convert keys should be selected */
-	public boolean isUnitIsSet(){
+	/** Returns if a unit key in current UnitType is selected */
+	public boolean isUnitSelected(){
 		return mUnitTypeArray.get(mUnitTypePos).isUnitSelected();
 	}
 

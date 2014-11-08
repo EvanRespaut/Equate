@@ -151,7 +151,7 @@ public class EditTextCursorWatcher extends EditText {
 		mExpressionText = mCalc.toString();
 		mTextSuffix = "";
 		//if expression not empty/invalid and unit selected, display it after the expression
-		if(!mCalc.isExpressionInvalid() && !mCalc.isExpressionEmpty() && mCalc.getCurrUnitType().isUnitSelected()){
+		if(!mCalc.isExpressionInvalid() && !mCalc.isExpressionEmpty() && mCalc.isUnitSelected()){
 			mTextSuffix = " " + mCalc.getCurrUnitType().getCurrUnit().toString();
 			//about to do conversion
 			if(!mCalc.isSolved()){
