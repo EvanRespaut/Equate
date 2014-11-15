@@ -108,11 +108,14 @@ public class Result {
 	private String formatDate(Long ld){
 		String dateText = "";
 		if(ld==0) return dateText;
-		Date now = new Date();
-		if((now.getTime() - ld) > (1000*60*60*24))
-			dateText = new SimpleDateFormat("MMM d",Locale.US).format(new Date(ld));
-		else 
+		//format both today and date to format as 2014-330
+		String nowDay = new SimpleDateFormat("y-D",Locale.US).format(new Date());
+		String ldDay = new SimpleDateFormat("y-D",Locale.US).format(new Date(ld));
+		//if the exact year and day of year are not same, just display month day
+		if(nowDay.equals(ldDay))
 			dateText = DateFormat.getTimeInstance(DateFormat.SHORT).format(new Date(ld));
+		else 
+			dateText = new SimpleDateFormat("MMM d",Locale.US).format(new Date(ld));
 		return dateText;
 	}
 

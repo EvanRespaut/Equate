@@ -31,7 +31,8 @@ public class UnitCurrency extends Unit {
 
 	private Date mTimeLastUpdated;
 	//	private String mURLPrefix = "http://rate-exchange.appspot.com/currency?from=USD&to=";
-	private String mURLPrefix = "http://rate-exchange.herokuapp.com/fetchRate?from=" + DEFAULT_CURRENCY + "&to=";
+	private String mURLPrefix = "http://rate-exchange.herokuapp.com/fetchRate?from=" 
+			+ DEFAULT_CURRENCY + "&to=";
 	private String mURLSuffix = "";
 
 	//this is for communication with fragment hosting convert keys
