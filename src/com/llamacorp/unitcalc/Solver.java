@@ -50,6 +50,9 @@ public class Solver {
 		//put parenthesis around ^ expressions; -(1)^2 to -((1)^2)
 		exp.groupPowerOperands();
 
+		//add implied multiples for parenthesis
+		exp.addImpliedParMult();
+		
 		//main calculation: first the P of PEMAS, this function then calls remaining EMAS 
 		String strExp = collapsePara(exp.toString());
 		//save solved expression away

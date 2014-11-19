@@ -292,12 +292,13 @@ public class Expression {
 
 	/** Replaces % operators their respective operators */
 	public void replacePercentOps() {
-		String str=mExpression.toString();
+		String str = mExpression.toString();
 		String subStr = "";
 		for(int i=0;i<str.length();i++){
 			if(str.charAt(i)=='%'){
-				//shorten the expression and trim off the %
+				//save beginning portion of string before the %
 				subStr = str.substring(0, i);
+				//get the number that was right before the %
 				String lastNum = getLastNumb(subStr);
 				//trim off the last number
 				subStr = subStr.substring(0,subStr.length()-lastNum.length());
@@ -324,6 +325,22 @@ public class Expression {
 	}
 
 
+	/** Adds implied multiples for parenthesis */
+	public void addImpliedParMult(){
+        //String str = "2((5)6)(3)7(3)(4).2+8.(0)";
+		String str = mExpression.toString();
+         
+         //first replace all )( with )*(
+        str = str.replaceAll("\\)\\(", "\\)\\*\\(");
+        
+        //replace all #( with #*(
+        str = str.replaceAll("([\\d\\.])\\(", "$1\\*\\(");
+        
+        //replace all )# with )*#
+        str = str.replaceAll("\\)([\\d\\.])", "\\)\\*$1");
+ 		replaceExpression(str);
+	}
+	
 
 
 	/** Close any open parentheses in this expression */
