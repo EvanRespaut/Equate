@@ -1,4 +1,4 @@
-package com.llamacorp.unitcalc;
+package com.llamacorp.unitcalc.view;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
@@ -11,6 +11,9 @@ import android.text.InputType;
 import android.util.AttributeSet;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.llamacorp.unitcalc.Calculator;
+import com.llamacorp.unitcalc.R;
 
 public class EditTextCursorWatcher extends EditText {
 	private Calculator mCalc;

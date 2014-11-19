@@ -1,4 +1,4 @@
-package com.llamacorp.unitcalc;
+package com.llamacorp.unitcalc.view;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,8 +22,11 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-import com.llamacorp.unitcalc.ConvKeysFragment.OnConvertKeySelectedListener;
-import com.llamacorp.unitcalc.ResultListFragment.OnResultSelectedListener;
+import com.llamacorp.unitcalc.Calculator;
+import com.llamacorp.unitcalc.R;
+import com.llamacorp.unitcalc.Unit;
+import com.llamacorp.unitcalc.view.ConvKeysFragment.OnConvertKeySelectedListener;
+import com.llamacorp.unitcalc.view.ResultListFragment.OnResultSelectedListener;
 import com.viewpagerindicator.TabPageIndicator;
 
 public class CalcActivity  extends FragmentActivity implements OnResultSelectedListener, OnConvertKeySelectedListener{
@@ -94,7 +97,7 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 
 	/**
 	 * Selects the a unit (used by result list)
-	 * @see com.llamacorp.unitcalc.ResultListFragment.OnResultSelectedListener#selectUnit(int)
+	 * @see com.llamacorp.unitcalc.view.ResultListFragment.OnResultSelectedListener#selectUnit(int)
 	 */
 	public void selectUnit(Unit unit, int unitTypePos){
 		//if not on right page, scroll there first

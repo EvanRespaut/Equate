@@ -1,4 +1,4 @@
-package com.llamacorp.unitcalc;
+package com.llamacorp.unitcalc.view;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Color;
@@ -6,6 +6,8 @@ import android.os.Build;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
+
+import com.llamacorp.unitcalc.R;
 
 class AnimatedHoldButton extends SecondaryTextButton {
 	protected static final int SECONDARY_FONT_PERCENTAGE = 85;

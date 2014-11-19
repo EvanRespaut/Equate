@@ -77,7 +77,7 @@ public abstract class Unit  /*implements JsonSerializer<Unit>, JsonDeserializer<
 		return mLongName;
 	}
 	
-	protected String getLowercaseLongName(){
+	public String getLowercaseLongName(){
 		return getLongName().toLowerCase(Locale.US);
 	}
 

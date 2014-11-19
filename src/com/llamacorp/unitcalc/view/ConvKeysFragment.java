@@ -1,4 +1,4 @@
-package com.llamacorp.unitcalc;
+package com.llamacorp.unitcalc.view;
 
 import java.util.ArrayList;
 
@@ -12,7 +12,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.llamacorp.unitcalc.Calculator;
+import com.llamacorp.unitcalc.R;
+import com.llamacorp.unitcalc.Unit;
 import com.llamacorp.unitcalc.UnitCurrency.OnConvertKeyUpdateFinishedListener;
+import com.llamacorp.unitcalc.UnitType;
 
 public class ConvKeysFragment extends Fragment implements OnConvertKeyUpdateFinishedListener {
 

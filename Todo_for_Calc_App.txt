@@ -1,5 +1,4 @@
 ------------------ToDo Next--------------------
-- Restructure file system, need view and model folder and model/unit folder
 - Make dynamically sized button into dynamically sized TextView, have button inherit this
 - Attempt to force "Converting __ to __" text to one line and dynamically sized 
 - Add historical USD
