@@ -79,12 +79,12 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 		//to display a dialog becomes hard
 		if(keyPressed.equals("=") && mCalc.isUnitSelected() && !mCalc.isSolved()){
 			new AlertDialog.Builder(this)
-		    .setMessage("Click a different unit to convert")
-		    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-		        public void onClick(DialogInterface dialog, int which) {}})
-		        .show();
+			.setMessage("Click a different unit to convert")
+			.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int which) {}})
+				.show();
 		}
-		
+
 		//pass button value to CalcAcitvity to pass to calc
 		mCalc.parseKeyPressed(keyPressed);
 
@@ -174,7 +174,7 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 		mDisplay = (EditTextCursorWatcher)findViewById(R.id.textDisplay);
 		mDisplay.setCalc(mCalc);
 		mDisplay.disableSoftInputFromAppearing();
-		
+
 		//hold click will select all text
 		mDisplay.setOnLongClickListener(new View.OnLongClickListener() {
 			@Override
@@ -257,7 +257,7 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 			});
 
 
-			
+
 			button.setOnLongClickListener(new View.OnLongClickListener() {
 				@Override 
 				public boolean onLongClick(View view) {
@@ -265,7 +265,8 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 					String buttonValue="";
 					switch(buttonId){
 					case R.id.multiply_button: buttonValue="%";
-					case R.id.nine_button: mCalc.refreshAllDynamicUnits();;
+					break;
+					case R.id.nine_button: mCalc.refreshAllDynamicUnits();
 					break;
 					default: 					
 						break;
@@ -489,11 +490,11 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 				//					padRight=0;
 				mConvKeysViewPager.setPadding(padLeft, 0, padRight, 0);
 				 */
-				
+
 				//if we just switched to a dynamic unit, attempt an update
 				if(mCalc.getCurrUnitType().isDynamicUnit())
 					mCalc.refreshAllDynamicUnits();
-				
+
 				//TODO do we still need to do this?
 				//clear selected unit from adjacent convert key fragment so you can't see a bit of them
 				int currConvKeyPos = mConvKeysViewPager.getCurrentItem();
@@ -567,7 +568,7 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 		if(mCalc.getCurrUnitType().isDynamicUnit())
 			mCalc.refreshAllDynamicUnits();
 
-		
+
 		//only set display to UnitCalc if no expression is there yet
 		if(mCalc.toString().equals("") && mCalc.getResultList().size()==0){
 			mDisplay.setText(R.string.app_name);

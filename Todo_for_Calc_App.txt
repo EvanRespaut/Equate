@@ -24,7 +24,7 @@
 
 ----------------------Fix----------------------
 ---- TRY TO ADD UNIT TESTING FOR ALL PROBLEMS FIXED -----
--After long press unit switch, select unit
+- After long press unit switch, select unit
 - Empty expression, tap previous result with unit, adds a one
 - Type "(30+3%" and put cursor before 0, displays "(3)0+3
 - Type "54+43)" and delete auto close para --> syntax error
