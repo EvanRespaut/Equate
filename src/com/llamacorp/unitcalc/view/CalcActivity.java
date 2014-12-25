@@ -492,7 +492,7 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 				 */
 
 				//if we just switched to a dynamic unit, attempt an update
-				if(mCalc.getCurrUnitType().isDynamicUnit())
+				if(mCalc.getCurrUnitType().containsDynamicUnits())
 					mCalc.refreshAllDynamicUnits();
 
 				//TODO do we still need to do this?
@@ -565,7 +565,7 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 			return;
 
 		//if we open app to dynamic unit, attempt an update
-		if(mCalc.getCurrUnitType().isDynamicUnit())
+		if(mCalc.getCurrUnitType().containsDynamicUnits())
 			mCalc.refreshAllDynamicUnits();
 
 

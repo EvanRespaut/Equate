@@ -94,13 +94,13 @@ public class ConvKeysFragment extends Fragment implements OnConvertKeyUpdateFini
 		mConvButton = new ArrayList<Button>();
 		final int numButtons = convertButtonIds.length;
 
-//		if(mUnitType.isDynamicUnit()){
-//			mUnitType.refreshDynamicUnits(getActivity().getApplicationContext());
-//		}		
-		
+		//		if(mUnitType.isDynamicUnit()){
+		//			mUnitType.refreshDynamicUnits(getActivity().getApplicationContext());
+		//		}		
+
 		for(int i=0; i<numButtons; i++) {
 			Button button = (Button)v.findViewById(convertButtonIds[i]);
-		
+
 			if(mUnitType.size()>10)
 				((SecondaryTextButton)button).setSecondaryText((String) getText(R.string.conv_button_hint));
 
@@ -171,16 +171,19 @@ public class ConvKeysFragment extends Fragment implements OnConvertKeyUpdateFini
 		if(unitPos != -1 && unitPos < mConvButton.size())
 			clickUnitButton(unitPos);
 	}
-	
+
 	public void updateDynamicUnitButtons(String text){
-		if(!mUnitType.isDynamicUnit())
+		if(!mUnitType.containsDynamicUnits())
 			return;
 		//add or remove dynamic unit updating indicator
 		for(int i=0;i<mConvButton.size();i++){
-			if(mUnitType.isUnitUpdating(i))
-				mConvButton.get(i).setText(text);
-			else
-				refreshButtonText(i);
+			//first check if each particular unit is dynamic
+			if(mUnitType.isUnitDynamic(i)){
+				if(mUnitType.isUnitUpdating(i))
+					mConvButton.get(i).setText(text);
+				else
+					refreshButtonText(i);
+			}
 		}
 	}
 
@@ -261,7 +264,7 @@ public class ConvKeysFragment extends Fragment implements OnConvertKeyUpdateFini
 	}
 
 
-	
+
 	/** Clears the button unit selection */
 	public void clearButtonSelection(){
 		//function may be called before convert key array built, in which case, leave

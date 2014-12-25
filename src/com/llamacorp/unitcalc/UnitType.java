@@ -22,6 +22,7 @@ public class UnitType {
 	private int mPrevUnitPos;
 	private int mCurrUnitPos;
 	private boolean mIsUnitSelected;
+	private boolean mContainsDynamicUnits = false;
 
 	/**
 	 * Constructor
@@ -65,6 +66,7 @@ public class UnitType {
 	 */
 	public void addUnit(Unit u){
 		mUnitArray.add(u);
+		if(u.isDynamic()) mContainsDynamicUnits = true;
 	}
 
 	/** Swap positions of units */	
@@ -120,33 +122,41 @@ public class UnitType {
 	 * Internet connection permitting.
 	 */	
 	public void refreshDynamicUnits(Context c){
-		if(isDynamicUnit())
+		if(containsDynamicUnits())
 			for(Unit uc : mUnitArray){
-				UnitCurrency u = ((UnitCurrency) uc);
-				//check to see if the update timeout has been reached
-				if(u.isTimeoutReached(c))
-					u.asyncRefresh(c);
+				//check to make sure each unit supports updating
+				if(uc.isDynamic()){
+					UnitCurrency u = ((UnitCurrency) uc);
+					//check to see if the update timeout has been reached
+					if(u.isTimeoutReached(c))
+						u.asyncRefresh(c);
+				}
 			}
 	}
 
 	/**
-	 * Check to see if this UnitType holds units that have values that
+	 * Check to see if this UnitType holds any units that have values that
 	 * need to be refreshed via the Internet
 	 */
-	public boolean isDynamicUnit(){
-		return mUnitArray.get(1).isDynamic();
+	public boolean containsDynamicUnits(){
+		return mContainsDynamicUnits;
 	}
 
+	/** Check to see if unit at position pos is currently updating */
 	public boolean isUnitUpdating(int pos){
-		if(isDynamicUnit())
+		if(containsDynamicUnits())
 			return ((UnitCurrency)mUnitArray.get(pos)).isUpdating();
 		else
 			return false;
 	}
-	
+
+	/** Check to see if unit at position pos is dynamic */
+	public boolean isUnitDynamic(int pos){
+		return mUnitArray.get(pos).isDynamic();
+	}
 
 	public void setDynamicUnitCallback(OnConvertKeyUpdateFinishedListener callback) {
-		if(isDynamicUnit())
+		if(containsDynamicUnits())
 			for(int i=0; i<size(); i++)
 				((UnitCurrency)mUnitArray.get(i)).setCallback(callback);
 	}
