@@ -138,7 +138,8 @@ public class ConvKeysFragment extends Fragment implements OnConvertKeyUpdateFini
 					if(mUnitType.size() <= numButtons)
 						return true;
 
-					AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+					AlertDialog.Builder builder = new AlertDialog.
+							Builder(getActivity());
 					builder.setTitle(getText(R.string.word_Change) 
 							+ " " + mUnitType.getLowercaseLongName(buttonPos) 
 							+ " " + getText(R.string.word_to) + ":");

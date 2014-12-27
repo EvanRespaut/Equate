@@ -96,7 +96,7 @@ public class Result {
 		mAnswerUnit = answerUnit;
 		mUnitTypePos = unitTypePos;
 		mContainsUnits=true;
-		if(mAnswerUnit instanceof UnitCurrency){
+		if(mAnswerUnit.isDynamic() && mQueryUnit.isDynamic()){
 			//the default unit (USD) doesn't get updated
 			if(mAnswerUnit.toString().equals(UnitCurrency.DEFAULT_CURRENCY))
 				mTimestamp = ((UnitCurrency)mQueryUnit).getTimeOfUpdate();

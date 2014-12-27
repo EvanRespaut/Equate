@@ -73,6 +73,10 @@ public abstract class Unit  /*implements JsonSerializer<Unit>, JsonDeserializer<
 		return json;
 	}
 
+	protected void setLongName(String longName){
+		mLongName = longName;
+	}
+	
 	protected String getLongName() {
 		return mLongName;
 	}
@@ -81,10 +85,18 @@ public abstract class Unit  /*implements JsonSerializer<Unit>, JsonDeserializer<
 		return getLongName().toLowerCase(Locale.US);
 	}
 
+	protected void setValue(double value){
+		mValue = value;
+	}
+	
 	protected double getValue() {
 		return mValue;
 	}
 
+	protected void setDispName(String name){
+		mDispName = name; 
+	}
+	
 	public String toString(){
 		return mDispName;
 	}

@@ -158,7 +158,8 @@ public class UnitType {
 	public void setDynamicUnitCallback(OnConvertKeyUpdateFinishedListener callback) {
 		if(containsDynamicUnits())
 			for(int i=0; i<size(); i++)
-				((UnitCurrency)mUnitArray.get(i)).setCallback(callback);
+				if(mUnitArray.get(i).isDynamic())
+					((UnitCurrency)mUnitArray.get(i)).setCallback(callback);
 	}
 
 	/**

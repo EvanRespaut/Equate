@@ -131,6 +131,13 @@ public class Calculator{
 		unitsOfCurrency.addUnit(new UnitCurrency("AUD", "Australian Dollars", 1.07)); 
 		unitsOfCurrency.addUnit(new UnitCurrency("HKD", "Hong Kong Dollars", 7.75)); 
 		unitsOfCurrency.addUnit(new UnitCurrency("SGD", "Singapore Dollars", 1.25)); 
+		
+		ArrayList<Double> al = new ArrayList<Double>();
+		al.add((double) 34);
+		al.add((double) 23);
+		al.add((double) 10);
+		unitsOfCurrency.addUnit(new UnitHistCurrency("USD", "Dollars", al, 1800, 1802));
+		
 		unitsOfCurrency.addUnit(new UnitCurrency("CNY", "Chinese Yuans", 6.15)); 
 		//		unitsOfCurrency.addUnit(new UnitCurrency()); 
 		//		unitsOfCurrency.addUnit(new UnitCurrency()); 

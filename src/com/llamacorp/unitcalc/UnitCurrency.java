@@ -60,7 +60,6 @@ public class UnitCurrency extends Unit {
 		this(name, name, value);
 	}	
 
-	//TODO do we need this?
 	public UnitCurrency(){
 		this("","",0);
 	}
@@ -153,11 +152,6 @@ public class UnitCurrency extends Unit {
 			return mURLPrefix;
 		else
 			return mURLPrefix + toString() + mURLSuffix;
-	}
-
-	/** Set value (presumably after HTTP API call)*/
-	private void setValue(double val) {
-		mValue = val;
 	}
 
 	private String getName(){
