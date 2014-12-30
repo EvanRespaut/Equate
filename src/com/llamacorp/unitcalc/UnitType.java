@@ -144,7 +144,7 @@ public class UnitType {
 
 	/** Check to see if unit at position pos is currently updating */
 	public boolean isUnitUpdating(int pos){
-		if(containsDynamicUnits())
+		if(mUnitArray.get(pos).isDynamic())
 			return ((UnitCurrency)mUnitArray.get(pos)).isUpdating();
 		else
 			return false;
@@ -154,14 +154,20 @@ public class UnitType {
 	public boolean isUnitDynamic(int pos){
 		return mUnitArray.get(pos).isDynamic();
 	}
-
+	
 	public void setDynamicUnitCallback(OnConvertKeyUpdateFinishedListener callback) {
 		if(containsDynamicUnits())
 			for(int i=0; i<size(); i++)
 				if(mUnitArray.get(i).isDynamic())
 					((UnitCurrency)mUnitArray.get(i)).setCallback(callback);
 	}
-
+	
+	/** Check to see if unit at position pos is dynamic */
+	public boolean isUnitHistorical(int pos){
+		return mUnitArray.get(pos).isHistorical();
+	}
+	
+	
 	/**
 	 * Resets mIsUnitSelected flag
 	 */		
@@ -204,6 +210,10 @@ public class UnitType {
 		return cs;
 	}
 
+	public Unit getUnit(int pos){
+		return mUnitArray.get(pos);
+	}
+	
 	public Unit getPrevUnit(){
 		return mUnitArray.get(mPrevUnitPos);
 	}

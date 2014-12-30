@@ -15,6 +15,7 @@ import android.widget.Button;
 import com.llamacorp.unitcalc.Calculator;
 import com.llamacorp.unitcalc.R;
 import com.llamacorp.unitcalc.Unit;
+import com.llamacorp.unitcalc.UnitHistCurrency;
 import com.llamacorp.unitcalc.UnitCurrency.OnConvertKeyUpdateFinishedListener;
 import com.llamacorp.unitcalc.UnitType;
 
@@ -219,9 +220,34 @@ public class ConvKeysFragment extends Fragment implements OnConvertKeyUpdateFini
 
 	/** Used to pass selected unit to the UnitType model class
 	 * @param buttonPos the position in the list of buttons to select */
-	private void clickUnitButton(int buttonPos){
+	private void clickUnitButton(final int buttonPos){
 		//Clear color and arrows from previously selected convert buttons
 		clearButtonSelection();
+		
+		//pop open selection dialog for historical units
+		if(mUnitType.isUnitHistorical(buttonPos)){
+			UnitHistCurrency uhc = (UnitHistCurrency) mUnitType.getUnit(buttonPos);
+			AlertDialog.Builder builder = new AlertDialog.
+					Builder(getActivity());
+			builder.setTitle(getText(R.string.word_Change) 
+					+ " " + getText(R.string.word_historical) 
+					+ " " + mUnitType.getLowercaseLongName(buttonPos) 
+					+ " " + getText(R.string.word_to) + ":");
+			builder.setItems(uhc.getPossibleYears(), 
+					new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int item) {
+					UnitHistCurrency uhc = (UnitHistCurrency) mUnitType.getUnit(buttonPos);
+					uhc.setNewYear(item);
+					refreshButtonText(buttonPos);
+				}
+			});
+			//null seems to do the same as canceling the dialog
+			builder.setNegativeButton(android.R.string.cancel,null);
+			AlertDialog alert = builder.create();
+			alert.show();
+		}
+		
 		//Set select unit, also this will potentially call convert if we already have a selected unit
 		boolean requestConvert = mUnitType.selectUnit(buttonPos);
 

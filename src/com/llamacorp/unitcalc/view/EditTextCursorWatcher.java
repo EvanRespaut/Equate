@@ -7,6 +7,7 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.os.Build;
 import android.os.SystemClock;
+import android.text.Html;
 import android.text.InputType;
 import android.util.AttributeSet;
 import android.widget.EditText;
@@ -163,7 +164,11 @@ public class EditTextCursorWatcher extends EditText {
 			}
 		}
 		//update the main display
-		setText(mTextPrefex + mExpressionText + mTextSuffix);
+		//setText(mTextPrefex + mExpressionText + mTextSuffix);
+		
+		setText(Html.fromHtml("<font color='gray'>" + mTextPrefex + "</font>" + 
+            mExpressionText + 
+            "<font color='gray'>" + mTextSuffix + "</font>"));
 		
 		selStart = selStart + mTextPrefex.length();
 		selEnd = selEnd + mTextPrefex.length();

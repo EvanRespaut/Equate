@@ -5,6 +5,7 @@ import java.util.List;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.text.Html;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -74,7 +75,7 @@ public class ResultListFragment extends ListFragment {
 						" " + result.getQuerryUnit().getLowercaseLongName() +
 						" " + getResources().getString(R.string.word_to) + 
 						" " + result.getAnswerUnit().getLowercaseLongName() + ":";
-				textViewUnitDesc.setText(text);
+				textViewUnitDesc.setText(Html.fromHtml("<i>" + text + "</i>"));
 				//ListView reuses old textViewUnitDesc sometimes; make sure old one isn't still invisible
 				textViewUnitDesc.setVisibility(View.VISIBLE);
 

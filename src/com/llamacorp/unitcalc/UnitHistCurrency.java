@@ -14,6 +14,7 @@ public class UnitHistCurrency extends Unit {
 	private int mYearIndex = 0;
 	private int mIndexStartYearOffset;
 	private ArrayList<Double> mHistoricalValues;
+	
 
 	public UnitHistCurrency(String name, String longName, ArrayList<Double> values,
 			int indexStartYear, int defaultStartYear){
@@ -47,6 +48,15 @@ public class UnitHistCurrency extends Unit {
 		mYearIndex = index;
 		setValue(mHistoricalValues.get(mYearIndex));
 		refreshNames();
+	}
+	
+	public CharSequence[] getPossibleYears(){
+		int arraySize = mHistoricalValues.size();
+		CharSequence[] cs = new CharSequence[arraySize];
+		for(int i=0;i<arraySize;i++){
+			cs[i] = String.valueOf(mIndexStartYearOffset + i);
+		}
+		return cs;
 	}
 	
 	private void refreshNames(){

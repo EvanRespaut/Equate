@@ -106,6 +106,11 @@ public abstract class Unit  /*implements JsonSerializer<Unit>, JsonDeserializer<
 		return this instanceof UnitCurrency;
 	}
 	
+	public boolean isHistorical(){
+		//TODO this should be replaced with an interface
+		return this instanceof UnitHistCurrency;
+	}
+	
 
 	protected abstract String convertTo(Unit toUnit, String expressionToConv);
 
