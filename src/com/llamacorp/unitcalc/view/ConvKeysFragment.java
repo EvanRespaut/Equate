@@ -217,13 +217,10 @@ public class ConvKeysFragment extends Fragment implements OnConvertKeyUpdateFini
 		 */
 		button.setText(displayText);
 	}
-
+	
 	/** Used to pass selected unit to the UnitType model class
 	 * @param buttonPos the position in the list of buttons to select */
 	private void clickUnitButton(final int buttonPos){
-		//Clear color and arrows from previously selected convert buttons
-		clearButtonSelection();
-		
 		//pop open selection dialog for historical units
 		if(mUnitType.isUnitHistorical(buttonPos)){
 			UnitHistCurrency uhc = (UnitHistCurrency) mUnitType.getUnit(buttonPos);
@@ -240,6 +237,7 @@ public class ConvKeysFragment extends Fragment implements OnConvertKeyUpdateFini
 					UnitHistCurrency uhc = (UnitHistCurrency) mUnitType.getUnit(buttonPos);
 					uhc.setNewYear(item);
 					refreshButtonText(buttonPos);
+					tryConvert(buttonPos);
 				}
 			});
 			//null seems to do the same as canceling the dialog
@@ -247,6 +245,15 @@ public class ConvKeysFragment extends Fragment implements OnConvertKeyUpdateFini
 			AlertDialog alert = builder.create();
 			alert.show();
 		}
+		//for historical units, only perform after dialog is gone
+		else
+			tryConvert(buttonPos);
+	}
+	
+	
+	private void tryConvert(int buttonPos){
+		//Clear color and arrows from previously selected convert buttons
+		clearButtonSelection();
 		
 		//Set select unit, also this will potentially call convert if we already have a selected unit
 		boolean requestConvert = mUnitType.selectUnit(buttonPos);
