@@ -2,11 +2,16 @@ package com.llamacorp.unitcalc;
 
 import java.util.ArrayList;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 public class UnitHistCurrency extends Unit {
-	private static String JSON_URL_RATE_TAG = "Rate";
+	private static String JSON_NAME_SUFFIX_TAG = "suf";
+	private static String JSON_LONG_NAME_SUFFIX_TAG = "long";
+	private static String JSON_YEAR_TAG = "year";
+	private static String JSON_OFFSET_TAG = "offset";
+	private static String JSON_VALUES_TAG = "values";
 	
 	private String mNameSuffix;
 	private String mLongNameSuffix;
@@ -29,13 +34,33 @@ public class UnitHistCurrency extends Unit {
 
 	/** Load in the update time */
 	public UnitHistCurrency(JSONObject json) throws JSONException {
-		super(json);
+		mNameSuffix = json.getString(JSON_NAME_SUFFIX_TAG);
+		mLongNameSuffix = json.getString(JSON_LONG_NAME_SUFFIX_TAG);
+		mYearIndex = json.getInt(JSON_YEAR_TAG);
+		mIndexStartYearOffset = json.getInt(JSON_OFFSET_TAG);
+		
+		mHistoricalValues = new ArrayList<Double>();
+		JSONArray jUnitArray = json.getJSONArray(JSON_VALUES_TAG);
+		for (int i = 0; i < jUnitArray.length(); i++) {
+			mHistoricalValues.add(jUnitArray.getDouble(i));
+		}
 	}
 
 	/** Save the update time */
 	@Override
 	public JSONObject toJSON() throws JSONException {
 		JSONObject json = super.toJSON();
+		
+		json.put(JSON_NAME_SUFFIX_TAG, mNameSuffix);
+		json.put(JSON_LONG_NAME_SUFFIX_TAG, mLongNameSuffix);
+		json.put(JSON_YEAR_TAG, mYearIndex);
+		json.put(JSON_OFFSET_TAG, mIndexStartYearOffset);
+		
+		JSONArray jUnitArray = new JSONArray();
+		for (Double d : mHistoricalValues)
+			jUnitArray.put(d);
+		json.put(JSON_VALUES_TAG, jUnitArray);
+		
 		return json;
 	}
 	
