@@ -13,6 +13,10 @@ public class Result {
 	private static final String JSON_ANSWER = "answer";
 	private static final String JSON_QUERY_UNIT = "query_unit";
 	private static final String JSON_ANSWER_UNIT = "answer_unit";
+	private static final String JSON_QUERY_UNIT_TEXT = "query_unit_text";
+	private static final String JSON_ANSWER_UNIT_TEXT = "answer_unit_text";
+	private static final String JSON_QUERY_UNIT_TEXT_LONG = "query_unit_text_long";
+	private static final String JSON_ANSWER_UNIT_TEXT_LONG = "answer_unit_text_long";
 	private static final String JSON_UNIT_TYPE_POS = "unit_type_pos";
 	private static final String JSON_CONTAINS_UNITS = "conatains_units";
 	private static final String JSON_TIMESTAMP = "timestamp";
@@ -20,6 +24,10 @@ public class Result {
 
 	private String mQuery;
 	private String mAnswer;
+	private String mQuerryUnitText;
+	private String mAnswerUnitText;
+	private String mQuerryUnitTextLong;
+	private String mAnswerUnitTextLong;
 	private Unit mQueryUnit;
 	private Unit mAnswerUnit;
 	private int mUnitTypePos;
@@ -27,12 +35,16 @@ public class Result {
 	private long mTimestamp;
 
 	public Result(String query, String answer){
-		mQuery=query;
-		mAnswer=answer;
+		mQuery = query;
+		mAnswer = answer;
 		mQueryUnit = new UnitScalar();
 		mAnswerUnit = new UnitScalar();
-		mContainsUnits=false;
-		mTimestamp=0;
+		mContainsUnits = false;
+		mTimestamp = 0;
+		mQuerryUnitText = "";
+		mAnswerUnitText = "";
+		mQuerryUnitTextLong = "";
+		mAnswerUnitTextLong = "";
 	}
 
 	public Result(String query){
@@ -47,7 +59,11 @@ public class Result {
 		mQuery = json.getString(JSON_QUERY);
 		mAnswer = json.getString(JSON_ANSWER);
 		mQueryUnit = Unit.getUnit(json.getJSONObject(JSON_QUERY_UNIT)); 
-		mAnswerUnit = Unit.getUnit(json.getJSONObject(JSON_ANSWER_UNIT)); 
+		mAnswerUnit = Unit.getUnit(json.getJSONObject(JSON_ANSWER_UNIT));
+		mAnswerUnitText = json.getString(JSON_ANSWER_UNIT_TEXT);
+		mAnswerUnitTextLong = json.getString(JSON_ANSWER_UNIT_TEXT_LONG);
+		mQuerryUnitText = json.getString(JSON_QUERY_UNIT_TEXT);
+		mQuerryUnitTextLong = json.getString(JSON_QUERY_UNIT_TEXT_LONG);
 		mUnitTypePos = json.getInt(JSON_UNIT_TYPE_POS);
 		mContainsUnits = json.getBoolean(JSON_CONTAINS_UNITS);
 		mTimestamp = json.getLong(JSON_TIMESTAMP);
@@ -60,6 +76,10 @@ public class Result {
 		json.put(JSON_ANSWER, getAnswer());
 		json.put(JSON_QUERY_UNIT, mQueryUnit.toJSON());
 		json.put(JSON_ANSWER_UNIT, mAnswerUnit.toJSON());
+		json.put(JSON_QUERY_UNIT_TEXT, mQuerryUnitText);
+		json.put(JSON_ANSWER_UNIT_TEXT, mAnswerUnitText);
+		json.put(JSON_QUERY_UNIT_TEXT_LONG, mQuerryUnitTextLong);
+		json.put(JSON_ANSWER_UNIT_TEXT_LONG, mAnswerUnitTextLong);
 		json.put(JSON_UNIT_TYPE_POS, getUnitTypePos());
 		json.put(JSON_CONTAINS_UNITS, containsUnits());
 		json.put(JSON_TIMESTAMP, mTimestamp); 
@@ -87,15 +107,21 @@ public class Result {
 		return mQueryUnit;
 	}
 
-	/** Set the query and answer units, and the overarching UnitType array position
+	/** Set the query and answer units, and the overarching UnitType array 
+	 * position
 	 * @param queryUnit is the Unit to set for this query
 	 * @param answerUnit is the Unit to set for this answer
 	 * @param unitTypePos is the position in the UnitType array */
-	public void setResultUnit(Unit queryUnit, Unit answerUnit, int unitTypePos) {
+	public void setResultUnit(Unit queryUnit, Unit answerUnit, 
+			int unitTypePos) {
 		mQueryUnit = queryUnit;
 		mAnswerUnit = answerUnit;
+		mQuerryUnitText = queryUnit.toString();
+		mAnswerUnitText = answerUnit.toString();
+		mQuerryUnitTextLong = queryUnit.getLowercaseLongName();
+		mAnswerUnitTextLong = answerUnit.getLowercaseLongName();
 		mUnitTypePos = unitTypePos;
-		mContainsUnits=true;
+		mContainsUnits = true;
 		if(mAnswerUnit.isDynamic() && mQueryUnit.isDynamic()){
 			//the default unit (USD) doesn't get updated
 			if(mAnswerUnit.toString().equals(UnitCurrency.DEFAULT_CURRENCY))
@@ -109,13 +135,17 @@ public class Result {
 		String dateText = "";
 		if(ld==0) return dateText;
 		//format both today and date to format as 2014-330
-		String nowDay = new SimpleDateFormat("y-D",Locale.US).format(new Date());
-		String ldDay = new SimpleDateFormat("y-D",Locale.US).format(new Date(ld));
+		String nowDay = new SimpleDateFormat("y-D",Locale.US).
+				format(new Date());
+		String ldDay = new SimpleDateFormat("y-D",Locale.US).
+				format(new Date(ld));
 		//if the exact year and day of year are not same, just display month day
 		if(nowDay.equals(ldDay))
-			dateText = DateFormat.getTimeInstance(DateFormat.SHORT).format(new Date(ld));
+			dateText = DateFormat.getTimeInstance(DateFormat.SHORT).
+			format(new Date(ld));
 		else 
-			dateText = new SimpleDateFormat("MMM d",Locale.US).format(new Date(ld));
+			dateText = new SimpleDateFormat("MMM d",Locale.US).
+			format(new Date(ld));
 		return dateText;
 	}
 
@@ -137,15 +167,23 @@ public class Result {
 
 	public String getTextQuerry() {
 		if(mContainsUnits)
-			return mQuery + " " + mQueryUnit;
+			return mQuery + " " + mQuerryUnitText;
 		else
 			return mQuery;	
 	}
 
 	public String getTextAnswer() {
 		if(mContainsUnits)
-			return mAnswer + " " + mAnswerUnit;
+			return mAnswer + " " + mAnswerUnitText;
 		else
 			return mAnswer;
+	}
+
+	public String getQuerryUnitTextLong() {
+		return mQuerryUnitTextLong;
+	}
+
+	public String getAnswerUnitTextLong() {
+		return mAnswerUnitTextLong;
 	}
 }

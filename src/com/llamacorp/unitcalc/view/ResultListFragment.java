@@ -72,9 +72,9 @@ public class ResultListFragment extends ListFragment {
 			textViewUnitTimestamp.setVisibility(View.GONE);
 			if(result.containsUnits()){
 				String text = getResources().getString(R.string.word_Converting) + 
-						" " + result.getQuerryUnit().getLowercaseLongName() +
+						" " + result.getQuerryUnitTextLong() +
 						" " + getResources().getString(R.string.word_to) + 
-						" " + result.getAnswerUnit().getLowercaseLongName() + ":";
+						" " + result.getAnswerUnitTextLong() + ":";
 				textViewUnitDesc.setText(Html.fromHtml("<i>" + text + "</i>"));
 				//ListView reuses old textViewUnitDesc sometimes; make sure old one isn't still invisible
 				textViewUnitDesc.setVisibility(View.VISIBLE);
