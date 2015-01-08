@@ -1,8 +1,5 @@
 ------------------ToDo Next--------------------
-- Bug, reset, quite app, no more just cure button
 - Current naming scheme is very confusing: 10 1975 USD is terrible
-- Need to add support for saving/loading JSON for hist curr
-- Need to add radio button popup when selecting hist curr
 - Should move all unit initialization into it's own class
 
 - Add invert, square root, and flip sign

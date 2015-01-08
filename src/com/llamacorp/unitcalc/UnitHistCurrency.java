@@ -44,6 +44,7 @@ public class UnitHistCurrency extends Unit {
 		for (int i = 0; i < jUnitArray.length(); i++) {
 			mHistoricalValues.add(jUnitArray.getDouble(i));
 		}
+		setYearIndex(mYearIndex);
 	}
 
 	/** Save the update time */
@@ -100,6 +101,10 @@ public class UnitHistCurrency extends Unit {
 		sYear = sYear + " ";
 		setDispName(sYear + mNameSuffix);
 		setLongName(sYear + mLongNameSuffix);		
+	}
+	
+	public int getReversedYearIndex(){
+		return mHistoricalValues.size() - mYearIndex;
 	}
 	
 	private int getSelectedYear(){

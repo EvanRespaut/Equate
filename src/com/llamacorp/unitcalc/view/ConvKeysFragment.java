@@ -230,10 +230,11 @@ public class ConvKeysFragment extends Fragment implements OnConvertKeyUpdateFini
 					+ " " + getText(R.string.word_historical) 
 					+ " " + mUnitType.getLowercaseLongName(buttonPos) 
 					+ " " + getText(R.string.word_to) + ":");
-			builder.setItems(uhc.getPossibleYearsReversed(), 
+			builder.setSingleChoiceItems(uhc.getPossibleYearsReversed(), uhc.getReversedYearIndex(), 
 					new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int item) {
+					dialog.dismiss();
 					UnitHistCurrency uhc = (UnitHistCurrency) mUnitType.getUnit(buttonPos);
 					uhc.setYearIndexReversed(item);
 					refreshButtonText(buttonPos);
