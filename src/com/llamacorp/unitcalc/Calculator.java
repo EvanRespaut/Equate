@@ -132,11 +132,28 @@ public class Calculator{
 		unitsOfCurrency.addUnit(new UnitCurrency("HKD", "Hong Kong Dollars", 7.75)); 
 		unitsOfCurrency.addUnit(new UnitCurrency("SGD", "Singapore Dollars", 1.25)); 
 		
+		
+		//array of values of a 1915 $10 bill; starts with 1915; uses the CPI index
+		double[] cpiTable = {10.0, 10.5, 12.1, 14.4, 17.0, 19.9, 18.6, 18.1,
+				18.3, 18.4, 18.4, 17.9, 17.6, 17.3, 17.3, 16.7, 15.1, 13.6, 
+				12.8, 12.9, 13.3, 13.5, 14.2, 14.0, 13.9, 13.9, 14.7, 16.5, 
+				17.3, 17.6, 18.1, 19.5, 22.0, 23.6, 23.6, 23.7, 25.7, 26.5, 
+				26.7, 26.7, 26.7, 27.1, 28.0, 28.9, 29.4, 30.0, 30.3, 30.7, 
+				31.1, 31.7, 32.4, 33.0, 33.8, 35.2, 36.8, 38.7, 40.1, 41.4, 
+				43.7, 48.2, 53.3, 56.9, 60.8, 65.3, 72.3, 83.7, 91.9, 97.3, 
+				99.1, 103.6, 108.4, 111.9, 116.7, 122.1, 128.3, 135.9, 141.4, 
+				146.5, 150.3, 152.3, 154.6, 157.5, 160.0, 162.3, 166.1, 171.6, 
+				177.3, 182.2, 187.0, 193.2, 201.8, 210.4, 217.338, 225.008, 
+				223.219, 225.894, 231.928, 236.648, 239.207};
+		
 		ArrayList<Double> al = new ArrayList<Double>();
-		al.add((double) 34);
-		al.add((double) 23);
-		al.add((double) 10);
-		unitsOfCurrency.addUnit(new UnitHistCurrency("USD", "Dollars", al, 1800, 1802));
+		for(int i=0;i<cpiTable.length;i++){
+			//convert values such that 1 is current 2014 dollar
+			double normalizedValue = cpiTable[i]/cpiTable[cpiTable.length-1];
+			al.add(normalizedValue);
+		}
+		
+		unitsOfCurrency.addUnit(new UnitHistCurrency("USD", "Dollars", al, 1915, 1975));
 		
 		unitsOfCurrency.addUnit(new UnitCurrency("CNY", "Chinese Yuans", 6.15)); 
 		//		unitsOfCurrency.addUnit(new UnitCurrency()); 

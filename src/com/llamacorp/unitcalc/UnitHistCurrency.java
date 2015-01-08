@@ -29,7 +29,7 @@ public class UnitHistCurrency extends Unit {
 		mIndexStartYearOffset = indexStartYear;
 		if(defaultStartYear - indexStartYear < values.size())
 			mYearIndex = defaultStartYear - indexStartYear;
-		setNewYear(mYearIndex);
+		setYearIndex(mYearIndex);
 	}	
 
 	/** Load in the update time */
@@ -69,18 +69,29 @@ public class UnitHistCurrency extends Unit {
 		return expressionToConv + "*" + toUnit.getValue() + "/" + getValue();
 	}
 
-	public void setNewYear(int index){
+	/**
+	 * Index value 0 corresponds to 2014, 1 to 2013 etc
+	 * @param reversedIndex
+	 */
+	public void setYearIndexReversed(int reversedIndex){
+		setYearIndex(mHistoricalValues.size()-reversedIndex);
+	}
+	
+	private void setYearIndex(int index){
 		mYearIndex = index;
 		setValue(mHistoricalValues.get(mYearIndex));
 		refreshNames();
 	}
 	
-	public CharSequence[] getPossibleYears(){
+	/**
+	 * @return an array of all years in decrementing order 
+	 * (2014, 2013,... etc)
+	 */
+	public CharSequence[] getPossibleYearsReversed(){
 		int arraySize = mHistoricalValues.size();
 		CharSequence[] cs = new CharSequence[arraySize];
-		for(int i=0;i<arraySize;i++){
-			cs[i] = String.valueOf(mIndexStartYearOffset + i);
-		}
+		for(int i=0;i<arraySize;i++)
+			cs[i] = String.valueOf(mIndexStartYearOffset + arraySize - i);
 		return cs;
 	}
 	
