@@ -75,7 +75,7 @@ public class UnitHistCurrency extends Unit {
 	 * @param reversedIndex
 	 */
 	public void setYearIndexReversed(int reversedIndex){
-		setYearIndex(mHistoricalValues.size()-reversedIndex);
+		setYearIndex(mHistoricalValues.size()-1-reversedIndex);
 	}
 	
 	private void setYearIndex(int index){
@@ -92,7 +92,7 @@ public class UnitHistCurrency extends Unit {
 		int arraySize = mHistoricalValues.size();
 		CharSequence[] cs = new CharSequence[arraySize];
 		for(int i=0;i<arraySize;i++)
-			cs[i] = String.valueOf(mIndexStartYearOffset + arraySize - i);
+			cs[i] = String.valueOf(mIndexStartYearOffset + arraySize - 1 - i);
 		return cs;
 	}
 	
@@ -104,7 +104,7 @@ public class UnitHistCurrency extends Unit {
 	}
 	
 	public int getReversedYearIndex(){
-		return mHistoricalValues.size() - mYearIndex;
+		return mHistoricalValues.size() - 1 - mYearIndex;
 	}
 	
 	private int getSelectedYear(){
