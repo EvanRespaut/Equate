@@ -81,6 +81,14 @@ public abstract class Unit  /*implements JsonSerializer<Unit>, JsonDeserializer<
 		return mLongName;
 	}
 	
+	public String getGenericLongName(){
+		return mLongName;
+	}	
+	
+	public String getLowercaseGenericLongName(){
+		return getGenericLongName().toLowerCase(Locale.US);
+	}
+	
 	public String getLowercaseLongName(){
 		return getLongName().toLowerCase(Locale.US);
 	}

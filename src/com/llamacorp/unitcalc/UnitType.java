@@ -195,6 +195,10 @@ public class UnitType {
 		return mUnitArray.get(pos).getLowercaseLongName();
 	}
 
+	public String getLowercaseGenericLongName(int pos){
+		return mUnitArray.get(pos).getLowercaseGenericLongName();
+	}
+
 	/** Method builds charSequence array of long names of undisplayed units
 	 * @param Array of long names of units not being displayed
 	 * @return Number of units being displayed, used to find undisplayed units
@@ -205,7 +209,7 @@ public class UnitType {
 		int arraySize = mUnitArray.size() - numDispUnits;
 		CharSequence[] cs = new CharSequence[arraySize];
 		for(int i=0;i<arraySize;i++){
-			cs[i] = mUnitArray.get(numDispUnits+i).getLongName();
+			cs[i] = mUnitArray.get(numDispUnits+i).getGenericLongName();
 		}
 		return cs;
 	}

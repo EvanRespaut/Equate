@@ -142,7 +142,7 @@ public class ConvKeysFragment extends Fragment implements OnConvertKeyUpdateFini
 					AlertDialog.Builder builder = new AlertDialog.
 							Builder(getActivity());
 					builder.setTitle(getText(R.string.word_Change) 
-							+ " " + mUnitType.getLowercaseLongName(buttonPos) 
+							+ " " + mUnitType.getLowercaseGenericLongName(buttonPos) 
 							+ " " + getText(R.string.word_to) + ":");
 					builder.setItems(mUnitType.getUndisplayedUnitNames(numButtons), 
 							new DialogInterface.OnClickListener() {
@@ -228,7 +228,7 @@ public class ConvKeysFragment extends Fragment implements OnConvertKeyUpdateFini
 					Builder(getActivity());
 			builder.setTitle(getText(R.string.word_Change) 
 					+ " " + getText(R.string.word_historical) 
-					+ " " + mUnitType.getLowercaseLongName(buttonPos) 
+					+ " " + mUnitType.getLowercaseGenericLongName(buttonPos) 
 					+ " " + getText(R.string.word_to) + ":");
 			builder.setSingleChoiceItems(uhc.getPossibleYearsReversed(), uhc.getReversedYearIndex(), 
 					new DialogInterface.OnClickListener() {
