@@ -98,14 +98,15 @@ public class UnitType {
 		//If we've already selected a unit, do conversion
 		if(mIsUnitSelected){
 			//if the unit is the same as before, de-select it
-			if(mCurrUnitPos==pos){
-				mIsUnitSelected=false;
-				return requestConvert;
+			if(mCurrUnitPos == pos){
+				//if historical unit, allow selection again (for a different year)
+				if(!getUnit(pos).isHistorical()){
+					mIsUnitSelected = false;
+					return requestConvert;
+				}
 			}
-			else {
-				mPrevUnitPos = mCurrUnitPos;
-				requestConvert = true;
-			}
+			mPrevUnitPos = mCurrUnitPos;
+			requestConvert = true;
 		}
 
 		//Select new unit regardless
@@ -154,20 +155,20 @@ public class UnitType {
 	public boolean isUnitDynamic(int pos){
 		return mUnitArray.get(pos).isDynamic();
 	}
-	
+
 	public void setDynamicUnitCallback(OnConvertKeyUpdateFinishedListener callback) {
 		if(containsDynamicUnits())
 			for(int i=0; i<size(); i++)
 				if(mUnitArray.get(i).isDynamic())
 					((UnitCurrency)mUnitArray.get(i)).setCallback(callback);
 	}
-	
+
 	/** Check to see if unit at position pos is dynamic */
 	public boolean isUnitHistorical(int pos){
 		return mUnitArray.get(pos).isHistorical();
 	}
-	
-	
+
+
 	/**
 	 * Resets mIsUnitSelected flag
 	 */		
@@ -217,7 +218,7 @@ public class UnitType {
 	public Unit getUnit(int pos){
 		return mUnitArray.get(pos);
 	}
-	
+
 	public Unit getPrevUnit(){
 		return mUnitArray.get(mPrevUnitPos);
 	}

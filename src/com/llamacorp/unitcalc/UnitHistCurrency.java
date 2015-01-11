@@ -21,6 +21,8 @@ public class UnitHistCurrency extends Unit {
 	private String mLongNamePrefix;
 	
 	private int mYearIndex = 0;
+	//used when we want to convert from this unit to this unit again (differnet year)
+	private int mYearIndexPrevious = 0;
 	private int mIndexStartYearOffset;
 	private ArrayList<Double> mHistoricalValues;
 	
@@ -71,7 +73,12 @@ public class UnitHistCurrency extends Unit {
 	
 	@Override
 	public String convertTo(Unit toUnit, String expressionToConv) {
-		return expressionToConv + "*" + toUnit.getValue() + "/" + getValue();
+		double toUnitValue;
+		if(this == toUnit)
+			toUnitValue = getPreviousUnitValue();
+		else
+			toUnitValue = getValue();
+		return expressionToConv + "*" + toUnit.getValue() + "/" + toUnitValue;
 	}
 
 	/**
@@ -83,9 +90,19 @@ public class UnitHistCurrency extends Unit {
 	}
 	
 	private void setYearIndex(int index){
+		mYearIndexPrevious = mYearIndex;
 		mYearIndex = index;
 		setValue(mHistoricalValues.get(mYearIndex));
 		refreshNames();
+	}
+	
+	/**
+	 * Used when conversion is being performed from one historical 
+	 * year to another.  This function retrieves the first historical
+	 * currency value selection
+	 */
+	private double getPreviousUnitValue(){
+		return mHistoricalValues.get(mYearIndexPrevious);
 	}
 	
 	/**
