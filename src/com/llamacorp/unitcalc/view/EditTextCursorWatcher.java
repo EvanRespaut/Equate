@@ -1,11 +1,16 @@
 package com.llamacorp.unitcalc.view;
 
+import android.animation.ArgbEvaluator;
+import android.animation.ValueAnimator;
+import android.animation.ValueAnimator.AnimatorUpdateListener;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Build;
+import android.os.Handler;
 import android.os.SystemClock;
 import android.text.Html;
 import android.text.InputType;
@@ -23,8 +28,8 @@ public class EditTextCursorWatcher extends EditText {
 	private String mTextPrefex="";
 	private String mExpressionText="";
 	private String mTextSuffix="";
-	
-	
+
+
 
 	// (This was in the original TextView) System wide time for last cut or copy action.
 	static long LAST_CUT_OR_COPY_TIME;
@@ -139,13 +144,18 @@ public class EditTextCursorWatcher extends EditText {
 			setFocusable(true);
 		}
 	}
-	
-	
-	
+
+	private static final int COLOR_CHANGE_TIME = 300;	
+	private Handler mColorHoldHandler;
+	//used to count up holding time
+	private int mHoldInc;
+
+
 	/**
 	 * Updates the text with current value from calc
 	 * Preserves calc's cursor selections
 	 */
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	public void updateTextFromCalc(){
 		//setText will reset selection to 0,0, so save it right now
 		int selStart = mCalc.getSelectionStart();
@@ -161,32 +171,96 @@ public class EditTextCursorWatcher extends EditText {
 			if(!mCalc.isSolved()){
 				mTextPrefex = getResources().getString(R.string.word_Convert) + " ";
 				mTextSuffix = mTextSuffix + " " + getResources().getString(R.string.word_to) + ":";
+
+				selStart = selStart + mTextPrefex.length();
+				selEnd = selEnd + mTextPrefex.length();
 			}
 		}
 		//update the main display
-		//setText(mTextPrefex + mExpressionText + mTextSuffix);
-		
 		setText(Html.fromHtml("<font color='gray'>" + mTextPrefex + "</font>" + 
-            mExpressionText + 
-            "<font color='gray'>" + mTextSuffix + "</font>"));
+				mExpressionText + 
+				"<font color='gray'>" + mTextSuffix + "</font>"));
+
+//				mHoldInc = 0;
+//				mColorHoldHandler = new Handler();
+//				mColorHoldHandler.post(mColorRunnable);
+
+//		Integer colorFrom = getResources().getColor(R.color.red);
+//		Integer colorTo = getResources().getColor(R.color.blue);
+		Integer colorFrom = Color.RED;
+		Integer colorTo = Color.WHITE;
+		ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, colorTo);
+		colorAnimation.addUpdateListener(new AnimatorUpdateListener() {
+
+		    @Override
+		    public void onAnimationUpdate(ValueAnimator animator) {
+		        setTextColor((Integer)animator.getAnimatedValue());
+		    }
+
+		});
+		colorAnimation.setDuration(600*2);
+		colorAnimation.start();
 		
-		selStart = selStart + mTextPrefex.length();
-		selEnd = selEnd + mTextPrefex.length();
+
 		//updating the text restarts selection to 0,0, so load in the current selection
 		setSelection(selStart, selEnd);
-		if(mCalc.isSolved())
-			setCursorVisible(false);
-		else 
-			setCursorVisible(true);
+
+		//if expression not solved, set cursor to visible (and visa-versa)
+		setCursorVisible(!mCalc.isSolved());
 	}
-	
+
+//
+//
+//	//set up the runnable for when button is held down
+//	Runnable mColorRunnable = new Runnable() {
+//		private int mGradStartCol = Color.RED;
+//		private int mGradEndCol = Color.GRAY;
+//
+//		private static final int NUM_COLOR_CHANGES=10;
+//
+//		@Override 
+//		public void run() {
+//			//after hold operation has been performed and 100ms is up, set final color
+//			if(mHoldInc==-1){
+//				return;
+//			}
+//			//color the button black for a second and perform long click operation
+//			if(mHoldInc==NUM_COLOR_CHANGES+1){
+//				mHoldInc=-1;
+//				return;
+//			}
+//			mColorHoldHandler.postDelayed(this, COLOR_CHANGE_TIME/NUM_COLOR_CHANGES);
+//
+//			float deltaRed= (float)Color.red(mGradStartCol) + ((float)Color.red(mGradEndCol)-(float)Color.red(mGradStartCol))*((float)mHoldInc)/((float)NUM_COLOR_CHANGES);
+//			float deltaGreen= (float)Color.green(mGradStartCol) + ((float)Color.green(mGradEndCol)-(float)Color.green(mGradStartCol))*((float)mHoldInc)/((float)NUM_COLOR_CHANGES);
+//			float deltaBlue= (float)Color.blue(mGradStartCol) + ((float)Color.blue(mGradEndCol)-(float)Color.blue(mGradStartCol))*((float)mHoldInc)/((float)NUM_COLOR_CHANGES);
+//
+//			//setBackgroundColor(Color.argb(255, (int)deltaRed, (int)deltaGreen, (int)deltaBlue));
+//			
+//			int intColor = ((int)deltaRed << 16) + ((int)deltaGreen << 8) + (int)deltaBlue;
+//			String hexColor = String.format("#%06X", (0xFFFFFF & intColor));
+//
+////			System.out.println("color = " + hexColor 
+////					+ "   red = " + deltaRed
+////					 + "   green = " + deltaGreen
+////					 + "   blue = " + deltaBlue + "<font color='" + hexColor + "'>" + mTextPrefex + "</font>" + 
+////						mExpressionText + 
+////						"<font color='" + hexColor + "'>" + mTextSuffix + "</font>");
+//			setText(Html.fromHtml("<font color='" + hexColor + "'>" + mTextPrefex + "</font>" + 
+//					mExpressionText + 
+//					"<font color='" + hexColor + "'>" + mTextSuffix + "</font>"));
+//
+//			mHoldInc++;
+//		}
+//	};		
+
+
 	/** Sets the current selection to the end of the expression */
 	public void setSelectionToEnd(){
 		int expLen = mCalc.toString().length() + mTextPrefex.length();
 		setSelection(expLen, expLen);
-		//setCursorVisible(false);
 	}
-	
+
 
 	@Override   
 	protected void onSelectionChanged(int selStart, int selEnd) { 
@@ -194,11 +268,11 @@ public class EditTextCursorWatcher extends EditText {
 			int preLen = mTextPrefex.length();
 			int expLen = mExpressionText.length();
 			//check to see if the unit part of the expression has been selected
-			if(selEnd > expLen+preLen){
-				setSelection(selStart, expLen+preLen);
+			if(selEnd > expLen + preLen){
+				setSelection(selStart, expLen + preLen);
 				return;
 			}
-			if(selStart > expLen+preLen){
+			if(selStart > expLen + preLen){
 				setSelection(expLen+preLen, selEnd);
 				return;
 			}
@@ -210,7 +284,7 @@ public class EditTextCursorWatcher extends EditText {
 				setSelection(preLen, selEnd);
 				return;
 			}	
-			
+
 			//save the new selection in the calc class
 			mCalc.setSelection(selStart-preLen, selEnd-preLen);
 			setCursorVisible(true);
