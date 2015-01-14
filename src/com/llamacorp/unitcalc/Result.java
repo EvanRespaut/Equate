@@ -1,4 +1,4 @@
- package com.llamacorp.unitcalc;
+package com.llamacorp.unitcalc;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -114,12 +114,24 @@ public class Result {
 	 * @param unitTypePos is the position in the UnitType array */
 	public void setResultUnit(Unit queryUnit, Unit answerUnit, 
 			int unitTypePos) {
-		mQueryUnit = queryUnit;
+
 		mAnswerUnit = answerUnit;
-		mQuerryUnitText = queryUnit.toString();
 		mAnswerUnitText = answerUnit.toString();
-		mQuerryUnitTextLong = queryUnit.getLowercaseLongName();
 		mAnswerUnitTextLong = answerUnit.getLowercaseLongName();
+
+		mQueryUnit = queryUnit;
+		//if we're dealing with the same historical currency, then the
+		//years are most likely different
+		if(queryUnit == answerUnit && queryUnit.isHistorical()){
+			UnitHistCurrency uc = (UnitHistCurrency)queryUnit;
+			mQuerryUnitText = uc.getPreviousShortName();
+			mQuerryUnitTextLong = uc.getPreviousLowercaseLongName();			
+		}
+		else{
+			mQuerryUnitText = queryUnit.toString();
+			mQuerryUnitTextLong = queryUnit.getLowercaseLongName();
+		}
+
 		mUnitTypePos = unitTypePos;
 		mContainsUnits = true;
 		if(mAnswerUnit.isDynamic() && mQueryUnit.isDynamic()){
