@@ -30,6 +30,7 @@
 
 ----------------------Fix----------------------
 ---- TRY TO ADD UNIT TESTING FOR ALL PROBLEMS FIXED -----
+- Enter (6)46 manually doesn't show as (6)*46 in result
 - After long press unit switch, select unit
 - Empty expression, tap previous result with unit, adds a one
 - Type "(30+3%" and put cursor before 0, displays "(3)0+3

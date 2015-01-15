@@ -28,7 +28,7 @@
         <com.llamacorp.unitcalc.view.EditTextCursorWatcher
             android:id="@+id/textDisplay"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="50sp"
             android:layout_marginRight="5dp"
             android:background="@color/app_background"
             android:gravity="right"

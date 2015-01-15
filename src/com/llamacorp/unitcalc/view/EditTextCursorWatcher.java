@@ -187,19 +187,19 @@ public class EditTextCursorWatcher extends EditText {
 
 //		Integer colorFrom = getResources().getColor(R.color.red);
 //		Integer colorTo = getResources().getColor(R.color.blue);
-		Integer colorFrom = Color.RED;
-		Integer colorTo = Color.WHITE;
-		ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, colorTo);
-		colorAnimation.addUpdateListener(new AnimatorUpdateListener() {
-
-		    @Override
-		    public void onAnimationUpdate(ValueAnimator animator) {
-		        setTextColor((Integer)animator.getAnimatedValue());
-		    }
-
-		});
-		colorAnimation.setDuration(600*2);
-		colorAnimation.start();
+//		Integer colorFrom = Color.RED;
+//		Integer colorTo = Color.WHITE;
+//		ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, colorTo);
+//		colorAnimation.addUpdateListener(new AnimatorUpdateListener() {
+//
+//		    @Override
+//		    public void onAnimationUpdate(ValueAnimator animator) {
+//		        setTextColor((Integer)animator.getAnimatedValue());
+//		    }
+//
+//		});
+//		colorAnimation.setDuration(600*2);
+//		colorAnimation.start();
 		
 
 		//updating the text restarts selection to 0,0, so load in the current selection
@@ -209,50 +209,50 @@ public class EditTextCursorWatcher extends EditText {
 		setCursorVisible(!mCalc.isSolved());
 	}
 
-//
-//
-//	//set up the runnable for when button is held down
-//	Runnable mColorRunnable = new Runnable() {
-//		private int mGradStartCol = Color.RED;
-//		private int mGradEndCol = Color.GRAY;
-//
-//		private static final int NUM_COLOR_CHANGES=10;
-//
-//		@Override 
-//		public void run() {
-//			//after hold operation has been performed and 100ms is up, set final color
-//			if(mHoldInc==-1){
-//				return;
-//			}
-//			//color the button black for a second and perform long click operation
-//			if(mHoldInc==NUM_COLOR_CHANGES+1){
-//				mHoldInc=-1;
-//				return;
-//			}
-//			mColorHoldHandler.postDelayed(this, COLOR_CHANGE_TIME/NUM_COLOR_CHANGES);
-//
-//			float deltaRed= (float)Color.red(mGradStartCol) + ((float)Color.red(mGradEndCol)-(float)Color.red(mGradStartCol))*((float)mHoldInc)/((float)NUM_COLOR_CHANGES);
-//			float deltaGreen= (float)Color.green(mGradStartCol) + ((float)Color.green(mGradEndCol)-(float)Color.green(mGradStartCol))*((float)mHoldInc)/((float)NUM_COLOR_CHANGES);
-//			float deltaBlue= (float)Color.blue(mGradStartCol) + ((float)Color.blue(mGradEndCol)-(float)Color.blue(mGradStartCol))*((float)mHoldInc)/((float)NUM_COLOR_CHANGES);
-//
-//			//setBackgroundColor(Color.argb(255, (int)deltaRed, (int)deltaGreen, (int)deltaBlue));
-//			
-//			int intColor = ((int)deltaRed << 16) + ((int)deltaGreen << 8) + (int)deltaBlue;
-//			String hexColor = String.format("#%06X", (0xFFFFFF & intColor));
-//
-////			System.out.println("color = " + hexColor 
-////					+ "   red = " + deltaRed
-////					 + "   green = " + deltaGreen
-////					 + "   blue = " + deltaBlue + "<font color='" + hexColor + "'>" + mTextPrefex + "</font>" + 
-////						mExpressionText + 
-////						"<font color='" + hexColor + "'>" + mTextSuffix + "</font>");
-//			setText(Html.fromHtml("<font color='" + hexColor + "'>" + mTextPrefex + "</font>" + 
-//					mExpressionText + 
-//					"<font color='" + hexColor + "'>" + mTextSuffix + "</font>"));
-//
-//			mHoldInc++;
-//		}
-//	};		
+
+
+	//set up the runnable for when button is held down
+	Runnable mColorRunnable = new Runnable() {
+		private int mGradStartCol = Color.RED;
+		private int mGradEndCol = Color.GRAY;
+
+		private static final int NUM_COLOR_CHANGES=10;
+
+		@Override 
+		public void run() {
+			//after hold operation has been performed and 100ms is up, set final color
+			if(mHoldInc==-1){
+				return;
+			}
+			//color the button black for a second and perform long click operation
+			if(mHoldInc==NUM_COLOR_CHANGES+1){
+				mHoldInc=-1;
+				return;
+			}
+			mColorHoldHandler.postDelayed(this, COLOR_CHANGE_TIME/NUM_COLOR_CHANGES);
+
+			float deltaRed= (float)Color.red(mGradStartCol) + ((float)Color.red(mGradEndCol)-(float)Color.red(mGradStartCol))*((float)mHoldInc)/((float)NUM_COLOR_CHANGES);
+			float deltaGreen= (float)Color.green(mGradStartCol) + ((float)Color.green(mGradEndCol)-(float)Color.green(mGradStartCol))*((float)mHoldInc)/((float)NUM_COLOR_CHANGES);
+			float deltaBlue= (float)Color.blue(mGradStartCol) + ((float)Color.blue(mGradEndCol)-(float)Color.blue(mGradStartCol))*((float)mHoldInc)/((float)NUM_COLOR_CHANGES);
+
+			//setBackgroundColor(Color.argb(255, (int)deltaRed, (int)deltaGreen, (int)deltaBlue));
+			
+			int intColor = ((int)deltaRed << 16) + ((int)deltaGreen << 8) + (int)deltaBlue;
+			String hexColor = String.format("#%06X", (0xFFFFFF & intColor));
+
+//			System.out.println("color = " + hexColor 
+//					+ "   red = " + deltaRed
+//					 + "   green = " + deltaGreen
+//					 + "   blue = " + deltaBlue + "<font color='" + hexColor + "'>" + mTextPrefex + "</font>" + 
+//						mExpressionText + 
+//						"<font color='" + hexColor + "'>" + mTextSuffix + "</font>");
+			setText(Html.fromHtml("<font color='" + hexColor + "'>" + mTextPrefex + "</font>" + 
+					mExpressionText + 
+					"<font color='" + hexColor + "'>" + mTextSuffix + "</font>"));
+
+			mHoldInc++;
+		}
+	};		
 
 
 	/** Sets the current selection to the end of the expression */
