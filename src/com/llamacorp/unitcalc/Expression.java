@@ -2,6 +2,7 @@ package com.llamacorp.unitcalc;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
+import java.util.ArrayList;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -28,6 +29,8 @@ public class Expression {
 	//stores whether or not this expression was just solved
 	private boolean mSolved;
 
+	//list of indexes of characters to highlight
+	private ArrayList<Integer> mHighlightedCharList;
 
 	public static final String regexGroupedExponent = "(\\^)";
 	public static final String regexGroupedMultDiv = "([/*])";
@@ -58,6 +61,9 @@ public class Expression {
 		clearExpression();
 		mPreciseResult="";
 		setSelection(0, 0);
+		mHighlightedCharList = new ArrayList<Integer>();
+		mHighlightedCharList.add(-1);
+		mHighlightedCharList.add(-1);
 		//skip precise unit usage if precision is set to 0
 		if(dispPrecision>0){
 			mIntDisplayPrecision = dispPrecision;
@@ -96,7 +102,6 @@ public class Expression {
 	}
 
 
-
 	/**
 	 * This function will try to add a number or operator, or entire result list to the current expression
 	 * Note that there is lots of error checking to be sure user can't entire an invalid operator/number
@@ -104,27 +109,23 @@ public class Expression {
 	 */
 	public void keyPresses(String sKey){
 		//for now, if we're adding a previous result, just add it without error checking
-		if(sKey.length()>1){
+		if(sKey.length() > 1){
 			//don't load in errors
 			if(isInvalid(sKey)) return;
 			if(mSolved) replaceExpression(sKey);
 			else insertAtSelection(sKey);
-			mSolved=false;
+			mSolved = false;
 			return;
 		}
-
-		//check for invalid entries
-		if(sKey.matches(regexHasInvalidChars))
-			throw new IllegalArgumentException("In addToExpression, invalid sKey..."); 
-
-		//don't start with [*/^E] when the expression string is empty or if we opened a para
-		if(sKey.matches(regexInvalidStartChar) && expresssionToSelection().matches("(^[-]?$)|(.*[(]$)"))
-			return;
 
 		//if just hit equals, and we hit [.0-9(], then clear expression
 		if(mSolved && sKey.matches("[.0-9(]"))
 			clearExpression();
 
+		if(!isEntryValid(sKey))
+			return;
+		
+			
 		//when adding (, if the previous character was any number or decimal, or close para, add mult
 		if(sKey.equals("(") && expresssionToSelection().matches(".*[\\d).]$"))
 			sKey = "*" + sKey;
@@ -135,35 +136,10 @@ public class Expression {
 
 		//add auto completion for close parentheses
 		if(sKey.equals(")"))	
-			if(numOpenPara() <= 0) //if more close than open, add an open
+			if(numOpenPara() <= 0){ //if more close than open, add an open
 				addToExpressionStart("(");
-
-		//if we already have a decimal or E in the number, don't add a decimal
-		if(sKey.equals(".") && getLastPartialNumb().matches(".*[.E].*"))
-			//lastNumb returns the last num; if expression="4.3+", returns "4.3"; if last key was an operator, allow decimals
-			if(!expresssionToSelection().matches(".*" + regexAnyValidOperator + "$"))
-				return;
-
-		//if we already have a E in the number, don't add another; also don't add E immediately after an operator
-		if(sKey.equals("E") && (getLastPartialNumb().contains("E") || expresssionToSelection().matches(".*" + regexAnyValidOperator + "$")))
-			return;		
-
-		//if "E" or "E-" was last pressed, only allow [0-9(-]
-		if(getLastPartialNumb().matches(".*E[-]?$"))
-			if(sKey.matches("[^\\d(-]"))
-				return;
-
-		//if last digit was only a decimal, don't add any operator or E
-		if(sKey.matches(regexAnyOperatorOrE) && getLastPartialNumb().equals("."))
-			return;	
-		
-		//don't allow "--" or "65E--"
-		if(sKey.matches("[-]") && expresssionToSelection().matches(".*E?[-]"))
-			return;	
-
-		//don't allow two %'s in a row, or "5%*" then another "%"
-		if(sKey.matches("%") && expresssionToSelection().matches(".*%" + regexAnyValidOperator + "?$"))
-			return;
+				markHighlighted(0, getSelectionEnd());
+			}
 
 		//if we have "84*-", replace both the * and the - with the operator
 		if(sKey.matches(regexAnyValidOperator) && expresssionToSelection().matches(".*" + regexAnyOpExceptPercent + regexAnyValidOperator + "$")){
@@ -185,6 +161,53 @@ public class Expression {
 		mSolved=false;
 	}
 
+	
+	private boolean isEntryValid(String sKey){
+		//check for invalid entries
+		if(sKey.matches(regexHasInvalidChars))
+			throw new IllegalArgumentException("In addToExpression, invalid sKey..."); 
+
+		//don't start with [*/^E] when the expression string is empty or if we opened a para
+		if(sKey.matches(regexInvalidStartChar) && expresssionToSelection().matches("(^[-]?$)|(.*[(]$)"))
+			return false;
+
+			//if we already have a decimal or E in the number, don't add a decimal
+		if(sKey.equals(".") && getLastPartialNumb().matches(".*[.E].*"))
+			//lastNumb returns the last num; if expression="4.3+", returns "4.3"; if last key was an operator, allow decimals
+			if(!expresssionToSelection().matches(".*" + regexAnyValidOperator + "$"))
+				return false;
+
+		//if we already have a E in the number, don't add another; also don't add E immediately after an operator
+		if(sKey.equals("E") && (getLastPartialNumb().contains("E") || expresssionToSelection().matches(".*" + regexAnyValidOperator + "$")))
+			return false;		
+
+		//if "E" or "E-" was last pressed, only allow [0-9(-]
+		if(getLastPartialNumb().matches(".*E[-]?$"))
+			if(sKey.matches("[^\\d(-]"))
+				return false;
+
+		//if last digit was only a decimal, don't add any operator or E
+		if(sKey.matches(regexAnyOperatorOrE) && getLastPartialNumb().equals("."))
+			return false;	
+		
+		//don't allow "--" or "65E--"
+		if(sKey.matches("[-]") && expresssionToSelection().matches(".*E?[-]"))
+			return false;	
+
+		//don't allow two %'s in a row, or "5%*" then another "%"
+		if(sKey.matches("%") && expresssionToSelection().matches(".*%" + regexAnyValidOperator + "?$"))
+			return false;
+			
+		//no problems, return valid entry
+		return true;
+	}
+	
+	
+	private void markHighlighted(int index1, int index2){
+		mHighlightedCharList.add(0, index1);
+		mHighlightedCharList.add(1, index2);
+	}
+	
 
 	/**
 	 * This function takes text pasted by user, formats it and loads it into the expression
@@ -216,7 +239,7 @@ public class Expression {
 		BigDecimal bd;
 		//try{
 		//round the answer for viewer's pleasure
-		bd = new BigDecimal(mExpression,mMcDisp);
+		bd = new BigDecimal(getExpression(), mMcDisp);
 		//}
 		//catch (NumberFormatException e){
 		//	mExpression=strSyntaxError;
@@ -224,7 +247,7 @@ public class Expression {
 		//}
 
 		//save the original to precise result for potential later use
-		mPreciseResult = mExpression;
+		mPreciseResult = getExpression();
 
 		//determine if exponent (number after E) is small enough for non-engineering style print, otherwise do regular style
 		if(lastNumbExponent()<mIntDisplayPrecision)
@@ -233,21 +256,21 @@ public class Expression {
 			replaceExpression(bd.toString());
 
 		//finally clean the result off
-		replaceExpression(cleanFormatting(mExpression));
+		replaceExpression(cleanFormatting(getExpression()));
 	}
 
 	/** Adds parenthesis around power operations */
 	public void groupPowerOperands(){
-		String str=mExpression.toString();
+		String str = getExpression();
 		//search to find "^" (start at 1 so no NPE later; "^3" invalid anyway)
-		for(int i=1; i<str.length(); i++){
+		for(int i = 1; i < str.length(); i++){
 			if(str.charAt(i) == '^'){
 				int openPareIndex = 0;
 				int closePareIndex = 0;
 				//first find where to add (
 				//first case is (###)^
-				if(str.charAt(i-1) == ')'){
-					for(int k=i-2;k>0;k--){
+				if(str.charAt(i - 1) == ')'){
+					for(int k = i - 2; k > 0; k--){
 						if(numOpenPara(str.substring(k, i))==0){
 							openPareIndex = k;
 							break;
@@ -292,7 +315,7 @@ public class Expression {
 
 	/** Replaces % operators their respective operators */
 	public void replacePercentOps() {
-		String str = mExpression.toString();
+		String str = getExpression();
 		String subStr = "";
 		for(int i=0;i<str.length();i++){
 			if(str.charAt(i)=='%'){
@@ -328,7 +351,7 @@ public class Expression {
 	/** Adds implied multiples for parenthesis */
 	public void addImpliedParMult(){
         //String str = "2((5)6)(3)7(3)(4).2+8.(0)";
-		String str = mExpression.toString();
+		String str = getExpression();
          
          //first replace all )( with )*(
         str = str.replaceAll("\\)\\(", "\\)\\*\\(");
@@ -368,7 +391,7 @@ public class Expression {
 
 		//find out if expression's first term matches first part of the precise result, if so replace with more precise term
 		if(getFirstNumb().equals(formallyPrecCleaned)){
-			replaceExpression(mExpression.replaceFirst(regexGroupedNumber, mPreciseResult.toString()));
+			replaceExpression(getExpression().replaceFirst(regexGroupedNumber, mPreciseResult.toString()));
 		}
 	}
 
@@ -376,14 +399,14 @@ public class Expression {
 	/** Clean off any dangling operators and E's (not parentheses!!) at the END ONLY */
 	public void cleanDanglingOps(){
 		//don't want to trim off %'s so long as there's at least one char before it
-		if(mExpression.matches(".+%$")) return;
-		replaceExpression(mExpression.replaceAll(regexAnyOperatorOrE + "+$", ""));
+		if(getExpression().matches(".+%$")) return;
+		replaceExpression(getExpression().replaceAll(regexAnyOperatorOrE + "+$", ""));
 	}
 
 
 	/** Returns if this expression is empty */
 	public boolean isEmpty(){
-		if(mExpression.equals("")) 
+		if(getExpression().equals("")) 
 			return true;
 		else 
 			return false;
@@ -401,7 +424,7 @@ public class Expression {
 
 	/** Returns if this expression is has invalid characters */
 	public boolean isInvalid(){
-		return isInvalid(mExpression);
+		return isInvalid(getExpression());
 	}
 
 	/** Returns the post rounded result */
@@ -421,12 +444,12 @@ public class Expression {
 
 
 	public void setSelectionToEnd() {
-		setSelection(mExpression.length(), mExpression.length());	
+		setSelection(getExpressionLength(), getExpressionLength());	
 	}
 
 
 	public void setSelection(int selectionStart, int selectionEnd ) {
-		if(selectionEnd>mExpression.length() || selectionStart>mExpression.length())
+		if(selectionEnd > getExpressionLength() || selectionStart > getExpressionLength())
 			throw new IllegalArgumentException("In Expression.setSelection, selection end or start > expression length");
 		//this occurs if the use drags the end selector before the start selector; need the following code so expression doesn't get confused
 		if(selectionEnd < selectionStart) {
@@ -453,8 +476,8 @@ public class Expression {
 	/** Replaces entire expression. Selection moves to end of the expression.
 	 * @param tempExp String to replace expression with*/
 	public void replaceExpression(String tempExp) {
-		mExpression=tempExp;
-		setSelection(mExpression.length(), mExpression.length());	
+		setExpression(tempExp);
+		setSelectionToEnd();	
 	}	
 
 
@@ -477,19 +500,31 @@ public class Expression {
 		if(selStart!=selEnd)
 			insertAtSelection("");
 		else {
-			mExpression = mExpression.substring(0, selStart-1) + mExpression.substring(selStart, mExpression.length());
+			setExpression(getExpression().substring(0, selStart-1) + getExpression().substring(selStart, getExpressionLength()));
 			setSelection(selStart-1, selStart-1);
 		}
 	}
 
 	/** @return the length of the expression */
 	public int length(){
-		return mExpression.toString().length();
+		return getExpressionLength();
 	}
 
 	@Override
 	public String toString(){
+		return getExpression();
+	}
+	
+	private void setExpression(String tempExp){
+		mExpression = tempExp;
+	}
+	
+	private String getExpression(){
 		return mExpression;
+	}
+	
+	private int getExpressionLength(){
+		return getExpression().length();
 	}
 
 
@@ -500,7 +535,7 @@ public class Expression {
 		int selStart = getSelectionStart();
 		int selEnd = getSelectionEnd();
 		int strLen = str.length();
-		mExpression = str + mExpression;
+		setExpression(str + getExpression());
 		setSelection(selStart + strLen, selEnd + strLen);
 	}
 
@@ -518,11 +553,11 @@ public class Expression {
 			//used to later tell where to place the selection (cursor)
 			int selStart = getSelectionStart();
 			int selEnd = getSelectionEnd();
-			int expLen = mExpression.length();
+			int expLen = getExpressionLength();
 
-			mExpression = mExpression.substring(0, selStart) + toAdd + mExpression.substring(selEnd, expLen);
+			setExpression(getExpression().substring(0, selStart) + toAdd + getExpression().substring(selEnd, expLen));
 			//move cursor down by newly added key.  note there is not "selection" just a cursor (since start=end)
-			setSelection(selStart+toAdd.length(), selStart+toAdd.length());
+			setSelection(selStart + toAdd.length(), selStart + toAdd.length());
 		}
 	}
 
@@ -577,8 +612,8 @@ public class Expression {
 	/** Gets the number after the E in expression (not including + and -) */	
 	private int lastNumbExponent(){
 		//func returns "" if expression empty, and expression if doesn't contain E[+-]?
-		if(mExpression.contains("E")){
-			String [] strA = mExpression.split("E[+-]?");
+		if(getExpression().contains("E")){
+			String [] strA = getExpression().split("E[+-]?");
 			return Integer.parseInt(strA[strA.length-1]);
 		}
 		else 
@@ -649,6 +684,6 @@ public class Expression {
 	}
 
 	private String expresssionToSelection(){
-		return mExpression.substring(0,getSelectionStart());
+		return getExpression().substring(0, getSelectionStart());
 	}
 }
