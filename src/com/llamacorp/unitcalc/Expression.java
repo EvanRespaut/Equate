@@ -107,9 +107,6 @@ public class Expression {
 	 * @param sKey should only be single valid number or operator character, or longer previous results
 	 */
 	public void keyPresses(String sKey){
-		//regardless of checking, clear the highlighed feild when any key pressed
-		clearHighlighted();
-	
 		//for now, if we're adding a previous result, just add it without error checking
 		if(sKey.length() > 1){
 			//don't load in errors
@@ -126,7 +123,7 @@ public class Expression {
 
 		if(!isEntryValid(sKey))
 			return;
-			
+
 		//when adding (, if the previous character was any number or decimal, or close para, add mult
 		if(sKey.equals("(") && expresssionToSelection().matches(".*[\\d).]$"))
 			sKey = "*" + sKey;
@@ -137,10 +134,8 @@ public class Expression {
 
 		//add auto completion for close parentheses
 		if(sKey.equals(")"))	
-			if(numOpenPara() <= 0){ //if more close than open, add an open
+			if(numOpenPara() <= 0) //if more close than open, add an open
 				addToExpressionStart("(");
-				markHighlighted(0, getSelectionEnd());
-			}
 
 		//if we have "84*-", replace both the * and the - with the operator
 		if(sKey.matches(regexAnyValidOperator) && expresssionToSelection().matches(".*" + regexAnyOpExceptPercent + regexAnyValidOperator + "$")){
@@ -157,7 +152,7 @@ public class Expression {
 		}
 		//otherwise load the new keypress
 		insertAtSelection(sKey);
-		
+
 		//try to highlight matching set of para if we just closed or opened one
 		highlightMatchingPara(sKey);
 
@@ -165,7 +160,7 @@ public class Expression {
 		mSolved=false;
 	}
 
-	
+
 	private boolean isEntryValid(String sKey){
 		//check for invalid entries
 		if(sKey.matches(regexHasInvalidChars))
@@ -175,7 +170,7 @@ public class Expression {
 		if(sKey.matches(regexInvalidStartChar) && expresssionToSelection().matches("(^[-]?$)|(.*[(]$)"))
 			return false;
 
-			//if we already have a decimal or E in the number, don't add a decimal
+		//if we already have a decimal or E in the number, don't add a decimal
 		if(sKey.equals(".") && getLastPartialNumb().matches(".*[.E].*"))
 			//lastNumb returns the last num; if expression="4.3+", returns "4.3"; if last key was an operator, allow decimals
 			if(!expresssionToSelection().matches(".*" + regexAnyValidOperator + "$"))
@@ -193,7 +188,7 @@ public class Expression {
 		//if last digit was only a decimal, don't add any operator or E
 		if(sKey.matches(regexAnyOperatorOrE) && getLastPartialNumb().equals("."))
 			return false;	
-		
+
 		//don't allow "--" or "65E--"
 		if(sKey.matches("[-]") && expresssionToSelection().matches(".*E?[-]"))
 			return false;	
@@ -201,7 +196,7 @@ public class Expression {
 		//don't allow two %'s in a row, or "5%*" then another "%"
 		if(sKey.matches("%") && expresssionToSelection().matches(".*%" + regexAnyValidOperator + "?$"))
 			return false;
-			
+
 		//no problems, return valid entry
 		return true;
 	}
@@ -332,7 +327,7 @@ public class Expression {
 					subStr = subStr.substring(0,subStr.length()-1);
 					//case similar to 2+5% or 2-5%, but no 2+5%3 or 2+5%*3
 					if(lastOp.matches(regexGroupedAddSub) && !subStr.equals("") &&
-						(strAfter.equals("") || strAfter.matches(regexGroupedAddSub + ".*$")))
+							(strAfter.equals("") || strAfter.matches(regexGroupedAddSub + ".*$")))
 						subStr = "(" + subStr + ")*(1" + lastOp + lastNum + "*0.01)";
 					//cases like 2*3% or 3% or similar
 					else
@@ -352,20 +347,69 @@ public class Expression {
 
 	/** Adds implied multiples for parenthesis */
 	public void addImpliedParMult(){
-        //String str = "2((5)6)(3)7(3)(4).2+8.(0)";
+		//String str = "2((5)6)(3)7(3)(4).2+8.(0)";
 		String str = getExpression();
-         
-         //first replace all )( with )*(
-        str = str.replaceAll("\\)\\(", "\\)\\*\\(");
-        
-        //replace all #( with #*(
-        str = str.replaceAll("([\\d\\.])\\(", "$1\\*\\(");
-        
-        //replace all )# with )*#
-        str = str.replaceAll("\\)([\\d\\.])", "\\)\\*$1");
- 		replaceExpression(str);
+
+		//first replace all )( with )*(
+		str = str.replaceAll("\\)\\(", "\\)\\*\\(");
+
+		//replace all #( with #*(
+		str = str.replaceAll("([\\d\\.])\\(", "$1\\*\\(");
+
+		//replace all )# with )*#
+		str = str.replaceAll("\\)([\\d\\.])", "\\)\\*$1");
+		replaceExpression(str);
 	}
-	
+
+	/**
+	 * Searches forward in string for associated close parenthesis given the 
+	 * index of an open
+	 * @param str String to look search over
+	 * @param firstOpenIndex Index in str of the open parenthesis requiring a mate
+	 * @return The index of the associated close parenthesis give the supplied open
+	 * returns -1 if no such associated parenthesis was found
+	 */
+	public static int findMatchingClosePara(String str, int firstOpenIndex) {
+		if(!str.equals("") && firstOpenIndex != -1){
+			int paraCount=0;
+			for(int i = firstOpenIndex; i<str.length(); i++){
+				if(str.charAt(i) == '(')
+					paraCount++;
+				else if (str.charAt(i) == ')'){
+					paraCount--;
+					if (paraCount==0){
+						return i;
+					}
+				}
+			}
+		}
+		return -1;
+	}
+
+	/**
+	 * Searches forward in string for associated close parenthesis given the 
+	 * index of an open
+	 * @param str String to look search over
+	 * @param lastCloseIndex Index in str of the close parenthesis requiring a mate
+	 * @return The index of the associated open parenthesis give the supplied close
+	 * returns -1 if no such associated parenthesis was found
+	 */
+	public static int findMatchingOpenPara(String str, int lastCloseIndex) {
+		if(!str.equals("") && lastCloseIndex != -1){
+			int paraCount=0;
+			for(int i = lastCloseIndex; i >= 0; i--){
+				if(str.charAt(i) == ')')
+					paraCount++;
+				else if (str.charAt(i) == '('){
+					paraCount--;
+					if (paraCount==0){
+						return i;
+					}
+				}
+			}
+		}
+		return -1;
+	}
 
 
 	/** Close any open parentheses in this expression */
@@ -516,8 +560,8 @@ public class Expression {
 	public String toString(){
 		return getExpression();
 	}
-	
-	
+
+
 	public ArrayList<Integer> getHighlighted(){
 		return mHighlightedCharList;
 	}
@@ -528,40 +572,49 @@ public class Expression {
 		mHighlightedCharList.add(-1);
 		mHighlightedCharList.add(-1);
 	}
-	
-	
+
+
 	private void highlightMatchingPara(String sKey){
 		String open = "(";
 		String close = ")";
 		int associatedIndex = -1;
 		if(sKey.equals(close)){
 			//search for backwards for the matching open
-			associatedIndex = expresssionToSelection().lastIndexOf(open);
+			associatedIndex = findMatchingOpenPara(expresssionToSelection(),
+					expresssionToSelection().lastIndexOf(close));
 		}
 		else if(sKey.equals(open)){
 			//search for forwards from selection for the matching close
-			associatedIndex = expresssionAfterSelectionStart().indexOf(close);
+			associatedIndex = findMatchingClosePara(expresssionAfterSelectionStart(),
+					expresssionAfterSelectionStart().indexOf(open));
 		}
 		else
 			return;
 		if(associatedIndex != -1)
 			markHighlighted(getSelectionStart()-1, associatedIndex);
 	}
-	
+
+
 	private void markHighlighted(int index1, int index2){
-		mHighlightedCharList.add(0, index1);
-		mHighlightedCharList.add(1, index2);
+		if(index1 < index2){
+			mHighlightedCharList.add(0, index1);
+			mHighlightedCharList.add(1, index2);
+		}
+		else{
+			mHighlightedCharList.add(0, index2);
+			mHighlightedCharList.add(1, index1);
+		}
 	}
-	
-	
+
+
 	private void setExpression(String tempExp){
 		mExpression = tempExp;
 	}
-	
+
 	private String getExpression(){
 		return mExpression;
 	}
-	
+
 	private int getExpressionLength(){
 		return getExpression().length();
 	}
@@ -569,7 +622,7 @@ public class Expression {
 	private String expresssionToSelection(){
 		return getExpression().substring(0, getSelectionStart());
 	}
-	
+
 	private String expresssionAfterSelectionStart(){
 		return getExpression().substring(getSelectionStart(), length());
 	}

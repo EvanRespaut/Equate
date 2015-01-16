@@ -14,7 +14,6 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Build;
-import android.os.Handler;
 import android.os.SystemClock;
 import android.text.Html;
 import android.text.InputType;
@@ -28,6 +27,12 @@ import com.llamacorp.unitcalc.R;
 public class EditTextCursorWatcher extends EditText {
 	private Calculator mCalc;
 	private final Context context;
+
+	private int mSelStart = 0;
+	private int mSelEnd = 0;
+
+	private int mHighlightIndex1;
+	private int mHighlightIndex2;
 
 	private String mTextPrefex="";
 	private String mExpressionText="";
@@ -149,12 +154,6 @@ public class EditTextCursorWatcher extends EditText {
 		}
 	}
 
-	private static final int COLOR_CHANGE_TIME = 300;	
-	private Handler mColorHoldHandler;
-	//used to count up holding time
-	private int mHoldInc;
-
-
 	/**
 	 * Updates the text with current value from calc
 	 * Preserves calc's cursor selections
@@ -162,8 +161,8 @@ public class EditTextCursorWatcher extends EditText {
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	public void updateTextFromCalc(){
 		//setText will reset selection to 0,0, so save it right now
-		int selStart = mCalc.getSelectionStart();
-		int selEnd = mCalc.getSelectionEnd();
+		mSelStart = mCalc.getSelectionStart();
+		mSelEnd = mCalc.getSelectionEnd();
 
 		mTextPrefex = "";
 		mExpressionText = mCalc.toString();
@@ -176,8 +175,8 @@ public class EditTextCursorWatcher extends EditText {
 				mTextPrefex = getResources().getString(R.string.word_Convert) + " ";
 				mTextSuffix = mTextSuffix + " " + getResources().getString(R.string.word_to) + ":";
 
-				selStart = selStart + mTextPrefex.length();
-				selEnd = selEnd + mTextPrefex.length();
+				mSelStart = mSelStart + mTextPrefex.length();
+				mSelEnd = mSelEnd + mTextPrefex.length();
 			}
 		}
 		//update the main display
@@ -186,32 +185,60 @@ public class EditTextCursorWatcher extends EditText {
 				"<font color='gray'>" + mTextSuffix + "</font>"));
 
 
-
-		if(mCalc.getHighlighted().get(0) != -1){
+		ArrayList<Integer> highlist = mCalc.getHighlighted();
+		mHighlightIndex1 = highlist.get(0);
+		mHighlightIndex2 = highlist.get(1);
+		if(mHighlightIndex1 != -1 && mHighlightIndex2 != -1){
 			Integer colorFrom = Color.RED;
 			Integer colorTo = Color.WHITE;
 			ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, colorTo);
 			colorAnimation.addUpdateListener(new AnimatorUpdateListener() {
 				@Override
 				public void onAnimationUpdate(ValueAnimator animator) {
-					setTextColor((Integer)animator.getAnimatedValue());
+					ArrayList<Integer> highlist = mCalc.getHighlighted();
+					mHighlightIndex1 = highlist.get(0);
+					mHighlightIndex2 = highlist.get(1);
+					String coloredExp = mExpressionText;
+					//if the highlight got canceled during the async animation update, cancel
+					if(mHighlightIndex1 == -1 || mHighlightIndex2 == -1)
+						animator.cancel();
+					else {
+						int color = (Integer)animator.getAnimatedValue();
+						coloredExp = mExpressionText.substring(0, mHighlightIndex1) +
+								"<font color='" + color + "'>" + 
+								mExpressionText.substring(mHighlightIndex1, mHighlightIndex1+1) +
+								"</font>" +
+								mExpressionText.substring(mHighlightIndex1+1, mHighlightIndex2) +
+								"<font color='" + color + "'>" + 
+								mExpressionText.substring(mHighlightIndex2, mHighlightIndex2+1) +
+								"</font>" +
+								mExpressionText.substring(mHighlightIndex2+1, mExpressionText.length());
+					}
+
+					//update the main display
+					setText(Html.fromHtml("<font color='gray'>" + mTextPrefex + "</font>" + 
+							coloredExp + 
+							"<font color='gray'>" + mTextSuffix + "</font>"));
+
+					//updating the text restarts selection to 0,0, so load in the current selection
+					setSelection(mSelStart, mSelEnd);
+
 				}
 			});	
 			colorAnimation.addListener(new AnimatorListenerAdapter() 
 			{
-			    @Override
-			    public void onAnimationEnd(Animator animation) 
-			    {
-			   	 System.out.println("cleared");
-			        mCalc.clearHighlighted();
-			    }
+				@Override
+				public void onAnimationEnd(Animator animation) 
+				{
+					mCalc.clearHighlighted();
+				}
 			});
 			colorAnimation.setDuration(600*2);
 			colorAnimation.start();
 		}
 
 		//updating the text restarts selection to 0,0, so load in the current selection
-		setSelection(selStart, selEnd);
+		setSelection(mSelStart, mSelEnd);
 
 		//if expression not solved, set cursor to visible (and visa-versa)
 		setCursorVisible(!mCalc.isSolved());

@@ -90,19 +90,7 @@ public class Solver {
 		//if no open parentheses exists, move on
 		if(firstPara!=-1){
 			//loop over all parentheses
-			int paraCount=0;
-			int matchingPara=-1;
-			for(int i = firstPara; i<str.length(); i++){
-				if(str.charAt(i) == '(')
-					paraCount++;
-				else if (str.charAt(i) == ')'){
-					paraCount--;
-					if (paraCount==0){
-						matchingPara=i;
-						break;
-					}
-				}
-			}
+			int matchingPara = Expression.findMatchingClosePara(str, firstPara);
 
 			//we didn't find the matching parentheses put up syntax error and quit
 			if(matchingPara==-1){

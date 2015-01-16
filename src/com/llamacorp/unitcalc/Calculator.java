@@ -460,6 +460,9 @@ public class Calculator{
 	 * @param sKey is either single character (but still a String) or a string from result list
 	 */
 	public void parseKeyPressed(String sKey){
+		//first clear any hightlighted chars (and the animation)
+		clearHighlighted();
+		
 		//if expression was displaying "Syntax Error" or similar (containing invalid chars) clear it
 		if(isExpressionInvalid())
 			mExpression.clearExpression();
