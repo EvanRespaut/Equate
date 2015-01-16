@@ -612,6 +612,15 @@ public class Calculator{
 	}
 
 
+	public ArrayList<Integer> getHighlighted(){
+		return mExpression.getHighlighted();
+	} 
+	
+
+	public void clearHighlighted() {
+		mExpression.clearHighlighted();
+	}
+	
 	public List<Result> getResultList() {
 		return mResultList;
 	}

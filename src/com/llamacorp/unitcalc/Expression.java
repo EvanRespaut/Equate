@@ -62,8 +62,7 @@ public class Expression {
 		mPreciseResult="";
 		setSelection(0, 0);
 		mHighlightedCharList = new ArrayList<Integer>();
-		mHighlightedCharList.add(-1);
-		mHighlightedCharList.add(-1);
+		clearHighlighted();
 		//skip precise unit usage if precision is set to 0
 		if(dispPrecision>0){
 			mIntDisplayPrecision = dispPrecision;
@@ -108,6 +107,9 @@ public class Expression {
 	 * @param sKey should only be single valid number or operator character, or longer previous results
 	 */
 	public void keyPresses(String sKey){
+		//regardless of checking, clear the highlighed feild when any key pressed
+		clearHighlighted();
+	
 		//for now, if we're adding a previous result, just add it without error checking
 		if(sKey.length() > 1){
 			//don't load in errors
@@ -124,7 +126,6 @@ public class Expression {
 
 		if(!isEntryValid(sKey))
 			return;
-		
 			
 		//when adding (, if the previous character was any number or decimal, or close para, add mult
 		if(sKey.equals("(") && expresssionToSelection().matches(".*[\\d).]$"))
@@ -156,6 +157,9 @@ public class Expression {
 		}
 		//otherwise load the new keypress
 		insertAtSelection(sKey);
+		
+		//try to highlight matching set of para if we just closed or opened one
+		highlightMatchingPara(sKey);
 
 		//we added a num/op, reset the solved flag
 		mSolved=false;
@@ -201,13 +205,7 @@ public class Expression {
 		//no problems, return valid entry
 		return true;
 	}
-	
-	
-	private void markHighlighted(int index1, int index2){
-		mHighlightedCharList.add(0, index1);
-		mHighlightedCharList.add(1, index2);
-	}
-	
+
 
 	/**
 	 * This function takes text pasted by user, formats it and loads it into the expression
@@ -317,6 +315,7 @@ public class Expression {
 	public void replacePercentOps() {
 		String str = getExpression();
 		String subStr = "";
+		String strAfter = "";
 		for(int i=0;i<str.length();i++){
 			if(str.charAt(i)=='%'){
 				//save beginning portion of string before the %
@@ -326,20 +325,23 @@ public class Expression {
 				//trim off the last number
 				subStr = subStr.substring(0,subStr.length()-lastNum.length());
 				//as long as the string isn't empty, find last operator
+				strAfter = str.substring(i+1, str.length());
 				if(!subStr.equals("")){
 					String lastOp = subStr.substring(subStr.length()-1,subStr.length());
 					//trim off the last operator
 					subStr = subStr.substring(0,subStr.length()-1);
-					//case similar to 200+5% or 200-5%
-					if(lastOp.matches(regexGroupedAddSub) && !subStr.equals(""))
+					//case similar to 2+5% or 2-5%, but no 2+5%3 or 2+5%*3
+					if(lastOp.matches(regexGroupedAddSub) && !subStr.equals("") &&
+						(strAfter.equals("") || strAfter.matches(regexGroupedAddSub + ".*$")))
 						subStr = "(" + subStr + ")*(1" + lastOp + lastNum + "*0.01)";
+					//cases like 2*3% or 3% or similar
 					else
 						subStr = subStr + lastOp + "(" + lastNum + "*0.01)";
 				}
 				else
 					subStr = "(" + lastNum + "*0.01)";
 				//replace the old contents with the new expression
-				str = subStr + str.substring(i+1, str.length());
+				str = subStr + strAfter;
 				//move up i by the diff between the new and old str
 				i = subStr.length();
 			}
@@ -500,7 +502,7 @@ public class Expression {
 		if(selStart!=selEnd)
 			insertAtSelection("");
 		else {
-			setExpression(getExpression().substring(0, selStart-1) + getExpression().substring(selStart, getExpressionLength()));
+			setExpression(getExpression().substring(0, selStart-1) + expresssionAfterSelectionStart());
 			setSelection(selStart-1, selStart-1);
 		}
 	}
@@ -515,6 +517,43 @@ public class Expression {
 		return getExpression();
 	}
 	
+	
+	public ArrayList<Integer> getHighlighted(){
+		return mHighlightedCharList;
+	}
+
+
+	public void clearHighlighted() {
+		mHighlightedCharList.clear();
+		mHighlightedCharList.add(-1);
+		mHighlightedCharList.add(-1);
+	}
+	
+	
+	private void highlightMatchingPara(String sKey){
+		String open = "(";
+		String close = ")";
+		int associatedIndex = -1;
+		if(sKey.equals(close)){
+			//search for backwards for the matching open
+			associatedIndex = expresssionToSelection().lastIndexOf(open);
+		}
+		else if(sKey.equals(open)){
+			//search for forwards from selection for the matching close
+			associatedIndex = expresssionAfterSelectionStart().indexOf(close);
+		}
+		else
+			return;
+		if(associatedIndex != -1)
+			markHighlighted(getSelectionStart()-1, associatedIndex);
+	}
+	
+	private void markHighlighted(int index1, int index2){
+		mHighlightedCharList.add(0, index1);
+		mHighlightedCharList.add(1, index2);
+	}
+	
+	
 	private void setExpression(String tempExp){
 		mExpression = tempExp;
 	}
@@ -527,6 +566,13 @@ public class Expression {
 		return getExpression().length();
 	}
 
+	private String expresssionToSelection(){
+		return getExpression().substring(0, getSelectionStart());
+	}
+	
+	private String expresssionAfterSelectionStart(){
+		return getExpression().substring(getSelectionStart(), length());
+	}
 
 	/** Adds String to beginning of expression. Note selection will NOT move relative 
 	 * to the rest of the expression
@@ -681,9 +727,5 @@ public class Expression {
 		if (expStr.matches(".*"+regexGroupedNonNegNumber))
 			return expStr.replaceAll(".*?"+regexGroupedNonNegNumber+"$", "$1");
 		return "";
-	}
-
-	private String expresssionToSelection(){
-		return getExpression().substring(0, getSelectionStart());
 	}
 }
