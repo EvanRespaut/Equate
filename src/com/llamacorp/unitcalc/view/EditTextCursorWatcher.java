@@ -188,7 +188,8 @@ public class EditTextCursorWatcher extends EditText {
 		ArrayList<Integer> highlist = mCalc.getHighlighted();
 		mHighlightIndex1 = highlist.get(0);
 		mHighlightIndex2 = highlist.get(1);
-		if(mHighlightIndex1 != -1 && mHighlightIndex2 != -1){
+		//if index1 isn't highlighted, neither is index2 (since they're sorted)
+		if(mHighlightIndex1 != -1){
 			Integer colorFrom = Color.RED;
 			Integer colorTo = Color.WHITE;
 			ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, colorTo);
@@ -200,10 +201,14 @@ public class EditTextCursorWatcher extends EditText {
 					mHighlightIndex2 = highlist.get(1);
 					String coloredExp = mExpressionText;
 					//if the highlight got canceled during the async animation update, cancel
-					if(mHighlightIndex1 == -1 || mHighlightIndex2 == -1)
+					if(mHighlightIndex1 == -1)
 						animator.cancel();
 					else {
 						int color = (Integer)animator.getAnimatedValue();
+						for(int i=0; i<2;i++){
+//							if()
+						}
+						
 						coloredExp = mExpressionText.substring(0, mHighlightIndex1) +
 								"<font color='" + color + "'>" + 
 								mExpressionText.substring(mHighlightIndex1, mHighlightIndex1+1) +
@@ -233,7 +238,7 @@ public class EditTextCursorWatcher extends EditText {
 					mCalc.clearHighlighted();
 				}
 			});
-			colorAnimation.setDuration(600*2);
+			colorAnimation.setDuration(600);
 			colorAnimation.start();
 		}
 

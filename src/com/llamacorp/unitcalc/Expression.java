@@ -583,10 +583,10 @@ public class Expression {
 			associatedIndex = findMatchingOpenPara(expresssionToSelection(),
 					expresssionToSelection().lastIndexOf(close));
 		}
-		else if(sKey.equals(open)){
+		else if(sKey.equals(open) || sKey.equals("*" + open)){
 			//search for forwards from selection for the matching close
-			associatedIndex = findMatchingClosePara(expresssionAfterSelectionStart(),
-					expresssionAfterSelectionStart().indexOf(open));
+			associatedIndex = findMatchingClosePara(getExpression(),
+					getSelectionStart()-1);
 		}
 		else
 			return;
