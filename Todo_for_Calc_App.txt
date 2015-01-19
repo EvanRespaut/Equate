@@ -1,4 +1,5 @@
 ------------------ToDo Next--------------------
+-quick double close of para crashes app
 - Should perhaps standardized date styling using pure HTML (instead of extra textView)
 - When doing regular currency to historical, should change to year date code (instead of day or hour)
 - Should use API update historical USD to today's USD

@@ -596,7 +596,7 @@ public class Expression {
 
 
 	private void markHighlighted(int index1, int index2){
-		if(index1 < index2){
+		if(index1 < index2 || index2 == -1){
 			mHighlightedCharList.add(0, index1);
 			mHighlightedCharList.add(1, index2);
 		}

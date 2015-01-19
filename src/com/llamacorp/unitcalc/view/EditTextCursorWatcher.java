@@ -187,7 +187,6 @@ public class EditTextCursorWatcher extends EditText {
 
 		ArrayList<Integer> highlist = mCalc.getHighlighted();
 		mHighlightIndex1 = highlist.get(0);
-		mHighlightIndex2 = highlist.get(1);
 		//if index1 isn't highlighted, neither is index2 (since they're sorted)
 		if(mHighlightIndex1 != -1){
 			Integer colorFrom = Color.RED;
@@ -199,25 +198,21 @@ public class EditTextCursorWatcher extends EditText {
 					ArrayList<Integer> highlist = mCalc.getHighlighted();
 					mHighlightIndex1 = highlist.get(0);
 					mHighlightIndex2 = highlist.get(1);
-					String coloredExp = mExpressionText;
+					String coloredExp = "";
 					//if the highlight got canceled during the async animation update, cancel
 					if(mHighlightIndex1 == -1)
 						animator.cancel();
 					else {
 						int color = (Integer)animator.getAnimatedValue();
-						for(int i=0; i<2;i++){
-//							if()
+						int len=2;
+						coloredExp = mExpressionText.substring(0,  highlist.get(0));
+						for(int i=0; i < len;i++){
+							int finish = mExpressionText.length();
+							if(i != len - 1) finish = highlist.get(i + 1);
+							coloredExp = coloredExp + "<font color='" + color + "'>" + 
+									mExpressionText.substring(highlist.get(i), highlist.get(i) + 1) +
+									"</font>" + mExpressionText.substring(highlist.get(i) + 1, finish);
 						}
-						
-						coloredExp = mExpressionText.substring(0, mHighlightIndex1) +
-								"<font color='" + color + "'>" + 
-								mExpressionText.substring(mHighlightIndex1, mHighlightIndex1+1) +
-								"</font>" +
-								mExpressionText.substring(mHighlightIndex1+1, mHighlightIndex2) +
-								"<font color='" + color + "'>" + 
-								mExpressionText.substring(mHighlightIndex2, mHighlightIndex2+1) +
-								"</font>" +
-								mExpressionText.substring(mHighlightIndex2+1, mExpressionText.length());
 					}
 
 					//update the main display
