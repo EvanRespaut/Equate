@@ -2,7 +2,7 @@ package com.llamacorp.unitcalc.view;
 
 import java.util.ArrayList;
 import java.util.List;
-
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -21,7 +21,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
-
 import com.llamacorp.unitcalc.Calculator;
 import com.llamacorp.unitcalc.R;
 import com.llamacorp.unitcalc.Unit;
@@ -187,12 +186,14 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 
 		//clicking display will set solve=false, and will make the cursor visible
 		mDisplay.setOnTouchListener(new View.OnTouchListener() {
+			@SuppressLint("NewApi")
 			@Override 
 			public boolean onTouch(View view, MotionEvent event) {
 				if(event.getAction()==MotionEvent.ACTION_DOWN){
 					//once the user clicks on part of the expression, don't want # to delete it
 					mCalc.setSolved(false);
 					mDisplay.setCursorVisible(true);
+					mDisplay.mColorAnimation.end();
 				}
 				return false;
 			}

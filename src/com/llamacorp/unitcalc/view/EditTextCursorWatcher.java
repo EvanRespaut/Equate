@@ -37,7 +37,7 @@ public class EditTextCursorWatcher extends EditText {
 	private String mTextPrefex="";
 	private String mExpressionText="";
 	private String mTextSuffix="";
-
+	public ValueAnimator mColorAnimation;
 
 
 	// (This was in the original TextView) System wide time for last cut or copy action.
@@ -191,8 +191,8 @@ public class EditTextCursorWatcher extends EditText {
 		if(mHighlightIndex1 != -1){
 			Integer colorFrom = Color.RED;
 			Integer colorTo = Color.WHITE;
-			ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, colorTo);
-			colorAnimation.addUpdateListener(new AnimatorUpdateListener() {
+			mColorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, colorTo);
+			mColorAnimation.addUpdateListener(new AnimatorUpdateListener() {
 				@Override
 				public void onAnimationUpdate(ValueAnimator animator) {
 					ArrayList<Integer> highlist = mCalc.getHighlighted();
@@ -200,8 +200,10 @@ public class EditTextCursorWatcher extends EditText {
 					mHighlightIndex2 = highlist.get(1);
 					String coloredExp = "";
 					//if the highlight got canceled during the async animation update, cancel
-					if(mHighlightIndex1 == -1)
+					if(mHighlightIndex1 == -1){
 						animator.cancel();
+						coloredExp = mExpressionText;
+					}
 					else {
 						int color = (Integer)animator.getAnimatedValue();
 						int len=2;
@@ -225,16 +227,25 @@ public class EditTextCursorWatcher extends EditText {
 
 				}
 			});	
-			colorAnimation.addListener(new AnimatorListenerAdapter() 
+			mColorAnimation.addListener(new AnimatorListenerAdapter() 
 			{
 				@Override
 				public void onAnimationEnd(Animator animation) 
 				{
 					mCalc.clearHighlighted();
+					
+					//update the main display
+					setText(Html.fromHtml("<font color='gray'>" + mTextPrefex + "</font>" + 
+							mExpressionText + 
+							"<font color='gray'>" + mTextSuffix + "</font>"));
+
+					//updating the text restarts selection to 0,0, so load in the current selection
+					setSelection(mSelStart, mSelEnd);
+
 				}
 			});
-			colorAnimation.setDuration(600);
-			colorAnimation.start();
+			mColorAnimation.setDuration(600);
+			mColorAnimation.start();
 		}
 
 		//updating the text restarts selection to 0,0, so load in the current selection
