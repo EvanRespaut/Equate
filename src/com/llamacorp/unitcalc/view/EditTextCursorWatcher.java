@@ -32,12 +32,11 @@ public class EditTextCursorWatcher extends EditText {
 	private int mSelEnd = 0;
 
 	private int mHighlightIndex1;
-	private int mHighlightIndex2;
 
 	private String mTextPrefex="";
 	private String mExpressionText="";
 	private String mTextSuffix="";
-	public ValueAnimator mColorAnimation;
+	private ValueAnimator mColorAnimation;
 
 
 	// (This was in the original TextView) System wide time for last cut or copy action.
@@ -197,7 +196,6 @@ public class EditTextCursorWatcher extends EditText {
 				public void onAnimationUpdate(ValueAnimator animator) {
 					ArrayList<Integer> highlist = mCalc.getHighlighted();
 					mHighlightIndex1 = highlist.get(0);
-					mHighlightIndex2 = highlist.get(1);
 					String coloredExp = "";
 					//if the highlight got canceled during the async animation update, cancel
 					if(mHighlightIndex1 == -1){
@@ -232,22 +230,12 @@ public class EditTextCursorWatcher extends EditText {
 				@Override
 				public void onAnimationEnd(Animator animation) 
 				{
-					mCalc.clearHighlighted();
-					
-					//update the main display
-					setText(Html.fromHtml("<font color='gray'>" + mTextPrefex + "</font>" + 
-							mExpressionText + 
-							"<font color='gray'>" + mTextSuffix + "</font>"));
-
-					//updating the text restarts selection to 0,0, so load in the current selection
-					setSelection(mSelStart, mSelEnd);
-
+					clearHighlighted();
 				}
 			});
 			mColorAnimation.setDuration(600);
 			mColorAnimation.start();
 		}
-
 		//updating the text restarts selection to 0,0, so load in the current selection
 		setSelection(mSelStart, mSelEnd);
 
@@ -255,6 +243,17 @@ public class EditTextCursorWatcher extends EditText {
 		setCursorVisible(!mCalc.isSolved());
 	}
 
+	public void clearHighlighted(){
+		mCalc.clearHighlighted();
+		
+		//update the main display
+		setText(Html.fromHtml("<font color='gray'>" + mTextPrefex + "</font>" + 
+				mExpressionText + 
+				"<font color='gray'>" + mTextSuffix + "</font>"));
+
+		//updating the text restarts selection to 0,0, so load in the current selection
+		setSelection(mSelStart, mSelEnd);
+	}
 
 
 	/** Sets the current selection to the end of the expression */

@@ -1,4 +1,4 @@
-------------------ToDo Next--------------------
+------------------ToDo Next--------------------equate
 -quick double close of para crashes app since the first highlight event is trying to set the text to () and then set the selection to 4 (i think)
 - Should perhaps standardized date styling using pure HTML (instead of extra textView)
 - When doing regular currency to historical, should change to year date code (instead of day or hour)
