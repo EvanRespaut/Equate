@@ -31,8 +31,6 @@ public class EditTextCursorWatcher extends EditText {
 	private int mSelStart = 0;
 	private int mSelEnd = 0;
 
-	private int mHighlightIndex1;
-
 	private String mTextPrefex="";
 	private String mExpressionText="";
 	private String mTextSuffix="";
@@ -184,27 +182,24 @@ public class EditTextCursorWatcher extends EditText {
 				"<font color='gray'>" + mTextSuffix + "</font>"));
 
 
-		ArrayList<Integer> highlist = mCalc.getHighlighted();
-		mHighlightIndex1 = highlist.get(0);
 		//if index1 isn't highlighted, neither is index2 (since they're sorted)
-		if(mHighlightIndex1 != -1){
+		if(mCalc.isHighlighted()){
 			Integer colorFrom = Color.RED;
 			Integer colorTo = Color.WHITE;
 			mColorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, colorTo);
 			mColorAnimation.addUpdateListener(new AnimatorUpdateListener() {
 				@Override
 				public void onAnimationUpdate(ValueAnimator animator) {
-					ArrayList<Integer> highlist = mCalc.getHighlighted();
-					mHighlightIndex1 = highlist.get(0);
 					String coloredExp = "";
 					//if the highlight got canceled during the async animation update, cancel
-					if(mHighlightIndex1 == -1){
+					if(!mCalc.isHighlighted()){
 						animator.cancel();
 						coloredExp = mExpressionText;
 					}
 					else {
+						ArrayList<Integer> highlist = mCalc.getHighlighted();
 						int color = (Integer)animator.getAnimatedValue();
-						int len=2;
+						int len = highlist.size();
 						coloredExp = mExpressionText.substring(0,  highlist.get(0));
 						for(int i=0; i < len;i++){
 							int finish = mExpressionText.length();
@@ -245,7 +240,7 @@ public class EditTextCursorWatcher extends EditText {
 
 	public void clearHighlighted(){
 		mCalc.clearHighlighted();
-		
+
 		//update the main display
 		setText(Html.fromHtml("<font color='gray'>" + mTextPrefex + "</font>" + 
 				mExpressionText + 

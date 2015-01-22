@@ -62,7 +62,7 @@ public class Expression {
 		mPreciseResult="";
 		setSelection(0, 0);
 		mHighlightedCharList = new ArrayList<Integer>();
-		clearHighlighted();
+		clearHighlightedList();
 		//skip precise unit usage if precision is set to 0
 		if(dispPrecision>0){
 			mIntDisplayPrecision = dispPrecision;
@@ -125,12 +125,16 @@ public class Expression {
 			return;
 
 		//when adding (, if the previous character was any number or decimal, or close para, add mult
-		if(sKey.equals("(") && expresssionToSelection().matches(".*[\\d).]$"))
+		if(sKey.equals("(") && expresssionToSelection().matches(".*[\\d).]$")){
 			sKey = "*" + sKey;
+			markHighlighted(length(), -1);
+		}
 
 		//when adding # after ), add multiply
-		if(sKey.matches("[.0-9]") && expresssionToSelection().matches(".*[)]$"))
+		if(sKey.matches("[.0-9]") && expresssionToSelection().matches(".*[)]$")){
 			sKey = "*" + sKey;
+			markHighlighted(length(), -1);
+		}
 
 		//add auto completion for close parentheses
 		if(sKey.equals(")"))	
@@ -562,15 +566,21 @@ public class Expression {
 	}
 
 
+	/**
+	 * @return if there are characters marked for highlighting
+	 * in the current expression
+	 */
+	public boolean isHighlighted(){
+		return mHighlightedCharList.size() != 0;
+	}
+	
 	public ArrayList<Integer> getHighlighted(){
 		return mHighlightedCharList;
 	}
 
 
-	public void clearHighlighted() {
+	public void clearHighlightedList() {
 		mHighlightedCharList.clear();
-		mHighlightedCharList.add(-1);
-		mHighlightedCharList.add(-1);
 	}
 
 
@@ -596,13 +606,17 @@ public class Expression {
 
 
 	private void markHighlighted(int index1, int index2){
-		if(index1 < index2 || index2 == -1){
-			mHighlightedCharList.add(0, index1);
-			mHighlightedCharList.add(1, index2);
+		clearHighlightedList();
+		
+		if(index2 == -1)
+			mHighlightedCharList.add(index1);
+		else if(index1 < index2){
+			mHighlightedCharList.add(index1);
+			mHighlightedCharList.add(index2);
 		}
 		else{
-			mHighlightedCharList.add(0, index2);
-			mHighlightedCharList.add(1, index1);
+			mHighlightedCharList.add(index2);
+			mHighlightedCharList.add(index1);
 		}
 	}
 

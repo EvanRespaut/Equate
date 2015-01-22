@@ -614,6 +614,12 @@ public class Calculator{
 				ut.refreshDynamicUnits(mAppContext);
 	}
 
+	/**
+	 * @return if there are characters marked for highlighting
+	 */
+	public boolean isHighlighted(){
+		return mExpression.isHighlighted();
+	}
 
 	public ArrayList<Integer> getHighlighted(){
 		return mExpression.getHighlighted();
@@ -621,7 +627,7 @@ public class Calculator{
 	
 
 	public void clearHighlighted() {
-		mExpression.clearHighlighted();
+		mExpression.clearHighlightedList();
 	}
 	
 	public List<Result> getResultList() {
