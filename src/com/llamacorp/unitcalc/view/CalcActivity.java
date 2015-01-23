@@ -20,6 +20,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.llamacorp.unitcalc.Calculator;
@@ -257,6 +258,7 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 				}
 			});
 
+			final LinearLayout mUnitContain = (LinearLayout)findViewById(R.id.unit_container);
 
 
 			button.setOnLongClickListener(new View.OnLongClickListener() {
@@ -268,6 +270,12 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 					case R.id.multiply_button: buttonValue="%";
 					break;
 					case R.id.nine_button: mCalc.refreshAllDynamicUnits();
+					break;
+					case R.id.eight_button: 
+						if(mUnitContain.getVisibility() == LinearLayout.GONE)
+							mUnitContain.setVisibility(LinearLayout.VISIBLE);
+						else
+							mUnitContain.setVisibility(LinearLayout.GONE);
 					break;
 					default: 					
 						break;

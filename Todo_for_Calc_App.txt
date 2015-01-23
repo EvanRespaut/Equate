@@ -1,11 +1,11 @@
-------------------ToDo Next--------------------equate
--quick double close of para crashes app since the first highlight event is trying to set the text to () and then set the selection to 4 (i think)
+------------------ToDo Next--------------------
+- Rename to Equate
+- make 10'th button "More", same functionality as hold press, but only temporary unit selection
 - Should perhaps standardized date styling using pure HTML (instead of extra textView)
 - When doing regular currency to historical, should change to year date code (instead of day or hour)
 - Should use API update historical USD to today's USD
 - Should move all unit initialization into it's own class
 
-- Play with using timers and HTML to fade auto completed *'s 
 - Add invert, square root, and flip sign
 - Make dynamically sized button into dynamically sized TextView, have button inherit this
 - Attempt to force "Converting __ to __" text to one line and dynamically sized 
@@ -58,6 +58,7 @@
 -------------------Features----------------------
 - Add check/click results functionality to ConsoleTester
 - Add sqrt, +/-
+- Add fractional mode 
 - Tap equals after solve for scientific notation (hold equals for sci notation preferences)?
 - Add preferences 
 - Make "Convert milimeters to..." blink or something cool
@@ -66,12 +67,10 @@
 - Make arrows pulse when waiting to convert
 - Also allow for custom unit
 - Implement infinity properly instead of just saying number too large
-- If hit in without any numbers, add highlighted "1" for unit to unit conv
 - Kitkat now has arrows at bottom. To move cursor, add these to calc
 - Maybe add sqrt and possibly trig
 - Try to implement pretty print, or at least superscript ^'s
 - Add phantom close paren after open? Goes away with any selection, close/equals makes permanent, 
-- Use spannables to auto highlight para closes, also maybe operators vs numbers?
 - Hold a convert button down to bring up a dialogue to customize it's name and value thus redefining it
 - Pinch zoom to change size of prev expression's text
 - Re-factor and clean code (make an expression class)
@@ -88,7 +87,6 @@
 - Use spannable to create custom colors for operators and numbers 
 - Swipe out left from numbers to access options menu (flip EE/^, maybe custom units, default units open or closed)
 - Add programming conversions (binary, hex, oct etc)
-- Add fractional mode 
 
 ----Usability Upgrades----
 - Add "Convert to" and "Unit set to" and "Set to" in convert unit buttons
