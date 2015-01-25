@@ -1,4 +1,4 @@
-package com.llamacorp.unitcalc.view;
+package com.llamacorp.equate.view;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,11 +23,11 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.llamacorp.unitcalc.Calculator;
-import com.llamacorp.unitcalc.R;
-import com.llamacorp.unitcalc.Unit;
-import com.llamacorp.unitcalc.view.ConvKeysFragment.OnConvertKeySelectedListener;
-import com.llamacorp.unitcalc.view.ResultListFragment.OnResultSelectedListener;
+import com.llamacorp.equate.Calculator;
+import com.llamacorp.equate.Unit;
+import com.llamacorp.equate.view.ConvKeysFragment.OnConvertKeySelectedListener;
+import com.llamacorp.equate.view.ResultListFragment.OnResultSelectedListener;
+import com.llamacorp.equate.R;
 import com.viewpagerindicator.TabPageIndicator;
 
 public class CalcActivity  extends FragmentActivity implements OnResultSelectedListener, OnConvertKeySelectedListener{
@@ -98,7 +98,7 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 
 	/**
 	 * Selects the a unit (used by result list)
-	 * @see com.llamacorp.unitcalc.view.ResultListFragment.OnResultSelectedListener#selectUnit(int)
+	 * @see com.llamacorp.equate.view.ResultListFragment.OnResultSelectedListener#selectUnit(int)
 	 */
 	public void selectUnit(Unit unit, int unitTypePos){
 		//if not on right page, scroll there first
@@ -578,7 +578,7 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 			mCalc.refreshAllDynamicUnits();
 
 
-		//only set display to UnitCalc if no expression is there yet
+		//only set display to Equate if no expression is there yet
 		if(mCalc.toString().equals("") && mCalc.getResultList().size()==0){
 			mDisplay.setText(R.string.app_name);
 			mDisplay.setCursorVisible(false);

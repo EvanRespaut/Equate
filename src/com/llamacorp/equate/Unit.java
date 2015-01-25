@@ -1,4 +1,4 @@
-package com.llamacorp.unitcalc;
+package com.llamacorp.equate;
 
 import java.lang.reflect.Constructor;
 import java.util.Locale;

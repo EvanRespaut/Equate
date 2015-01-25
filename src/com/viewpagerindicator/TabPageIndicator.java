@@ -29,7 +29,7 @@ import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.llamacorp.unitcalc.R;
+import com.llamacorp.equate.R;
 
 /**
  * This widget implements the dynamic action bar tab behavior that can change

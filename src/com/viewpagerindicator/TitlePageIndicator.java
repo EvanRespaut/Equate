@@ -38,7 +38,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 
-import com.llamacorp.unitcalc.R;
+import com.llamacorp.equate.R;
 
 /**
  * A TitlePageIndicator is a PageIndicator which displays the title of left view

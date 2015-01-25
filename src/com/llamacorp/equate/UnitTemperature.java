@@ -1,4 +1,4 @@
-package com.llamacorp.unitcalc;
+package com.llamacorp.equate;
 
 import org.json.JSONException;
 import org.json.JSONObject;

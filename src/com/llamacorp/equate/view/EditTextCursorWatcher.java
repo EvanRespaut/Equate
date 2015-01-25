@@ -1,4 +1,4 @@
-package com.llamacorp.unitcalc.view;
+package com.llamacorp.equate.view;
 
 import java.util.ArrayList;
 
@@ -21,8 +21,8 @@ import android.util.AttributeSet;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.llamacorp.unitcalc.Calculator;
-import com.llamacorp.unitcalc.R;
+import com.llamacorp.equate.Calculator;
+import com.llamacorp.equate.R;
 
 public class EditTextCursorWatcher extends EditText {
 	private Calculator mCalc;

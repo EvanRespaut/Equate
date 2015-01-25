@@ -1,4 +1,4 @@
-package com.llamacorp.unitcalc.view;
+package com.llamacorp.equate.view;
 
 import java.util.List;
 
@@ -11,10 +11,10 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import com.llamacorp.unitcalc.Calculator;
-import com.llamacorp.unitcalc.R;
-import com.llamacorp.unitcalc.Result;
-import com.llamacorp.unitcalc.Unit;
+import com.llamacorp.equate.Calculator;
+import com.llamacorp.equate.Result;
+import com.llamacorp.equate.Unit;
+import com.llamacorp.equate.R;
 
 public class ResultListFragment extends ListFragment {
 	//this is for communication with the parent activity

@@ -1,4 +1,4 @@
-package com.llamacorp.unitcalc;
+package com.llamacorp.equate;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;

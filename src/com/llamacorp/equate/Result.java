@@ -1,4 +1,4 @@
-package com.llamacorp.unitcalc;
+package com.llamacorp.equate;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;

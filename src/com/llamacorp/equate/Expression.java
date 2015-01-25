@@ -1,4 +1,4 @@
-package com.llamacorp.unitcalc;
+package com.llamacorp.equate;
 
 import java.math.BigDecimal;
 import java.math.MathContext;

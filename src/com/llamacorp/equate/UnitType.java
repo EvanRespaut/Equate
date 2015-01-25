@@ -1,4 +1,4 @@
-package com.llamacorp.unitcalc;
+package com.llamacorp.equate;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -9,7 +9,7 @@ import org.json.JSONObject;
 
 import android.content.Context;
 
-import com.llamacorp.unitcalc.UnitCurrency.OnConvertKeyUpdateFinishedListener;
+import com.llamacorp.equate.UnitCurrency.OnConvertKeyUpdateFinishedListener;
 
 public class UnitType {
 	private static final String JSON_NAME = "name";

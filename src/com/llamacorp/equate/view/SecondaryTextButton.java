@@ -1,4 +1,4 @@
-package com.llamacorp.unitcalc.view;
+package com.llamacorp.equate.view;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
@@ -6,7 +6,7 @@ import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.widget.Button;
 
-import com.llamacorp.unitcalc.R;
+import com.llamacorp.equate.R;
 
 class SecondaryTextButton extends Button {
 	protected static final int SECONDARY_FONT_PERCENTAGE = 70;

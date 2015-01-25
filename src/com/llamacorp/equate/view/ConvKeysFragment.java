@@ -1,4 +1,4 @@
-package com.llamacorp.unitcalc.view;
+package com.llamacorp.equate.view;
 
 import java.util.ArrayList;
 
@@ -13,12 +13,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import com.llamacorp.unitcalc.Calculator;
-import com.llamacorp.unitcalc.R;
-import com.llamacorp.unitcalc.Unit;
-import com.llamacorp.unitcalc.UnitCurrency.OnConvertKeyUpdateFinishedListener;
-import com.llamacorp.unitcalc.UnitHistCurrency;
-import com.llamacorp.unitcalc.UnitType;
+import com.llamacorp.equate.Calculator;
+import com.llamacorp.equate.Unit;
+import com.llamacorp.equate.UnitHistCurrency;
+import com.llamacorp.equate.UnitType;
+import com.llamacorp.equate.UnitCurrency.OnConvertKeyUpdateFinishedListener;
+import com.llamacorp.equate.R;
 
 public class ConvKeysFragment extends Fragment implements OnConvertKeyUpdateFinishedListener {
 
@@ -45,7 +45,8 @@ public class ConvKeysFragment extends Fragment implements OnConvertKeyUpdateFini
 	}
 
 	//used for the extra
-	private static final String EXTRA_UNIT_TYPE_POS = "com.llamacorp.unitcalc.unit_type_pos";
+	//TODO use getPackageName() instead
+	private static final String EXTRA_UNIT_TYPE_POS = "com.llamacorp.equate.unit_type_pos";
 	//holds UnitType for this fragment aka series of convert buttons
 	private UnitType mUnitType;
 	private ArrayList<Button> mConvButton;

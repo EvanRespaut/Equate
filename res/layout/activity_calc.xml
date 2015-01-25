@@ -33,7 +33,7 @@
                 android:layout_height="2dp"
                 android:background="@color/prev_curr_exp_divider" />
 
-            <com.llamacorp.unitcalc.view.EditTextCursorWatcher
+            <com.llamacorp.equate.view.EditTextCursorWatcher
                 android:id="@+id/textDisplay"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -137,8 +137,8 @@
                 style="@style/NumButton"
                 android:text="@string/nine_button" />
 
-            <com.llamacorp.unitcalc.view.AnimatedHoldButton
-                xmlns:customNS="http://schemas.android.com/apk/res/com.llamacorp.unitcalc"
+            <com.llamacorp.equate.view.AnimatedHoldButton
+                xmlns:customNS="http://schemas.android.com/apk/res/com.llamacorp.equate"
                 android:id="@+id/multiply_button"
                 style="@style/OpButton"
                 customNS:secondary_text="@string/percent_button" />
