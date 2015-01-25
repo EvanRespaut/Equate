@@ -130,7 +130,6 @@ public class Calculator{
 		unitsOfCurrency.addUnit(new UnitCurrency("CHF", "Swiss Francs", 0.91)); 
 		unitsOfCurrency.addUnit(new UnitCurrency("AUD", "Australian Dollars", 1.07)); 
 		unitsOfCurrency.addUnit(new UnitCurrency("HKD", "Hong Kong Dollars", 7.75)); 
-		unitsOfCurrency.addUnit(new UnitCurrency("SGD", "Singapore Dollars", 1.25)); 
 		
 		
 		//array of values from 1914 $10 bill; starts with 1913; uses the CPI index
@@ -155,16 +154,8 @@ public class Calculator{
 		
 		unitsOfCurrency.addUnit(new UnitHistCurrency("USD", "Dollars", al, 1913, 1975));
 		
+		unitsOfCurrency.addUnit(new UnitCurrency("SGD", "Singapore Dollars", 1.25)); 
 		unitsOfCurrency.addUnit(new UnitCurrency("CNY", "Chinese Yuans", 6.15)); 
-		//		unitsOfCurrency.addUnit(new UnitCurrency()); 
-		//		unitsOfCurrency.addUnit(new UnitCurrency()); 
-		//		unitsOfCurrency.addUnit(new UnitCurrency()); 
-		//
-		//		unitsOfCurrency.addUnit(new UnitCurrency()); 
-		//		unitsOfCurrency.addUnit(new UnitCurrency()); 
-		//		unitsOfCurrency.addUnit(new UnitCurrency()); 
-		//		unitsOfCurrency.addUnit(new UnitCurrency()); 
-
 		unitsOfCurrency.addUnit(new UnitCurrency("BTC", "Bitcoins", 0.003, 
 				"http://blockchain.info/tobtc?currency=USD&value=1")); 
 		unitsOfCurrency.addUnit(new UnitCurrency("RUB", "Russian Rubles", 39.7)); 
@@ -214,17 +205,18 @@ public class Calculator{
 		unitsOfLength.addUnit(new UnitScalar("mi", "Miles", 1/1609.344));//exact: in*12*5280
 		unitsOfLength.addUnit(new UnitScalar("km", "Kilometers", 1/1000.0));
 
-		unitsOfLength.addUnit(new UnitScalar("nm", "Nanometers", 1E9));
 		unitsOfLength.addUnit(new UnitScalar("\u00B5m", "Micrometers", 1E6));
 		unitsOfLength.addUnit(new UnitScalar("mm", "Millimeters", 1000));
 		unitsOfLength.addUnit(new UnitScalar("cm", "Centimeters", 100));
 		unitsOfLength.addUnit(new UnitScalar("m", "Meters", 1));
 
+		unitsOfLength.addUnit(new UnitScalar("nm", "Nanometers", 1E9));
 		unitsOfLength.addUnit(new UnitScalar("Å", "Ångströms", 1E10));
 		unitsOfLength.addUnit(new UnitScalar("mil", "Thousandths of an Inch", 1/2.54E-5));
 		unitsOfLength.addUnit(new UnitScalar("fur", "Furlongs", 0.00497096954));
 		unitsOfLength.addUnit(new UnitScalar("nmi", "Nautical Miles", 1/1852));
 		unitsOfLength.addUnit(new UnitScalar("ly", "Light Years", 1/9.4607E15));
+		unitsOfLength.addUnit(new UnitScalar("au", "Astronomical Units", 1/1.495978707E11)); //exact
 		unitsOfLength.addUnit(new UnitScalar("pc", "Parsecs", 3.24078E-17));
 		mUnitTypeArray.add(unitsOfLength);	
 
@@ -240,8 +232,8 @@ public class Calculator{
 		unitsOfArea.addUnit(new UnitScalar("cm\u00B2", "Square Centimeters", 1/0.0001));
 		unitsOfArea.addUnit(new UnitScalar("m\u00B2", "Square Meters", 1));
 		unitsOfArea.addUnit(new UnitScalar("km\u00B2", "Square Kilometers", 1/1000000.0));
+		
 		unitsOfArea.addUnit(new UnitScalar("ha", "Hectares", 1/10000.0));
-
 		unitsOfArea.addUnit(new UnitScalar("a", "Ares", 0.01));
 		unitsOfArea.addUnit(new UnitScalar("cir mil", "Circular Mils", 1/5.067E-10));
 		mUnitTypeArray.add(unitsOfArea);
@@ -258,13 +250,7 @@ public class Calculator{
 		unitsOfVolume.addUnit(new UnitScalar("fl oz", "Fluid Ounces (US)", 1/0.0000295735295625));//exact: gal/128
 		unitsOfVolume.addUnit(new UnitScalar("mL", "Milliliters", 1E6)); 
 		unitsOfVolume.addUnit(new UnitScalar("L", "Liters", 1000));
-		unitsOfVolume.addUnit(new UnitScalar("m^3", "Cubic Meters", 1));
-
-		unitsOfVolume.addUnit(new UnitScalar("in\u00B3", "Cubic Inches", 1/0.000016387064));//exact: gal/231
-		unitsOfVolume.addUnit(new UnitScalar("ft\u00B3", "Cubic Feet", 1/0.028316846592));//exact: gal/231*12^3
-		unitsOfVolume.addUnit(new UnitScalar("yd\u00B3", "Cubic Yards", 1/0.764554857984));//exact: 3^3 ft^3
-		unitsOfVolume.addUnit(new UnitScalar("cm\u00B3", "Cubic Centimeters", 1E6));
-		unitsOfVolume.addUnit(new UnitScalar("cm\u00B3", "Cubic Millimeters", 1E9));
+		
 		unitsOfVolume.addUnit(new UnitScalar("cL", "Centiliter", 1E5));
 		unitsOfVolume.addUnit(new UnitScalar("dL", "Deciliters", 1E4));
 		unitsOfVolume.addUnit(new UnitScalar("gal uk", "Gallons (UK)", 1000/4.54609));//exact: 4.54609L/gal uk
@@ -272,6 +258,12 @@ public class Calculator{
 		unitsOfVolume.addUnit(new UnitScalar("pt uk", "Pints (UK)", 1000/0.56826125));//exact: gal uk/8
 		unitsOfVolume.addUnit(new UnitScalar("fl oz uk", "Fluid Ounces (UK)", 1000/0.0284130625));//exact: gal uk/160
 		unitsOfVolume.addUnit(new UnitScalar("shot", "Shots (US)", 1/0.00004436029434375));//exact for 1.5 fl oz
+		unitsOfVolume.addUnit(new UnitScalar("m^3", "Cubic Meters", 1));
+		unitsOfVolume.addUnit(new UnitScalar("in\u00B3", "Cubic Inches", 1/0.000016387064));//exact: gal/231
+		unitsOfVolume.addUnit(new UnitScalar("ft\u00B3", "Cubic Feet", 1/0.028316846592));//exact: gal/231*12^3
+		unitsOfVolume.addUnit(new UnitScalar("yd\u00B3", "Cubic Yards", 1/0.764554857984));//exact: 3^3 ft^3
+		unitsOfVolume.addUnit(new UnitScalar("cm\u00B3", "Cubic Centimeters", 1E6));
+		unitsOfVolume.addUnit(new UnitScalar("cm\u00B3", "Cubic Millimeters", 1E9));
 
 		mUnitTypeArray.add(unitsOfVolume);
 
@@ -317,8 +309,8 @@ public class Calculator{
 		unitsOfEnergy.addUnit(new UnitScalar("J", "Joules", 1));
 		unitsOfEnergy.addUnit(new UnitScalar("Wh", "Watt-Hours", 1/3.6E3)); //exact
 		unitsOfEnergy.addUnit(new UnitScalar("kWh", "Kilowatt-Hours", 1/3.6E6)); //exact
+		
 		unitsOfEnergy.addUnit(new UnitScalar("Nm", "Newton-Meters", 1));
-
 		unitsOfEnergy.addUnit(new UnitScalar("MJ", "Megajoules", 1E-6));
 		unitsOfEnergy.addUnit(new UnitScalar("eV", "Electronvolts", 6.241509E18));
 		mUnitTypeArray.add(unitsOfEnergy);

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -15,8 +16,8 @@ import android.widget.Button;
 import com.llamacorp.unitcalc.Calculator;
 import com.llamacorp.unitcalc.R;
 import com.llamacorp.unitcalc.Unit;
-import com.llamacorp.unitcalc.UnitHistCurrency;
 import com.llamacorp.unitcalc.UnitCurrency.OnConvertKeyUpdateFinishedListener;
+import com.llamacorp.unitcalc.UnitHistCurrency;
 import com.llamacorp.unitcalc.UnitType;
 
 public class ConvKeysFragment extends Fragment implements OnConvertKeyUpdateFinishedListener {
@@ -48,6 +49,8 @@ public class ConvKeysFragment extends Fragment implements OnConvertKeyUpdateFini
 	//holds UnitType for this fragment aka series of convert buttons
 	private UnitType mUnitType;
 	private ArrayList<Button> mConvButton;
+
+	private int mNumConvButtons;
 
 	private int[] convertButtonIds = {	
 			R.id.convert_button1,
@@ -88,21 +91,44 @@ public class ConvKeysFragment extends Fragment implements OnConvertKeyUpdateFini
 		return fragment;
 	}
 
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState){
 		View v = inflater.inflate(R.layout.fragment_convert_keys, parent, false);
 
 		mConvButton = new ArrayList<Button>();
-		final int numButtons = convertButtonIds.length;
 
-		//		if(mUnitType.isDynamicUnit()){
-		//			mUnitType.refreshDynamicUnits(getActivity().getApplicationContext());
-		//		}		
+		mNumConvButtons =  convertButtonIds.length;
 
-		for(int i=0; i<numButtons; i++) {
+		//if we have more than 10 unit buttons, replace last convert button with a more button
+		if(mUnitType.size() > convertButtonIds.length){
+			mNumConvButtons =  mNumConvButtons - 1;
+
+			Button button = (Button)v.findViewById(convertButtonIds[mNumConvButtons]);
+
+			button.setText(getText(R.string.more_button));
+			button.setTypeface(null, Typeface.ITALIC);
+			
+			button.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					createMoreUnitsDialog(getText(R.string.more_button), 
+							new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int item) {
+							clickUnitButton(item + mNumConvButtons);
+						}
+					});
+				}
+			});
+		}
+
+
+		for(int i=0; i < mNumConvButtons; i++) {
 			Button button = (Button)v.findViewById(convertButtonIds[i]);
 
-			if(mUnitType.size()>10)
+			//add ellipses for long press
+			if(mUnitType.size() > mNumConvButtons)
 				((SecondaryTextButton)button).setSecondaryText((String) getText(R.string.conv_button_hint));
 
 			//add to our list of conv buttons
@@ -119,7 +145,7 @@ public class ConvKeysFragment extends Fragment implements OnConvertKeyUpdateFini
 				public void onClick(View view) {
 
 					int viewId = view.getId();
-					for (int i=0; i<numButtons; i++){
+					for (int i=0; i < mNumConvButtons; i++){
 						if(convertButtonIds[i] == viewId){
 							//select key
 							clickUnitButton(i);
@@ -136,30 +162,24 @@ public class ConvKeysFragment extends Fragment implements OnConvertKeyUpdateFini
 				@Override 
 				public boolean onLongClick(View view) {
 					//if there are less units to display than slots, move on
-					if(mUnitType.size() <= numButtons)
+					if(mUnitType.size() <= mNumConvButtons)
 						return true;
 
-					AlertDialog.Builder builder = new AlertDialog.
-							Builder(getActivity());
-					builder.setTitle(getText(R.string.word_Change) 
+					String title = getText(R.string.word_Change) 
 							+ " " + mUnitType.getLowercaseGenericLongName(buttonPos) 
-							+ " " + getText(R.string.word_to) + ":");
-					builder.setItems(mUnitType.getUndisplayedUnitNames(numButtons), 
-							new DialogInterface.OnClickListener() {
+							+ " " + getText(R.string.word_to) + ":";
+
+					//pass the title and on item click listener
+					createMoreUnitsDialog(title, new DialogInterface.OnClickListener() {
 						@Override
 						public void onClick(DialogInterface dialog, int item) {
-							mUnitType.swapUnits(buttonPos, item+numButtons);
+							mUnitType.swapUnits(buttonPos, item + mNumConvButtons);
 							refreshButtonText(buttonPos);
 						}
 					});
-					//null seems to do the same as canceling the dialog
-					builder.setNegativeButton(android.R.string.cancel,null);
-					AlertDialog alert = builder.create();
-					alert.show();
 					return false;
 				}
 			});
-
 		}
 		return v;
 	}
@@ -190,11 +210,34 @@ public class ConvKeysFragment extends Fragment implements OnConvertKeyUpdateFini
 	}
 
 
+	/**
+	 * Helper function to build a dialog box that list overflow units not shown
+	 * on the screen.  Dialog lists has a cancel button.
+	 * @param title to display at top of dialog box
+	 * @param itemClickListener OnClickListener for when the user selects one of the
+	 * units in the dialog list
+	 */
+	private void createMoreUnitsDialog(CharSequence title, DialogInterface.OnClickListener itemClickListener){
+		AlertDialog.Builder builder = new AlertDialog.
+				Builder(getActivity());
+		builder.setTitle(title);
+		builder.setItems(mUnitType.getUndisplayedUnitNames(mNumConvButtons), itemClickListener);
+		//null seems to do the same as canceling the dialog
+		builder.setNegativeButton(android.R.string.cancel,null);
+		AlertDialog alert = builder.create();
+		alert.show();
+	}
+
+
 	private void refreshButtonText(int buttonPos){
 		refreshButtonText("", buttonPos);
 	}
 
 	private void refreshButtonText(String textPrefix, int buttonPos){
+		//if trying to update historical curr text and button not on screen, move on
+		if(buttonPos >= mNumConvButtons)
+			return;
+		
 		String displayText = mUnitType.getUnitDisplayName(buttonPos);
 		if(displayText.equals(""))
 			return;
@@ -217,7 +260,7 @@ public class ConvKeysFragment extends Fragment implements OnConvertKeyUpdateFini
 		 */
 		button.setText(displayText);
 	}
-	
+
 	/** Used to pass selected unit to the UnitType model class
 	 * @param buttonPos the position in the list of buttons to select */
 	private void clickUnitButton(final int buttonPos){
@@ -250,12 +293,12 @@ public class ConvKeysFragment extends Fragment implements OnConvertKeyUpdateFini
 		else
 			tryConvert(buttonPos);
 	}
-	
-	
+
+
 	private void tryConvert(int buttonPos){
 		//Clear color and arrows from previously selected convert buttons
 		clearButtonSelection();
-		
+
 		//Set select unit, also this will potentially call convert if we already have a selected unit
 		boolean requestConvert = mUnitType.selectUnit(buttonPos);
 
@@ -293,8 +336,7 @@ public class ConvKeysFragment extends Fragment implements OnConvertKeyUpdateFini
 					refreshButtonText("\u2192 ", i);
 				}
 			}
-			//Add color to newly selected convert button
-			mConvButton.get(mUnitType.getCurrUnitPos()).setSelected(true);	
+			setButtonHighlight(true);
 		}			
 	}
 
@@ -306,14 +348,21 @@ public class ConvKeysFragment extends Fragment implements OnConvertKeyUpdateFini
 		if(mConvButton == null) return;
 
 		//remove arrows
-		for(int i=0;i<mConvButton.size();i++){
+		for(int i = 0; i < mConvButton.size(); i++){
 			refreshButtonText(i);
 		}
 
 		//Clear color from previously selected convert button
-		Button prevSelected = mConvButton.get(mUnitType.getCurrUnitPos());
-		prevSelected.setSelected(false);	
+		setButtonHighlight(false);
 		//clear the button in the calc
 		//	mUnitType.clearUnitSelection();
+	}
+	
+	
+	private void setButtonHighlight(boolean highlighted){
+		//Don't color if "More" button was selected
+		if(mUnitType.getCurrUnitPos() < mNumConvButtons)
+			//set the current button to highlighted or not
+			mConvButton.get(mUnitType.getCurrUnitPos()).setSelected(highlighted);	
 	}
 }

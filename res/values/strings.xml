@@ -35,7 +35,9 @@
     <string name="first_convert_message">Now tap the desired unit to perform conversion.</string>
     <string name="first_convert_message_no_numbers">Now enter some numbers and tap the desired unit to perform conversion.</string>
  
-	<string name="word_Change">Change</string>
+    <string name="more_button">More&#8230;</string>
+    <string name="select_unit">Select a unit:</string>
+    <string name="word_Change">Change</string>
 	<string name="word_historical">historical</string>
 	<string name="word_Convert">Convert</string>
 	<string name="word_Converting">Converting</string>
@@ -43,7 +45,7 @@
    
     <string name="convert_toast_converting">Converting</string>
     <string name="convert_toast_no_numbers">No numbers to convert</string>
-    <string name="conv_button_hint">...</string>
+    <string name="conv_button_hint">&#8230;</string>
     
     <color name="equal_button_normal">#176B17</color>
     <color name="equal_button_pressed">#61AD61</color>
