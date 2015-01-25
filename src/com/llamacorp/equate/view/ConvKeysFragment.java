@@ -113,7 +113,7 @@ public class ConvKeysFragment extends Fragment implements OnConvertKeyUpdateFini
 			button.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View view) {
-					createMoreUnitsDialog(getText(R.string.more_button), 
+					createMoreUnitsDialog(getText(R.string.select_unit), 
 							new DialogInterface.OnClickListener() {
 						@Override
 						public void onClick(DialogInterface dialog, int item) {
