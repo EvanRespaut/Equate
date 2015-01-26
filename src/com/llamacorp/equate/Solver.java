@@ -36,7 +36,10 @@ public class Solver {
 		//if more open parentheses then close, add corresponding close para's
 		exp.closeOpenPar();
 
+		//save away query before we start manipulating it
 		String cleanedQuery = exp.toString();
+		//add implied multiplies for display purposes
+		cleanedQuery = Expression.addImpliedParMult(cleanedQuery);
 		//if expression empty|invalid, don't need to solve anything
 		if(exp.isEmpty())
 			return null;
@@ -45,16 +48,16 @@ public class Solver {
 		exp.loadPreciseResult();
 
 		//deal with percent operators
-		exp.replacePercentOps();
+		String strExp = Expression.replacePercentOps(exp.toString());
 		
 		//put parenthesis around ^ expressions; -(1)^2 to -((1)^2)
-		exp.groupPowerOperands();
+		strExp = Expression.groupPowerOperands(strExp);
 
 		//add implied multiples for parenthesis
-		exp.addImpliedParMult();
+		strExp = Expression.addImpliedParMult(strExp);
 		
 		//main calculation: first the P of PEMAS, this function then calls remaining EMAS 
-		String strExp = collapsePara(exp.toString());
+		strExp = collapsePara(strExp);
 		//save solved expression away
 		exp.replaceExpression(strExp);
 

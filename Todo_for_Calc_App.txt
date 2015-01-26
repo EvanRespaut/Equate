@@ -5,6 +5,7 @@
 - Should use API update historical USD to today's USD
 - Should move all unit initialization into it's own class
 
+- Currency conversion appears broken (api problems)
 - Add invert, square root, and flip sign
 - Make dynamically sized button into dynamically sized TextView, have button inherit this
 - Attempt to force "Converting __ to __" text to one line and dynamically sized 
@@ -30,10 +31,8 @@
 
 ----------------------Fix----------------------
 ---- TRY TO ADD UNIT TESTING FOR ALL PROBLEMS FIXED -----
-- Enter (6)46 manually doesn't show as (6)*46 in result
 - After long press unit switch, select unit
-- Empty expression, tap previous result with unit, adds a one
-- Type "(30+3%" and put cursor before 0, displays "(3)0+3
+- Empty expression, tap previous result with different unit type than curr, adds a one
 - Type "54+43)" and delete auto close para --> syntax error
 - When prog first starts, cursor is on with Unitcalc on screen
 - Catch JSON read errors and do a reset calc

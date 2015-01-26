@@ -257,8 +257,7 @@ public class Expression {
 	}
 
 	/** Adds parenthesis around power operations */
-	public void groupPowerOperands(){
-		String str = getExpression();
+	public static String groupPowerOperands(String str){
 		//search to find "^" (start at 1 so no NPE later; "^3" invalid anyway)
 		for(int i = 1; i < str.length(); i++){
 			if(str.charAt(i) == '^'){
@@ -306,13 +305,12 @@ public class Expression {
 				i=closePareIndex;
 			}
 		}
-		replaceExpression(str);
+		return str;
 	}
 
 
 	/** Replaces % operators their respective operators */
-	public void replacePercentOps() {
-		String str = getExpression();
+	public static String replacePercentOps(String str) {
 		String subStr = "";
 		String strAfter = "";
 		for(int i=0;i<str.length();i++){
@@ -345,15 +343,12 @@ public class Expression {
 				i = subStr.length();
 			}
 		}
-		replaceExpression(str);
+		return str;
 	}
 
 
 	/** Adds implied multiples for parenthesis */
-	public void addImpliedParMult(){
-		//String str = "2((5)6)(3)7(3)(4).2+8.(0)";
-		String str = getExpression();
-
+	public static String addImpliedParMult(String str){
 		//first replace all )( with )*(
 		str = str.replaceAll("\\)\\(", "\\)\\*\\(");
 
@@ -362,7 +357,7 @@ public class Expression {
 
 		//replace all )# with )*#
 		str = str.replaceAll("\\)([\\d\\.])", "\\)\\*$1");
-		replaceExpression(str);
+		return str;
 	}
 
 	/**
@@ -421,7 +416,7 @@ public class Expression {
 		//if more open parentheses then close, add corresponding close para's
 		int numCloseParaToAdd = numOpenPara();
 		for(int i=0; i<numCloseParaToAdd; i++){
-			insertAtSelection(")");
+			setExpression(getExpression() + ")");
 		}
 	}
 
@@ -708,7 +703,7 @@ public class Expression {
 	 * @param String containing parenthesis to count 
 	 * @return 0 if equal num of open/close para, positive # if more open, neg # if more close
 	 */
-	private int numOpenPara(String str) {
+	private static int numOpenPara(String str) {
 		int numOpen = 0;
 		int numClose = 0;
 		for(int i=0; i<str.length(); i++){
@@ -741,7 +736,7 @@ public class Expression {
 	 * @return anything before the first valid operator, or "" if expression empty, 
 	 * or entire expression if doesn't contain regexAnyValidOperator (for "-3E-4-5" returns "-3E-4")
 	 */
-	private String getFirstNumb(String str){
+	private static String getFirstNumb(String str){
 		String [] strA = str.split("(?<!^|E)" + regexAnyValidOperator);
 		return strA[0];
 	}
@@ -782,7 +777,7 @@ public class Expression {
 	 * @return Last valid number in expression, "" if expression empty, or entire expression 
 	 * if doesn't contain regexAnyValidOperator. Note if expression is "1+-5" it will return "-5"
 	 */
-	private String getLastNumb(String expStr){
+	private static String getLastNumb(String expStr){
 		/*String [] strA = expStr.split(regexAnyValidOperator);
 		if(strA.length==0) return "";
 		else {
