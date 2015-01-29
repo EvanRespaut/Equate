@@ -7,13 +7,10 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
 import android.animation.ValueAnimator.AnimatorUpdateListener;
-import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.graphics.Color;
-import android.os.Build;
 import android.os.SystemClock;
 import android.text.Html;
 import android.text.InputType;
@@ -84,23 +81,14 @@ public class EditTextCursorWatcher extends EditText {
 	}
 
 	/** Try to cut the current clipboard text */
-	@SuppressWarnings("deprecation")
-	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	private void onTextCut(){
 		int selStart = getSelectionStart();
 		int selEnd = getSelectionEnd();
 
 		CharSequence copiedText = getText().subSequence(selStart, selEnd);
 
-		int currentapiVersion = android.os.Build.VERSION.SDK_INT;
-		if (currentapiVersion >= android.os.Build.VERSION_CODES.HONEYCOMB){
-			ClipboardManager clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
-			clipboard.setPrimaryClip(ClipData.newPlainText(null, copiedText));
-		} 
-		else{
-			ClipboardManager clipboard = (ClipboardManager)getContext().getSystemService(Context.CLIPBOARD_SERVICE); 
-			clipboard.setText(copiedText);
-		}
+		ClipboardManager clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
+		clipboard.setPrimaryClip(ClipData.newPlainText(null, copiedText));
 
 		//cut deletes the selected text
 		mCalc.parseKeyPressed("b");
@@ -114,22 +102,11 @@ public class EditTextCursorWatcher extends EditText {
 
 
 	/** Try to paste the current clipboard text into this EditText */
-	@SuppressWarnings("deprecation")
-	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	private void onTextPaste(){
 		String textToPaste;
-		int currentapiVersion = android.os.Build.VERSION.SDK_INT;
-		if (currentapiVersion >= android.os.Build.VERSION_CODES.HONEYCOMB){
-			ClipboardManager clipboard =  (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE); 
-			ClipData clip = clipboard.getPrimaryClip();
-			textToPaste = clip.getItemAt(0).coerceToText(getContext()).toString();
-		} 
-		else{
-			ClipboardManager clipboard = (ClipboardManager)getContext().getSystemService(Context.CLIPBOARD_SERVICE); 
-			if(clipboard.hasText())
-				textToPaste = clipboard.getText().toString();
-			else return;
-		}
+		ClipboardManager clipboard =  (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE); 
+		ClipData clip = clipboard.getPrimaryClip();
+		textToPaste = clip.getItemAt(0).coerceToText(getContext()).toString();
 		Toast.makeText(context, "Pasted: \"" + textToPaste + "\"", Toast.LENGTH_SHORT).show();
 		mCalc.pasteIntoExpression(textToPaste);
 	}	
@@ -140,22 +117,15 @@ public class EditTextCursorWatcher extends EditText {
 	 * Disable soft keyboard from appearing, use in conjunction with android:windowSoftInputMode="stateAlwaysHidden|adjustNothing"
 	 * @param editText
 	 */
-	@SuppressLint("NewApi")
 	public void disableSoftInputFromAppearing() {
-		if (Build.VERSION.SDK_INT >= 11) {
-			setRawInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
-			setTextIsSelectable(true);
-		} else {
-			setRawInputType(InputType.TYPE_NULL);
-			setFocusable(true);
-		}
+		setRawInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
+		setTextIsSelectable(true);
 	}
 
 	/**
 	 * Updates the text with current value from calc
 	 * Preserves calc's cursor selections
 	 */
-	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	public void updateTextFromCalc(){
 		//setText will reset selection to 0,0, so save it right now
 		mSelStart = mCalc.getSelectionStart();

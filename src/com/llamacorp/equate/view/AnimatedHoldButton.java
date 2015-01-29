@@ -1,8 +1,6 @@
 package com.llamacorp.equate.view;
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -28,7 +26,6 @@ class AnimatedHoldButton extends SecondaryTextButton {
 	private int mHoldInc;
 
 
-	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	public AnimatedHoldButton(Context context, AttributeSet attrs) {
 		super(context, attrs);
 	}
