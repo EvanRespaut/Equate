@@ -66,7 +66,8 @@ public class UnitType {
 	 */
 	public void addUnit(Unit u){
 		mUnitArray.add(u);
-		if(u.isDynamic()) mContainsDynamicUnits = true;
+		//if there was already a dynamic unit or this one is, UnitType still contains dynamic units
+		if(mContainsDynamicUnits || u.isDynamic()) mContainsDynamicUnits = true;
 	}
 
 	/** Swap positions of units */	
