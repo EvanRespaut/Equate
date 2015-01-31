@@ -227,7 +227,7 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 					break;
 					case R.id.minus_button: buttonValue="-";
 					break;
-					case R.id.multiply_button: buttonValue="*";
+					case R.id.multiply_button:  buttonValue="*";
 					break;
 					case R.id.divide_button: buttonValue="/";
 					break;
@@ -267,16 +267,18 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 					int buttonId = view.getId();
 					String buttonValue="";
 					switch(buttonId){
-					case R.id.multiply_button: buttonValue="%";
+					case R.id.multiply_button: buttonValue = "%";
 					break;
 					case R.id.nine_button: mCalc.refreshAllDynamicUnits();
+					break;
+					case R.id.minus_button: buttonValue = "n";
 					break;
 					case R.id.eight_button: 
 						if(mUnitContain.getVisibility() == LinearLayout.GONE)
 							mUnitContain.setVisibility(LinearLayout.VISIBLE);
 						else
 							mUnitContain.setVisibility(LinearLayout.GONE);
-					break;
+						break;
 					default: 					
 						break;
 					}
@@ -286,54 +288,13 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 				}
 			});
 
-
-			/*
-			if(button instanceof CustomButton){
-				button.setOnTouchListener(new View.OnTouchListener() {
-					private View mView;
-					private Handler mSecondaryHandler;	
-					private Boolean mEventConsumed;
-
-					public boolean onTouch(View view, MotionEvent event) {
-						switch(event.getAction()) {
-						case MotionEvent.ACTION_DOWN:
-							mEventConsumed=false;
-							mView=view;
-							if (mSecondaryHandler != null) return true;
-							mSecondaryHandler = new Handler();
-							mSecondaryHandler.postDelayed(mSecondaryRun, 300);
-							break;
-						case MotionEvent.ACTION_UP:
-							if (mSecondaryHandler == null) return true;
-							mSecondaryHandler.removeCallbacks(mSecondaryRun);
-							mSecondaryHandler = null;
-							break;
-						} 
-						return mEventConsumed;
-					}
-
-					Runnable mSecondaryRun = new Runnable() {
-						@Override 
-						public void run() {
-							mEventConsumed=true;
-							int buttonId = mView.getId();
-							String buttonValue="";
-							switch(buttonId){
-							case R.id.multiply_button: buttonValue="%";
-							break;
-							default: 					
-								break;
-							}
-							//pass button to calc, change conv key colors (maybe) and update screen
-							numButtonPressed(buttonValue);
-						}
-					};	
-				});
+			//set main display text manually; doesn't work in xml for some reason
+			switch(id){
+			case R.id.minus_button: button.setText(getText(R.string.minus_button));
+			break;
+			case R.id.multiply_button:  button.setText(getText(R.string.multiply_button));
+			break;
 			}
-			 */
-
-			if(id==R.id.multiply_button)
-				button.setText(getText(R.string.multiply_button));
 
 			//add to our list of num buttons
 			calcButton.add(button);

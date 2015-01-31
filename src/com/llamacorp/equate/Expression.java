@@ -117,6 +117,12 @@ public class Expression {
 			return;
 		}
 
+		//if we have negation, instantly perform and return
+		if(sKey.equals("n")){
+			negateLastNumber();
+			return;
+		}
+
 		//if just hit equals, and we hit [.0-9(], then clear expression
 		if(mSolved && sKey.matches("[.0-9(]"))
 			clearExpression();
@@ -161,7 +167,7 @@ public class Expression {
 		highlightMatchingPara(sKey);
 
 		//we added a num/op, reset the solved flag
-		mSolved=false;
+		mSolved = false;
 	}
 
 
@@ -568,7 +574,7 @@ public class Expression {
 	public boolean isHighlighted(){
 		return mHighlightedCharList.size() != 0;
 	}
-	
+
 	public ArrayList<Integer> getHighlighted(){
 		return mHighlightedCharList;
 	}
@@ -576,6 +582,32 @@ public class Expression {
 
 	public void clearHighlightedList() {
 		mHighlightedCharList.clear();
+	}
+
+
+	/**
+	 * This function will negate the last number before the selection
+	 * If expression is empty, add a minus; 
+	 */
+	private void negateLastNumber(){
+		String str = expresssionToSelection();
+		String lastNum = getLastNumb(str);
+		
+		int frontLen = str.length() - lastNum.length();
+		String endStr = str.substring(0,frontLen);
+
+		//if first char is "-", remove it
+		if(lastNum.matches("[-].*")){
+			endStr = endStr + lastNum.substring(1,lastNum.length());
+		}
+		//add in a minus and the shorten unnecessary signs
+		else {
+			endStr = endStr + "-" + lastNum.substring(0,lastNum.length());
+			endStr = endStr.replace("+-", "-");
+			endStr = endStr.replace("--", "+");
+		}
+		setExpression(endStr + expresssionAfterSelectionStart());
+		setSelection(endStr.length(), endStr.length());
 	}
 
 
@@ -602,7 +634,7 @@ public class Expression {
 
 	private void markHighlighted(int index1, int index2){
 		clearHighlightedList();
-		
+
 		if(index2 == -1)
 			mHighlightedCharList.add(index1);
 		else if(index1 < index2){
@@ -775,7 +807,8 @@ public class Expression {
 	 * Gets the last number (returned as a String) for input string
 	 * @param String expression to find last number of
 	 * @return Last valid number in expression, "" if expression empty, or entire expression 
-	 * if doesn't contain regexAnyValidOperator. Note if expression is "1+-5" it will return "-5"
+	 * if doesn't contain regexAnyValidOperator. For expStr = "1+-5", return "-5"
+	 * if expStr = "1-5", return "5"; 
 	 */
 	private static String getLastNumb(String expStr){
 		/*String [] strA = expStr.split(regexAnyValidOperator);

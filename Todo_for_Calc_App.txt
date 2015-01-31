@@ -1,15 +1,11 @@
 ------------------ToDo Next--------------------
-- Use hierachyViewer to analyze Equate
-- Nested layout weights might be closing slow downs, might want to try something else, also try highlighting edit text feild in empty app and see if the color is stuttery
--Use relative layout for result view
-- Use gridlayout for main calculator and unit keys
 - Should perhaps standardized date styling using pure HTML (instead of extra textView)
 - When doing regular currency to historical, should change to year date code (instead of day or hour)
 - Should use API update historical USD to today's USD
 - Should move all unit initialization into it's own class
 
 - Currency conversion appears broken (api problems)
-- Add invert, square root, and flip sign
+- Add invert and square root
 - Make dynamically sized button into dynamically sized TextView, have button inherit this
 - Attempt to force "Converting __ to __" text to one line and dynamically sized 
 
@@ -58,7 +54,7 @@
 
 -------------------Features----------------------
 - Add check/click results functionality to ConsoleTester
-- Add sqrt, +/-
+- Add sqrt
 - Add fractional mode 
 - Tap equals after solve for scientific notation (hold equals for sci notation preferences)?
 - Add preferences 

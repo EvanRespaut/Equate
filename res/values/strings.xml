@@ -12,6 +12,7 @@
     <string name="open_para_button">(</string>
     <string name="close_para_button">)</string>
     <string name="percent_button">%</string>
+     <string name="negate_button">&#177;</string>
     <string name="clear_button">C</string>
     
     
