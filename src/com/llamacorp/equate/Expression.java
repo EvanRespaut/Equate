@@ -133,13 +133,13 @@ public class Expression {
 		//when adding (, if the previous character was any number or decimal, or close para, add mult
 		if(sKey.equals("(") && expresssionToSelection().matches(".*[\\d).]$")){
 			sKey = "*" + sKey;
-			markHighlighted(length(), -1);
+			markHighlighted(length());
 		}
 
 		//when adding # after ), add multiply
 		if(sKey.matches("[.0-9]") && expresssionToSelection().matches(".*[)]$")){
 			sKey = "*" + sKey;
-			markHighlighted(length(), -1);
+			markHighlighted(length());
 		}
 
 		//add auto completion for close parentheses
@@ -602,9 +602,9 @@ public class Expression {
 		}
 		//add in a minus and the shorten unnecessary signs
 		else {
-			endStr = endStr + "-" + lastNum.substring(0,lastNum.length());
-			endStr = endStr.replace("+-", "-");
-			endStr = endStr.replace("--", "+");
+			endStr = endStr + "-" + lastNum;
+			endStr = endStr.replace("+-", "-").replace("--", "+");
+			markHighlighted(endStr.length() - 1 - lastNum.length());
 		}
 		setExpression(endStr + expresssionAfterSelectionStart());
 		setSelection(endStr.length(), endStr.length());
@@ -631,7 +631,20 @@ public class Expression {
 			markHighlighted(getSelectionStart()-1, associatedIndex);
 	}
 
-
+	/**
+	 * Mark one character in the expression for highlighting
+	 * during the next screen update.
+	 * @param index is 0 indexed, so in "74" to highlight 7, pass 0
+	 */
+	private void markHighlighted(int index){
+		markHighlighted(index, -1);
+	}
+	
+	/**
+	 * Mark two characters in the expression for highlighting
+	 * during the next screen update. 
+	 * @param index is 0 indexed, so in "74" to highlight 7, pass 0
+	 */
 	private void markHighlighted(int index1, int index2){
 		clearHighlightedList();
 
