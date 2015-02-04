@@ -16,6 +16,8 @@ import org.json.JSONObject;
 import org.json.JSONTokener;
 
 import android.content.Context;
+import android.view.Gravity;
+import android.widget.Toast;
 
 
 public class Calculator{
@@ -95,11 +97,18 @@ public class Calculator{
 		//over-right values above if this works
 		try {
 			loadState();
-		} catch (Exception e) {
-			System.out.println("-----------");
-			System.out.println("Exception in Calculator.loadState():");
-			System.out.println(e.toString());
-			System.out.println("-----------");
+		}
+		//might be from a JSON object not existing (app update)
+		catch (JSONException JE){
+			//delete the problem JSON file
+			boolean del = mAppContext.deleteFile(FILENAME);
+			String message = "Calculator reset due to JSONException. JSON file " 
+					+ (del ? "successfully" : "NOT") + " deleted.";
+			toastErrorMsg(message);
+			resetCalc(); //reset the calc and we should be good
+		}
+		catch (Exception e) {
+			toastErrorMsg("Exception in Calculator.loadState():" + e.toString());
 		}
 	}
 
@@ -113,6 +122,12 @@ public class Calculator{
 	}
 
 
+	private void toastErrorMsg(String msg){
+		Toast toast = Toast.makeText(mAppContext, msg, Toast.LENGTH_LONG);
+		toast.setGravity(Gravity.CENTER, 0, 0);
+		toast.show();
+	}
+	
 
 	/**
 	 * Helper method used to initiate the array of various types of units
@@ -130,8 +145,8 @@ public class Calculator{
 		unitsOfCurrency.addUnit(new UnitCurrency("CHF", "Swiss Francs", 0.91)); 
 		unitsOfCurrency.addUnit(new UnitCurrency("AUD", "Australian Dollars", 1.07)); 
 		unitsOfCurrency.addUnit(new UnitCurrency("HKD", "Hong Kong Dollars", 7.75)); 
-		
-		
+
+
 		//array of values from 1914 $10 bill; starts with 1913; uses the CPI index
 		//data can be found: http://data.bls.gov/timeseries/CUUR0000SA0
 		double[] cpiTable = {9.9, 10, 10.1, 10.9, 12.8, 15.1, 17.3, 20, 17.9, 16.8, 
@@ -144,16 +159,16 @@ public class Calculator{
 				144.5, 148.2, 152.4, 156.9, 160.5, 163, 166.6, 172.2, 177.1, 179.9, 
 				184, 188.9, 195.3, 201.6, 207.342, 215.303, 214.537, 218.056, 224.939, 
 				229.594, 232.957, 236.911};
-		
+
 		ArrayList<Double> al = new ArrayList<Double>();
 		for(int i=0;i<cpiTable.length;i++){
 			//convert values such that 1 is current 2014 dollar
 			double normalizedValue = cpiTable[i]/cpiTable[cpiTable.length-1];
 			al.add(normalizedValue);
 		}
-		
+
 		unitsOfCurrency.addUnit(new UnitHistCurrency("USD", "Dollars", al, 1913, 1975));
-		
+
 		unitsOfCurrency.addUnit(new UnitCurrency("SGD", "Singapore Dollars", 1.25)); 
 		unitsOfCurrency.addUnit(new UnitCurrency("CNY", "Chinese Yuans", 6.15)); 
 		unitsOfCurrency.addUnit(new UnitCurrency("BTC", "Bitcoins", 0.003, 
@@ -232,7 +247,7 @@ public class Calculator{
 		unitsOfArea.addUnit(new UnitScalar("cm\u00B2", "Square Centimeters", 1/0.0001));
 		unitsOfArea.addUnit(new UnitScalar("m\u00B2", "Square Meters", 1));
 		unitsOfArea.addUnit(new UnitScalar("km\u00B2", "Square Kilometers", 1/1000000.0));
-		
+
 		unitsOfArea.addUnit(new UnitScalar("ha", "Hectares", 1/10000.0));
 		unitsOfArea.addUnit(new UnitScalar("a", "Ares", 0.01));
 		unitsOfArea.addUnit(new UnitScalar("cir mil", "Circular Mils", 1/5.067E-10));
@@ -250,7 +265,7 @@ public class Calculator{
 		unitsOfVolume.addUnit(new UnitScalar("fl oz", "Fluid Ounces (US)", 1/0.0000295735295625));//exact: gal/128
 		unitsOfVolume.addUnit(new UnitScalar("mL", "Milliliters", 1E6)); 
 		unitsOfVolume.addUnit(new UnitScalar("L", "Liters", 1000));
-		
+
 		unitsOfVolume.addUnit(new UnitScalar("cL", "Centiliter", 1E5));
 		unitsOfVolume.addUnit(new UnitScalar("dL", "Deciliters", 1E4));
 		unitsOfVolume.addUnit(new UnitScalar("gal uk", "Gallons (UK)", 1000/4.54609));//exact: 4.54609L/gal uk
@@ -309,7 +324,7 @@ public class Calculator{
 		unitsOfEnergy.addUnit(new UnitScalar("J", "Joules", 1));
 		unitsOfEnergy.addUnit(new UnitScalar("Wh", "Watt-Hours", 1/3.6E3)); //exact
 		unitsOfEnergy.addUnit(new UnitScalar("kWh", "Kilowatt-Hours", 1/3.6E6)); //exact
-		
+
 		unitsOfEnergy.addUnit(new UnitScalar("Nm", "Newton-Meters", 1));
 		unitsOfEnergy.addUnit(new UnitScalar("MJ", "Megajoules", 1E-6));
 		unitsOfEnergy.addUnit(new UnitScalar("eV", "Electronvolts", 6.241509E18));
@@ -436,7 +451,7 @@ public class Calculator{
 		mExpression = new Expression(intDisplayPrecision);
 		mHints = new Hints();
 		//set the unit type to length by default
-		mUnitTypePos=UNIT_TYPE_DEFAULT_POS;
+		mUnitTypePos = UNIT_TYPE_DEFAULT_POS;
 
 		//load the calculating precision
 		mSolver = new Solver(intCalcPrecision);
@@ -454,7 +469,7 @@ public class Calculator{
 	public void parseKeyPressed(String sKey){
 		//first clear any hightlighted chars (and the animation)
 		clearHighlighted();
-		
+
 		//if expression was displaying "Syntax Error" or similar (containing invalid chars) clear it
 		if(isExpressionInvalid())
 			mExpression.clearExpression();
@@ -616,12 +631,12 @@ public class Calculator{
 	public ArrayList<Integer> getHighlighted(){
 		return mExpression.getHighlighted();
 	} 
-	
+
 
 	public void clearHighlighted() {
 		mExpression.clearHighlightedList();
 	}
-	
+
 	public List<Result> getResultList() {
 		return mResultList;
 	}
