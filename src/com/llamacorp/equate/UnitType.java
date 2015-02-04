@@ -16,6 +16,7 @@ public class UnitType {
 	private static final String JSON_UNIT_ARRAY = "unit_array";
 	private static final String JSON_CURR_POS = "pos";
 	private static final String JSON_IS_SELECTED = "selected";
+	private static final String JSON_DYNAMIC = "dynamic";
 
 	private String mName;
 	private ArrayList<Unit> mUnitArray;
@@ -39,6 +40,7 @@ public class UnitType {
 		this(json.getString(JSON_NAME));
 		mCurrUnitPos = json.getInt(JSON_CURR_POS);
 		mIsUnitSelected = json.getBoolean(JSON_IS_SELECTED);
+		mContainsDynamicUnits = json.getBoolean(JSON_DYNAMIC);
 
 		JSONArray jUnitArray = json.getJSONArray(JSON_UNIT_ARRAY);
 		for (int i = 0; i < jUnitArray.length(); i++) {
@@ -57,6 +59,7 @@ public class UnitType {
 		json.put(JSON_NAME, mName);
 		json.put(JSON_CURR_POS, mCurrUnitPos);
 		json.put(JSON_IS_SELECTED, mIsUnitSelected);
+		json.put(JSON_DYNAMIC, mContainsDynamicUnits);
 		return json;
 	}
 

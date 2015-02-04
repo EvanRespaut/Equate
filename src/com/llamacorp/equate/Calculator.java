@@ -193,8 +193,8 @@ public class Calculator{
 
 		unitsOfWeight.addUnit(new UnitScalar("oz t", "Troy Ounces", 1/0.0311034768)); //exact
 		unitsOfWeight.addUnit(new UnitScalar("gr", "Grains", 1/6.479891E-5)); //exact
-		unitsOfWeight.addUnit(new UnitScalar("dwt", "Pennyweight", 20/0.0311034768)); //exact, 1/20 troy oz
-		unitsOfWeight.addUnit(new UnitScalar("CD", "Carat", 5000)); // =200mg
+		unitsOfWeight.addUnit(new UnitScalar("dwt", "Pennyweights", 20/0.0311034768)); //exact, 1/20 troy oz
+		unitsOfWeight.addUnit(new UnitScalar("CD", "Carats", 5000)); // =200mg
 		mUnitTypeArray.add(unitsOfWeight);
 
 
@@ -340,7 +340,7 @@ public class Calculator{
 
 		unitsOfPressure.addUnit(new UnitScalar("kg/m\u00B2", "Kilogram/Square Meter", 1/9.80665)); //approx?
 		unitsOfPressure.addUnit(new UnitScalar("kPa", "Kilopascals", 0.001)); //exact
-		unitsOfPressure.addUnit(new UnitScalar("Pa", "Pascal", 1)); //exact
+		unitsOfPressure.addUnit(new UnitScalar("Pa", "Pascals", 1)); //exact
 		unitsOfPressure.addUnit(new UnitScalar("inHg", "Inches of Mercury", 1/3386.388640341)); //exact using cmHg - 1/(1333.22387415*2.54)
 		unitsOfPressure.addUnit(new UnitScalar("cmHg", "Centimeters of Mercury", 1/1333.22387415)); //exact
 

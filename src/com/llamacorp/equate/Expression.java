@@ -133,13 +133,13 @@ public class Expression {
 		//when adding (, if the previous character was any number or decimal, or close para, add mult
 		if(sKey.equals("(") && expresssionToSelection().matches(".*[\\d).]$")){
 			sKey = "*" + sKey;
-			markHighlighted(length());
+			markHighlighted(expresssionToSelection().length());
 		}
 
 		//when adding # after ), add multiply
 		if(sKey.matches("[.0-9]") && expresssionToSelection().matches(".*[)]$")){
 			sKey = "*" + sKey;
-			markHighlighted(length());
+			markHighlighted(expresssionToSelection().length());
 		}
 
 		//add auto completion for close parentheses
