@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources>
+
     <declare-styleable name="SecondaryTextButton">
-        <attr name="secondary_text" format="string"/>
-		<attr name="secondary_text_font_size" format="dimension"/>
+        <attr name="secondary_text" format="string" />
+        <attr name="secondary_text_font_size" format="dimension" />
     </declare-styleable>
+    <declare-styleable name="EditTextCursorWatcher">
+        <attr name="minimumTextSize" format="dimension" />
+    </declare-styleable>
+
 </resources>

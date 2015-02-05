@@ -10,6 +10,7 @@ import android.animation.ValueAnimator.AnimatorUpdateListener;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.SystemClock;
@@ -59,8 +60,13 @@ public class EditTextCursorWatcher extends EditText {
 
 	private void setUpEditText(Context context, AttributeSet attrs){
 		mContext = context;
-
-		mMinTextSize = spToPixels(mContext, 25);
+		
+		//grab custom resource variable
+		TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.EditTextCursorWatcher, 0, 0);
+		try {
+			mMinTextSize = ta.getDimension(R.styleable.EditTextCursorWatcher_minimumTextSize,
+					getTextSize());
+		} finally {	ta.recycle();}
 	}
 
 	/** Set the singleton calc to this EditText for its own use */
@@ -86,14 +92,11 @@ public class EditTextCursorWatcher extends EditText {
 	private void layoutText() {
 		Paint paint = getPaint();
 		if (mTextSize != 0f) paint.setTextSize(mTextSize);
+		//if min text size is the same as normal size, just leave
+		if(mMinTextSize == getTextSize()) return;
 		float textWidth = paint.measureText(getText().toString());
 		float boxWidth = getWidth() - getPaddingLeft() - getPaddingRight();
 		float textSize = getTextSize();
-		System.out.println("textWidth = " + textWidth
-				+ "  boxWidth = " + boxWidth 
-				+ "  textSize = " + textSize
-				+ "  textSize = " + pixelsToSp(mContext, textSize) + " sp"
-				+ "  scaled = " + pixelsToSp(mContext, textSize * boxWidth / textWidth) + " sp");
 		if (textWidth > boxWidth) {
 			float scaled = textSize * boxWidth / textWidth;
 			if(scaled < mMinTextSize)
@@ -103,22 +106,6 @@ public class EditTextCursorWatcher extends EditText {
 		} 
 	}
 
-	private static float pixelsToSp(Context context, float px) {
-		if(context != null){
-			float scaledDensity = context.getResources().getDisplayMetrics().scaledDensity;
-			return px/scaledDensity;
-		}
-		else return 0;
-	}
-
-
-	private static float spToPixels(Context context, float sp) {
-		if(context != null){
-			float scaledDensity = context.getResources().getDisplayMetrics().scaledDensity;
-			return sp*scaledDensity;
-		}
-		else return 0;
-	}
 
 	/**
 	 *  Custom paste and cut commands, leave the default copy operation

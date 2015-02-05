@@ -43,9 +43,7 @@ class SecondaryTextButton extends Button {
 			mSecondaryText = ta.getString(R.styleable.SecondaryTextButton_secondary_text);
 			mSecondaryTextSize = ta.getDimension(R.styleable.SecondaryTextButton_secondary_text_font_size,
 												 defaultSecondaryTextSize);
-		} finally {
-			ta.recycle();
-		}
+		} finally { ta.recycle();}
 
 		mSecondaryPaint = new Paint(getPaint());
 	}

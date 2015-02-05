@@ -34,6 +34,7 @@
                 android:background="@color/prev_curr_exp_divider" />
 
             <com.llamacorp.equate.view.EditTextCursorWatcher
+                xmlns:customNS="http://schemas.android.com/apk/res/com.llamacorp.equate"
                 android:id="@+id/textDisplay"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -41,7 +42,8 @@
                 android:background="@color/app_background"
                 android:gravity="right"
                 android:inputType="textNoSuggestions"
-                android:textSize="40sp" />
+                android:textSize="40sp" 
+                customNS:minimumTextSize="25sp"/>
         </LinearLayout>
 
         <LinearLayout
@@ -169,7 +171,7 @@
                 xmlns:customNS="http://schemas.android.com/apk/res/com.llamacorp.equate"
                 android:id="@+id/minus_button"
                 style="@style/OpButton"
-                customNS:secondary_text="@string/negate_button"  />
+                customNS:secondary_text="@string/negate_button" />
         </LinearLayout>
 
         <LinearLayout
