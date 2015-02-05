@@ -11,6 +11,7 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.os.SystemClock;
 import android.text.Html;
 import android.text.InputType;
@@ -23,7 +24,10 @@ import com.llamacorp.equate.R;
 
 public class EditTextCursorWatcher extends EditText {
 	private Calculator mCalc;
-	private final Context context;
+	private Context mContext;
+
+	private float mTextSize = 0f;
+	private float mMinTextSize;
 
 	private int mSelStart = 0;
 	private int mSelEnd = 0;
@@ -34,29 +38,87 @@ public class EditTextCursorWatcher extends EditText {
 	private ValueAnimator mColorAnimation;
 
 
+	//TODO might not need this
 	// (This was in the original TextView) System wide time for last cut or copy action.
 	static long LAST_CUT_OR_COPY_TIME;
 
-	public EditTextCursorWatcher(Context context, AttributeSet attrs, int defStyle) {
-		super(context, attrs, defStyle);
-		this.context=context;
-	}
+
+	public EditTextCursorWatcher(Context context) {
+		this(context, null);
+	}	
 
 	public EditTextCursorWatcher(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		this.context=context;
+		setUpEditText(context, attrs);
 	}
 
-	public EditTextCursorWatcher(Context context) {
-		super(context);
-		this.context=context;
+	public EditTextCursorWatcher(Context context, AttributeSet attrs, int defStyle) {
+		super(context, attrs, defStyle);
+		setUpEditText(context, attrs);
+	}
+
+	private void setUpEditText(Context context, AttributeSet attrs){
+		mContext = context;
+
+		mMinTextSize = spToPixels(mContext, 25);
 	}
 
 	/** Set the singleton calc to this EditText for its own use */
 	public void setCalc(Calculator calc) {
-		mCalc=calc;		
+		mCalc = calc;		
 	} 
 
+
+	@Override
+	protected void onTextChanged(CharSequence text, int start, int before, int after) {
+		super.onTextChanged(text, start, before, after);
+		layoutText();
+	}
+
+
+	@Override
+	protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+		super.onLayout(changed, left, top, right, bottom);
+		if (changed) layoutText();
+	}	
+
+	/** Helper method to size text */
+	private void layoutText() {
+		Paint paint = getPaint();
+		if (mTextSize != 0f) paint.setTextSize(mTextSize);
+		float textWidth = paint.measureText(getText().toString());
+		float boxWidth = getWidth() - getPaddingLeft() - getPaddingRight();
+		float textSize = getTextSize();
+		System.out.println("textWidth = " + textWidth
+				+ "  boxWidth = " + boxWidth 
+				+ "  textSize = " + textSize
+				+ "  textSize = " + pixelsToSp(mContext, textSize) + " sp"
+				+ "  scaled = " + pixelsToSp(mContext, textSize * boxWidth / textWidth) + " sp");
+		if (textWidth > boxWidth) {
+			float scaled = textSize * boxWidth / textWidth;
+			if(scaled < mMinTextSize)
+				scaled = mMinTextSize;
+			paint.setTextSize(scaled);
+			mTextSize = textSize;
+		} 
+	}
+
+	private static float pixelsToSp(Context context, float px) {
+		if(context != null){
+			float scaledDensity = context.getResources().getDisplayMetrics().scaledDensity;
+			return px/scaledDensity;
+		}
+		else return 0;
+	}
+
+
+	private static float spToPixels(Context context, float sp) {
+		if(context != null){
+			float scaledDensity = context.getResources().getDisplayMetrics().scaledDensity;
+			return sp*scaledDensity;
+		}
+		else return 0;
+	}
 
 	/**
 	 *  Custom paste and cut commands, leave the default copy operation
@@ -96,7 +158,7 @@ public class EditTextCursorWatcher extends EditText {
 		//this was in the original function, keep for now
 		LAST_CUT_OR_COPY_TIME = SystemClock.uptimeMillis();
 
-		Toast.makeText(context, "Cut: \"" + copiedText + "\"", Toast.LENGTH_SHORT).show();
+		Toast.makeText(mContext, "Cut: \"" + copiedText + "\"", Toast.LENGTH_SHORT).show();
 	}
 
 
@@ -107,7 +169,7 @@ public class EditTextCursorWatcher extends EditText {
 		ClipboardManager clipboard =  (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE); 
 		ClipData clip = clipboard.getPrimaryClip();
 		textToPaste = clip.getItemAt(0).coerceToText(getContext()).toString();
-		Toast.makeText(context, "Pasted: \"" + textToPaste + "\"", Toast.LENGTH_SHORT).show();
+		Toast.makeText(mContext, "Pasted: \"" + textToPaste + "\"", Toast.LENGTH_SHORT).show();
 		mCalc.pasteIntoExpression(textToPaste);
 	}	
 

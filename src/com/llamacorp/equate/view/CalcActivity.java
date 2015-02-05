@@ -534,13 +534,8 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 		if(mCalc==null)
 			return;
 
-		//if we open app to dynamic unit, attempt an update
-//		try {
 		if(mCalc.getCurrUnitType().containsDynamicUnits())
 			mCalc.refreshAllDynamicUnits();
-//		} catch (Exception E){
-//			mCalc.resetCalc();
-//		}
 
 		//only set display to Equate if no expression is there yet
 		if(mCalc.toString().equals("") && mCalc.getResultList().size()==0){

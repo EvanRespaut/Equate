@@ -14,6 +14,7 @@ class SecondaryTextButton extends Button {
 	private float mTextX;
 	private float mTextY;
 	private float mTextSize = 0f;
+	
 	protected Paint mSecondaryPaint;
 	protected String mSecondaryText;
 	protected float mSecondaryTextSize;
@@ -56,25 +57,6 @@ class SecondaryTextButton extends Button {
 	}
 
 
-	private void layoutText() {
-		Paint paint = getPaint();
-		if (mTextSize != 0f) paint.setTextSize(mTextSize);
-		float textWidth = paint.measureText(getText().toString());
-		float width = getWidth() - getPaddingLeft() - getPaddingRight();
-		float textSize = getTextSize();
-		if (textWidth > width) {
-			paint.setTextSize(textSize * width / textWidth);
-			mTextX = getPaddingLeft();
-			mTextSize = textSize;
-		} else {
-			mTextX = (getWidth() - textWidth) / 2;
-		}
-		mTextY = (getHeight() - paint.ascent() - paint.descent()) / 2;
-		if (mSecondaryPaint != null)
-			mSecondaryPaint.setTextSize(mSecondaryTextSize);
-	}
-
-
 	@Override
 	protected void onTextChanged(CharSequence text, int start, int before, int after) {
 		super.onTextChanged(text, start, before, after);
@@ -86,11 +68,31 @@ class SecondaryTextButton extends Button {
 	protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
 		super.onLayout(changed, left, top, right, bottom);
 		if (changed) layoutText();
-	}
+	} 
 
+	
+	/** Helper method to size text */
+	private void layoutText() {
+		Paint paint = getPaint();
+		if (mTextSize != 0f) paint.setTextSize(mTextSize);
+		float textWidth = paint.measureText(getText().toString());
+		float boxWidth = getWidth() - getPaddingLeft() - getPaddingRight();
+		float textSize = getTextSize();
+		if (textWidth > boxWidth) {
+			paint.setTextSize(textSize * boxWidth / textWidth);
+			mTextX = getPaddingLeft();
+			mTextSize = textSize;
+		} else {
+			mTextX = (getWidth() - textWidth) / 2;
+		}
+		mTextY = (getHeight() - paint.ascent() - paint.descent()) / 2;
+		if (mSecondaryPaint != null)
+			mSecondaryPaint.setTextSize(mSecondaryTextSize);
+	}
 
 	@Override
 	protected void onDraw(Canvas canvas) {
+		//draw the text in the upper corner
 		mSecondaryPaint.setColor(getResources().getColor(R.color.button_secondary_text));
 
 		if(mSecondaryText != null){
@@ -98,22 +100,23 @@ class SecondaryTextButton extends Button {
 			mButtonWidth = getWidth() - getPaddingLeft() - getPaddingRight();
 
 			mSecTextWidth = mSecondaryPaint.measureText(mSecondaryText);
-			mSecAdditionalXOffset = getContext().getResources().getDimensionPixelSize(R.dimen.button_ellipses_additional_offset_x);
+			mSecAdditionalXOffset = getContext().getResources()
+					.getDimensionPixelSize(R.dimen.button_ellipses_additional_offset_x);
 
 			mSecTextHeight = mSecondaryPaint.getTextSize();
-			mSecAdditionalYOffset = getContext().getResources().getDimensionPixelSize(R.dimen.button_ellipses_additional_offset_y);
+			mSecAdditionalYOffset = getContext().getResources()
+					.getDimensionPixelSize(R.dimen.button_ellipses_additional_offset_y);
 
 			findSecondaryTextCoord();
 
 			canvas.drawText(mSecondaryText, 0, mSecondaryText.length(), 
-					mSecXCoord, 
-					mSecYCoord, 
-					mSecondaryPaint);
+					mSecXCoord, mSecYCoord, mSecondaryPaint);
 		}
-
+		
 		getPaint().setColor(getCurrentTextColor());
 		CharSequence text = getText();
 		canvas.drawText(text, 0, text.length(), mTextX, mTextY, getPaint());
+
 	}
 	
 	
