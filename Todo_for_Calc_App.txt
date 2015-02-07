@@ -2,12 +2,11 @@
 - Should perhaps standardized date styling using pure HTML (instead of extra textView)
 - When doing regular currency to historical, should change to year date code (instead of day or hour)
 - Should use API update historical USD to today's USD
+- When unit selected, and math operators present, let convert op work
 - Should move all unit initialization into it's own class
 
 - Add invert and square root
 - When any math is in "Convert __ to __", enable equals
-- Make dynamically sized button into dynamically sized TextView, have button inherit this
-- Attempt to force "Converting __ to __" text to one line and dynamically sized 
 
 -----Stuff to Test (squashed bugs, etc)-----
 - Test min/mile to mph and back again
@@ -31,11 +30,13 @@
 
 ----------------------Fix----------------------
 ---- TRY TO ADD UNIT TESTING FOR ALL PROBLEMS FIXED -----
+-Convert unit to another, tap expression, adds convert to
 - After long press unit switch, select unit
 - Empty expression, tap previous result with different unit type than curr, adds a one
 - Type "54+43)" and delete auto close para --> syntax error
 - When prog first starts, cursor is on with Unitcalc on screen
 - Screen rotation clears unit
+- Try to programicly determine height of EditText to wrap content (without a wrap content flag)
 - For every solve or unit convert, save app state
 - Font size issues with large text sizes (also run the emulator for a few diff size screens and resolutions. 
 - When prev expression exists, operators should take last expression it back instead of doing nothing even when current expression is empty 

@@ -108,7 +108,7 @@ public class ConvKeysFragment extends Fragment implements OnConvertKeyUpdateFini
 			Button button = (Button)v.findViewById(convertButtonIds[mNumConvButtons]);
 
 			button.setText(getText(R.string.more_button));
-			button.setTypeface(null, Typeface.ITALIC);
+			//button.setTypeface(null, Typeface.ITALIC);
 			
 			button.setOnClickListener(new View.OnClickListener() {
 				@Override

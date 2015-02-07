@@ -37,10 +37,10 @@
                 xmlns:customNS="http://schemas.android.com/apk/res/com.llamacorp.equate"
                 android:id="@+id/textDisplay"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="54sp"
                 android:layout_marginRight="5dp"
                 android:background="@color/app_background"
-                android:gravity="right"
+                android:gravity="right|bottom"
                 android:inputType="textNoSuggestions"
                 android:textSize="40sp" 
                 customNS:minimumTextSize="25sp"/>
