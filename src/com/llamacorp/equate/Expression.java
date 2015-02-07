@@ -477,6 +477,15 @@ public class Expression {
 	public boolean isInvalid(){
 		return isInvalid(getExpression());
 	}
+	
+	/**
+	 * Tell whether or not this expression contains operators
+	 * @return false if empty or only contains a number ("", "3E1", or "-4"),
+	 * true for a result such as "2-3" "2^4" etc
+	 */
+	public boolean containsOps(){
+		return getLastNumb(mExpression).length() != length();
+	}
 
 	/** Returns the post rounded result */
 	public String getPreciseResult(){
@@ -556,11 +565,17 @@ public class Expression {
 		}
 	}
 
-	/** @return the length of the expression */
+	/**
+	 * Returns the length of the current expression
+	 * @return length of expression
+	 */
 	public int length(){
 		return getExpressionLength();
 	}
 
+	/**
+	 * Returns the current expression in expressed as a String
+	 */
 	@Override
 	public String toString(){
 		return getExpression();

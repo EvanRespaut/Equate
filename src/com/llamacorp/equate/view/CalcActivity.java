@@ -76,6 +76,9 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 	 * @param keyPressed ASCII representation of the key pressed ("1", "=" "*", etc)
 	 */
 	public void numButtonPressed(String keyPressed){
+		//pass button value to CalcAcitvity to pass to calc
+		mCalc.parseKeyPressed(keyPressed);
+
 		//TODO this logic really belongs in calc, but then passing back
 		//to display a dialog becomes hard
 		if(keyPressed.equals("=") && mCalc.isUnitSelected() && !mCalc.isSolved()){
@@ -85,10 +88,7 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 				public void onClick(DialogInterface dialog, int which) {}})
 				.show();
 		}
-
-		//pass button value to CalcAcitvity to pass to calc
-		mCalc.parseKeyPressed(keyPressed);
-
+		
 		//update the result list and do it with the normal scroll (not fast)
 		updateScreen(keyPressed.equals("="));
 	}
