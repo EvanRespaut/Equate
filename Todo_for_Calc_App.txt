@@ -2,7 +2,6 @@
 - Should perhaps standardized date styling using pure HTML (instead of extra textView)
 - When doing regular currency to historical, should change to year date code (instead of day or hour)
 - Should use API update historical USD to today's USD
-- Should move all unit initialization into it's own class
 
 - Add invert and square root
 
