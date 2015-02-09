@@ -3,7 +3,7 @@
 - When doing regular currency to historical, should change to year date code (instead of day or hour)
 - Should use API update historical USD to today's USD
 
-- Add invert and square root
+- Add square root
 
 -----Stuff to Test (squashed bugs, etc)-----
 - Test min/mile to mph and back again
@@ -27,6 +27,9 @@
 
 ----------------------Fix----------------------
 ---- TRY TO ADD UNIT TESTING FOR ALL PROBLEMS FIXED -----
+- When tapping various parts of the EditText, the cursor momentarily bounces around, mDisplay.clearHighlighted(); call in CalcActivity is to blame
+- Tester only now works if you comment out Calculator(Context appContext) constructor for no reason
+-type (-45, then try negate, get (+45
 -Convert unit to another, tap expression, adds convert to
 - After long press unit switch, select unit
 - Empty expression, tap previous result with different unit type than curr, adds a one

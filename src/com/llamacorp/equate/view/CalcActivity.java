@@ -77,7 +77,7 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 	 */
 	public void numButtonPressed(String keyPressed){
 		//pass button value to CalcAcitvity to pass to calc
-		mCalc.parseKeyPressed(keyPressed);
+		boolean performedSolve = mCalc.parseKeyPressed(keyPressed);
 
 		//TODO this logic really belongs in calc, but then passing back
 		//to display a dialog becomes hard
@@ -90,7 +90,7 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 		}
 		
 		//update the result list and do it with the normal scroll (not fast)
-		updateScreen(keyPressed.equals("="));
+		updateScreen(performedSolve);
 	}
 
 	//Crude fix: used to tell the ConvKeyViewPager what unit to select after scrolling to correct UnitType
@@ -273,6 +273,8 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 					break;
 					case R.id.minus_button: buttonValue = "n";
 					break;
+					case R.id.divide_button: buttonValue = "i";
+					break;
 					case R.id.eight_button: 
 						if(mUnitContain.getVisibility() == LinearLayout.GONE)
 							mUnitContain.setVisibility(LinearLayout.VISIBLE);
@@ -293,6 +295,8 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 			case R.id.minus_button: button.setText(getText(R.string.minus_button));
 			break;
 			case R.id.multiply_button:  button.setText(getText(R.string.multiply_button));
+			break;
+			case R.id.divide_button:  button.setText(getText(R.string.divide_button));
 			break;
 			}
 

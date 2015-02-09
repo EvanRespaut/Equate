@@ -105,11 +105,11 @@
                     android:layout_marginLeft="1dp"
                     android:text="@string/close_para_button" />
             </LinearLayout>
-
-            <Button
+            <com.llamacorp.equate.view.AnimatedHoldButton
+                xmlns:customNS="http://schemas.android.com/apk/res/com.llamacorp.equate"
                 android:id="@+id/divide_button"
                 style="@style/OpButton"
-                android:text="@string/divide_button" />
+                customNS:secondary_text="@string/invert_button" />
 
             <ImageButton
                 android:id="@+id/backspace_button"

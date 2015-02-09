@@ -105,22 +105,29 @@ public class Expression {
 	 * This function will try to add a number or operator, or entire result list to the current expression
 	 * Note that there is lots of error checking to be sure user can't entire an invalid operator/number
 	 * @param sKey should only be single valid number or operator character, or longer previous results
+	 * @return returns if a solve should be performed
 	 */
-	public void keyPresses(String sKey){
+	public boolean keyPresses(String sKey){
 		//for now, if we're adding a previous result, just add it without error checking
 		if(sKey.length() > 1){
 			//don't load in errors
-			if(isInvalid(sKey)) return;
+			if(isInvalid(sKey)) return false;
 			if(mSolved) replaceExpression(sKey);
 			else insertAtSelection(sKey);
 			mSolved = false;
-			return;
+			return false;
 		}
 
 		//if we have negation, instantly perform and return
 		if(sKey.equals("n")){
 			negateLastNumber();
-			return;
+			return false;
+		}
+
+		//if we have inversion, instantly perform and return
+		if(sKey.equals("i")){
+			invertLastNumber();
+			return isSolved();
 		}
 
 		//if just hit equals, and we hit [.0-9(], then clear expression
@@ -128,7 +135,7 @@ public class Expression {
 			clearExpression();
 
 		if(!isEntryValid(sKey))
-			return;
+			return false;
 
 		//when adding (, if the previous character was any number or decimal, or close para, add mult
 		if(sKey.equals("(") && expresssionToSelection().matches(".*[\\d).]$")){
@@ -145,7 +152,7 @@ public class Expression {
 		//add auto completion for close parentheses
 		if(sKey.equals(")"))	
 			if(numOpenPara() <= 0) //if more close than open, add an open
-				addToExpressionStart("(");
+				insertAtExpressionStart("(");
 
 		//if we have "84*-", replace both the * and the - with the operator
 		if(sKey.matches(regexAnyValidOperator) && expresssionToSelection().matches(".*" + regexAnyOpExceptPercent + regexAnyValidOperator + "$")){
@@ -168,6 +175,7 @@ public class Expression {
 
 		//we added a num/op, reset the solved flag
 		mSolved = false;
+		return false;
 	}
 
 
@@ -477,7 +485,7 @@ public class Expression {
 	public boolean isInvalid(){
 		return isInvalid(getExpression());
 	}
-	
+
 	/**
 	 * Tell whether or not this expression contains operators
 	 * @return false if empty or only contains a number ("", "3E1", or "-4"),
@@ -557,7 +565,7 @@ public class Expression {
 			return;
 
 		//if something is highlighted, delete highlighted part (replace with "")
-		if(selStart!=selEnd)
+		if(selStart != selEnd)
 			insertAtSelection("");
 		else {
 			setExpression(getExpression().substring(0, selStart-1) + expresssionAfterSelectionStart());
@@ -607,11 +615,11 @@ public class Expression {
 	private void negateLastNumber(){
 		String str = expresssionToSelection();
 		String lastNum = getLastNumb(str);
-		
+
 		int frontLen = str.length() - lastNum.length();
 		String endStr = str.substring(0,frontLen);
 
-		//if first char is "-", remove it
+		//if we had 5+-6, remove the - before the 6
 		if(lastNum.matches("[-].*")){
 			endStr = endStr + lastNum.substring(1,lastNum.length());
 		}
@@ -625,6 +633,27 @@ public class Expression {
 		setSelection(endStr.length(), endStr.length());
 	}
 
+
+
+	/**
+	 * This function will add a "1/(" before the last number before the selection
+	 * If the expression is solved, also solve again
+	 * @return if the calculator should perform a solve
+	 */
+	private void invertLastNumber(){
+		String str = expresssionToSelection();
+		String lastNum = getLastNumb(str);
+
+		int frontLen = str.length() - lastNum.length();
+		String inv = "1/(";
+		insertAt(inv, frontLen);
+
+		frontLen = frontLen + inv.length();
+		String expEnd = getExpression().substring(frontLen, length());
+		int lenFirstNum = getFirstNumb(expEnd).length();
+
+		insertAt(")", frontLen + lenFirstNum);
+	}
 
 	private void highlightMatchingPara(String sKey){
 		String open = "(";
@@ -654,7 +683,7 @@ public class Expression {
 	private void markHighlighted(int index){
 		markHighlighted(index, -1);
 	}
-	
+
 	/**
 	 * Mark two characters in the expression for highlighting
 	 * during the next screen update. 
@@ -699,7 +728,7 @@ public class Expression {
 	/** Adds String to beginning of expression. Note selection will NOT move relative 
 	 * to the rest of the expression
 	 * @param str String to add to beginning of expression */
-	private void addToExpressionStart(String str) {
+	private void insertAtExpressionStart(String str) {
 		int selStart = getSelectionStart();
 		int selEnd = getSelectionEnd();
 		int strLen = str.length();
@@ -707,26 +736,51 @@ public class Expression {
 		setSelection(selStart + strLen, selEnd + strLen);
 	}
 
-
 	/**
 	 * Add a String to this expression at the correct selection point
+	 * Note if something is highlighted (selStart != selEnd), this 
+	 * selection will be replaced
 	 * @param toAdd the String to add
 	 */
 	private void insertAtSelection(String toAdd){
-		//just add the string if expression is empty
-		if(isEmpty())
-			replaceExpression(toAdd);
-		//replace selection with toAdd
-		else {
-			//used to later tell where to place the selection (cursor)
-			int selStart = getSelectionStart();
-			int selEnd = getSelectionEnd();
-			int expLen = getExpressionLength();
-
-			setExpression(getExpression().substring(0, selStart) + toAdd + getExpression().substring(selEnd, expLen));
-			//move cursor down by newly added key.  note there is not "selection" just a cursor (since start=end)
-			setSelection(selStart + toAdd.length(), selStart + toAdd.length());
+		//delete the current highlighted selection (if it exists) 
+		if(getSelectionStart() != getSelectionEnd()){
+			setExpression(getExpression().substring(0, getSelectionStart()) 
+					+ getExpression().substring(getSelectionEnd(), length()));
+			//update the selections to reflected deleted highlighted selection
+			setSelection(getSelectionStart(), getSelectionStart());
 		}
+		insertAt(toAdd, getSelectionStart());
+	}
+
+
+	/**
+	 * Inserts a string at the insert location and preserves the user's selection
+	 * @param toAdd the string to insert
+	 * @param insertLocation the location to insert the string. In "42+3", 0 would
+	 * specify before the 4, 1 would be before the 2, etc. 
+	 */
+	private void insertAt(String toAdd, int insertLocation){
+		//return if we're trying to insert at invalid location
+		if(insertLocation > length() | insertLocation < 0)
+			return;
+		//actually insert text into the expression
+		setExpression(getExpression().substring(0, insertLocation) + toAdd
+				+ getExpression().substring(insertLocation, length()));
+		//move up the selection start if necessary
+		int selStart = getSelectionStart();
+		int selEnd = getSelectionEnd();
+		if(selStart == selEnd && insertLocation <= selStart){
+			selStart = selStart + toAdd.length();
+			selEnd = selStart;
+		}
+		else{
+			if(insertLocation <= selStart)
+				selStart = selStart + toAdd.length();
+			if(insertLocation < selEnd)
+				selEnd = selEnd + toAdd.length();
+		}
+		setSelection(selStart, selEnd);
 	}
 
 
@@ -749,6 +803,7 @@ public class Expression {
 
 		return sToClean;
 	}
+
 
 	/**
 	 * Counts the number of open vs. number of closed parentheses in expresssionToSelection()

@@ -236,7 +236,7 @@ public class Calculator{
 	 * Passed a key from calculator (num/op/back/clear/eq) and distributes it to its proper function
 	 * @param sKey is either single character (but still a String) or a string from result list
 	 */
-	public void parseKeyPressed(String sKey){
+	public boolean parseKeyPressed(String sKey){
 		//first clear any highlighted chars (and the animation)
 		clearHighlighted();
 
@@ -254,11 +254,12 @@ public class Calculator{
 			//if "Convert 3 in to..." is showing, help user out
 			if(isUnitSelected() & !mExpression.containsOps()){
 				//don't follow through with solve
-				return;
+				return false;
 			}
 
 			//solve expression, load into result list if answer not empty
 			solveAndLoadIntoResultList();
+			return true;
 		}
 		//check for plain text (want 
 		//check for backspace key
@@ -269,15 +270,19 @@ public class Calculator{
 		else if(sKey.equals("c")){
 			clear();
 		}
-
 		//else try all other potential numbers and operators, as well as result list
 		else{
 			//if just hit equals, and we hit [.0-9(], then clear current unit type
 			if(mExpression.isSolved() && sKey.matches("[.0-9(]"))
 				clearSelectedUnit();
 
-			mExpression.keyPresses(sKey);
+			boolean performSolve = mExpression.keyPresses(sKey);
+			if(performSolve){
+				solveAndLoadIntoResultList();
+				return true;
+			}
 		}
+		return false;
 	}
 
 	/**
