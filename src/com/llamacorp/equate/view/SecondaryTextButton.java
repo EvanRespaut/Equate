@@ -35,15 +35,17 @@ class SecondaryTextButton extends Button {
 	public SecondaryTextButton(Context context, AttributeSet attrs) {
 		super(context, attrs);
 
-		final float defaultSecondaryTextSize = getPaint().getTextSize() * SECONDARY_FONT_PERCENTAGE / 100f;
+		int secTextPerc = SECONDARY_FONT_PERCENTAGE;
 		
 		//grab custom resource variable
 		TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.SecondaryTextButton, 0, 0);
 		try {
 			mSecondaryText = ta.getString(R.styleable.SecondaryTextButton_secondary_text);
-			mSecondaryTextSize = ta.getDimension(R.styleable.SecondaryTextButton_secondary_text_font_size,
-												 defaultSecondaryTextSize);
+			secTextPerc = ta.getInteger(R.styleable.SecondaryTextButton_secondary_text_font_size_percentage,
+					SECONDARY_FONT_PERCENTAGE);
 		} finally { ta.recycle();}
+
+		mSecondaryTextSize = getPaint().getTextSize() * secTextPerc / 100f;
 
 		mSecondaryPaint = new Paint(getPaint());
 	}

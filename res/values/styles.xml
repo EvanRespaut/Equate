@@ -51,7 +51,7 @@
         <item name="android:background">@drawable/conv_button</item>
         <item name="android:textColor">@drawable/button_text_color</item>
         <item name="android:textSize">20sp</item>
-        <item name="secondary_text_font_size">30sp</item>
+        <item name="secondary_text_font_size_percentage">150</item>
     </style>
 
     <style name="SmallOpButton">

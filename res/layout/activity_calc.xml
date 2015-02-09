@@ -109,7 +109,8 @@
                 xmlns:customNS="http://schemas.android.com/apk/res/com.llamacorp.equate"
                 android:id="@+id/divide_button"
                 style="@style/OpButton"
-                customNS:secondary_text="@string/invert_button" />
+                customNS:secondary_text="@string/invert_button" 
+                customNS:secondary_text_font_size_percentage="50" />
 
             <ImageButton
                 android:id="@+id/backspace_button"

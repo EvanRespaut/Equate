@@ -3,7 +3,7 @@
 
     <declare-styleable name="SecondaryTextButton">
         <attr name="secondary_text" format="string" />
-        <attr name="secondary_text_font_size" format="dimension" />
+        <attr name="secondary_text_font_size_percentage" format="integer" />
     </declare-styleable>
     <declare-styleable name="EditTextCursorWatcher">
         <attr name="minimumTextSize" format="dimension" />
