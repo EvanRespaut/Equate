@@ -45,7 +45,7 @@ public class Expression {
 	public static final String regexAnyOpExceptPercent = regexAnyValidOperator.replace("%","");
 	public static final String regexAnyOperatorOrE = "[E" + regexOperators + "]";
 	public static final String regexGroupedNumber = "([-]?\\d*[.]?\\d+[.]?(?:E[+-]?\\d+)?)";
-	public static final String regexGroupedNonNegNumber = "((?:(?<=^)[-])?(?:(?<=[*+/-])[-])?\\d*[.]?\\d+[.]?(?:E[+-]?\\d+)?)";
+	public static final String regexGroupedNonNegNumber = "((?:(?<=^)[-])?(?:(?<=[*+(/-])[-])?\\d*[.]?\\d+[.]?(?:E[+-]?\\d+)?)";
 	//this isn't really needed anymore, if want non capturing group, use ?:"
 	public static final int numGroupsInregexGroupedNumber = 1; 
 
@@ -891,9 +891,9 @@ public class Expression {
 	 * @param String expression to find last number of
 	 * @return Last valid number in expression, "" if expression empty, or entire expression 
 	 * if doesn't contain regexAnyValidOperator. For expStr = "1+-5", return "-5"
-	 * if expStr = "1-5", return "5"; 
+	 * if expStr = "1-5", return "5"; for (-45, should return -45
 	 */
-	private static String getLastNumb(String expStr){
+	private static String getLastNumb(String str){
 		/*String [] strA = expStr.split(regexAnyValidOperator);
 		if(strA.length==0) return "";
 		else {
@@ -902,8 +902,8 @@ public class Expression {
 			return strA[strA.length-1];
 		}
 		 */
-		if (expStr.matches(".*"+regexGroupedNonNegNumber))
-			return expStr.replaceAll(".*?"+regexGroupedNonNegNumber+"$", "$1");
+		if (str.matches(".*" + regexGroupedNonNegNumber))
+			return str.replaceAll(".*?" + regexGroupedNonNegNumber + "$", "$1");
 		return "";
 	}
 }
