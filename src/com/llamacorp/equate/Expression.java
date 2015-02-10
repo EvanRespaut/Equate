@@ -653,6 +653,10 @@ public class Expression {
 		int lenFirstNum = getFirstNumb(expEnd).length();
 
 		insertAt(")", frontLen + lenFirstNum);
+		
+		//move cursor back into the parenthesis if no number was inverted
+		if(lenFirstNum == 0)
+			setSelection(getSelectionStart()-1, getSelectionEnd()-1);
 	}
 
 	private void highlightMatchingPara(String sKey){

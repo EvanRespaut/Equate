@@ -3,7 +3,6 @@
 - When doing regular currency to historical, should change to year date code (instead of day or hour)
 - Should use API update historical USD to today's USD
 
-- When nothing to invert, move selection back one space
 - Add square root
 
 -----Stuff to Test (squashed bugs, etc)-----
@@ -33,7 +32,6 @@
 - After long press unit switch, select unit
 - Empty expression, tap previous result with different unit type than curr, adds a one
 - Type "54+43)" and delete auto close para --> syntax error
-- When prog first starts, cursor is on with Unitcalc on screen
 - Screen rotation clears unit
 - Try to programicly determine height of EditText to wrap content (without a wrap content flag)
 - For every solve or unit convert, save app state
