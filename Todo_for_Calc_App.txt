@@ -3,6 +3,7 @@
 - When doing regular currency to historical, should change to year date code (instead of day or hour)
 - Should use API update historical USD to today's USD
 
+- Add commas between large numbers
 - Add square root
 
 -----Stuff to Test (squashed bugs, etc)-----
@@ -66,15 +67,12 @@
 - Maybe add sqrt and possibly trig
 - Try to implement pretty print, or at least superscript ^'s
 - Add phantom close paren after open? Goes away with any selection, close/equals makes permanent, 
-- Hold a convert button down to bring up a dialogue to customize it's name and value thus redefining it
 - Pinch zoom to change size of prev expression's text
 - Re-factor and clean code (make an expression class)
 - Use gridlayout and support library instead of nested weights and linear layouts
-- Split units support for both weight and temp for example
-- Perhaps squish para operators into one key and add large clear key?
 - Copy and maybe paste buttons (maybe left side of expression's text box) show copy button after solve and paste if properly formatted thing in clipboard?
 - Maybe copy and paste in status bar, although this is going to take a lot of vertical space
-- Add hold options for lots of keys (add indicating names for these) eg Clear, +/-, sqrt, !, mod
+- Add hold options for lots of keys (add indicating names for these) eg, sqrt, !, mod
 - Explore adding another coloum of keys to main calc app, might be too cluttered, but also might be nice (maybe make it an option?)
 - Swipe down on units to hide; use three horz lines to signify swipeable. When hidden only show unittypes 
 - Use animation to move expression up and to the left after ='s; also make answer bold or something for a second
@@ -84,10 +82,7 @@
 - Add programming conversions (binary, hex, oct etc)
 
 ----Usability Upgrades----
-- Add "Convert to" and "Unit set to" and "Set to" in convert unit buttons
-- If user hits equals with unit selected maybe another toast? (Otherwise result is (1+2m = 3m)
 - For first time opening show how the units can be slide left and right and other not obvious features
-- If user hits backspace >3 times (and then expression="", show a popup once to instead hold to clear all (don't show if user has pressed clear at least once)
 
 
 - Change event flow (1. User input in controller, 2. Controller calls model with basic user input, model updates some stuff maybe 3. Controller updates screen liberally) model classes should be usable in iOS app
