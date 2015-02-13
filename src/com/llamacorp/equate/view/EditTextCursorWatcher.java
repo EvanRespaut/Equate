@@ -74,6 +74,139 @@ public class EditTextCursorWatcher extends EditText {
 		mCalc = calc;		
 	} 
 
+	
+
+
+	/**
+	 * Disable soft keyboard from appearing, use in conjunction with android:windowSoftInputMode="stateAlwaysHidden|adjustNothing"
+	 * @param editText
+	 */
+	public void disableSoftInputFromAppearing() {
+		setRawInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
+		setTextIsSelectable(true);
+	}
+
+	/**
+	 * Updates the text and selection with current value from calc
+	 */
+	public void updateTextFromCalc(){
+		mTextPrefex = "";
+		mExpressionText = getSepDispText();
+		mTextSuffix = "";
+		
+		//setText will reset selection to 0,0, so save it right now
+		mSelStart = mCalc.getSelectionStart();
+		mSelEnd = mCalc.getSelectionEnd();
+
+		//if expression not empty/invalid and unit selected, display it after the expression
+		if(!mCalc.isExpressionInvalid() && !mCalc.isExpressionEmpty() && mCalc.isUnitSelected()){
+			mTextSuffix = " " + mCalc.getCurrUnitType().getCurrUnit().toString();
+			//about to do conversion
+			if(!mCalc.isSolved()){
+				mTextPrefex = getResources().getString(R.string.word_Convert) + " ";
+				mTextSuffix = mTextSuffix + " " + getResources().getString(R.string.word_to) + ":";
+
+				mSelStart = mSelStart + mTextPrefex.length();
+				mSelEnd = mSelEnd + mTextPrefex.length();
+			}
+		}
+		//update the main display
+		setTextHtml(mExpressionText);
+
+		//Set up a animator to highlight parts red and fade to white
+		if(mCalc.isHighlighted()){
+			Integer colorFrom = Color.RED;
+			Integer colorTo = Color.WHITE;
+			final int ANIMATE_DURR = 600; //ms
+			mColorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, colorTo);
+			mColorAnimation.addUpdateListener(new AnimatorUpdateListener() {
+				@Override
+				public void onAnimationUpdate(ValueAnimator animator) {
+					String coloredExp = "";
+					//if the highlight got canceled during the async animation update, cancel
+					if(!mCalc.isHighlighted()){
+						animator.cancel();
+						coloredExp = mExpressionText;
+					}
+					else {
+						ArrayList<Integer> highlist = mCalc.getHighlighted();
+						int color = (Integer)animator.getAnimatedValue();
+						int len = highlist.size();
+						coloredExp = mExpressionText.substring(0,  highlist.get(0));
+						for(int i=0; i < len;i++){
+							int finish = mExpressionText.length();
+							if(i != len - 1) finish = highlist.get(i + 1);
+							coloredExp = coloredExp + "<font color='" + color + "'>" + 
+									mExpressionText.substring(highlist.get(i), highlist.get(i) + 1) +
+									"</font>" + mExpressionText.substring(highlist.get(i) + 1, finish);
+						}
+					}
+
+					//update the main display
+					setTextHtml(coloredExp);
+
+					//updating the text restarts selection to 0,0, so load in the current selection
+					setSelection(mSelStart, mSelEnd);
+				}
+			});	
+			mColorAnimation.addListener(new AnimatorListenerAdapter() {
+				@Override
+				public void onAnimationEnd(Animator animation) {
+					clearHighlighted();
+				}
+			});
+			mColorAnimation.setDuration(ANIMATE_DURR);
+			mColorAnimation.start();
+		}
+		
+		//updating the text restarts selection to 0,0, so load in the current selection
+		setSelection(mSelStart, mSelEnd);
+
+		//if expression not solved, set cursor to visible (and visa-versa)
+		setCursorVisible(!mCalc.isSolved());
+	}
+
+	public void clearHighlighted(){
+		mCalc.clearHighlighted();
+
+		//update the main display
+		setTextHtml(mExpressionText);
+
+		//updating the text restarts selection to 0,0, so load in the current selection
+		setSelection(mSelStart, mSelEnd);
+	}
+	
+	/**
+	* Helper method used to set the main display with HTML formating, without
+	* highlighting
+	* @param expStr is the main expression to update
+	*/
+	private void setTextHtml(String expStr){
+		setText(Html.fromHtml("<font color='gray'>" + mTextPrefex + "</font>" + 
+			expStr + 
+			"<font color='gray'>" + mTextSuffix + "</font>"));
+	}
+	
+
+	/** Sets the current selection to the end of the expression */
+	public void setSelectionToEnd(){
+		int expLen = mExpressionText.length() + mTextPrefex.length();
+		setSelection(expLen, expLen);
+	}
+
+	
+	/**
+	* Helper method returns the Expression text from calc seperated by commas
+	* This function will also set up update mSepHandler such that getting
+	* shiftedIndexs will work with the current text.
+	*/
+	private String getSepDispText(){
+		return mCalc.toString();
+		//TODO enable this
+		//return mSepHandler.getSepText(mCalc.toString())
+	}
+	
+	
 
 	@Override
 	protected void onTextChanged(CharSequence text, int start, int before, int after) {
@@ -163,121 +296,6 @@ public class EditTextCursorWatcher extends EditText {
 		mCalc.pasteIntoExpression(textToPaste);
 	}	
 
-
-
-	/**
-	 * Disable soft keyboard from appearing, use in conjunction with android:windowSoftInputMode="stateAlwaysHidden|adjustNothing"
-	 * @param editText
-	 */
-	public void disableSoftInputFromAppearing() {
-		setRawInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
-		setTextIsSelectable(true);
-	}
-
-	/**
-	 * Updates the text with current value from calc
-	 * Preserves calc's cursor selections
-	 */
-	public void updateTextFromCalc(){
-		//setText will reset selection to 0,0, so save it right now
-		mSelStart = mCalc.getSelectionStart();
-		mSelEnd = mCalc.getSelectionEnd();
-
-		mTextPrefex = "";
-		mExpressionText = mCalc.toString();
-		mTextSuffix = "";
-		//if expression not empty/invalid and unit selected, display it after the expression
-		if(!mCalc.isExpressionInvalid() && !mCalc.isExpressionEmpty() && mCalc.isUnitSelected()){
-			mTextSuffix = " " + mCalc.getCurrUnitType().getCurrUnit().toString();
-			//about to do conversion
-			if(!mCalc.isSolved()){
-				mTextPrefex = getResources().getString(R.string.word_Convert) + " ";
-				mTextSuffix = mTextSuffix + " " + getResources().getString(R.string.word_to) + ":";
-
-				mSelStart = mSelStart + mTextPrefex.length();
-				mSelEnd = mSelEnd + mTextPrefex.length();
-			}
-		}
-		//update the main display
-		setText(Html.fromHtml("<font color='gray'>" + mTextPrefex + "</font>" + 
-				mExpressionText + 
-				"<font color='gray'>" + mTextSuffix + "</font>"));
-
-
-		//if index1 isn't highlighted, neither is index2 (since they're sorted)
-		if(mCalc.isHighlighted()){
-			Integer colorFrom = Color.RED;
-			Integer colorTo = Color.WHITE;
-			mColorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, colorTo);
-			mColorAnimation.addUpdateListener(new AnimatorUpdateListener() {
-				@Override
-				public void onAnimationUpdate(ValueAnimator animator) {
-					String coloredExp = "";
-					//if the highlight got canceled during the async animation update, cancel
-					if(!mCalc.isHighlighted()){
-						animator.cancel();
-						coloredExp = mExpressionText;
-					}
-					else {
-						ArrayList<Integer> highlist = mCalc.getHighlighted();
-						int color = (Integer)animator.getAnimatedValue();
-						int len = highlist.size();
-						coloredExp = mExpressionText.substring(0,  highlist.get(0));
-						for(int i=0; i < len;i++){
-							int finish = mExpressionText.length();
-							if(i != len - 1) finish = highlist.get(i + 1);
-							coloredExp = coloredExp + "<font color='" + color + "'>" + 
-									mExpressionText.substring(highlist.get(i), highlist.get(i) + 1) +
-									"</font>" + mExpressionText.substring(highlist.get(i) + 1, finish);
-						}
-					}
-
-					//update the main display
-					setText(Html.fromHtml("<font color='gray'>" + mTextPrefex + "</font>" + 
-							coloredExp + 
-							"<font color='gray'>" + mTextSuffix + "</font>"));
-
-					//updating the text restarts selection to 0,0, so load in the current selection
-					setSelection(mSelStart, mSelEnd);
-
-				}
-			});	
-			mColorAnimation.addListener(new AnimatorListenerAdapter() 
-			{
-				@Override
-				public void onAnimationEnd(Animator animation) 
-				{
-					clearHighlighted();
-				}
-			});
-			mColorAnimation.setDuration(600);
-			mColorAnimation.start();
-		}
-		//updating the text restarts selection to 0,0, so load in the current selection
-		setSelection(mSelStart, mSelEnd);
-
-		//if expression not solved, set cursor to visible (and visa-versa)
-		setCursorVisible(!mCalc.isSolved());
-	}
-
-	public void clearHighlighted(){
-		mCalc.clearHighlighted();
-
-		//update the main display
-		setText(Html.fromHtml("<font color='gray'>" + mTextPrefex + "</font>" + 
-				mExpressionText + 
-				"<font color='gray'>" + mTextSuffix + "</font>"));
-
-		//updating the text restarts selection to 0,0, so load in the current selection
-		setSelection(mSelStart, mSelEnd);
-	}
-
-
-	/** Sets the current selection to the end of the expression */
-	public void setSelectionToEnd(){
-		int expLen = mCalc.toString().length() + mTextPrefex.length();
-		setSelection(expLen, expLen);
-	}
 
 
 	@Override   
