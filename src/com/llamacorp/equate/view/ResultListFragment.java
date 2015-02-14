@@ -144,6 +144,8 @@ public class ResultListFragment extends ListFragment {
 					if (viewID==R.id.list_item_result_textPrevAnswer)
 						textPassBack = thisResult.getAnswerWithoutSep();
 
+					calc.parseKeyPressed(textPassBack);
+					
 					//if unit not selected in calc, and result has unit, set that unit
 					if(!calc.isUnitSelected() && thisResult.containsUnits()){
 						Unit unitPassBack;
@@ -158,7 +160,6 @@ public class ResultListFragment extends ListFragment {
 						mCallback.selectUnit(unitPassBack, thisResult.getUnitTypePos());
 					}
 
-					calc.parseKeyPressed(textPassBack);
 					mCallback.updateScreen(false);				
 				}
 			});

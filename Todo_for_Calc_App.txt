@@ -6,6 +6,7 @@
 - Add square root
 
 -----Stuff to Test (squashed bugs, etc)-----
+- Empty expression, tap previous result with different unit type than curr, adds a one
 - Test min/mile to mph and back again
 - Reset then hit num and then unit, unit doesn't appear
 - Make sure tapping "Convert" doesn't select text or break, also try entering text after that
@@ -30,7 +31,6 @@
 - When clicking result with unit not visible, unit doesn't stay selected
 - Convert unit to another, tap expression, adds convert to
 - After long press unit switch, select unit
-- Empty expression, tap previous result with different unit type than curr, adds a one
 - Type "54+43)" and delete auto close para --> syntax error
 - Screen rotation clears unit
 - Try to programicly determine height of EditText to wrap content (without a wrap content flag)
