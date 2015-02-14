@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 
 public  class  ExpSeperatorHandler {
+	private static String THOUS_SEP = ",";
+
 	public ArrayList<Integer> mSepIndexes;
 
 
@@ -14,17 +16,42 @@ public  class  ExpSeperatorHandler {
 	/**
 	 * Inserts separators between thousands places in a String representation
 	 * of a expression composed of numbers and other characters.  Ignores 
+	 * numbers after a decimal point or "E".
+	 * @param str String representation of expression to add separators to
+	 * @return String with separators added: eg 1000 returns 1,000; 1420.2425+53
+	 * returns 1,420.2425+53; 
+	 */
+	static public String addSep(String str){
+		return getSepTextHelper(str, null);
+	}
+	
+	/**
+	 * Static method that just removes separators from a given string
+	 * @param str is the string with separators
+	 * @return the str with separators removed
+	 */
+	static public String removeSep(String str){
+		return str.replace(THOUS_SEP, "");
+	}
+	
+	
+	/**
+	 * Inserts separators between thousands places in a String representation
+	 * of a expression composed of numbers and other characters.  Ignores 
 	 * numbers after a decimal point or "E".  Keeps track of each added 
 	 * seperator's index.
 	 * @param str String representation of expression to add separators to
 	 * @return String with separators added: eg 1000 returns 1,000; 1420.2425+53
 	 * returns 1,420.2425+53; 
 	 */
-	public String getSepText(String str)
-	{
-		mSepIndexes.clear();
+	public String getSepText(String str){
+		return getSepTextHelper(str, mSepIndexes);
+	}
+	
+
+	static private String getSepTextHelper(String str, ArrayList<Integer> indList){
+		if(indList != null) indList.clear();
 		final String regNum = "\\d";
-		final String thouSep = ",";
 		final String regSkipNumsAfter = "[E.]";
 		int numCount = 0;
 
@@ -38,9 +65,9 @@ public  class  ExpSeperatorHandler {
 					for(int j = numCount%3; j < numCount; j = j + 3){
 						if(j == 0) continue;
 						int comPos = i - numCount + j;
-						str = str.substring(0,comPos) + thouSep 
+						str = str.substring(0,comPos) + THOUS_SEP 
 								+ str.substring(comPos, str.length());
-						addSepIndex(comPos);
+						if(indList != null) indList.add(comPos);
 						i++; //offset for added commas
 					}
 				}
@@ -58,9 +85,6 @@ public  class  ExpSeperatorHandler {
 		return str;
 	}
 
-	private void addSepIndex(int indexToAdd) {
-		mSepIndexes.add(indexToAdd);
-	}
 
 	/**
 	 * Same as translateToSepIndex, except for list of indexes

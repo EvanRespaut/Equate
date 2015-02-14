@@ -3,7 +3,6 @@
 - When doing regular currency to historical, should change to year date code (instead of day or hour)
 - Should use API update historical USD to today's USD
 
-- Add commas between large numbers
 - Add square root
 
 -----Stuff to Test (squashed bugs, etc)-----

@@ -311,7 +311,7 @@ public class Calculator{
 		//load units into result list (this will also set contains unit flag) (overrides that from solve)
 		mResultList.get(mResultList.size()-1).setResultUnit(fromUnit, toUnit, mUnitTypePos);
 		//load the final value into the result list
-		mResultList.get(mResultList.size()-1).setAnswer(mExpression.toString());
+		mResultList.get(mResultList.size()-1).setAnswerWithSep(mExpression.toString());
 	}
 
 
@@ -331,7 +331,7 @@ public class Calculator{
 			if(mResultList.size() > RESULT_LIST_MAX_SIZE)
 				mResultList.remove(0);
 			//if result had an error, leave before setting units
-			if(Expression.isInvalid(result.getAnswer()))
+			if(Expression.isInvalid(result.getAnswerWithoutSep()))
 				return false;
 			//also set result's unit if it's selected
 			if(isUnitSelected()){

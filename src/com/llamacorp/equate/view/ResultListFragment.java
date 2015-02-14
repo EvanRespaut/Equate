@@ -140,9 +140,9 @@ public class ResultListFragment extends ListFragment {
 					String textPassBack="";
 					int viewID = view.getId();
 					if (viewID==R.id.list_item_result_textPrevQuery)
-						textPassBack = thisResult.getQuerry();
+						textPassBack = thisResult.getQuerryWithoutSep();
 					if (viewID==R.id.list_item_result_textPrevAnswer)
-						textPassBack = thisResult.getAnswer();
+						textPassBack = thisResult.getAnswerWithoutSep();
 
 					//if unit not selected in calc, and result has unit, set that unit
 					if(!calc.isUnitSelected() && thisResult.containsUnits()){
