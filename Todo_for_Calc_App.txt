@@ -27,9 +27,7 @@
 
 ----------------------Fix----------------------
 ---- TRY TO ADD UNIT TESTING FOR ALL PROBLEMS FIXED -----
-- Nautical mile messed up
 - When clicking result with unit not visible, unit doesn't stay selected
-- When tapping various parts of the EditText, the cursor momentarily bounces around, mDisplay.clearHighlighted(); call in CalcActivity is to blame
 - Convert unit to another, tap expression, adds convert to
 - After long press unit switch, select unit
 - Empty expression, tap previous result with different unit type than curr, adds a one

@@ -102,7 +102,7 @@ public class UnitInitializer {
 		unitsOfLength.addUnit(new UnitScalar("mil", "Thousandths of an Inch", 1/2.54E-5));
 		unitsOfLength.addUnit(new UnitScalar("fur", "Furlongs", 0.00497096954));
 		unitsOfLength.addUnit(new UnitScalar("pc", "Parsecs", 3.24078E-17));
-		unitsOfLength.addUnit(new UnitScalar("nmi", "Nautical Miles", 1/1852));
+		unitsOfLength.addUnit(new UnitScalar("nmi", "Nautical Miles", 1/1852.0));
 		unitsOfLength.addUnit(new UnitScalar("ly", "Light Years", 1/9.4607E15));
 		unitsOfLength.addUnit(new UnitScalar("au", "Astronomical Units", 1/1.495978707E11)); //exact
 		unitTypeArray.add(unitsOfLength);	

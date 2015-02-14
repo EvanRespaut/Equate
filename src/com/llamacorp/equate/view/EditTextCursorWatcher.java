@@ -173,11 +173,14 @@ public class EditTextCursorWatcher extends EditText {
 	public void clearHighlighted(){
 		mCalc.clearHighlighted();
 
-		//update the main display
-		setTextHtml(mExpressionText);
+		//only need to change the text if we have a animator running
+		if(mColorAnimation != null && mColorAnimation.isRunning()){
+			//update the main display
+			setTextHtml(mExpressionText);
 
-		//updating the text restarts selection to 0,0, so load in the current selection
-		setSelection(mSelStart, mSelEnd);
+			//updating the text restarts selection to 0,0, so load in the current selection
+			setSelection(mSelStart, mSelEnd);
+		}
 	}
 
 	/**
