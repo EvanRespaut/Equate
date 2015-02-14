@@ -21,6 +21,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.llamacorp.equate.Calculator;
+import com.llamacorp.equate.ExpSeperatorHandler;
 import com.llamacorp.equate.R;
 
 public class EditTextCursorWatcher extends EditText {
@@ -36,6 +37,9 @@ public class EditTextCursorWatcher extends EditText {
 	private String mTextPrefex="";
 	private String mExpressionText="";
 	private String mTextSuffix="";
+
+	private ExpSeperatorHandler mSepHandler;
+
 	private ValueAnimator mColorAnimation;
 
 
@@ -60,7 +64,8 @@ public class EditTextCursorWatcher extends EditText {
 
 	private void setUpEditText(Context context, AttributeSet attrs){
 		mContext = context;
-		
+		mSepHandler = new ExpSeperatorHandler();
+
 		//grab custom resource variable
 		TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.EditTextCursorWatcher, 0, 0);
 		try {
@@ -73,8 +78,6 @@ public class EditTextCursorWatcher extends EditText {
 	public void setCalc(Calculator calc) {
 		mCalc = calc;		
 	} 
-
-	
 
 
 	/**
@@ -93,10 +96,10 @@ public class EditTextCursorWatcher extends EditText {
 		mTextPrefex = "";
 		mExpressionText = getSepDispText();
 		mTextSuffix = "";
-		
+
 		//setText will reset selection to 0,0, so save it right now
-		mSelStart = mCalc.getSelectionStart();
-		mSelEnd = mCalc.getSelectionEnd();
+		mSelStart = mSepHandler.translateToSepIndex(mCalc.getSelectionStart());
+		mSelEnd = mSepHandler.translateToSepIndex(mCalc.getSelectionEnd());
 
 		//if expression not empty/invalid and unit selected, display it after the expression
 		if(!mCalc.isExpressionInvalid() && !mCalc.isExpressionEmpty() && mCalc.isUnitSelected()){
@@ -130,6 +133,7 @@ public class EditTextCursorWatcher extends EditText {
 					}
 					else {
 						ArrayList<Integer> highlist = mCalc.getHighlighted();
+						highlist = mSepHandler.translateIndexListToSep(highlist);
 						int color = (Integer)animator.getAnimatedValue();
 						int len = highlist.size();
 						coloredExp = mExpressionText.substring(0,  highlist.get(0));
@@ -158,7 +162,7 @@ public class EditTextCursorWatcher extends EditText {
 			mColorAnimation.setDuration(ANIMATE_DURR);
 			mColorAnimation.start();
 		}
-		
+
 		//updating the text restarts selection to 0,0, so load in the current selection
 		setSelection(mSelStart, mSelEnd);
 
@@ -175,18 +179,18 @@ public class EditTextCursorWatcher extends EditText {
 		//updating the text restarts selection to 0,0, so load in the current selection
 		setSelection(mSelStart, mSelEnd);
 	}
-	
+
 	/**
-	* Helper method used to set the main display with HTML formating, without
-	* highlighting
-	* @param expStr is the main expression to update
-	*/
+	 * Helper method used to set the main display with HTML formating, without
+	 * highlighting
+	 * @param expStr is the main expression to update
+	 */
 	private void setTextHtml(String expStr){
 		setText(Html.fromHtml("<font color='gray'>" + mTextPrefex + "</font>" + 
-			expStr + 
-			"<font color='gray'>" + mTextSuffix + "</font>"));
+				expStr + 
+				"<font color='gray'>" + mTextSuffix + "</font>"));
 	}
-	
+
 
 	/** Sets the current selection to the end of the expression */
 	public void setSelectionToEnd(){
@@ -194,19 +198,18 @@ public class EditTextCursorWatcher extends EditText {
 		setSelection(expLen, expLen);
 	}
 
-	
+
 	/**
-	* Helper method returns the Expression text from calc seperated by commas
-	* This function will also set up update mSepHandler such that getting
-	* shiftedIndexs will work with the current text.
-	*/
+	 * Helper method returns the Expression text from calc seperated by commas
+	 * This function will also set up update mSepHandler such that getting
+	 * shiftedIndexs will work with the current text.
+	 */
 	private String getSepDispText(){
-		return mCalc.toString();
-		//TODO enable this
-		//return mSepHandler.getSepText(mCalc.toString())
+		//return mCalc.toString();
+		return mSepHandler.getSepText(mCalc.toString());
 	}
-	
-	
+
+
 
 	@Override
 	protected void onTextChanged(CharSequence text, int start, int before, int after) {
@@ -230,9 +233,9 @@ public class EditTextCursorWatcher extends EditText {
 		float textWidth = paint.measureText(getText().toString());
 		float boxWidth = getWidth() - getPaddingLeft() - getPaddingRight();
 		float textSize = getTextSize();
-//		System.out.println("box height (px) = " + getHeight()
-//				+"  box height (sp) = " + ViewUtils.pixelsToSp(mContext, getHeight())
-//				+"  box hiegh (dp) = " + ViewUtils.pixelsToDp(mContext, getHeight()));
+		//		System.out.println("box height (px) = " + getHeight()
+		//				+"  box height (sp) = " + ViewUtils.pixelsToSp(mContext, getHeight())
+		//				+"  box hiegh (dp) = " + ViewUtils.pixelsToDp(mContext, getHeight()));
 		if (textWidth > boxWidth) {
 			float scaled = textSize * boxWidth / textWidth;
 			if(scaled < mMinTextSize)
@@ -301,6 +304,14 @@ public class EditTextCursorWatcher extends EditText {
 	@Override   
 	protected void onSelectionChanged(int selStart, int selEnd) { 
 		if(mCalc!=null){
+			int fixedSelStart = mSepHandler.makeIndexValid(selStart);
+			int fixedSelEnd = mSepHandler.makeIndexValid((selEnd));
+
+			if(fixedSelStart != selStart || fixedSelEnd != selEnd){
+				setSelection(fixedSelStart, fixedSelEnd);
+				return;
+			}
+
 			int preLen = mTextPrefex.length();
 			int expLen = mExpressionText.length();
 			//check to see if the unit part of the expression has been selected
@@ -322,7 +333,8 @@ public class EditTextCursorWatcher extends EditText {
 			}	
 
 			//save the new selection in the calc class
-			mCalc.setSelection(selStart-preLen, selEnd-preLen);
+			mCalc.setSelection(mSepHandler.translateFromSepIndex(selStart-preLen),
+					mSepHandler.translateFromSepIndex(selEnd-preLen));
 			setCursorVisible(true);
 		}
 	}
