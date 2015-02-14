@@ -304,16 +304,17 @@ public class EditTextCursorWatcher extends EditText {
 	@Override   
 	protected void onSelectionChanged(int selStart, int selEnd) { 
 		if(mCalc!=null){
-			int fixedSelStart = mSepHandler.makeIndexValid(selStart);
-			int fixedSelEnd = mSepHandler.makeIndexValid((selEnd));
+			int preLen = mTextPrefex.length();
+			int expLen = mExpressionText.length();
+
+			int fixedSelStart = mSepHandler.makeIndexValid(selStart - preLen) + preLen;
+			int fixedSelEnd = mSepHandler.makeIndexValid((selEnd - preLen)) + preLen;
 
 			if(fixedSelStart != selStart || fixedSelEnd != selEnd){
 				setSelection(fixedSelStart, fixedSelEnd);
 				return;
 			}
 
-			int preLen = mTextPrefex.length();
-			int expLen = mExpressionText.length();
 			//check to see if the unit part of the expression has been selected
 			if(selEnd > expLen + preLen){
 				setSelection(selStart, expLen + preLen);
