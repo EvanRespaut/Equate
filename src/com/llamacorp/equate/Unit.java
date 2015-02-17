@@ -125,9 +125,10 @@ public abstract class Unit  /*implements JsonSerializer<Unit>, JsonDeserializer<
 	@Override
 	public boolean equals(Object other){
 		if (other == null) return false;
-		if (other == this) return true;
-		if (!(other instanceof UnitScalar))return false;
-		UnitScalar otherUnit = (UnitScalar)other;
+		if (other == this) return true;  //if objects are pointing to the same ref
+		//now check if a cast into Unit is possible and then check compatibility
+		if (!(other instanceof Unit))return false;
+		Unit otherUnit = (Unit)other;
 		return (otherUnit.getValue() == this.getValue() &&
 				otherUnit.toString().equals(this.toString()));
 	}

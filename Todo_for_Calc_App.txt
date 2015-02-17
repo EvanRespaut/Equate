@@ -25,15 +25,14 @@
 - Check all unit values
 - ResultList has a max size
 - Catch JSON read errors and do a reset calc
+- When clicking result with unit not visible, unit doesn't stay selected
 
 ----------------------Fix----------------------
 ---- TRY TO ADD UNIT TESTING FOR ALL PROBLEMS FIXED -----
-- When clicking result with unit not visible, unit doesn't stay selected
 - Convert unit to another, tap expression, adds convert to
 - After long press unit switch, select unit
 - Type "54+43)" and delete auto close para --> syntax error
 - Screen rotation clears unit
-- Try to programicly determine height of EditText to wrap content (without a wrap content flag)
 - For every solve or unit convert, save app state
 - Font size issues with large text sizes (also run the emulator for a few diff size screens and resolutions. 
 - When prev expression exists, operators should take last expression it back instead of doing nothing even when current expression is empty 
@@ -45,7 +44,6 @@
 - (fixed?) If its been a while since open, app crashes
 - Reduce redundant case checking before an big number addition/subtraction
 - Backspace drawable selected turns white instead of dark
-- Maybe change backspace button to clear when its going to clear
 - Single character vs multi character results are treated differently when clicked with Unit
 - Use of AndroidManifest file to change styles seems crude, investigate this
 - Perhaps selection access should be revisited--should it be initiated from the model side or the controller side?

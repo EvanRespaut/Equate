@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -14,11 +13,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.llamacorp.equate.Calculator;
+import com.llamacorp.equate.R;
 import com.llamacorp.equate.Unit;
+import com.llamacorp.equate.UnitCurrency.OnConvertKeyUpdateFinishedListener;
 import com.llamacorp.equate.UnitHistCurrency;
 import com.llamacorp.equate.UnitType;
-import com.llamacorp.equate.UnitCurrency.OnConvertKeyUpdateFinishedListener;
-import com.llamacorp.equate.R;
 
 public class ConvKeysFragment extends Fragment implements OnConvertKeyUpdateFinishedListener {
 
@@ -191,7 +190,7 @@ public class ConvKeysFragment extends Fragment implements OnConvertKeyUpdateFini
 	public void selectUnit(Unit unit) {
 		int unitPos = mUnitType.findUnitPosition(unit);
 		//unitPos will be -1 if it wasn't found
-		if(unitPos != -1 && unitPos < mConvButton.size())
+		if(unitPos != -1)
 			clickUnitButton(unitPos);
 	}
 

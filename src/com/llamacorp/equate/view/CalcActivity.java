@@ -102,8 +102,8 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 	 */
 	public void selectUnit(Unit unit, int unitTypePos){
 		//if not on right page, scroll there first
-		if(unitTypePos!=mConvKeysViewPager.getCurrentItem()){
-			unitToSelectAfterScroll=unit;
+		if(unitTypePos != mConvKeysViewPager.getCurrentItem()){
+			unitToSelectAfterScroll = unit;
 			mConvKeysViewPager.setCurrentItem(unitTypePos);
 		}
 		else
@@ -282,10 +282,11 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 							mUnitContain.setVisibility(LinearLayout.GONE);
 						break;
 					default: 					
-						break;
+						return true;
 					}
 					//pass button to calc, change conv key colors (maybe) and update screen
-					numButtonPressed(buttonValue);
+					if(!buttonValue.equals(""))
+						numButtonPressed(buttonValue);
 					return true;
 				}
 			});
