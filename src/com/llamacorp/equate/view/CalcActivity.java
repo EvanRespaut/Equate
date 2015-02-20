@@ -551,8 +551,8 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 			updateScreenWithInstaScrollOption(true, true);
 			mDisplay.setSelectionToEnd();
 		}
-		//pull focus from ListFrag and on the EditText so cursor blinks (not sure if we need this anymore)
-		//mDisplay.requestFocus();
+		//pull focus from ListFrag and on the EditText so cursor blinks when app starts
+		mDisplay.requestFocus();
 	}
 
 

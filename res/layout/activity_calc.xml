@@ -83,7 +83,7 @@
 
             <Button
                 android:id="@+id/clear_button"
-                style="@style/ClearButton"
+                style="@style/CalcButton.Clear"
                 android:text="@string/clear_button" />
 
             <LinearLayout
@@ -95,26 +95,26 @@
 
                 <Button
                     android:id="@+id/open_para_button"
-                    style="@style/SmallOpButton"
+                    style="@style/CalcButton.SmallOperator"
                     android:layout_marginRight="1dp"
                     android:text="@string/open_para_button" />
 
                 <Button
                     android:id="@+id/close_para_button"
-                    style="@style/SmallOpButton"
+                    style="@style/CalcButton.SmallOperator"
                     android:layout_marginLeft="1dp"
                     android:text="@string/close_para_button" />
             </LinearLayout>
             <com.llamacorp.equate.view.AnimatedHoldButton
                 xmlns:customNS="http://schemas.android.com/apk/res/com.llamacorp.equate"
                 android:id="@+id/divide_button"
-                style="@style/OpButton"
+                style="@style/CalcButton.Operator"
                 customNS:secondary_text="@string/invert_button" 
                 customNS:secondary_text_font_size_percentage="50" />
 
             <ImageButton
                 android:id="@+id/backspace_button"
-                style="@style/OpButton"
+                style="@style/CalcButton.Operator"
                 android:adjustViewBounds="false"
                 android:src="@drawable/ic_action_backspace" />
         </LinearLayout>
@@ -127,23 +127,23 @@
 
             <Button
                 android:id="@+id/seven_button"
-                style="@style/NumButton"
+                style="@style/CalcButton.Numb"
                 android:text="@string/seven_button" />
 
             <Button
                 android:id="@+id/eight_button"
-                style="@style/NumButton"
+                style="@style/CalcButton.Numb"
                 android:text="@string/eight_button" />
 
             <Button
                 android:id="@+id/nine_button"
-                style="@style/NumButton"
+                style="@style/CalcButton.Numb"
                 android:text="@string/nine_button" />
 
             <com.llamacorp.equate.view.AnimatedHoldButton
                 xmlns:customNS="http://schemas.android.com/apk/res/com.llamacorp.equate"
                 android:id="@+id/multiply_button"
-                style="@style/OpButton"
+                style="@style/CalcButton.Operator"
                 customNS:secondary_text="@string/percent_button" />
         </LinearLayout>
 
@@ -155,23 +155,23 @@
 
             <Button
                 android:id="@+id/four_button"
-                style="@style/NumButton"
+                style="@style/CalcButton.Numb"
                 android:text="@string/four_button" />
 
             <Button
                 android:id="@+id/five_button"
-                style="@style/NumButton"
+                style="@style/CalcButton.Numb"
                 android:text="@string/five_button" />
 
             <Button
                 android:id="@+id/six_button"
-                style="@style/NumButton"
+                style="@style/CalcButton.Numb"
                 android:text="@string/six_button" />
 
             <com.llamacorp.equate.view.AnimatedHoldButton
                 xmlns:customNS="http://schemas.android.com/apk/res/com.llamacorp.equate"
                 android:id="@+id/minus_button"
-                style="@style/OpButton"
+                style="@style/CalcButton.Operator"
                 customNS:secondary_text="@string/negate_button" />
         </LinearLayout>
 
@@ -183,22 +183,22 @@
 
             <Button
                 android:id="@+id/one_button"
-                style="@style/NumButton"
+                style="@style/CalcButton.Numb"
                 android:text="@string/one_button" />
 
             <Button
                 android:id="@+id/two_button"
-                style="@style/NumButton"
+                style="@style/CalcButton.Numb"
                 android:text="@string/two_button" />
 
             <Button
                 android:id="@+id/three_button"
-                style="@style/NumButton"
+                style="@style/CalcButton.Numb"
                 android:text="@string/three_button" />
 
             <Button
                 android:id="@+id/plus_button"
-                style="@style/OpButton"
+                style="@style/CalcButton.Operator"
                 android:text="@string/plus_button" />
         </LinearLayout>
 
@@ -217,30 +217,30 @@
 
                 <Button
                     android:id="@+id/ee_button"
-                    style="@style/SmallOpButton"
+                    style="@style/CalcButton.SmallOperator"
                     android:layout_marginRight="1dp"
                     android:text="@string/ee_button" />
 
                 <Button
                     android:id="@+id/power_button"
-                    style="@style/SmallOpButton"
+                    style="@style/CalcButton.SmallOperator"
                     android:layout_marginLeft="1dp"
                     android:text="@string/power_button" />
             </LinearLayout>
 
             <Button
                 android:id="@+id/zero_button"
-                style="@style/NumButton"
+                style="@style/CalcButton.Numb"
                 android:text="@string/zero_button" />
 
             <Button
                 android:id="@+id/decimal_button"
-                style="@style/NumButton"
+                style="@style/CalcButton.Numb"
                 android:text="@string/decimal_button" />
 
             <Button
                 android:id="@+id/equals_button"
-                style="@style/EqualsButton"
+                style="@style/CalcButton.Equals"
                 android:text="@string/equals_button" />
         </LinearLayout>
     </LinearLayout>

@@ -2,13 +2,13 @@
 
     <!--
         Base application theme, dependent on API level. This theme is replaced
-        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
+        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
     -->
     <style name="AppBaseTheme" parent="android:Theme.Light">
         <!--
             Theme customizations available in newer API levels can go in
             res/values-vXX/styles.xml, while customizations related to
-            backward-compatibility can go here.
+            backward-compatibility can go here.
         -->
     </style>
     <!-- Application theme. -->
@@ -21,47 +21,40 @@
         <item name="android:layout_height">match_parent</item>
         <item name="android:layout_weight">1</item>
         <item name="android:layout_margin">1dp</item>
+        <item name="android:textSize">30sp</item>
     </style>
 
-    <style name="NumButton" parent="CalcButton">
+    <style name="CalcButton.Numb">
         <item name="android:background">@drawable/num_button</item>
         <item name="android:textColor">@drawable/button_text_color</item>
-        <item name="android:textSize">30sp</item>
     </style>
 
-    <style name="OpButton" parent="CalcButton">
+    <style name="CalcButton.Operator">
         <item name="android:background">@drawable/op_button</item>
         <item name="android:textColor">@drawable/button_text_color</item>
-        <item name="android:textSize">30sp</item>
     </style>
 
-    <style name="EqualsButton" parent="CalcButton">
+    <style name="CalcButton.Equals">
         <item name="android:background">@drawable/eq_button</item>
         <item name="android:textColor">@drawable/eq_button_text_color</item>
-        <item name="android:textSize">30sp</item>
     </style>
 
-    <style name="ClearButton" parent="CalcButton">
+    <style name="CalcButton.Clear">
         <item name="android:background">@drawable/clear_button</item>
         <item name="android:textColor">@drawable/button_text_color</item>
-        <item name="android:textSize">30sp</item>
     </style>
-    
-    <style name="ConvertButton" parent="CalcButton">
+
+    <style name="CalcButton.Convert">
         <item name="android:background">@drawable/conv_button</item>
         <item name="android:textColor">@drawable/button_text_color</item>
         <item name="android:textSize">20sp</item>
         <item name="secondary_text_font_size_percentage">150</item>
     </style>
 
-    <style name="SmallOpButton">
-        <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">match_parent</item>
-        <item name="android:layout_weight">1</item>
+    <style name="CalcButton.SmallOperator">
         <item name="android:background">@drawable/op_button</item>
         <item name="android:textColor">@drawable/button_text_color</item>
-        <item name="android:textSize">30sp</item>
-    </style>    
+    </style>
 
     <style name="ResultText">
         <item name="android:layout_weight">1</item>
