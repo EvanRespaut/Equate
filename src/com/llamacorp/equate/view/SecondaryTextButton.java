@@ -3,6 +3,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.widget.Button;
 
@@ -10,11 +11,11 @@ import com.llamacorp.equate.R;
 
 class SecondaryTextButton extends Button {
 	protected static final int SECONDARY_FONT_PERCENTAGE = 70;
-	
+
 	private float mTextX;
 	private float mTextY;
 	private float mTextSize = 0f;
-	
+
 	protected Paint mSecondaryPaint;
 	protected String mSecondaryText;
 	protected float mSecondaryTextSize;
@@ -36,7 +37,7 @@ class SecondaryTextButton extends Button {
 		super(context, attrs);
 
 		int secTextPerc = SECONDARY_FONT_PERCENTAGE;
-		
+
 		//grab custom resource variable
 		TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.SecondaryTextButton, 0, 0);
 		try {
@@ -70,9 +71,24 @@ class SecondaryTextButton extends Button {
 		if (changed) layoutText();
 	} 
 
-	
+
 	/** Helper method to size text */
 	private void layoutText() {
+//		String text = getText().toString();
+//		if(text.contains("/")){
+//			if(text.contains(getResources().getString(R.string.convert_arrow)))
+//				layoutTextDividedWithArrow();
+//			else 
+//				layoutTextDivided();
+//		}
+//		else
+			layoutTextStraight();
+		if (mSecondaryPaint != null)
+			mSecondaryPaint.setTextSize(mSecondaryTextSize);
+	}
+
+
+	private void layoutTextStraight() {
 		Paint paint = getPaint();
 		if (mTextSize != 0f) paint.setTextSize(mTextSize);
 		float textWidth = paint.measureText(getText().toString());
@@ -86,9 +102,36 @@ class SecondaryTextButton extends Button {
 			mTextX = (getWidth() - textWidth) / 2;
 		}
 		mTextY = (getHeight() - paint.ascent() - paint.descent()) / 2;
-		if (mSecondaryPaint != null)
-			mSecondaryPaint.setTextSize(mSecondaryTextSize);
 	}
+
+//
+//	private void layoutTextDivided() {
+//		Paint paint = getPaint();
+//		if (mTextSize != 0f) paint.setTextSize(mTextSize);
+//		
+//		//get the larger half of the divided text
+//		String[] halves = getText().toString().split("/");
+//		String top = halves[0];
+//		String bot = halves[1];
+//		float topTextWidth = paint.measureText(top);
+//		float botTextWidth = paint.measureText(bot);
+//		
+//		float boxWidth = getWidth() - getPaddingLeft() - getPaddingRight();
+//		float textSize = getTextSize();
+//		if (textWidth > boxWidth) {
+//			paint.setTextSize(textSize * boxWidth / textWidth);
+//			mTextX = getPaddingLeft();
+//			mTextSize = textSize;
+//		} else {
+//			mTextX = (getWidth() - textWidth) / 2;
+//		}
+//		mTextY = (getHeight() - paint.ascent() - paint.descent()) / 2;
+//
+//	}
+//
+//	private void layoutTextDividedWithArrow() {
+//	}
+
 
 	@Override
 	protected void onDraw(Canvas canvas) {
@@ -96,8 +139,8 @@ class SecondaryTextButton extends Button {
 		mSecondaryPaint.setColor(getResources().getColor(R.color.button_secondary_text));
 
 		if(mSecondaryText != null){
-			mButtonHeight = getHeight() - getPaddingTop() - getPaddingBottom();
-			mButtonWidth = getWidth() - getPaddingLeft() - getPaddingRight();
+			mButtonHeight = getHeight(); // - getPaddingTop() - getPaddingBottom();
+			mButtonWidth = getWidth(); // - getPaddingLeft() - getPaddingRight();
 
 			mSecTextWidth = mSecondaryPaint.measureText(mSecondaryText);
 			mSecAdditionalXOffset = getContext().getResources()
@@ -112,14 +155,25 @@ class SecondaryTextButton extends Button {
 			canvas.drawText(mSecondaryText, 0, mSecondaryText.length(), 
 					mSecXCoord, mSecYCoord, mSecondaryPaint);
 		}
-		
+
 		getPaint().setColor(getCurrentTextColor());
-		CharSequence text = getText();
-		canvas.drawText(text, 0, text.length(), mTextX, mTextY, getPaint());
+//		CharSequence text = getText();
+//		if(text.equals("ft-lb/min")){
+//			getPaint().setUnderlineText(true);
+//			System.out.println("decent =" + getPaint().descent());
+//			System.out.println("ascent =" + getPaint().ascent());
+//			canvas.drawText("ft-lb", 0, "ft-lb".length(), mTextX, mTextY + (getPaint().ascent() - getPaint().descent())/2, getPaint());
+//			getPaint().setUnderlineText(false);
+//			System.out.println("decent =" + getPaint().descent());
+//			System.out.println("ascent =" + getPaint().ascent());
+//			canvas.drawText("min", 0, "min".length(), mTextX, mTextY - (getPaint().ascent() - getPaint().descent())/2, getPaint());
+//		}
+//		else
+			canvas.drawText(getText(), 0, getText().length(), mTextX, mTextY, getPaint());
 
 	}
-	
-	
+
+
 	/** Calculate where to put secondary text
 	 * This method should get overloaded to change text location */
 	protected void findSecondaryTextCoord(){

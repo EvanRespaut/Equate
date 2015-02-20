@@ -333,7 +333,7 @@ public class ConvKeysFragment extends Fragment implements OnConvertKeyUpdateFini
 			for(int i=0;i<mConvButton.size();i++){
 				if(i != mUnitType.getCurrUnitPos()){
 					//\u2192 is an ascii arrow
-					refreshButtonText("\u2192 ", i);
+					refreshButtonText(getResources().getString(R.string.convert_arrow), i);
 				}
 			}
 			setButtonHighlight(true);
