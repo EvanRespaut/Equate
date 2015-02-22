@@ -10,23 +10,23 @@
         android:layout_height="0dp"
         android:layout_weight="1" >
 
-        <com.llamacorp.equate.view.SecondaryTextButton
+        <com.llamacorp.equate.view.ConvertButton
             android:id="@+id/convert_button1"
             style="@style/CalcButton.Convert"/>
 
-        <com.llamacorp.equate.view.SecondaryTextButton
+        <com.llamacorp.equate.view.ConvertButton
             android:id="@+id/convert_button2"
             style="@style/CalcButton.Convert" />
 
-        <com.llamacorp.equate.view.SecondaryTextButton
+        <com.llamacorp.equate.view.ConvertButton
             android:id="@+id/convert_button3"
             style="@style/CalcButton.Convert"/>
 
-        <com.llamacorp.equate.view.SecondaryTextButton
+        <com.llamacorp.equate.view.ConvertButton
             android:id="@+id/convert_button4"
             style="@style/CalcButton.Convert"/>
 
-        <com.llamacorp.equate.view.SecondaryTextButton
+        <com.llamacorp.equate.view.ConvertButton
             android:id="@+id/convert_button5"
             style="@style/CalcButton.Convert" />
     </LinearLayout>
@@ -36,23 +36,23 @@
         android:layout_height="0dp"
         android:layout_weight="1" >
 
-        <com.llamacorp.equate.view.SecondaryTextButton
+        <com.llamacorp.equate.view.ConvertButton
             android:id="@+id/convert_button6"
             style="@style/CalcButton.Convert"/>
 
-        <com.llamacorp.equate.view.SecondaryTextButton
+        <com.llamacorp.equate.view.ConvertButton
             android:id="@+id/convert_button7"
             style="@style/CalcButton.Convert" />
 
-        <com.llamacorp.equate.view.SecondaryTextButton
+        <com.llamacorp.equate.view.ConvertButton
             android:id="@+id/convert_button8"
             style="@style/CalcButton.Convert" />
 
-        <com.llamacorp.equate.view.SecondaryTextButton
+        <com.llamacorp.equate.view.ConvertButton
             android:id="@+id/convert_button9"
             style="@style/CalcButton.Convert"/>
 
-        <com.llamacorp.equate.view.SecondaryTextButton
+        <com.llamacorp.equate.view.ConvertButton
             android:id="@+id/convert_button10"
             style="@style/CalcButton.Convert"/>
     </LinearLayout>
