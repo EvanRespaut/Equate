@@ -104,7 +104,7 @@ public class UnitCurrency extends Unit {
 		mContext = c;
 		Date now = new Date();
 		if(mTimeLastUpdated != null && (now.getTime() - mTimeLastUpdated.getTime()) < (60*1000*UPDATE_TIMEOUT_MIN)){ 
-			System.out.println("Not ready to update " + getName() + " yet, wait " + (now.getTime() - mTimeLastUpdated.getTime())/(1000) + " seconds");
+			//System.out.println("Not ready to update " + getName() + " yet, wait " + (now.getTime() - mTimeLastUpdated.getTime())/(1000) + " seconds");
 			final Toast toast = Toast.makeText(mContext, (CharSequence)"Timeout not reached for " + getName(), Toast.LENGTH_SHORT);
 			toast.show();
 
@@ -135,8 +135,6 @@ public class UnitCurrency extends Unit {
 	public void asyncRefresh(Context c){
 		if(getName().equals("") || getName().equals(DEFAULT_CURRENCY)) return;
 		if(mUpdating) return;
-		if(getName().equals("BTC"))
-			System.out.println("-----------------asyncRefresh for BTC");
 
 		mContext = c;
 
@@ -190,11 +188,6 @@ public class UnitCurrency extends Unit {
 			//record time of update only if we actually updated
 			if(updateSuccess){
 				mTimeLastUpdated = new Date(); 
-				if(getName().equals("BTC"))	{		
-					System.out.println("BTC updated at " + DateFormat.getDateTimeInstance().format(mTimeLastUpdated));
-					//					Toast toast = Toast.makeText(mContext, (CharSequence)"BTC updated at "+ DateFormat.getInstance().format(mTimeLastUpdated), Toast.LENGTH_SHORT);
-					//					toast.show();
-				}
 			}
 
 			//updating is complete

@@ -55,7 +55,6 @@ public class TabPageIndicator extends HorizontalScrollView implements PageIndica
 
     private final OnClickListener mTabClickListener = new OnClickListener() {
         public void onClick(View view) {
-//        	long start = SystemClock.uptimeMillis();
             TabView tabView = (TabView)view;
             final int oldSelected = mViewPager.getCurrentItem();
             final int newSelected = tabView.getIndex();
@@ -63,7 +62,6 @@ public class TabPageIndicator extends HorizontalScrollView implements PageIndica
             if (oldSelected == newSelected && mTabReselectedListener != null) {
                 mTabReselectedListener.onTabReselected(newSelected);
             }
-//        	System.out.println("finish time = " + String.valueOf(SystemClock.uptimeMillis()-start));
       }
     };
 

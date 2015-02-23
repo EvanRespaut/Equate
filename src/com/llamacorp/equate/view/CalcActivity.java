@@ -386,32 +386,15 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 					mColorHoldHandler.postDelayed(this, CLEAR_HOLD_TIME/NUM_COLOR_CHANGES);
 
 					float deltaRed= (float)Color.red(mStartColor) + ((float)Color.red(mEndColor)-(float)Color.red(mStartColor))*((float)mInc*(float)mInc*(float)mInc)/((float)NUM_COLOR_CHANGES*(float)NUM_COLOR_CHANGES*(float)NUM_COLOR_CHANGES);
-					//					int deltaGreen= Color.green(mStartColor) + ((Color.green(mEndColor)-Color.green(mStartColor))*mInc^3)/NUM_COLOR_CHANGES^3;
-					//					int deltaBlue= Color.blue(mStartColor) + ((Color.blue(mEndColor)-Color.blue(mStartColor))*mInc^3)/NUM_COLOR_CHANGES^3;
 
-					//					int deltaRed= Color.red(mStartColor) + ((Color.red(mEndColor)-Color.red(mStartColor))*mInc)/NUM_COLOR_CHANGES;
 					int deltaGreen= Color.green(mStartColor) + ((Color.green(mEndColor)-Color.green(mStartColor))*mInc)/NUM_COLOR_CHANGES;
 					int deltaBlue= Color.blue(mStartColor) + ((Color.blue(mEndColor)-Color.blue(mStartColor))*mInc)/NUM_COLOR_CHANGES;
 
 					mView.setBackgroundColor(Color.argb(255, (int)deltaRed, deltaGreen, deltaBlue));
-					//					System.out.println("deltaRed="+deltaRed);
-					//					System.out.println("((Color.red(mEndColor)-Color.red(mStartColor))*mInc^3)"+((Color.red(mEndColor)-Color.red(mStartColor))*mInc^3));
-					//					System.out.println("mInc="+mInc);
 					mInc++;
 				}
 			};			
 		});
-		/*
-		float px = mDisplay.getTextSize();
-
-		DisplayMetrics metrics = new DisplayMetrics();
-		getWindowManager().getDefaultDisplay().getMetrics(metrics);
-		float logicalDensity = metrics.density;
-
-		int dp = (int) Math.ceil(px / logicalDensity);
-		System.out.println("text size dp=" + dp);
-		System.out.println("text size px=" + px);
-		 */
 	}
 
 

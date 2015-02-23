@@ -76,7 +76,6 @@ public class UnitType {
 	/** Swap positions of units */	
 	public void swapUnits(int pos1, int pos2){
 		Collections.swap(mUnitArray, pos1, pos2);
-		System.out.println(mUnitArray);
 	}
 
 	/**

@@ -236,9 +236,6 @@ public class EditTextCursorWatcher extends EditText {
 		float textWidth = paint.measureText(getText().toString());
 		float boxWidth = getWidth() - getPaddingLeft() - getPaddingRight();
 		float textSize = getTextSize();
-		//		System.out.println("box height (px) = " + getHeight()
-		//				+"  box height (sp) = " + ViewUtils.pixelsToSp(mContext, getHeight())
-		//				+"  box hiegh (dp) = " + ViewUtils.pixelsToDp(mContext, getHeight()));
 		if (textWidth > boxWidth) {
 			float scaled = textSize * boxWidth / textWidth;
 			if(scaled < mMinTextSize)
