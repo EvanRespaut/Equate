@@ -4,9 +4,7 @@
 - Should use API update historical USD to today's USD
 - Remove unnecessary comments and any sysouts
 
-- Make Historical USD two lines
 - Make convert summary text view's font size slightly dynamic
-- Power units all smooshed, add a 1-2dp margin for unit buttons
 - Add square root
 
 -----Stuff to Test (squashed bugs, etc)-----

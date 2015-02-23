@@ -89,7 +89,7 @@ public class ConvertButton extends SecondaryTextButton {
 		mBotTextY = (getHeight())/2  - paint.ascent()*4/5;
 
 		if(text.contains(mArrowText)){
-			mArrowTextX = (getWidth() - topTextWidth - arrowWidth) / 2;
+			mArrowTextX = (getWidth() - maxWidth - arrowWidth) / 2;
 			mArrowTextY = (getHeight() - paint.ascent() - paint.descent()) / 2;
 		}
 		
