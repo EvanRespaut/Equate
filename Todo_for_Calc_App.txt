@@ -5,6 +5,8 @@
 - Remove unnecessary comments and any sysouts
 
 - Make convert summary text view's font size slightly dynamic
+- Separation between small op keys gone
+- Should make % a reg button and EE and ^ hold buttons 
 - Add square root
 
 -----Stuff to Test (squashed bugs, etc)-----

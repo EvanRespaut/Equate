@@ -82,13 +82,13 @@
 
                     <Button
                         android:id="@+id/open_para_button"
-                        style="@style/CalcButton.SmallOperator"
+                        style="@style/SmallOperator"
                         android:layout_marginRight="1dp"
                         android:text="@string/open_para_button" />
 
                     <Button
                         android:id="@+id/close_para_button"
-                        style="@style/CalcButton.SmallOperator"
+                        style="@style/SmallOperator"
                         android:layout_marginLeft="1dp"
                         android:text="@string/close_para_button" />
                 </LinearLayout>
@@ -204,13 +204,13 @@
 
                     <Button
                         android:id="@+id/ee_button"
-                        style="@style/CalcButton.SmallOperator"
+                        style="@style/SmallOperator"
                         android:layout_marginRight="1dp"
                         android:text="@string/ee_button" />
 
                     <Button
                         android:id="@+id/power_button"
-                        style="@style/CalcButton.SmallOperator"
+                        style="@style/SmallOperator"
                         android:layout_marginLeft="1dp"
                         android:text="@string/power_button" />
                 </LinearLayout>

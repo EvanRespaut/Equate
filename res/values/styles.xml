@@ -52,10 +52,13 @@
         <item name="secondary_text_font_size_percentage">150</item>
     </style>
 
-    <style name="CalcButton.SmallOperator">
+    <style name="SmallOperator">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:textSize">30sp</item>
         <item name="android:background">@drawable/op_button</item>
         <item name="android:textColor">@drawable/button_text_color</item>
-        <item name="android:layout_margin">0dp</item>
     </style>
 
     <style name="ResultText">
