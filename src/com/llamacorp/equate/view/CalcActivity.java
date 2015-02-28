@@ -15,7 +15,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.Gravity;
-import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -24,10 +23,10 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.llamacorp.equate.Calculator;
+import com.llamacorp.equate.R;
 import com.llamacorp.equate.Unit;
 import com.llamacorp.equate.view.ConvKeysFragment.OnConvertKeySelectedListener;
 import com.llamacorp.equate.view.ResultListFragment.OnResultSelectedListener;
-import com.llamacorp.equate.R;
 import com.viewpagerindicator.TabPageIndicator;
 
 public class CalcActivity  extends FragmentActivity implements OnResultSelectedListener, OnConvertKeySelectedListener{
@@ -55,11 +54,12 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 		R.id.minus_button,
 		R.id.multiply_button,
 		R.id.divide_button,
+		R.id.percent_button,
 
 		R.id.decimal_button,
 		R.id.equals_button,
-		R.id.ee_button,
-		R.id.power_button,
+//		R.id.ee_button,
+//		R.id.power_button,
 
 		R.id.clear_button,
 
@@ -231,14 +231,16 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 					break;
 					case R.id.divide_button: buttonValue="/";
 					break;
+					case R.id.percent_button: buttonValue="%";
+					break;
 					case R.id.decimal_button: buttonValue=".";
 					break;
 					case R.id.equals_button: buttonValue="=";
 					break;
-					case R.id.ee_button: buttonValue="E";
-					break;
-					case R.id.power_button: buttonValue="^";
-					break;
+//					case R.id.ee_button: buttonValue="E";
+//					break;
+//					case R.id.power_button: buttonValue="^";
+//					break;
 					case R.id.clear_button: buttonValue="c";
 					break;
 					case R.id.open_para_button: buttonValue="(";
@@ -267,7 +269,9 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 					int buttonId = view.getId();
 					String buttonValue="";
 					switch(buttonId){
-					case R.id.multiply_button: buttonValue = "%";
+					case R.id.multiply_button: buttonValue = "^";
+					break;
+					case R.id.percent_button: buttonValue = "E";
 					break;
 					case R.id.nine_button: mCalc.refreshAllDynamicUnits();
 					break;
@@ -290,17 +294,6 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 					return true;
 				}
 			});
-
-			//set main display text manually; doesn't work in xml for some reason
-			switch(id){
-			case R.id.minus_button: button.setText(getText(R.string.minus_button));
-			break;
-			case R.id.multiply_button:  button.setText(getText(R.string.multiply_button));
-			break;
-			case R.id.divide_button:  button.setText(getText(R.string.divide_button));
-			break;
-			}
-
 			//add to our list of num buttons
 			calcButton.add(button);
 		}
@@ -533,9 +526,9 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 		else{
 			updateScreenWithInstaScrollOption(true, true);
 			mDisplay.setSelectionToEnd();
+			//pull focus from ListFrag and on the EditText so cursor blinks when app starts
+			mDisplay.requestFocus();
 		}
-		//pull focus from ListFrag and on the EditText so cursor blinks when app starts
-		mDisplay.requestFocus();
 	}
 
 
@@ -563,14 +556,5 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 			return currFrag;
 		}
 		else return null;
-	}
-
-
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.calc, menu);
-		return true;
 	}
 }

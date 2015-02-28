@@ -73,32 +73,20 @@
                     style="@style/CalcButton.Clear"
                     android:text="@string/clear_button" />
 
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_margin="1dp"
-                    android:layout_weight="1"
-                    android:background="@color/app_background" >
+                <com.llamacorp.equate.view.AnimatedHoldButton
+                    xmlns:customNS="http://schemas.android.com/apk/res/com.llamacorp.equate"
+                    android:id="@+id/percent_button"
+                    style="@style/CalcButton.Operator"
+                    customNS:secondary_text="@string/ee_button"
+                    customNS:secondary_text_font_size_percentage="50" />
+                
+                <com.llamacorp.equate.view.AnimatedHoldButton
+                    xmlns:customNS="http://schemas.android.com/apk/res/com.llamacorp.equate"
+                    android:id="@+id/divide_button"
+                    style="@style/CalcButton.Operator"
+                    customNS:secondary_text="@string/invert_button"
+                    customNS:secondary_text_font_size_percentage="50" />
 
-                    <Button
-                        android:id="@+id/open_para_button"
-                        style="@style/SmallOperator"
-                        android:layout_marginRight="1dp"
-                        android:text="@string/open_para_button" />
-
-                    <Button
-                        android:id="@+id/close_para_button"
-                        style="@style/SmallOperator"
-                        android:layout_marginLeft="1dp"
-                        android:text="@string/close_para_button" />
-                </LinearLayout>
-
-            <com.llamacorp.equate.view.AnimatedHoldButton
-                xmlns:customNS="http://schemas.android.com/apk/res/com.llamacorp.equate"
-                android:id="@+id/divide_button"
-                style="@style/CalcButton.Operator"
-                customNS:secondary_text="@string/invert_button" 
-                customNS:secondary_text_font_size_percentage="50" />
                 <ImageButton
                     android:id="@+id/backspace_button"
                     style="@style/CalcButton.Operator"
@@ -127,11 +115,11 @@
                     style="@style/CalcButton.Numb"
                     android:text="@string/nine_button" />
 
-            <com.llamacorp.equate.view.AnimatedHoldButton
-                xmlns:customNS="http://schemas.android.com/apk/res/com.llamacorp.equate"
-                android:id="@+id/multiply_button"
-                style="@style/CalcButton.Operator"
-                customNS:secondary_text="@string/percent_button" />
+                <com.llamacorp.equate.view.AnimatedHoldButton
+                    xmlns:customNS="http://schemas.android.com/apk/res/com.llamacorp.equate"
+                    android:id="@+id/multiply_button"
+                    style="@style/CalcButton.Operator"
+                    customNS:secondary_text="@string/power_button" />
             </LinearLayout>
 
             <LinearLayout
@@ -155,11 +143,11 @@
                     style="@style/CalcButton.Numb"
                     android:text="@string/six_button" />
 
-            <com.llamacorp.equate.view.AnimatedHoldButton
-                xmlns:customNS="http://schemas.android.com/apk/res/com.llamacorp.equate"
-                android:id="@+id/minus_button"
-                style="@style/CalcButton.Operator"
-                customNS:secondary_text="@string/negate_button" />
+                <com.llamacorp.equate.view.AnimatedHoldButton
+                    xmlns:customNS="http://schemas.android.com/apk/res/com.llamacorp.equate"
+                    android:id="@+id/minus_button"
+                    style="@style/CalcButton.Operator"
+                    customNS:secondary_text="@string/negate_button" />
             </LinearLayout>
 
             <LinearLayout
@@ -195,25 +183,6 @@
                 android:layout_weight="1"
                 android:background="@color/app_background" >
 
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_margin="1dp"
-                    android:layout_weight="1"
-                    android:background="@color/app_background" >
-
-                    <Button
-                        android:id="@+id/ee_button"
-                        style="@style/SmallOperator"
-                        android:layout_marginRight="1dp"
-                        android:text="@string/ee_button" />
-
-                    <Button
-                        android:id="@+id/power_button"
-                        style="@style/SmallOperator"
-                        android:layout_marginLeft="1dp"
-                        android:text="@string/power_button" />
-                </LinearLayout>
 
                 <Button
                     android:id="@+id/zero_button"
@@ -224,6 +193,26 @@
                     android:id="@+id/decimal_button"
                     style="@style/CalcButton.Numb"
                     android:text="@string/decimal_button" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_margin="1dp"
+                    android:layout_weight="1"
+                    android:background="@color/app_background" >
+
+                    <Button
+                        android:id="@+id/open_para_button"
+                        style="@style/SmallOperator"
+                        android:layout_marginRight="1dp"
+                        android:text="@string/open_para_button" />
+
+                    <Button
+                        android:id="@+id/close_para_button"
+                        style="@style/SmallOperator"
+                        android:layout_marginLeft="1dp"
+                        android:text="@string/close_para_button" />
+                </LinearLayout>
 
                 <Button
                     android:id="@+id/equals_button"

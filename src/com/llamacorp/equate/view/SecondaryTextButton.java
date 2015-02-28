@@ -3,7 +3,6 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.widget.Button;
 
@@ -37,7 +36,6 @@ class SecondaryTextButton extends Button {
 		super(context, attrs);
 
 		int secTextPerc = SECONDARY_FONT_PERCENTAGE;
-
 		//grab custom resource variable
 		TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.SecondaryTextButton, 0, 0);
 		try {
@@ -93,11 +91,13 @@ class SecondaryTextButton extends Button {
 	}
 
 
+
 	@Override
 	protected void onDraw(Canvas canvas) {
 		if(mSecondaryText != null){
 			//draw the text in the upper corner
-			mSecondaryPaint.setColor(getResources().getColor(R.color.button_secondary_text));
+			mSecondaryPaint.setColor(getResources().getColor(R.color
+					.button_secondary_text));
 
 			mButtonHeight = getHeight(); // - getPaddingTop() - getPaddingBottom();
 			mButtonWidth = getWidth(); // - getPaddingLeft() - getPaddingRight();
@@ -125,8 +125,15 @@ class SecondaryTextButton extends Button {
 	 */
 	protected void drawMainText(Canvas canvas){
 		getPaint().setColor(getCurrentTextColor());
-		canvas.drawText(getText(), 0, getText().length(), mTextX, mTextY, getPaint());
-
+		canvas.drawText(getPrimaryText(), 0, getPrimaryText().length(), mTextX, mTextY, 
+				getPaint());
+	}
+	
+	
+	protected String getPrimaryText(){
+		if(getText().toString()==null)
+			return "";
+		return getText().toString();
 	}
 
 

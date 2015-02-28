@@ -3,7 +3,10 @@
 - When doing regular currency to historical, should change to year date code (instead of day or hour)
 - Should use API update historical USD to today's USD
 - Remove unnecessary comments and any sysouts
+- Remove timeout not reached toast
 
+- Highlight added invert stuff red
+-Grab last result answer when */^+ are used
 - Make convert summary text view's font size slightly dynamic
 - Separation between small op keys gone
 - Should make % a reg button and EE and ^ hold buttons 

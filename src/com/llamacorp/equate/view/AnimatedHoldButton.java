@@ -1,5 +1,6 @@
 package com.llamacorp.equate.view;
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.os.Handler;
 import android.util.AttributeSet;
@@ -24,10 +25,22 @@ class AnimatedHoldButton extends SecondaryTextButton {
 
 	//used to count up holding time
 	private int mHoldInc;
+	
+	private String mPrimaryText;
 
 
 	public AnimatedHoldButton(Context context, AttributeSet attrs) {
 		super(context, attrs);
+		
+		mPrimaryText = "";
+		
+		TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.AnimatedHoldButton, 0, 0);
+		try {
+			mPrimaryText = ta.getString(R.styleable.AnimatedHoldButton_primary_text);
+		} finally { ta.recycle();}
+		
+		//this is needed for so paint knows what to measure in layoutText
+		setText(mPrimaryText);
 	}
 
 	@Override
@@ -116,6 +129,13 @@ class AnimatedHoldButton extends SecondaryTextButton {
 			mLongClickListen.onLongClick(this);
 	}
 
+	@Override
+	protected String getPrimaryText(){
+		if(mPrimaryText==null)
+			return "";
+		return mPrimaryText;
+	}
+	
 	@Override
 	public void setOnClickListener(OnClickListener l){
 		mClickListen = l;
