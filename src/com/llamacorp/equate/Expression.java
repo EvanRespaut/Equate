@@ -3,6 +3,7 @@ package com.llamacorp.equate;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.util.ArrayList;
+import java.util.Collections;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -127,7 +128,10 @@ public class Expression {
 
 		//if we have inversion, instantly perform and return
 		if(sKey.equals("i")){
-			invertLastNumber();
+			int[] toHighlight = invertLastNumber();
+			//highlight the newly added invert symbols if not immediately solving
+			if(!isSolved())
+				markHighlighted(toHighlight);
 			return isSolved();
 		}
 
@@ -485,7 +489,7 @@ public class Expression {
 		setSolved(false);		
 	}
 
-	
+
 	/** Replaces entire expression. Selection moves to end of the expression.
 	 * @param tempExp String to replace expression with*/
 	public void replaceExpression(String tempExp) {
@@ -550,7 +554,7 @@ public class Expression {
 		return mHighlightedCharList.size() != 0;
 	}
 
-	
+
 	public ArrayList<Integer> getHighlighted(){
 		return mHighlightedCharList;
 	}
@@ -559,7 +563,7 @@ public class Expression {
 	public void clearHighlightedList() {
 		mHighlightedCharList.clear();
 	}
-	
+
 
 	public int getSelectionStart() {
 		return mSelectionStart;
@@ -585,7 +589,7 @@ public class Expression {
 		mSolved = solved;
 	}
 
-	
+
 	/**
 	 * Returns the length of the current expression
 	 * @return length of expression
@@ -594,7 +598,7 @@ public class Expression {
 		return getExpression().length();
 	}
 
-	
+
 	/**
 	 * Returns the current expression in expressed as a String
 	 */
@@ -622,7 +626,7 @@ public class Expression {
 
 		return sToClean;
 	}
-	
+
 
 	/**
 	 * This function will negate the last number before the selection
@@ -654,9 +658,9 @@ public class Expression {
 	/**
 	 * This function will add a "1/(" before the last number before the selection
 	 * If the expression is solved, also solve again
-	 * @return if the calculator should perform a solve
+	 * @return an array of indexes that were added
 	 */
-	private void invertLastNumber(){
+	private int[] invertLastNumber(){
 		String str = expresssionToSelection();
 		String lastNum = getLastNumb(str);
 
@@ -669,13 +673,17 @@ public class Expression {
 		int lenFirstNum = getFirstNumb(expEnd).length();
 
 		insertAt(")", frontLen + lenFirstNum);
-		
+
 		//move cursor back into the parenthesis if no number was inverted
 		if(lenFirstNum == 0)
 			setSelection(getSelectionStart()-1, getSelectionEnd()-1);
+		
+		//mark indexes of elements added
+		int[] addedIndexArray = {frontLen-3, frontLen-2, frontLen-1, frontLen + lenFirstNum};
+		return addedIndexArray;
 	}
 
-	
+
 	/**
 	 * Counts the number of open vs. number of closed parentheses in expresssionToSelection()
 	 * @return 0 if equal num of open/close para, positive # if more open, neg # if more close
@@ -719,8 +727,10 @@ public class Expression {
 		}
 		else
 			return;
-		if(associatedIndex != -1)
-			markHighlighted(getSelectionStart()-1, associatedIndex);
+		if(associatedIndex != -1){
+			int[] tmpArray = {getSelectionStart()-1, associatedIndex};
+			markHighlighted(tmpArray);
+		}
 	}
 
 	/**
@@ -729,7 +739,8 @@ public class Expression {
 	 * @param index is 0 indexed, so in "74" to highlight 7, pass 0
 	 */
 	private void markHighlighted(int index){
-		markHighlighted(index, -1);
+		int[] tmpArray = {index};
+		markHighlighted(tmpArray);
 	}
 
 	/**
@@ -737,19 +748,14 @@ public class Expression {
 	 * during the next screen update. 
 	 * @param index is 0 indexed, so in "74" to highlight 7, pass 0
 	 */
-	private void markHighlighted(int index1, int index2){
+	private void markHighlighted(int[] indexArray){
 		clearHighlightedList();
 
-		if(index2 == -1)
-			mHighlightedCharList.add(index1);
-		else if(index1 < index2){
-			mHighlightedCharList.add(index1);
-			mHighlightedCharList.add(index2);
+		for(int i = 0; i < indexArray.length; i++){
+			mHighlightedCharList.add(indexArray[i]);
 		}
-		else{
-			mHighlightedCharList.add(index2);
-			mHighlightedCharList.add(index1);
-		}
+
+		Collections.sort(mHighlightedCharList);
 	}
 
 
