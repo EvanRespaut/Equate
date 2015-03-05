@@ -276,8 +276,13 @@ public class Calculator{
 			if(mExpression.isSolved() && sKey.matches("[.0-9(]"))
 				clearSelectedUnit();
 
-			boolean performSolve = mExpression.keyPresses(sKey);
-			if(performSolve){
+			//if we hit an operator other than minus, load in the prev answer
+			if(mExpression.isEmpty() && sKey.matches("[" + Expression.regexNonNegOperators + "]"))
+				if(!mResultList.isEmpty())
+					sKey = mResultList.get(mResultList.size()-1).getAnswerWithoutSep() + sKey;
+			
+			boolean requestSolve = mExpression.keyPresses(sKey);
+			if(requestSolve){
 				solveAndLoadIntoResultList();
 				return true;
 			}

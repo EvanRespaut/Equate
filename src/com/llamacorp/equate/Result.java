@@ -91,6 +91,7 @@ public class Result {
 		return ExpSeperatorHandler.removeSep(getQuerry());
 	}
 	
+	/** Returns query with separators */ 
 	private String getQuerry() {
 		return mQuery;
 	}
@@ -107,6 +108,7 @@ public class Result {
 		return ExpSeperatorHandler.removeSep(getAnswer());
 	}
 	
+	/** Returns answer with separators */ 
 	private String getAnswer() {
 		return mAnswer;
 	}

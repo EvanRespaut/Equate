@@ -37,10 +37,11 @@ public class Expression {
 	public static final String regexGroupedAddSub = "([+-])";
 
 	//note that in []'s only ^, -, and ] need escapes. - doen't need one if invalid
-	public static final String regexInvalidChars = "[^0-9()E.+*^/%-]";	
+	public static final String regexNonNegOperators = "+/*^%";
+	public static final String regexOperators = regexNonNegOperators + "-";
+	public static final String regexInvalidChars = "[^0-9()E." + regexOperators + "]";	
 	public static final String regexHasInvalidChars = ".*" + regexInvalidChars + ".*";
-	public static final String regexOperators = "+/*^%-";
-	public static final String regexInvalidStartChar = "[E*^/%+]";
+	public static final String regexInvalidStartChar = "[E" + regexNonNegOperators + "]";
 	public static final String regexAnyValidOperator = "[" + regexOperators + "]";
 	public static final String regexAnyOpExceptPercent = regexAnyValidOperator.replace("%","");
 	public static final String regexAnyOperatorOrE = "[E" + regexOperators + "]";

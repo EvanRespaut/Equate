@@ -7,6 +7,7 @@
 
 - Highlight added invert stuff red
 -Grab last result answer when */^+ are used
+- When convert to insides deleted leave convert to and only remove after second backspace
 - Make convert summary text view's font size slightly dynamic
 - Separation between small op keys gone
 - Should make % a reg button and EE and ^ hold buttons 
