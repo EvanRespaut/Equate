@@ -375,12 +375,8 @@ public class Calculator{
 		}
 
 		//delete last of calcExp list so long as expression isn't already empty
-		if(!mExpression.isEmpty()){
+		if(!mExpression.isEmpty())
 			mExpression.backspaceAtSelection();
-			//if we just cleared the expression out, also clear currUnit
-			if(mExpression.isEmpty())
-				clearSelectedUnit();
-		}	
 	}
 
 	private void clearSelectedUnit(){

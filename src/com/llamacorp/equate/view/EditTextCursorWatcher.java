@@ -101,8 +101,8 @@ public class EditTextCursorWatcher extends EditText {
 		mSelStart = mSepHandler.translateToSepIndex(mCalc.getSelectionStart());
 		mSelEnd = mSepHandler.translateToSepIndex(mCalc.getSelectionEnd());
 
-		//if expression not empty/invalid and unit selected, display it after the expression
-		if(!mCalc.isExpressionInvalid() && !mCalc.isExpressionEmpty() && mCalc.isUnitSelected()){
+		//if expression not invalid and unit selected, display it after the expression
+		if(!mCalc.isExpressionInvalid() &&  mCalc.isUnitSelected()){
 			mTextSuffix = " " + mCalc.getCurrUnitType().getCurrUnit().toString();
 			//about to do conversion
 			if(!mCalc.isSolved()){

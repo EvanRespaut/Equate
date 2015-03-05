@@ -5,7 +5,6 @@
 - Remove unnecessary comments and any sysouts
 - Remove timeout not reached toast
 
-- When convert to insides deleted leave convert to and only remove after second backspace
 - Make convert summary text view's font size slightly dynamic
 - Add square root
 
