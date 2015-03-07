@@ -5,7 +5,6 @@
 - Remove unnecessary comments and any sysouts
 - Remove timeout not reached toast
 
--Landscape keys messed
 - Make convert summary text view's font size slightly dynamic
 - Add square root
 

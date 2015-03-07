@@ -78,12 +78,14 @@
                     android:id="@+id/percent_button"
                     style="@style/CalcButton.Operator"
                     customNS:secondary_text="@string/ee_button"
+                	customNS:primary_text="@string/percent_button"
                     customNS:secondary_text_font_size_percentage="50" />
                 
                 <com.llamacorp.equate.view.AnimatedHoldButton
                     xmlns:customNS="http://schemas.android.com/apk/res/com.llamacorp.equate"
                     android:id="@+id/divide_button"
                     style="@style/CalcButton.Operator"
+                	customNS:primary_text="@string/divide_button"
                     customNS:secondary_text="@string/invert_button"
                     customNS:secondary_text_font_size_percentage="50" />
 
@@ -119,6 +121,7 @@
                     xmlns:customNS="http://schemas.android.com/apk/res/com.llamacorp.equate"
                     android:id="@+id/multiply_button"
                     style="@style/CalcButton.Operator"
+                	customNS:primary_text="@string/multiply_button"
                     customNS:secondary_text="@string/power_button" />
             </LinearLayout>
 
@@ -147,7 +150,8 @@
                     xmlns:customNS="http://schemas.android.com/apk/res/com.llamacorp.equate"
                     android:id="@+id/minus_button"
                     style="@style/CalcButton.Operator"
-                    customNS:secondary_text="@string/negate_button" />
+                    customNS:secondary_text="@string/negate_button"
+                	customNS:primary_text="@string/minus_button" />
             </LinearLayout>
 
             <LinearLayout

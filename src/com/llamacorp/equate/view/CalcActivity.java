@@ -29,14 +29,13 @@ import com.llamacorp.equate.view.ConvKeysFragment.OnConvertKeySelectedListener;
 import com.llamacorp.equate.view.ResultListFragment.OnResultSelectedListener;
 import com.viewpagerindicator.TabPageIndicator;
 
-public class CalcActivity  extends FragmentActivity implements OnResultSelectedListener, OnConvertKeySelectedListener{
-	private Context mAppContext;
+public class CalcActivity  extends FragmentActivity 
+implements OnResultSelectedListener, OnConvertKeySelectedListener{
+	private Context mAppContext;  //used for toasts and the like
 
-	private ViewPager mConvKeysViewPager; 
-	private ResultListFragment mResultFragment;
-
-	private List<Button> calcButton;
-	private EditTextCursorWatcher mDisplay;
+	private ResultListFragment mResultListFrag;	//scroll-able history
+	private EditTextCursorWatcher mDisplay;  		//main display
+	private ViewPager mUnitTypeViewPager;			//controls and displays UnitType 
 
 	private static final int[] BUTTON_IDS = {
 		R.id.zero_button,
@@ -58,8 +57,8 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 
 		R.id.decimal_button,
 		R.id.equals_button,
-//		R.id.ee_button,
-//		R.id.power_button,
+		//		R.id.ee_button,
+		//		R.id.power_button,
 
 		R.id.clear_button,
 
@@ -71,101 +70,15 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 	//main calculator object
 	public Calculator mCalc;// = new Calculator();
 
-	/**
-	 * Called when any non convert key is pressed
-	 * @param keyPressed ASCII representation of the key pressed ("1", "=" "*", etc)
-	 */
-	public void numButtonPressed(String keyPressed){
-		//pass button value to CalcAcitvity to pass to calc
-		boolean performedSolve = mCalc.parseKeyPressed(keyPressed);
-
-		//TODO this logic really belongs in calc, but then passing back
-		//to display a dialog becomes hard
-		if(keyPressed.equals("=") && mCalc.isUnitSelected() && !mCalc.isSolved()){
-			new AlertDialog.Builder(this)
-			.setMessage("Click a different unit to convert")
-			.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int which) {}})
-				.show();
-		}
-		
-		//update the result list and do it with the normal scroll (not fast)
-		updateScreen(performedSolve);
-	}
 
 	//Crude fix: used to tell the ConvKeyViewPager what unit to select after scrolling to correct UnitType
 	private Unit unitToSelectAfterScroll;
 
-	/**
-	 * Selects the a unit (used by result list)
-	 * @see com.llamacorp.equate.view.ResultListFragment.OnResultSelectedListener#selectUnit(int)
-	 */
-	public void selectUnit(Unit unit, int unitTypePos){
-		//if not on right page, scroll there first
-		if(unitTypePos != mConvKeysViewPager.getCurrentItem()){
-			unitToSelectAfterScroll = unit;
-			mConvKeysViewPager.setCurrentItem(unitTypePos);
-		}
-		else
-			getConvKeyFrag(mConvKeysViewPager.getCurrentItem()).selectUnit(unit);
-	}
-
-
-	/**
-	 * Function 
-	 * @param updateResult
-	 * @param instaScroll
-	 */
-	private void updateScreenWithInstaScrollOption(boolean updateResult, boolean instaScroll){
-		//Update EditText view
-		mDisplay.updateTextFromCalc();
-
-		//if we hit equals, update result list
-		if(updateResult){
-			FragmentManager fm = getSupportFragmentManager();
-			ResultListFragment resultListFragment = (ResultListFragment)fm.findFragmentById(R.id.resultListfragmentContainer);
-			resultListFragment.refresh(instaScroll);
-
-			/*
-			//make a little gray divider above expression when prev expression hits it
-			View divider = findViewById(R.id.prev_curr_exp_divider);
-			ListView mResultListView = mResultFragment.getListView();
-			//don't try this unless result list has something there
-			if(mResultListView.getChildCount()>0){
-				//test to see if the last child's bottom edge is greater than the the total result list height
-				//note that 0 is top of screen; also note that an extra child height is needed to reach the bottom
-				if(mResultListView.getChildAt(mResultListView.getChildCount() - 1).getBottom() + 
-						mResultListView.getChildAt(mResultListView.getChildCount() - 1).getHeight() >= mResultListView.getHeight())
-					divider.setBackgroundColor(getResources().getColor(R.color.prev_curr_exp_divider));
-			}
-			 */
-		}
-	}
-
-	/**
-	 * Updates the current expression and result list
-	 * @param updateResult whether or not to update result
-	 */
-	public void updateScreen(boolean updateResult){
-		//no insta scroll for previous expression
-		updateScreenWithInstaScrollOption(updateResult, false);
-
-		//see if colored convert button should be not colored (if backspace or clear were pressed, or if expression solved)
-		if(!mCalc.isUnitSelected())
-			clearConvKeyForFragPos(mConvKeysViewPager.getCurrentItem());
-	}
-
-	/*
-	public void openFirstConvertDialog(){
-		FragmentManager fm = getSupportFragmentManager();
-
-	}
-	 */
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		mAppContext=this;
+		mAppContext = this;
 		setContentView(R.layout.activity_calc);
 
 		//either get old calc or create a new one
@@ -202,17 +115,14 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 
 		//use fragment manager to make the result list
 		FragmentManager fm = getSupportFragmentManager();
-		mResultFragment = (ResultListFragment) fm.findFragmentById(R.id.resultListfragmentContainer);
+		mResultListFrag = (ResultListFragment) fm.findFragmentById(R.id.resultListfragmentContainer);
 
-		if(mResultFragment == null){
-			mResultFragment = new ResultListFragment();
-			//TODO this line is what causes cursor not to display at startup
-			fm.beginTransaction().add(R.id.resultListfragmentContainer, mResultFragment).commit();	
+		if(mResultListFrag == null){
+			mResultListFrag = new ResultListFragment();
+			fm.beginTransaction().add(R.id.resultListfragmentContainer, mResultListFrag).commit();	
 		}
 
-		setupConverKeyPager();
-
-		calcButton = new ArrayList<Button>();
+		setupUnitTypePager();
 
 
 		for(int id : BUTTON_IDS) {
@@ -237,10 +147,10 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 					break;
 					case R.id.equals_button: buttonValue="=";
 					break;
-//					case R.id.ee_button: buttonValue="E";
-//					break;
-//					case R.id.power_button: buttonValue="^";
-//					break;
+					//					case R.id.ee_button: buttonValue="E";
+					//					break;
+					//					case R.id.power_button: buttonValue="^";
+					//					break;
 					case R.id.clear_button: buttonValue="c";
 					break;
 					case R.id.open_para_button: buttonValue="(";
@@ -280,8 +190,9 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 					case R.id.divide_button: buttonValue = "i";
 					break;
 					case R.id.eight_button: 
-						if(mUnitContain.getVisibility() == LinearLayout.GONE)
+						if(mUnitContain.getVisibility() == LinearLayout.GONE){
 							mUnitContain.setVisibility(LinearLayout.VISIBLE);
+						}
 						else
 							mUnitContain.setVisibility(LinearLayout.GONE);
 						break;
@@ -294,8 +205,6 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 					return true;
 				}
 			});
-			//add to our list of num buttons
-			calcButton.add(button);
 		}
 
 
@@ -344,7 +253,7 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 				@Override 
 				public void run() {
 					mCalc.resetCalc();
-					setupConverKeyPager();
+					setupUnitTypePager();
 					updateScreen(true);
 					Toast toast = Toast.makeText(mAppContext, (CharSequence)"Calculator reset", Toast.LENGTH_SHORT);
 					toast.setGravity(Gravity.CENTER, 0, 0);
@@ -391,25 +300,20 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 	}
 
 
-	private void setupConverKeyPager(){
+	private void setupUnitTypePager(){
 		//use fragment manager to make the result list
 		FragmentManager fm = getSupportFragmentManager();
 
-		mConvKeysViewPager = (ViewPager)findViewById(R.id.convertKeyPager);
+		mUnitTypeViewPager = (ViewPager)findViewById(R.id.convertKeyPager);
 
-		mConvKeysViewPager.setAdapter(new FragmentStatePagerAdapter(fm) {
+		mUnitTypeViewPager.setAdapter(new FragmentStatePagerAdapter(fm) {
 			@Override
 			public int getCount(){
-				//return 10000;
 				return mCalc.getUnitTypeSize();
 			}
 
 			@Override
 			public Fragment getItem(int pos){
-				//				System.out.println("pos="+pos);
-				//				System.out.println("pos % mCalc.getUnitTypeSize()"+pos % mCalc.getUnitTypeSize());
-				//				return ConvKeysFragment.newInstance(pos % mCalc.getUnitTypeSize());
-				//				//TODO try debugging this 
 				return ConvKeysFragment.newInstance(pos);
 			}
 
@@ -419,45 +323,32 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 			}
 		});
 
-		TabPageIndicator convertPageIndicator = (TabPageIndicator)findViewById(R.id.titles);
-		convertPageIndicator.setViewPager(mConvKeysViewPager);
+		TabPageIndicator unitTypePageIndicator = (TabPageIndicator)findViewById(R.id.titles);
+		unitTypePageIndicator.setViewPager(mUnitTypeViewPager);
 
 		//need to tell calc when a new UnitType page is selected
-		convertPageIndicator.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+		unitTypePageIndicator.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 			//as the page is being scrolled to
 			@Override
 			public void onPageSelected(int pos) {
 				//update the calc with current UnitType selection
 				mCalc.setUnitTypePos(pos);
 
-				/*
-				//set the margins so that you can see a bit of the left and right pages
-				DisplayMetrics metrics = getResources().getDisplayMetrics();
-				int padLeft=(int) (metrics.density * 8f + 0.5f);
-				int padRight=(int) (metrics.density * 8f + 0.5f);
-				//				if(mViewPager.getCurrentItem()==0)
-				//					padLeft=0;
-				//				if(mViewPager.getCurrentItem()==mViewPager.getAdapter().getCount()-1)
-				//					padRight=0;
-				mConvKeysViewPager.setPadding(padLeft, 0, padRight, 0);
-				 */
-
 				//if we just switched to a dynamic unit, attempt an update
 				if(mCalc.getCurrUnitType().containsDynamicUnits())
 					mCalc.refreshAllDynamicUnits();
 
-				//TODO do we still need to do this?
 				//clear selected unit from adjacent convert key fragment so you can't see a bit of them
-				int currConvKeyPos = mConvKeysViewPager.getCurrentItem();
-				clearConvKeyForFragPos(currConvKeyPos-1);
-				clearConvKeyForFragPos(currConvKeyPos);
-				clearConvKeyForFragPos(currConvKeyPos+1);
+				int currUnitTypePos = mUnitTypeViewPager.getCurrentItem();
+				clearUnitSelection(currUnitTypePos-1);
+				clearUnitSelection(currUnitTypePos);
+				clearUnitSelection(currUnitTypePos+1);
 				mCalc.getCurrUnitType().clearUnitSelection();
 
 				//this change UnitType was result of unit-ed result, select that unit
-				if(unitToSelectAfterScroll!=null){
-					getConvKeyFrag(mConvKeysViewPager.getCurrentItem()).selectUnit(unitToSelectAfterScroll);
-					unitToSelectAfterScroll=null;
+				if(unitToSelectAfterScroll != null){
+					getConvKeyFrag(mUnitTypeViewPager.getCurrentItem()).selectUnit(unitToSelectAfterScroll);
+					unitToSelectAfterScroll = null;
 				}
 				//clear out the unit in expression if it's now cleared
 				updateScreen(false);
@@ -473,27 +364,109 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 			public void onPageScrollStateChanged(int state) {}
 		});
 
-		/*
-		DisplayMetrics metrics = getResources().getDisplayMetrics();
-
-		int padLeft=(int) (metrics.density * 8f + 0.5f);
-		int padRight=padLeft;
-		//		if(mViewPager.getCurrentItem()==0)
-		//			padLeft=0;
-		//		if(mViewPager.getCurrentItem()==mViewPager.getAdapter().getCount()-1)
-		//			padRight=0;
-
-		mConvKeysViewPager.setPadding(padLeft, 0, padRight, 0);
-
-		//this shows the edges of the next page work
-		mConvKeysViewPager.setClipToPadding(false);
-		//add a little break between pages
-		mConvKeysViewPager.setPageMargin(8);
-		 */
 		//set page back to the previously selected page
-		mConvKeysViewPager.setCurrentItem(mCalc.getUnitTypePos());
+		mUnitTypeViewPager.setCurrentItem(mCalc.getUnitTypePos());
 	}
 
+
+
+	/**
+	 * Called when any non convert key is pressed
+	 * @param keyPressed ASCII representation of the key pressed ("1", "=" "*", etc)
+	 */
+	public void numButtonPressed(String keyPressed){
+		//pass button value to CalcAcitvity to pass to calc
+		boolean performedSolve = mCalc.parseKeyPressed(keyPressed);
+
+		//TODO this logic belongs in Calculator, but passing back to display
+		// a dialog is hard
+		if(keyPressed.equals("=") && mCalc.isUnitSelected() && !mCalc.isSolved()){
+			new AlertDialog.Builder(this)
+			.setMessage("Click a different unit to convert")
+			.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int which) {}})
+				.show();
+		}
+
+		//update the result list and do it with the normal scroll (not fast)
+		updateScreen(performedSolve);
+	}
+
+
+
+	/**
+	 * Selects the a unit (used by result list)
+	 * @see com.llamacorp.equate.view.ResultListFragment.OnResultSelectedListener#selectUnit(int)
+	 */
+	public void selectUnit(Unit unit, int unitTypePos){
+		//if not on right page, scroll there first
+		if(unitTypePos != mUnitTypeViewPager.getCurrentItem()){
+			unitToSelectAfterScroll = unit;
+			mUnitTypeViewPager.setCurrentItem(unitTypePos);
+		}
+		else
+			getConvKeyFrag(mUnitTypeViewPager.getCurrentItem()).selectUnit(unit);
+	}
+
+
+	/** Grabs newest data from Calculator, updates the main display, and gives an
+	 * option to scroll down the result list
+	 * @param updateResult pass true to update result list
+	 * @param instaScroll pass true to scroll instantly, otherwise use animation
+	 */
+	private void updateScreen(boolean updateResult, boolean instaScroll){
+		mDisplay.updateTextFromCalc(); //Update EditText view
+
+		//if we hit equals, update result list
+		if(updateResult)
+			mResultListFrag.refresh(instaScroll);
+	}
+
+	/**
+	 * Grabs newest data from Calculator, updates the main display
+	 * @param updateResult whether or not to update result
+	 */
+	public void updateScreen(boolean updateResult){
+		//no insta scroll for previous expression
+		updateScreen(updateResult, false);
+
+		//see if colored convert button should be not colored (if backspace or 
+		//clear were pressed, or if expression solved)
+		if(!mCalc.isUnitSelected())
+			clearUnitSelection(mUnitTypeViewPager.getCurrentItem());
+	}
+
+
+
+
+	/**
+	 * Clear the unit selection for unit type fragment at position pos
+	 * @param unitTypeFragPos the position of the desired unit type fragment 
+	 * from which to clear selected units 
+	 */
+	private void clearUnitSelection(int unitTypeFragPos){
+		ConvKeysFragment currFragAtPos = getConvKeyFrag(unitTypeFragPos);
+		if(currFragAtPos != null)
+			currFragAtPos.clearButtonSelection();
+	}
+
+
+	/**
+	 * Helper function to return the convert key fragment at position pos
+	 * @param pos the position of the desired convert key fragment
+	 * @return will return the fragment or null if it doesn't exist at that position
+	 */
+	private ConvKeysFragment getConvKeyFrag(int pos){
+		FragmentStatePagerAdapter tempAdapter = 
+				(FragmentStatePagerAdapter) mUnitTypeViewPager.getAdapter();
+		//make sure we aren't trying to access an invalid page fragment
+		if(pos < tempAdapter.getCount() && pos >= 0){
+			ConvKeysFragment currFrag = (ConvKeysFragment) tempAdapter.
+					instantiateItem(mUnitTypeViewPager, pos);
+			return currFrag;
+		}
+		else return null;
+	}
 
 
 	@Override
@@ -512,7 +485,7 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 		super.onResume();
 
 		//maybe fixes that random crash?
-		if(mCalc==null)
+		if(mCalc == null)
 			return;
 
 		if(mCalc.getCurrUnitType().containsDynamicUnits())
@@ -524,37 +497,10 @@ public class CalcActivity  extends FragmentActivity implements OnResultSelectedL
 			mDisplay.setCursorVisible(false);
 		}
 		else{
-			updateScreenWithInstaScrollOption(true, true);
+			updateScreen(true, true);
 			mDisplay.setSelectionToEnd();
-			//pull focus from ListFrag and on the EditText so cursor blinks when app starts
+			//pull ListFrag's focus, to be sure EditText's cursor blinks when app starts
 			mDisplay.requestFocus();
 		}
-	}
-
-
-	/**
-	 * Clear the unit selection for convert key fragment at position pos
-	 * @param pos the position of the desired convert key fragment to clear selected units from 
-	 */
-	private void clearConvKeyForFragPos(int pos){
-		ConvKeysFragment currFragAtPos = getConvKeyFrag(pos);
-		if(currFragAtPos!=null)
-			currFragAtPos.clearButtonSelection();
-	}
-
-
-	/**
-	 * Helper function to return the convert key fragment at position pos
-	 * @param pos the position of the desired convert key fragment
-	 * @return will return the fragment or null if it doesn't exist at that position
-	 */
-	private ConvKeysFragment getConvKeyFrag(int pos){
-		FragmentStatePagerAdapter tempAdapter = (FragmentStatePagerAdapter) mConvKeysViewPager.getAdapter();
-		//make sure we aren't trying to access an invalid page fragment
-		if(pos<tempAdapter.getCount() && pos>=0){
-			ConvKeysFragment currFrag = (ConvKeysFragment) tempAdapter.instantiateItem(mConvKeysViewPager, pos);
-			return currFrag;
-		}
-		else return null;
 	}
 }

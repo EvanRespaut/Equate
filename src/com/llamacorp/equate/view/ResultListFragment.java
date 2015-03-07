@@ -182,8 +182,9 @@ public class ResultListFragment extends ListFragment {
 
 
 	/**
-	 * Gets called by the activity
-	 * @param instaScroll 
+	 * Update the listView and scroll to the bottom
+	 * @param instaScroll if false, use animated scroll to bottom,
+	 * otherwise use scroll instantly
 	 */
 	public void refresh(boolean instaScroll) {
 		//notify the adapter that the listview needs to be updated
