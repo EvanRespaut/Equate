@@ -170,6 +170,21 @@ public class UnitInitializer {
 		unitTypeArray.add(unitsOfSpeed);
 
 
+		UnitType unitsOfFuel = new UnitType("Fuel Eco");
+		unitsOfFuel.addUnit(new UnitScalar("", 0));
+		unitsOfFuel.addUnit(new UnitScalar("", 0));
+		unitsOfFuel.addUnit(new UnitScalar("", 0));
+		unitsOfFuel.addUnit(new UnitScalar("mpg us", "Miles per Gallon (US)", 3.785411784/1.609344)); //exact
+		unitsOfFuel.addUnit(new UnitScalar("mpg uk", "Miles per Gallon (UK)", 4.54609/1.609344)); //exact
+
+		unitsOfFuel.addUnit(new UnitScalar("", 0));
+		unitsOfFuel.addUnit(new UnitScalar("", 0));
+		unitsOfFuel.addUnit(new UnitScalar("L/100km", "Liter per 100 Kilometers", .01, true));
+		unitsOfFuel.addUnit(new UnitScalar("km/L", "Meters per Liter", 1));
+		unitsOfFuel.addUnit(new UnitScalar("mi/L", "Miles per Liter", 1/1.609344)); //exact
+		unitTypeArray.add(unitsOfFuel);
+
+
 		UnitType unitsOfPower = new UnitType("Power");
 		unitsOfPower.addUnit(new UnitScalar("", 0));
 		unitsOfPower.addUnit(new UnitScalar("", 0));

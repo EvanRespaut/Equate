@@ -5,6 +5,7 @@
 - Remove unnecessary comments and any sysouts
 - Remove timeout not reached toast
 
+-Landscape keys messed
 - Make convert summary text view's font size slightly dynamic
 - Add square root
 
@@ -60,7 +61,6 @@
 - Add preferences 
 - Make "Convert milimeters to..." blink or something cool
 - Make arrows in a circle instead of line
-- Commas for large numbers?
 - Make arrows pulse when waiting to convert
 - Also allow for custom unit
 - Implement infinity properly instead of just saying number too large
@@ -77,7 +77,6 @@
 - Explore adding another coloum of keys to main calc app, might be too cluttered, but also might be nice (maybe make it an option?)
 - Swipe down on units to hide; use three horz lines to signify swipeable. When hidden only show unittypes 
 - Use animation to move expression up and to the left after ='s; also make answer bold or something for a second
-- Commas between numbers?
 - Use spannable to create custom colors for operators and numbers 
 - Swipe out left from numbers to access options menu (flip EE/^, maybe custom units, default units open or closed)
 - Add programming conversions (binary, hex, oct etc)
