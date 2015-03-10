@@ -1,8 +1,5 @@
 package com.llamacorp.equate.view;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -36,6 +33,8 @@ implements OnResultSelectedListener, OnConvertKeySelectedListener{
 	private ResultListFragment mResultListFrag;	//scroll-able history
 	private EditTextCursorWatcher mDisplay;  		//main display
 	private ViewPager mUnitTypeViewPager;			//controls and displays UnitType 
+
+	private Button mEqualsButton; //used for changing color
 
 	private static final int[] BUTTON_IDS = {
 		R.id.zero_button,
@@ -127,6 +126,10 @@ implements OnResultSelectedListener, OnConvertKeySelectedListener{
 
 		for(int id : BUTTON_IDS) {
 			Button button = (Button)findViewById(id);
+
+			//used for coloring the equals button
+			if(id == R.id.equals_button) mEqualsButton = button;
+
 			button.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View view) {
@@ -435,7 +438,16 @@ implements OnResultSelectedListener, OnConvertKeySelectedListener{
 		if(!mCalc.isUnitSelected())
 			clearUnitSelection(mUnitTypeViewPager.getCurrentItem());
 	}
+	
 
+	/**
+	 * Changes equals button color according the the input boolean value.
+	 * Equals button is colored normally when button is not selected. When 
+	 * a unit is selected, equals button looks like a regular op button
+	 */
+	public void setEqualButtonColor(boolean unHighlighted){
+		mEqualsButton.setSelected(unHighlighted);
+	}
 
 
 

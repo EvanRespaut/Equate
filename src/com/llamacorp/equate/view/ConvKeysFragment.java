@@ -27,6 +27,7 @@ public class ConvKeysFragment extends Fragment implements OnConvertKeyUpdateFini
 	// Container Activity must implement this interface
 	public interface OnConvertKeySelectedListener {
 		public void updateScreen(boolean updateResult);
+		public void setEqualButtonColor(boolean unitSet);
 	}
 
 	@Override
@@ -360,6 +361,7 @@ public class ConvKeysFragment extends Fragment implements OnConvertKeyUpdateFini
 	
 	
 	private void setButtonHighlight(boolean highlighted){
+		mCallback.setEqualButtonColor(highlighted);
 		//Don't color if "More" button was selected
 		if(mUnitType.getCurrUnitPos() < mNumConvButtons)
 			//set the current button to highlighted or not
