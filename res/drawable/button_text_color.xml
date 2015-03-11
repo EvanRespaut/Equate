@@ -1,7 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android" >
-    <item android:state_pressed="false" 
-        android:color="@color/button_text_normal"/>
-    <item android:state_pressed="true" 
-        android:color="@color/button_text_pressed"/>
+   <!-- Hover used to give convert buttons accent before convert -->
+    <item android:color="@color/button_text_conv_not_selected" 
+          android:state_hovered="true" 
+          android:state_pressed="false"/>
+    
+   <!-- Pressed = half clicked; selected = (only for units) unit selected -->
+    <item android:color="@color/button_text_conv_normal" 
+          android:state_selected="true" 
+          android:state_pressed="true"/>
+    <item android:color="@color/button_text_pressed" 
+          android:state_selected="false"
+          android:state_pressed="true" />
+    <item android:color="@color/button_text_conv_pressed"
+          android:state_selected="true"
+          android:state_pressed="false"/>
+    <item android:color="@color/button_text_normal" 
+          android:state_selected="false"
+          android:state_pressed="false" />
+    
 </selector>

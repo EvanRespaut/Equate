@@ -50,6 +50,8 @@ public class ConvKeysFragment extends Fragment implements OnConvertKeyUpdateFini
 	//holds UnitType for this fragment aka series of convert buttons
 	private UnitType mUnitType;
 	private ArrayList<Button> mConvButton;
+	
+	private Button mMoreButton;
 
 	private int mNumConvButtons;
 
@@ -105,12 +107,12 @@ public class ConvKeysFragment extends Fragment implements OnConvertKeyUpdateFini
 		if(mUnitType.size() > convertButtonIds.length){
 			mNumConvButtons =  mNumConvButtons - 1;
 
-			Button button = (Button)v.findViewById(convertButtonIds[mNumConvButtons]);
+			mMoreButton = (Button)v.findViewById(convertButtonIds[mNumConvButtons]);
 
-			button.setText(getText(R.string.more_button));
+			mMoreButton.setText(getText(R.string.more_button));
 			//button.setTypeface(null, Typeface.ITALIC);
 			
-			button.setOnClickListener(new View.OnClickListener() {
+			mMoreButton.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View view) {
 					createMoreUnitsDialog(getText(R.string.select_unit), 
@@ -245,21 +247,15 @@ public class ConvKeysFragment extends Fragment implements OnConvertKeyUpdateFini
 		displayText = textPrefix + displayText;
 		Button button = mConvButton.get(buttonPos);
 
-		/*
-			//want to superscript text after a "^" character
-			String [] splitArray = displayText.split("\\^");
-			//only upper-case text if it exists
-			if(splitArray.length>1){
-				//cut out the "^"
-				SpannableString spanText = new SpannableString(splitArray[0] + splitArray[1]);   
-				//superscript the portion after the "^"
-				spanText.setSpan(new SuperscriptSpan(), splitArray[0].length(), spanText.length(), 0);  
-				button.setText(spanText, BufferType.SPANNABLE);   
-			}
-			//otherwise just set it normally
-			else
-		 */
 		button.setText(displayText);
+		
+		//accent the text color of the button
+		button.setHovered(!textPrefix.equals(""));
+		
+		//TODO crude method here, since this is called 10x times and only needs
+		//to be called once
+		if(mMoreButton != null)
+			mMoreButton.setHovered(!textPrefix.equals(""));
 	}
 
 	/** Used to pass selected unit to the UnitType model class
@@ -333,11 +329,10 @@ public class ConvKeysFragment extends Fragment implements OnConvertKeyUpdateFini
 		if(mUnitType.isUnitSelected()){
 			for(int i=0;i<mConvButton.size();i++){
 				if(i != mUnitType.getCurrUnitPos()){
-					//\u2192 is an ascii arrow
 					refreshButtonText(getResources().getString(R.string.convert_arrow), i);
 				}
 			}
-			setButtonHighlight(true);
+			setSelectedButtonHighlight(true);
 		}			
 	}
 
@@ -354,13 +349,13 @@ public class ConvKeysFragment extends Fragment implements OnConvertKeyUpdateFini
 		}
 
 		//Clear color from previously selected convert button
-		setButtonHighlight(false);
+		setSelectedButtonHighlight(false);
 		//clear the button in the calc
 		//	mUnitType.clearUnitSelection();
 	}
 	
 	
-	private void setButtonHighlight(boolean highlighted){
+	private void setSelectedButtonHighlight(boolean highlighted){
 		mCallback.setEqualButtonColor(highlighted);
 		//Don't color if "More" button was selected
 		if(mUnitType.getCurrUnitPos() < mNumConvButtons)
