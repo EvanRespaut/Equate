@@ -5,6 +5,11 @@
 - Remove unnecessary comments and any sysouts
 - Remove timeout not reached toast
 
+ http://stackoverflow.com/questions/1309629/how-to-change-colors-of-a-drawable-in-android
+
+-When history item deleted, toast
+- When currency update, toast
+- Think about adding a graphic for shrinking unit keys
 - Make convert summary text view's font size slightly dynamic
 - Add square root
 

@@ -189,9 +189,17 @@ public class ResultListFragment extends ListFragment {
 	public void refresh(boolean instaScroll) {
 		//notify the adapter that the listview needs to be updated
 		((ResultAdapter)getListAdapter()).notifyDataSetChanged();	
+		
 		//scroll to the bottom of the list
-		if(instaScroll)
-			getListView().setSelection(getListAdapter().getCount()-1);
+		if(instaScroll){
+			//post a runnable for setSelection otherwise it won't be called
+			getListView().post(new Runnable() {
+		        @Override
+		        public void run() {
+		            getListView().setSelection(getListAdapter().getCount()-1);
+		        }
+		    });
+		}
 		else
 			getListView().smoothScrollToPosition(getListAdapter().getCount()-1);
 	}

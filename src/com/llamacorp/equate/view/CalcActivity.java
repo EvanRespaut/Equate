@@ -195,6 +195,7 @@ implements OnResultSelectedListener, OnConvertKeySelectedListener{
 					case R.id.eight_button: 
 						if(mUnitContain.getVisibility() == LinearLayout.GONE){
 							mUnitContain.setVisibility(LinearLayout.VISIBLE);
+							updateScreen(true, true); 
 						}
 						else
 							mUnitContain.setVisibility(LinearLayout.GONE);
