@@ -187,9 +187,9 @@ public class UnitInitializer {
 
 		UnitType unitsOfPower = new UnitType("Power");
 		unitsOfPower.addUnit(new UnitScalar("", 0));
-		unitsOfPower.addUnit(new UnitScalar("", 0));
-		unitsOfPower.addUnit(new UnitScalar("W", "Watts", 1));
+		unitsOfPower.addUnit(new UnitScalar("MW", "Megawatts", 1E-6));
 		unitsOfPower.addUnit(new UnitScalar("kW", "Kilowatts", 1E-3));
+		unitsOfPower.addUnit(new UnitScalar("W", "Watts", 1));
 		unitsOfPower.addUnit(new UnitScalar("hp", "Horsepower", 1/745.699872)); //don't think it's exact
 
 		unitsOfPower.addUnit(new UnitScalar("", 0));
@@ -217,7 +217,22 @@ public class UnitInitializer {
 		unitsOfEnergy.addUnit(new UnitScalar("eV", "Electronvolts", 6.241509E18));
 		unitTypeArray.add(unitsOfEnergy);
 
+		
+		UnitType unitsOfForce = new UnitType("Force");
+		unitsOfForce.addUnit(new UnitScalar("", 0));
+		unitsOfForce.addUnit(new UnitScalar("", 0));
+		unitsOfForce.addUnit(new UnitScalar("dyn", "Dyne", 1E5)); 
+		unitsOfForce.addUnit(new UnitScalar("kgf", "Kilogram-Force", 1/9.80665)); //exact
+		unitsOfForce.addUnit(new UnitScalar("N", "Newton", 1)); 
 
+		unitsOfForce.addUnit(new UnitScalar("", 0));
+		unitsOfForce.addUnit(new UnitScalar("", 0));
+		unitsOfForce.addUnit(new UnitScalar("pdl", "Poundal", 1/0.138254954376)); //exact
+		unitsOfForce.addUnit(new UnitScalar("lbf", "Pound-Force", 1/4.4482216152605)); //exact
+		unitsOfForce.addUnit(new UnitScalar("ozf", "Ounce-Force", 16/4.4482216152605));  //exact
+		unitTypeArray.add(unitsOfForce);
+		
+		
 		UnitType unitsOfTorque = new UnitType("Torque");
 		unitsOfTorque.addUnit(new UnitScalar("Nm", "Newton Meters", 1)); 
 		unitsOfTorque.addUnit(new UnitScalar("Ncm", "Newton Centimeters", 100)); 
@@ -232,7 +247,6 @@ public class UnitInitializer {
 		unitsOfTorque.addUnit(new UnitScalar("dyn cm", "Dyne Centimeters", 1));
 		unitTypeArray.add(unitsOfTorque);
 
-		//note the use of singular tense, not sure what is the best
 		UnitType unitsOfPressure = new UnitType("Pressure");
 		unitsOfPressure.addUnit(new UnitScalar("N/m\u00B2", "Newton/Square Meter", 1));
 		unitsOfPressure.addUnit(new UnitScalar("lb/ft\u00B2", "Pounds/Square Foot", 144/6894.757293168));  //approx
