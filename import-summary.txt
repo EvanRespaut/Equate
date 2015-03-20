@@ -1,0 +1,82 @@
+ECLIPSE ANDROID PROJECT IMPORT SUMMARY
+======================================
+
+Ignored Files:
+--------------
+The following files were *not* copied into the new Gradle project; you
+should evaluate whether these are still needed in your project and if
+so manually move them:
+
+* .gitignore
+* LICENSE
+* Readme.txt
+* Todo_for_Calc_App.txt
+* screenshots\
+* screenshots\CalcDesign.pdn
+* screenshots\ColoredConvertButts.png
+* screenshots\Icon.pdn
+* screenshots\Icon.zip
+* screenshots\ScreenShot (20).png
+* screenshots\ScreenShot (21).png
+* screenshots\ScreenShot (22).png
+* screenshots\ScreenShot (23).png
+* screenshots\ScreenShot (24).png
+* screenshots\ScreenShot (25).png
+* screenshots\ScreenShot (26).png
+* screenshots\ScreenShot (27).png
+* screenshots\ScreenShot (28).png
+* screenshots\ScreenShot (29).png
+* screenshots\ScreenShot (30).png
+* screenshots\ScreenShot (31).png
+* screenshots\ScreenShot (32).png
+* screenshots\ScreenShot (33).png
+* screenshots\ScreenShot (34).png
+* screenshots\ScreenShot (35).png
+* screenshots\ScreenShot (36).png
+* screenshots\ScreenShot (37).png
+* screenshots\UnitColorDesign.pdn
+* screenshots\ViewPager Patch 9 Drawings\
+* screenshots\ViewPager Patch 9 Drawings\All versions\
+* screenshots\ViewPager Patch 9 Drawings\All versions\vpi__tab_selected_holo.9.zip
+* screenshots\ViewPager Patch 9 Drawings\All versions\vpi__tab_selected_pressed_holo.9.zip
+* screenshots\ViewPager Patch 9 Drawings\All versions\vpi__tab_unselected_holo.9.zip
+* screenshots\ViewPager Patch 9 Drawings\All versions\vpi__tab_unselected_pressed_holo.9.zip
+
+Replaced Jars with Dependencies:
+--------------------------------
+The importer recognized the following .jar files as third party
+libraries and replaced them with Gradle dependencies instead. This has
+the advantage that more explicit version information is known, and the
+libraries can be updated automatically. However, it is possible that
+the .jar file in your project was of an older version than the
+dependency we picked, which could render the project not compileable.
+You can disable the jar replacement in the import wizard and try again:
+
+android-support-v4.jar => com.android.support:support-v4:19.1.0
+
+Moved Files:
+------------
+Android Gradle projects use a different directory structure than ADT
+Eclipse projects. Here's how the projects were restructured:
+
+* AndroidManifest.xml => app\src\main\AndroidManifest.xml
+* assets\ => app\src\main\assets\
+* res\ => app\src\main\res\
+* src\ => app\src\main\java\
+* AndroidTest\res\ => app\src\androidTest\res\
+* AndroidTest\src\ => app\src\androidTest\java\
+
+Next Steps:
+-----------
+You can now build the project. The Gradle project needs network
+connectivity to download dependencies.
+
+Bugs:
+-----
+If for some reason your project does not build, and you determine that
+it is due to a bug or limitation of the Eclipse to Gradle importer,
+please file a bug at http://b.android.com with category
+Component-Tools.
+
+(This import summary is for your information only, and can be deleted
+after import once you are satisfied with the results.)

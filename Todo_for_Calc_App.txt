@@ -7,6 +7,7 @@
 
  http://stackoverflow.com/questions/1309629/how-to-change-colors-of-a-drawable-in-android
 
+- Android studio
 -When history item deleted, toast
 - When currency update, toast
 - Think about adding a graphic for shrinking unit keys
