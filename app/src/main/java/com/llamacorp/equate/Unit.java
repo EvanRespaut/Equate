@@ -43,7 +43,7 @@ public abstract class Unit  /*implements JsonSerializer<Unit>, JsonDeserializer<
 	static protected Unit getUnit(JSONObject json) throws JSONException {
 		String unitType = json.getString(JSON_TYPE);
 		String packageName = Unit.class.getPackage().getName();
-		Unit u =null;
+		Unit u;
 		try {
 			Class<?> c = Class.forName(packageName + "." + unitType);
 			Constructor<?> con = c.getConstructor(JSONObject.class);

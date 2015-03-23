@@ -132,8 +132,6 @@ public  class  ExpSeperatorHandler {
 	/**
 	 * Take an index and shift it over if it's in an invalid location relative
 	 * to the separator. Eg if index=2 in 1,234, move it to 1
-	 * @param index
-	 * @return
 	 */
 	public int makeIndexValid(int index){
 		if(mSepIndexes != null)

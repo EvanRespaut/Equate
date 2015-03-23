@@ -33,9 +33,9 @@ public class UnitInitializer {
 				229.594, 232.957, 236.911};
 
 		ArrayList<Double> al = new ArrayList<Double>();
-		for(int i=0;i<cpiTable.length;i++){
+		for(double val : cpiTable){
 			//convert values such that 1 is current 2014 dollar
-			double normalizedValue = cpiTable[i]/cpiTable[cpiTable.length-1];
+			double normalizedValue = val/cpiTable[cpiTable.length-1];
 			al.add(normalizedValue);
 		}
 
@@ -98,7 +98,7 @@ public class UnitInitializer {
 		unitsOfLength.addUnit(new UnitScalar("m", "Meters", 1));
 
 		unitsOfLength.addUnit(new UnitScalar("nm", "Nanometers", 1E9));
-		unitsOfLength.addUnit(new UnitScalar("Å", "Ångströms", 1E10));
+		unitsOfLength.addUnit(new UnitScalar("ï¿½", "ï¿½ngstrï¿½ms", 1E10));
 		unitsOfLength.addUnit(new UnitScalar("mil", "Thousandths of an Inch", 1/2.54E-5));
 		unitsOfLength.addUnit(new UnitScalar("fur", "Furlongs", 0.00497096954));
 		unitsOfLength.addUnit(new UnitScalar("pc", "Parsecs", 3.24078E-17));

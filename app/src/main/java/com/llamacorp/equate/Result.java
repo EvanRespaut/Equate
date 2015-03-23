@@ -47,14 +47,6 @@ public class Result {
 		mAnswerUnitTextLong = "";
 	}
 
-	public Result(String query){
-		this(query,"");
-	}
-
-	public Result(){
-		this("","");
-	}
-
 	public Result(JSONObject json) throws JSONException {
 		setQuerry(json.getString(JSON_QUERY));
 		setAnswer(json.getString(JSON_ANSWER));

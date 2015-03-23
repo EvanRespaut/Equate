@@ -72,11 +72,6 @@ public class Expression {
 		}
 	}
 
-	public Expression(){
-		//precision of zero means any precise result converting will be skipped
-		this(0);
-	}
-
 	public Expression(JSONObject json, int displayPrecision) throws JSONException {
 		this(displayPrecision);
 		replaceExpression(json.getString(JSON_EXPRESSION));
@@ -330,8 +325,8 @@ public class Expression {
 
 	/** Replaces % operators their respective operators */
 	public static String replacePercentOps(String str) {
-		String subStr = "";
-		String strAfter = "";
+		String subStr;
+		String strAfter;
 		for(int i=0;i<str.length();i++){
 			if(str.charAt(i)=='%'){
 				//save beginning portion of string before the %
@@ -454,7 +449,7 @@ public class Expression {
 
 		//find out if expression's first term matches first part of the precise result, if so replace with more precise term
 		if(getFirstNumb().equals(formallyPrecCleaned)){
-			replaceExpression(getExpression().replaceFirst(regexGroupedNumber, mPreciseResult.toString()));
+			replaceExpression(getExpression().replaceFirst(regexGroupedNumber, mPreciseResult));
 		}
 	}
 
@@ -750,8 +745,8 @@ public class Expression {
 	private void markHighlighted(int[] indexArray){
 		clearHighlightedList();
 
-		for(int i = 0; i < indexArray.length; i++){
-			mHighlightedCharList.add(indexArray[i]);
+		for(int index : indexArray){
+			mHighlightedCharList.add(index);
 		}
 
 		Collections.sort(mHighlightedCharList);

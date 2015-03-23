@@ -146,7 +146,7 @@ public class Calculator{
 			InputStream in = mAppContext.openFileInput(FILENAME);
 			reader = new BufferedReader(new InputStreamReader(in));
 			StringBuilder jsonString = new StringBuilder();
-			String line = null;
+			String line;
 			while ((line = reader.readLine()) != null) {
 				// line breaks are omitted and irrelevant
 				jsonString.append(line);
@@ -373,9 +373,8 @@ public class Calculator{
 			return;
 		}
 
-		//delete last of calcExp list so long as expression isn't already empty
-		if(!mExpression.isEmpty())
-			mExpression.backspaceAtSelection();
+		//since the expression isn't empty, delete last of calcExp list
+		mExpression.backspaceAtSelection();
 	}
 
 	private void clearSelectedUnit(){
@@ -476,8 +475,6 @@ public class Calculator{
 
 	/**
 	 * Set the EditText selection for expression
-	 * @param selStart
-	 * @param selEnd
 	 */
 	public void setSelection(int selStart, int selEnd) {
 		mExpression.setSelection(selStart, selEnd);

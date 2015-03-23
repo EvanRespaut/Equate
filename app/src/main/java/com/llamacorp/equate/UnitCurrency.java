@@ -104,7 +104,7 @@ public class UnitCurrency extends Unit {
 		Date now = new Date();
 		if(mTimeLastUpdated != null && (now.getTime() - mTimeLastUpdated.getTime()) < (60*1000*UPDATE_TIMEOUT_MIN)){ 
 			//System.out.println("Not ready to update " + getName() + " yet, wait " + (now.getTime() - mTimeLastUpdated.getTime())/(1000) + " seconds");
-			final Toast toast = Toast.makeText(mContext, (CharSequence)"Timeout not reached for " + getName(), Toast.LENGTH_SHORT);
+			final Toast toast = Toast.makeText(mContext, "Timeout not reached for " + getName(), Toast.LENGTH_SHORT);
 			toast.show();
 
 			Handler handler = new Handler();
@@ -219,7 +219,7 @@ public class UnitCurrency extends Unit {
 
 		/** Helper function for above method*/
 		private String GET(String url){
-			InputStream inputStream = null;
+			InputStream inputStream;
 			String result = "";
 			try {
 				// create HttpClient
@@ -247,7 +247,7 @@ public class UnitCurrency extends Unit {
 		/** Helper function for above method*/
 		private String convertInputStreamToString(InputStream inputStream) throws IOException{
 			BufferedReader bufferedReader = new BufferedReader( new InputStreamReader(inputStream));
-			String line = "";
+			String line;
 			String result = "";
 			while((line = bufferedReader.readLine()) != null)
 				result += line;
