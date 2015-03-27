@@ -54,7 +54,7 @@ public class Expression {
 	//the following is a more concise version, but doesn't work with NP++ due to the | in the lookbehind
 	//public static final String regexGroupedNonNegNumber = "((?:(?<=^|[*+/])\\-)?\\d*\\.?\\d+\\.?(?:E[\\-\\+]?\\d+)?)";
 
-	private String[][] substituteChars = new String[][]{{"[\u00f7�]", "/"}, //alt-246
+	private String[][] substituteChars = new String[][]{{"[\u00f7\u00B7]", "/"}, //alt-246
 			{"[x\u00d7]", "*"},//alt-0215,249,250 
 			{"[\u0096\u0097]", "-"}}; //alt-0151,0150
 	//TODO add in all these characters
@@ -80,8 +80,6 @@ public class Expression {
 		//		mSelectionStart = json.getInt(JSON_START);
 		//		mSelectionEnd = json.getInt(JSON_END);
 
-		//System.out.println("mSelectionStart="+mSelectionStart);
-		//System.out.println("mSelectionEnd="+mSelectionEnd);
 		setSolved(json.getBoolean(JSON_SOLVED));
 	}
 

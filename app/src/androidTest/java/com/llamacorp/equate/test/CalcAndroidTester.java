@@ -81,7 +81,7 @@ public class CalcAndroidTester extends ActivityInstrumentationTestCase2<CalcActi
 		mUnitToPos.put("long ton", inc++);
 		mUnitToPos.put("stone", inc++);
 
-		mUnitToPos.put("�g", inc++);
+		mUnitToPos.put("\u00B5g", inc++);
 		mUnitToPos.put("mg", inc++);
 		mUnitToPos.put("g", inc++);
 		mUnitToPos.put("kg", inc++);

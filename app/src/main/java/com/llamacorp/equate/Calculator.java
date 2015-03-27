@@ -32,7 +32,7 @@ public class Calculator{
 
 
 	private static Calculator mCaculator;
-	private Context mAppContext; 
+	private Context mAppContext;
 
 	//main expression
 	private Expression mExpression;
@@ -60,10 +60,10 @@ public class Calculator{
 	//------THIS IS FOR TESTING ONLY-----------------
 	private Calculator(){
 		mResultList = new ArrayList<Result>();
-		mExpression=new Expression(intDisplayPrecision); 		
-		//mMcOperate = new MathContext(intCalcPrecision); 
+		mExpression=new Expression(intDisplayPrecision);
+		//mMcOperate = new MathContext(intCalcPrecision);
 		mSolver = new Solver(intCalcPrecision);
-		mUnitTypePos=UNIT_TYPE_DEFAULT_POS;	
+		mUnitTypePos=UNIT_TYPE_DEFAULT_POS;
 		mUnitTypeArray = new ArrayList<UnitType>();
 		mIsTestCalc=true;
 		initiateUnits();
@@ -74,7 +74,7 @@ public class Calculator{
 
 
 	/**
-	 * Method turns calculator class into a singleton class 
+	 * Method turns calculator class into a singleton class
 	 * (one instance allowed)
 	 */
 	private Calculator(Context appContext){
@@ -102,7 +102,7 @@ public class Calculator{
 		catch (JSONException JE){
 			//delete the problem JSON file
 			boolean del = mAppContext.deleteFile(FILENAME);
-			String message = "Calculator reset due to JSONException. JSON file " 
+			String message = "Calculator reset due to JSONException. JSON file "
 					+ (del ? "successfully" : "NOT") + " deleted.";
 			toastErrorMsg(message);
 			resetCalc(); //reset the calc and we should be good
@@ -127,11 +127,11 @@ public class Calculator{
 		toast.setGravity(Gravity.CENTER, 0, 0);
 		toast.show();
 	}
-	
+
 
 	/**
 	 * Helper method used to initiate the array of various types of units
-	 */	
+	 */
 	private void initiateUnits(){
 		mUnitTypeArray.clear();
 		mUnitTypeArray = UnitInitializer.getDefaultUnitArray();
@@ -165,7 +165,7 @@ public class Calculator{
 				mResultList.add(new Result(jResultArray.getJSONObject(i)));
 			}
 
-			int newSize = mUnitTypeArray.size();	
+			int newSize = mUnitTypeArray.size();
 			JSONArray jUnitTypeArray = jObjState.getJSONArray(JSON_UNIT_TYPE_ARRAY);
 			//only load in saved unit types only if same size as current
 			if(jUnitTypeArray.length()==newSize){
@@ -182,27 +182,27 @@ public class Calculator{
 		} finally {
 			if (reader != null)
 				reader.close();
-		}
-	}
+      }
+   }
 
-	public void saveState() throws JSONException, IOException {
-		JSONObject jObjState = new JSONObject();
-		jObjState.put(JSON_EXPRESSION, mExpression.toJSON());
-		jObjState.put(JSON_UNIT_TYPE, mUnitTypePos);
-		jObjState.put(JSON_HINTS, mHints.toJSON());
+   public void saveState() throws JSONException, IOException {
+      JSONObject jObjState = new JSONObject();
+      jObjState.put(JSON_EXPRESSION, mExpression.toJSON());
+      jObjState.put(JSON_UNIT_TYPE, mUnitTypePos);
+      jObjState.put(JSON_HINTS, mHints.toJSON());
 
-		JSONArray jResultArray = new JSONArray();
-		for (Result result : mResultList)
-			jResultArray.put(result.toJSON());
-		jObjState.put(JSON_RESULT_LIST, jResultArray);
+      JSONArray jResultArray = new JSONArray();
+      for (Result result : mResultList)
+         jResultArray.put(result.toJSON());
+      jObjState.put(JSON_RESULT_LIST, jResultArray);
 
 
-		JSONArray jUnitTypeArray = new JSONArray();
-		for (UnitType unitType : mUnitTypeArray)
-			jUnitTypeArray.put(unitType.toJSON());
-		jObjState.put(JSON_UNIT_TYPE_ARRAY, jUnitTypeArray);
+      JSONArray jUnitTypeArray = new JSONArray();
+      for (UnitType unitType : mUnitTypeArray)
+         jUnitTypeArray.put(unitType.toJSON());
+      jObjState.put(JSON_UNIT_TYPE_ARRAY, jUnitTypeArray);
 
-		// write the file to disk
+      // write the file to disk
 		Writer writer = null;
 		try {
 			OutputStream out = mAppContext.openFileOutput(FILENAME, Context.MODE_PRIVATE);
@@ -261,7 +261,7 @@ public class Calculator{
 			solveAndLoadIntoResultList();
 			return true;
 		}
-		//check for plain text (want 
+		//check for plain text (want
 		//check for backspace key
 		else if(sKey.equals("b"))
 			backspace();
@@ -280,7 +280,7 @@ public class Calculator{
 			if(mExpression.isEmpty() && sKey.matches("[" + Expression.regexNonNegOperators + "]"))
 				if(!mResultList.isEmpty())
 					sKey = mResultList.get(mResultList.size()-1).getAnswerWithoutSep() + sKey;
-			
+
 			boolean requestSolve = mExpression.keyPresses(sKey);
 			if(requestSolve){
 				solveAndLoadIntoResultList();
@@ -294,7 +294,7 @@ public class Calculator{
 	 * Function used to convert from one unit to another
 	 * @param fromUnit is unit being converted from
 	 * @param toUnit is unit being converted to
-	 */		
+	 */
 	public void convertFromTo(Unit fromUnit, Unit toUnit){
 		//if expression was displaying "Syntax Error" or similar (containing invalid chars) clear it
 		if(isExpressionInvalid()){
@@ -331,7 +331,7 @@ public class Calculator{
 		//skip result list handling if no result was created
 		if(result != null){
 			mResultList.add(result);
-			//if we hit size limit, remove oldest element 
+			//if we hit size limit, remove oldest element
 			if(mResultList.size() > RESULT_LIST_MAX_SIZE)
 				mResultList.remove(0);
 			//if result had an error, leave before setting units
@@ -345,20 +345,20 @@ public class Calculator{
 			}
 			return true;
 		}
-		else 
+		else
 			return false;
 	}
 
 	/**
 	 * Clear function for the calculator
-	 */	
+	 */
 	private void clear(){
 		//clear the immediate expression
 		mExpression.clearExpression();
 
 		//reset current unit
 		clearSelectedUnit();
-	}   
+	}
 
 
 	/**
@@ -385,9 +385,9 @@ public class Calculator{
 	/**
 	 * Update values of units that are not static (currency) via
 	 * each unit's own HTTP/JSON API call. Note that this refresh
-	 * is asynchronous and will only happen sometime in the future 
+	 * is asynchronous and will only happen sometime in the future
 	 * Internet connection permitting.
-	 */		
+	 */
 	public void refreshAllDynamicUnits(){
 		//JUnit tests can't find AsynTask class, so skip it for test calc
 		if(!mIsTestCalc)
@@ -404,7 +404,7 @@ public class Calculator{
 
 	public ArrayList<Integer> getHighlighted(){
 		return mExpression.getHighlighted();
-	} 
+	}
 
 
 	public void clearHighlighted() {
@@ -446,7 +446,7 @@ public class Calculator{
 
 	public boolean isExpressionEmpty(){
 		return mExpression.isEmpty();
-	}	
+	}
 
 	public boolean isExpressionInvalid(){
 		return mExpression.isInvalid();
@@ -467,7 +467,7 @@ public class Calculator{
 
 	public int getSelectionEnd(){
 		return mExpression.getSelectionEnd();
-	}	
+	}
 
 	public int getSelectionStart(){
 		return mExpression.getSelectionStart();

@@ -98,7 +98,7 @@ public class UnitInitializer {
 		unitsOfLength.addUnit(new UnitScalar("m", "Meters", 1));
 
 		unitsOfLength.addUnit(new UnitScalar("nm", "Nanometers", 1E9));
-		unitsOfLength.addUnit(new UnitScalar("�", "�ngstr�ms", 1E10));
+		unitsOfLength.addUnit(new UnitScalar("\u212B", "\u212Bngstr\u00F6ms", 1E10));
 		unitsOfLength.addUnit(new UnitScalar("mil", "Thousandths of an Inch", 1/2.54E-5));
 		unitsOfLength.addUnit(new UnitScalar("fur", "Furlongs", 0.00497096954));
 		unitsOfLength.addUnit(new UnitScalar("pc", "Parsecs", 3.24078E-17));
@@ -162,23 +162,23 @@ public class UnitInitializer {
 		unitsOfSpeed.addUnit(new UnitScalar("mph", "Miles per Hour", 1/0.44704));
 		unitsOfSpeed.addUnit(new UnitScalar("knot", "Knots", 1/0.514444));
 
-		unitsOfSpeed.addUnit(new UnitScalar("", 0));
-		unitsOfSpeed.addUnit(new UnitScalar("", 0));
-		unitsOfSpeed.addUnit(new UnitScalar("", 0));
+		unitsOfSpeed.addUnit(new UnitScalar());
+		unitsOfSpeed.addUnit(new UnitScalar());
+		unitsOfSpeed.addUnit(new UnitScalar());
 		unitsOfSpeed.addUnit(new UnitScalar("m/s", "Meters per Second", 1));
 		unitsOfSpeed.addUnit(new UnitScalar("kph", "Kilometers per Hour", 3.6));
 		unitTypeArray.add(unitsOfSpeed);
 
 
 		UnitType unitsOfFuel = new UnitType("Fuel Eco");
-		unitsOfFuel.addUnit(new UnitScalar("", 0));
-		unitsOfFuel.addUnit(new UnitScalar("", 0));
-		unitsOfFuel.addUnit(new UnitScalar("", 0));
+		unitsOfFuel.addUnit(new UnitScalar());
+		unitsOfFuel.addUnit(new UnitScalar());
+		unitsOfFuel.addUnit(new UnitScalar());
 		unitsOfFuel.addUnit(new UnitScalar("mpg us", "Miles per Gallon (US)", 3.785411784/1.609344)); //exact
 		unitsOfFuel.addUnit(new UnitScalar("mpg uk", "Miles per Gallon (UK)", 4.54609/1.609344)); //exact
 
-		unitsOfFuel.addUnit(new UnitScalar("", 0));
-		unitsOfFuel.addUnit(new UnitScalar("", 0));
+		unitsOfFuel.addUnit(new UnitScalar());
+		unitsOfFuel.addUnit(new UnitScalar());
 		unitsOfFuel.addUnit(new UnitScalar("L/100km", "Liter per 100 Kilometers", .01, true));
 		unitsOfFuel.addUnit(new UnitScalar("km/L", "Meters per Liter", 1));
 		unitsOfFuel.addUnit(new UnitScalar("mi/L", "Miles per Liter", 1/1.609344)); //exact
@@ -186,13 +186,13 @@ public class UnitInitializer {
 
 
 		UnitType unitsOfPower = new UnitType("Power");
-		unitsOfPower.addUnit(new UnitScalar("", 0));
+		unitsOfPower.addUnit(new UnitScalar());
 		unitsOfPower.addUnit(new UnitScalar("MW", "Megawatts", 1E-6));
 		unitsOfPower.addUnit(new UnitScalar("kW", "Kilowatts", 1E-3));
 		unitsOfPower.addUnit(new UnitScalar("W", "Watts", 1));
 		unitsOfPower.addUnit(new UnitScalar("hp", "Horsepower", 1/745.699872)); //don't think it's exact
 
-		unitsOfPower.addUnit(new UnitScalar("", 0));
+		unitsOfPower.addUnit(new UnitScalar());
 		unitsOfPower.addUnit(new UnitScalar("Btu/hr", "Btus/Hour", 3.412141632)); //approx
 		unitsOfPower.addUnit(new UnitScalar("Btu/min", "Btus/Minute", 0.0568690272)); //approx
 		unitsOfPower.addUnit(new UnitScalar("ft-lb/min", "Foot-Pounds/Minute", 44.2537289)); //most likely approx
@@ -219,14 +219,14 @@ public class UnitInitializer {
 
 		
 		UnitType unitsOfForce = new UnitType("Force");
-		unitsOfForce.addUnit(new UnitScalar("", 0));
-		unitsOfForce.addUnit(new UnitScalar("", 0));
+		unitsOfForce.addUnit(new UnitScalar());
+		unitsOfForce.addUnit(new UnitScalar());
 		unitsOfForce.addUnit(new UnitScalar("dyn", "Dyne", 1E5)); 
 		unitsOfForce.addUnit(new UnitScalar("kgf", "Kilogram-Force", 1/9.80665)); //exact
 		unitsOfForce.addUnit(new UnitScalar("N", "Newton", 1)); 
 
-		unitsOfForce.addUnit(new UnitScalar("", 0));
-		unitsOfForce.addUnit(new UnitScalar("", 0));
+		unitsOfForce.addUnit(new UnitScalar());
+		unitsOfForce.addUnit(new UnitScalar());
 		unitsOfForce.addUnit(new UnitScalar("pdl", "Poundal", 1/0.138254954376)); //exact
 		unitsOfForce.addUnit(new UnitScalar("lbf", "Pound-Force", 1/4.4482216152605)); //exact
 		unitsOfForce.addUnit(new UnitScalar("ozf", "Ounce-Force", 16/4.4482216152605));  //exact

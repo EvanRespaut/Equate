@@ -179,7 +179,7 @@ public class UnitCurrency extends Unit {
 					setValue(Double.parseDouble(result));
 					updateSuccess = true;
 				} catch (Exception e){
-					System.out.println("Parsing Exception for BTC, result = " + result);
+					//System.out.println("Parsing Exception for BTC, result = " + result);
 				}
 			else
 				updateSuccess = parseRateFromJSONString(result);
@@ -208,11 +208,11 @@ public class UnitCurrency extends Unit {
 				setValue(rate);
 				updateSuccess = true;
 			} catch (JSONException e) {
-				if(result.contains("Over Quota")){
-					System.out.println("Over quota for " + getName());
-				}
-				else
-					System.out.println("Result didn't parse, result = " + result);
+//				if(result.contains("Over Quota")){
+//					System.out.println("Over quota for " + getName());
+//				}
+//				else
+//					System.out.println("Result didn't parse, result = " + result);
 			}
 			return updateSuccess;
 		}
