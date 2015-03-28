@@ -119,9 +119,9 @@ public class UnitCurrency extends Unit {
 		else
 			return true;
 		//		if(mTimeLastUpdated == null)
-		//			System.out.println("Update will be peformed: mTimeLastUpdated = null - " + getName());
+		//			System.out.println("Update will be performed: mTimeLastUpdated = null - " + getName());
 		//		else
-		//			System.out.println("Update will be peformed: TIMEOUT REACHED, last update = " + getUpdateTime());
+		//			System.out.println("Update will be performed: TIMEOUT REACHED, last update = " + getUpdateTime());
 	}
 
 	/**

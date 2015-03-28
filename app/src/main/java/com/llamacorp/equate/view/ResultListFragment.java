@@ -6,10 +6,12 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.text.Html;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.llamacorp.equate.Calculator;
 import com.llamacorp.equate.Result;
@@ -45,7 +47,7 @@ public class ResultListFragment extends ListFragment {
 
 		mResultArray = Calculator.getCalculator(getActivity()).getResultList();
 		ResultAdapter adapter = new ResultAdapter(mResultArray);
-		setListAdapter(adapter);	
+		setListAdapter(adapter);
 	}
 
 
@@ -60,20 +62,20 @@ public class ResultListFragment extends ListFragment {
 			// If we weren't given a view, inflate one
 			if (convertView == null)
 				convertView = getActivity().getLayoutInflater().
-					inflate(R.layout.list_item_result, null);
+					inflate(R.layout.list_item_result, parent, false);
 
 			// Configure the view for this result
 			Result result = getItem(position);
 
 			TextView textViewUnitDesc = (TextView)convertView.
-					findViewById(R.id.list_item_result_convertUnitDesc);	
+					findViewById(R.id.list_item_result_convertUnitDesc);
 			TextView textViewUnitTimestamp = (TextView)convertView.
 					findViewById(R.id.list_item_result_currencyTimestamp);
 			textViewUnitTimestamp.setVisibility(View.GONE);
 			if(result.containsUnits()){
-				String text = getResources().getString(R.string.word_Converting) + 
+				String text = getResources().getString(R.string.word_Converting) +
 						" " + result.getQuerryUnitTextLong() +
-						" " + getResources().getString(R.string.word_to) + 
+						" " + getResources().getString(R.string.word_to) +
 						" " + result.getAnswerUnitTextLong() + ":";
 				textViewUnitDesc.setText(Html.fromHtml("<i>" + text + "</i>"));
 				//ListView reuses old textViewUnitDesc sometimes; make sure old one isn't still invisible
@@ -88,17 +90,17 @@ public class ResultListFragment extends ListFragment {
 			}
 			else {
 				textViewUnitDesc.setVisibility(View.GONE);
-			}	
+			}
 
 			TextView textViewQuerry = (TextView)convertView.
-					findViewById(R.id.list_item_result_textPrevQuery);	
+					findViewById(R.id.list_item_result_textPrevQuery);
 			setUpResultTextView(textViewQuerry, result.getTextQuerry());
 
 			TextView textViewAnswer = (TextView)convertView.
 					findViewById(R.id.list_item_result_textPrevAnswer);
 			setUpResultTextView(textViewAnswer, result.getTextAnswer());
 
-			return convertView; 
+			return convertView;
 		}
 
 		/**
@@ -145,7 +147,7 @@ public class ResultListFragment extends ListFragment {
 						textPassBack = thisResult.getAnswerWithoutSep();
 
 					calc.parseKeyPressed(textPassBack);
-					
+
 					//if unit not selected in calc, and result has unit, set that unit
 					if(!calc.isUnitSelected() && thisResult.containsUnits()){
 						Unit unitPassBack;
@@ -160,20 +162,25 @@ public class ResultListFragment extends ListFragment {
 						mCallback.selectUnit(unitPassBack, thisResult.getUnitTypePos());
 					}
 
-					mCallback.updateScreen(false);				
+					mCallback.updateScreen(false);
 				}
 			});
 
 			textView.setOnLongClickListener(new View.OnLongClickListener() {
-				@Override 
+				@Override
 				public boolean onLongClick(View view) {
-					//get the listView position of this answer/query
-					int position = getListView().getPositionForView((View)view.getParent());
-					//delete associated previous expression
-					mResultArray.remove(position);
-					mCallback.updateScreen(true);				
+               Toast toast = Toast.makeText(view.getContext(), "Result Deleted", Toast.LENGTH_SHORT);
+               toast.setGravity(Gravity.CENTER, 0, 0);
+               toast.show();
 
-					return false;
+               //get the listView position of this answer/query
+               int position = getListView().getPositionForView((View)view.getParent());
+               //delete associated previous expression
+               mResultArray.remove(position);
+               mCallback.updateScreen(true);
+
+
+               return false;
 				}
 			});
 		}
@@ -188,8 +195,8 @@ public class ResultListFragment extends ListFragment {
 	 */
 	public void refresh(boolean instaScroll) {
 		//notify the adapter that the listview needs to be updated
-		((ResultAdapter)getListAdapter()).notifyDataSetChanged();	
-		
+		((ResultAdapter)getListAdapter()).notifyDataSetChanged();
+
 		//scroll to the bottom of the list
 		if(instaScroll){
 			//post a runnable for setSelection otherwise it won't be called
