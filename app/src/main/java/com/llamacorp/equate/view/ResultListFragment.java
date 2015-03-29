@@ -74,7 +74,7 @@ public class ResultListFragment extends ListFragment {
 			textViewUnitTimestamp.setVisibility(View.GONE);
 			if(result.containsUnits()){
 				String text = getResources().getString(R.string.word_Converting) +
-						" " + result.getQuerryUnitTextLong() +
+						" " + result.getQueryUnitTextLong() +
 						" " + getResources().getString(R.string.word_to) +
 						" " + result.getAnswerUnitTextLong() + ":";
 				textViewUnitDesc.setText(Html.fromHtml("<i>" + text + "</i>"));
@@ -92,9 +92,9 @@ public class ResultListFragment extends ListFragment {
 				textViewUnitDesc.setVisibility(View.GONE);
 			}
 
-			TextView textViewQuerry = (TextView)convertView.
+			TextView textViewQuery = (TextView)convertView.
 					findViewById(R.id.list_item_result_textPrevQuery);
-			setUpResultTextView(textViewQuerry, result.getTextQuerry());
+			setUpResultTextView(textViewQuery, result.getTextQuery());
 
 			TextView textViewAnswer = (TextView)convertView.
 					findViewById(R.id.list_item_result_textPrevAnswer);
@@ -130,7 +130,14 @@ public class ResultListFragment extends ListFragment {
 			textView.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View view) {
-					//get the listView position of this answer/query
+               //error case
+               if(view == null){
+                  Toast toast = Toast.makeText(getActivity(), "ERROR: onClick parameter view is null", Toast.LENGTH_LONG);
+                  toast.show();
+                  return;
+               }
+
+               //get the listView position of this answer/query
 					int position = getListView().getPositionForView((View)view.getParent());
 					//grab the calc
 					Calculator calc = Calculator.getCalculator(getActivity());
@@ -142,7 +149,7 @@ public class ResultListFragment extends ListFragment {
 					String textPassBack="";
 					int viewID = view.getId();
 					if (viewID==R.id.list_item_result_textPrevQuery)
-						textPassBack = thisResult.getQuerryWithoutSep();
+						textPassBack = thisResult.getQueryWithoutSep();
 					if (viewID==R.id.list_item_result_textPrevAnswer)
 						textPassBack = thisResult.getAnswerWithoutSep();
 
@@ -152,7 +159,7 @@ public class ResultListFragment extends ListFragment {
 					if(!calc.isUnitSelected() && thisResult.containsUnits()){
 						Unit unitPassBack;
 						if (viewID==R.id.list_item_result_textPrevQuery)
-							unitPassBack = thisResult.getQuerryUnit();
+							unitPassBack = thisResult.getQueryUnit();
 						else
 							unitPassBack = thisResult.getAnswerUnit();
 

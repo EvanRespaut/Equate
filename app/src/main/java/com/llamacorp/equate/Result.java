@@ -18,15 +18,15 @@ public class Result {
 	private static final String JSON_QUERY_UNIT_TEXT_LONG = "query_unit_text_long";
 	private static final String JSON_ANSWER_UNIT_TEXT_LONG = "answer_unit_text_long";
 	private static final String JSON_UNIT_TYPE_POS = "unit_type_pos";
-	private static final String JSON_CONTAINS_UNITS = "conatains_units";
+	private static final String JSON_CONTAINS_UNITS = "contains_units";
 	private static final String JSON_TIMESTAMP = "timestamp";
 
 
 	private String mQuery;
 	private String mAnswer;
-	private String mQuerryUnitText;
+	private String mQueryUnitText;
 	private String mAnswerUnitText;
-	private String mQuerryUnitTextLong;
+	private String mQueryUnitTextLong;
 	private String mAnswerUnitTextLong;
 	private Unit mQueryUnit;
 	private Unit mAnswerUnit;
@@ -35,27 +35,27 @@ public class Result {
 	private long mTimestamp;
 
 	public Result(String query, String answer){
-		setQuerryWithSep(query);
+		setQueryWithSep(query);
 		setAnswerWithSep(answer);
 		mQueryUnit = new UnitScalar();
 		mAnswerUnit = new UnitScalar();
 		mContainsUnits = false;
 		mTimestamp = 0;
-		mQuerryUnitText = "";
+		mQueryUnitText = "";
 		mAnswerUnitText = "";
-		mQuerryUnitTextLong = "";
+		mQueryUnitTextLong = "";
 		mAnswerUnitTextLong = "";
 	}
 
 	public Result(JSONObject json) throws JSONException {
-		setQuerry(json.getString(JSON_QUERY));
+		setQuery(json.getString(JSON_QUERY));
 		setAnswer(json.getString(JSON_ANSWER));
 		mQueryUnit = Unit.getUnit(json.getJSONObject(JSON_QUERY_UNIT)); 
 		mAnswerUnit = Unit.getUnit(json.getJSONObject(JSON_ANSWER_UNIT));
 		mAnswerUnitText = json.getString(JSON_ANSWER_UNIT_TEXT);
 		mAnswerUnitTextLong = json.getString(JSON_ANSWER_UNIT_TEXT_LONG);
-		mQuerryUnitText = json.getString(JSON_QUERY_UNIT_TEXT);
-		mQuerryUnitTextLong = json.getString(JSON_QUERY_UNIT_TEXT_LONG);
+		mQueryUnitText = json.getString(JSON_QUERY_UNIT_TEXT);
+		mQueryUnitTextLong = json.getString(JSON_QUERY_UNIT_TEXT_LONG);
 		mUnitTypePos = json.getInt(JSON_UNIT_TYPE_POS);
 		mContainsUnits = json.getBoolean(JSON_CONTAINS_UNITS);
 		mTimestamp = json.getLong(JSON_TIMESTAMP);
@@ -64,13 +64,13 @@ public class Result {
 	public JSONObject toJSON() throws JSONException {
 		JSONObject json = new JSONObject();
 
-		json.put(JSON_QUERY, getQuerry());
+		json.put(JSON_QUERY, getQuery());
 		json.put(JSON_ANSWER, getAnswer());
 		json.put(JSON_QUERY_UNIT, mQueryUnit.toJSON());
 		json.put(JSON_ANSWER_UNIT, mAnswerUnit.toJSON());
-		json.put(JSON_QUERY_UNIT_TEXT, mQuerryUnitText);
+		json.put(JSON_QUERY_UNIT_TEXT, mQueryUnitText);
 		json.put(JSON_ANSWER_UNIT_TEXT, mAnswerUnitText);
-		json.put(JSON_QUERY_UNIT_TEXT_LONG, mQuerryUnitTextLong);
+		json.put(JSON_QUERY_UNIT_TEXT_LONG, mQueryUnitTextLong);
 		json.put(JSON_ANSWER_UNIT_TEXT_LONG, mAnswerUnitTextLong);
 		json.put(JSON_UNIT_TYPE_POS, getUnitTypePos());
 		json.put(JSON_CONTAINS_UNITS, containsUnits());
@@ -79,21 +79,21 @@ public class Result {
 		return json;
 	}
 
-	public String getQuerryWithoutSep(){
-		return ExpSeperatorHandler.removeSep(getQuerry());
+	public String getQueryWithoutSep(){
+		return ExpSeperatorHandler.removeSep(getQuery());
 	}
 	
 	/** Returns query with separators */ 
-	private String getQuerry() {
+	private String getQuery() {
 		return mQuery;
 	}
 
-	public void setQuerryWithSep(String querry){
-		setQuerry(ExpSeperatorHandler.addSep(querry));
+	public void setQueryWithSep(String query){
+		setQuery(ExpSeperatorHandler.addSep(query));
 	}
 	
-	private void setQuerry(String querry) {
-		mQuery = querry;
+	private void setQuery(String query) {
+		mQuery = query;
 	}
 
 	public String getAnswerWithoutSep(){
@@ -113,7 +113,7 @@ public class Result {
 		mAnswer = answer;
 	}
 
-	public Unit getQuerryUnit() {
+	public Unit getQueryUnit() {
 		return mQueryUnit;
 	}
 
@@ -134,12 +134,12 @@ public class Result {
 		//years are most likely different
 		if(queryUnit == answerUnit && queryUnit.isHistorical()){
 			UnitHistCurrency uc = (UnitHistCurrency)queryUnit;
-			mQuerryUnitText = uc.getPreviousShortName();
-			mQuerryUnitTextLong = uc.getPreviousLowercaseLongName();			
+			mQueryUnitText = uc.getPreviousShortName();
+			mQueryUnitTextLong = uc.getPreviousLowercaseLongName();
 		}
 		else{
-			mQuerryUnitText = queryUnit.toString();
-			mQuerryUnitTextLong = queryUnit.getLowercaseLongName();
+			mQueryUnitText = queryUnit.toString();
+			mQueryUnitTextLong = queryUnit.getLowercaseLongName();
 		}
 
 		mUnitTypePos = unitTypePos;
@@ -187,9 +187,9 @@ public class Result {
 		return formatDate(mTimestamp);
 	}
 
-	public String getTextQuerry() {
+	public String getTextQuery() {
 		if(mContainsUnits)
-			return mQuery + " " + mQuerryUnitText;
+			return mQuery + " " + mQueryUnitText;
 		else
 			return mQuery;	
 	}
@@ -201,8 +201,8 @@ public class Result {
 			return mAnswer;
 	}
 
-	public String getQuerryUnitTextLong() {
-		return mQuerryUnitTextLong;
+	public String getQueryUnitTextLong() {
+		return mQueryUnitTextLong;
 	}
 
 	public String getAnswerUnitTextLong() {
