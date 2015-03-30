@@ -8,7 +8,7 @@ import android.view.MotionEvent;
 
 import com.llamacorp.equate.R;
 
-class AnimatedHoldButton extends SecondaryTextButton {
+public class AnimatedHoldButton extends SecondaryTextButton {
 	protected static final int SECONDARY_FONT_PERCENTAGE = 85;
 	private static final int CLICK_HOLD_TIME = 300;	
 
