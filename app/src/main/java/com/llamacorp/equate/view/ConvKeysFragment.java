@@ -266,10 +266,7 @@ public class ConvKeysFragment extends Fragment implements OnConvertKeyUpdateFini
 			UnitHistCurrency uhc = (UnitHistCurrency) mUnitType.getUnit(buttonPos);
 			AlertDialog.Builder builder = new AlertDialog.
 					Builder(getActivity());
-			builder.setTitle(getText(R.string.word_Change) 
-					+ " " + getText(R.string.word_historical) 
-					+ " " + mUnitType.getLowercaseGenericLongName(buttonPos) 
-					+ " " + getText(R.string.word_to) + ":");
+			builder.setTitle(getText(R.string.historical_dialog_title));
 			builder.setSingleChoiceItems(uhc.getPossibleYearsReversed(), uhc.getReversedYearIndex(), 
 					new DialogInterface.OnClickListener() {
 				@Override

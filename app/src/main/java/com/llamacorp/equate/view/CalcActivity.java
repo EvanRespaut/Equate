@@ -3,6 +3,7 @@ package com.llamacorp.equate.view;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -192,13 +193,14 @@ implements OnResultSelectedListener, OnConvertKeySelectedListener{
 					break;
 					case R.id.divide_button: buttonValue = "i";
 					break;
-					case R.id.eight_button: 
-						if(mUnitContain.getVisibility() == LinearLayout.GONE){
-							mUnitContain.setVisibility(LinearLayout.VISIBLE);
-							updateScreen(true, true); 
-						}
-						else
-							mUnitContain.setVisibility(LinearLayout.GONE);
+					case R.id.eight_button:
+                  if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+                     if (mUnitContain.getVisibility() == LinearLayout.GONE) {
+                        mUnitContain.setVisibility(LinearLayout.VISIBLE);
+                        updateScreen(true, true);
+                     } else
+                        mUnitContain.setVisibility(LinearLayout.GONE);
+                  }
 						break;
 					default: 					
 						return true;

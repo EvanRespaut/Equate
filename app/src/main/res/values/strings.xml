@@ -41,6 +41,7 @@
     <string name="select_unit">Select a unit:</string>
     <string name="word_Change">Change</string>
 	<string name="word_historical">historical</string>
+   <string name="historical_dialog_title">Select date:</string>
 	<string name="word_Convert">Convert</string>
 	<string name="word_Converting">Converting</string>
 	<string name="word_to">to</string>
