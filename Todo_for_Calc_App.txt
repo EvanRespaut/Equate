@@ -6,6 +6,7 @@
 
  http://stackoverflow.com/questions/1309629/how-to-change-colors-of-a-drawable-in-android
 
+- Click equals again for sci notation
 - getting occasional null pointer from "getListView().getPositionForView((View)view.getParent());" in ResultListFrag
 - When currency update, toast
 - Think about adding a graphic for shrinking unit keys

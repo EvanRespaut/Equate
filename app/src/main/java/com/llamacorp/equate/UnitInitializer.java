@@ -6,46 +6,47 @@ public class UnitInitializer {
 
 	public static ArrayList<UnitType> getDefaultUnitArray(){
 		ArrayList<UnitType> unitTypeArray = new ArrayList<UnitType>();
-		
+
+
+      //array of values from 1914 $10 bill; starts with 1913; uses the CPI index
+      //data can be found: http://data.bls.gov/timeseries/CUUR0000SA0
+      double[] cpiTable = {9.9, 10, 10.1, 10.9, 12.8, 15.1, 17.3, 20, 17.9, 16.8,
+              17.1, 17.1, 17.5, 17.7, 17.4, 17.1, 17.1, 16.7, 15.2, 13.7, 13, 13.4,
+              13.7, 13.9, 14.4, 14.1, 13.9, 14, 14.7, 16.3, 17.3, 17.6, 18, 19.5,
+              22.3, 24.1, 23.8, 24.1, 26, 26.5, 26.7, 26.9, 26.8, 27.2, 28.1, 28.9,
+              29.1, 29.6, 29.9, 30.2, 30.6, 31, 31.5, 32.4, 33.4, 34.8, 36.7, 38.8,
+              40.5, 41.8, 44.4, 49.3, 53.8, 56.9, 60.6, 65.2, 72.6, 82.4, 90.9, 96.5,
+              99.6, 103.9, 107.6, 109.6, 113.6, 118.3, 124, 130.7, 136.2, 140.3,
+              144.5, 148.2, 152.4, 156.9, 160.5, 163, 166.6, 172.2, 177.1, 179.9,
+              184, 188.9, 195.3, 201.6, 207.342, 215.303, 214.537, 218.056, 224.939,
+              229.594, 232.957, 236.911};
+
+      ArrayList<Double> al = new ArrayList<Double>();
+      for(double val : cpiTable){
+         //convert values such that 1 is current 2014 dollar
+         double normalizedValue = val/cpiTable[cpiTable.length-1];
+         al.add(normalizedValue);
+      }
+
+
 		UnitType unitsOfCurrency = new UnitType("Currency");
 		unitsOfCurrency.addUnit(new UnitCurrency("USD", "Dollars", 1));
 		unitsOfCurrency.addUnit(new UnitCurrency("EUR", "Euros", 0.76)); 
 		unitsOfCurrency.addUnit(new UnitCurrency("CAD", "Canadian Dollars", 1.08)); 
-		unitsOfCurrency.addUnit(new UnitCurrency("GBP", "Pounds", 0.6)); 
-		unitsOfCurrency.addUnit(new UnitCurrency("JPY", "Yen", 103.9)); 
+		unitsOfCurrency.addUnit(new UnitCurrency("GBP", "Pounds", 0.6));
+      unitsOfCurrency.addUnit(new UnitCurrency("BTC", "Bitcoins", 0.003,
+              "http://blockchain.info/tobtc?currency=USD&value=1"));
 
-		unitsOfCurrency.addUnit(new UnitCurrency("CHF", "Swiss Francs", 0.91)); 
-		unitsOfCurrency.addUnit(new UnitCurrency("AUD", "Australian Dollars", 1.07)); 
-		unitsOfCurrency.addUnit(new UnitCurrency("HKD", "Hong Kong Dollars", 7.75)); 
+      unitsOfCurrency.addUnit(new UnitHistCurrency("USD", "Dollars", al, 1913, 1975));
+		unitsOfCurrency.addUnit(new UnitCurrency("CHF", "Swiss Francs", 0.91));
+      unitsOfCurrency.addUnit(new UnitCurrency("JPY", "Yen", 103.9));
+		unitsOfCurrency.addUnit(new UnitCurrency("HKD", "Hong Kong Dollars", 7.75));
 
 
-		//array of values from 1914 $10 bill; starts with 1913; uses the CPI index
-		//data can be found: http://data.bls.gov/timeseries/CUUR0000SA0
-		double[] cpiTable = {9.9, 10, 10.1, 10.9, 12.8, 15.1, 17.3, 20, 17.9, 16.8, 
-				17.1, 17.1, 17.5, 17.7, 17.4, 17.1, 17.1, 16.7, 15.2, 13.7, 13, 13.4, 
-				13.7, 13.9, 14.4, 14.1, 13.9, 14, 14.7, 16.3, 17.3, 17.6, 18, 19.5, 
-				22.3, 24.1, 23.8, 24.1, 26, 26.5, 26.7, 26.9, 26.8, 27.2, 28.1, 28.9,
-				29.1, 29.6, 29.9, 30.2, 30.6, 31, 31.5, 32.4, 33.4, 34.8, 36.7, 38.8,
-				40.5, 41.8, 44.4, 49.3, 53.8, 56.9, 60.6, 65.2, 72.6, 82.4, 90.9, 96.5,
-				99.6, 103.9, 107.6, 109.6, 113.6, 118.3, 124, 130.7, 136.2, 140.3, 
-				144.5, 148.2, 152.4, 156.9, 160.5, 163, 166.6, 172.2, 177.1, 179.9, 
-				184, 188.9, 195.3, 201.6, 207.342, 215.303, 214.537, 218.056, 224.939, 
-				229.594, 232.957, 236.911};
-
-		ArrayList<Double> al = new ArrayList<Double>();
-		for(double val : cpiTable){
-			//convert values such that 1 is current 2014 dollar
-			double normalizedValue = val/cpiTable[cpiTable.length-1];
-			al.add(normalizedValue);
-		}
-
-		unitsOfCurrency.addUnit(new UnitHistCurrency("USD", "Dollars", al, 1913, 1975));
-
-		unitsOfCurrency.addUnit(new UnitCurrency("SGD", "Singapore Dollars", 1.25)); 
+      unitsOfCurrency.addUnit(new UnitCurrency("AUD", "Australian Dollars", 1.07));
+      unitsOfCurrency.addUnit(new UnitCurrency("SGD", "Singapore Dollars", 1.25));
 		unitsOfCurrency.addUnit(new UnitCurrency("CNY", "Chinese Yuans", 6.15)); 
-		unitsOfCurrency.addUnit(new UnitCurrency("BTC", "Bitcoins", 0.003, 
-				"http://blockchain.info/tobtc?currency=USD&value=1")); 
-		unitsOfCurrency.addUnit(new UnitCurrency("RUB", "Russian Rubles", 39.7)); 
+		unitsOfCurrency.addUnit(new UnitCurrency("RUB", "Russian Rubles", 39.7));
 		unitTypeArray.add(unitsOfCurrency);
 
 		//refreshAllDynamicUnits();		
@@ -214,7 +215,8 @@ public class UnitInitializer {
 
 		unitsOfEnergy.addUnit(new UnitScalar("Nm", "Newton-Meters", 1));
 		unitsOfEnergy.addUnit(new UnitScalar("MJ", "Megajoules", 1E-6));
-		unitsOfEnergy.addUnit(new UnitScalar("eV", "Electronvolts", 6.241509E18));
+      unitsOfEnergy.addUnit(new UnitScalar("eV", "Electronvolts", 6.241509E18));
+      unitsOfEnergy.addUnit(new UnitScalar("Ha", "Hartrees", 2.29371044869059200E17));
 		unitTypeArray.add(unitsOfEnergy);
 
 		
