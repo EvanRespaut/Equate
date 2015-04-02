@@ -4,14 +4,17 @@
 - Should use API update historical USD to today's USD
 - Remove timeout not reached toast
 
- http://stackoverflow.com/questions/1309629/how-to-change-colors-of-a-drawable-in-android
 
+- Need a way to reset units instead of pull them from memory when new app installed (so user gets updated shit)
+- 2015 Historical (grab latest CPI numbers)
 - Click equals again for sci notation
+
 - getting occasional null pointer from "getListView().getPositionForView((View)view.getParent());" in ResultListFrag
 - When currency update, toast
 - Think about adding a graphic for shrinking unit keys
 - Make convert summary text view's font size slightly dynamic
 - Add square root
+http://stackoverflow.com/questions/1309629/how-to-change-colors-of-a-drawable-in-android
 
 -----Stuff to Test (squashed bugs, etc)-----
 - Empty expression, tap previous result with different unit type than curr, adds a one

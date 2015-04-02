@@ -31,22 +31,23 @@ public class UnitInitializer {
 
 		UnitType unitsOfCurrency = new UnitType("Currency");
 		unitsOfCurrency.addUnit(new UnitCurrency("USD", "Dollars", 1));
-		unitsOfCurrency.addUnit(new UnitCurrency("EUR", "Euros", 0.76)); 
-		unitsOfCurrency.addUnit(new UnitCurrency("CAD", "Canadian Dollars", 1.08)); 
-		unitsOfCurrency.addUnit(new UnitCurrency("GBP", "Pounds", 0.6));
-      unitsOfCurrency.addUnit(new UnitCurrency("BTC", "Bitcoins", 0.003,
+		unitsOfCurrency.addUnit(new UnitCurrency("EUR", "Euros", 0.929));
+		unitsOfCurrency.addUnit(new UnitCurrency("CAD", "Canadian Dollars", 1.26));
+		unitsOfCurrency.addUnit(new UnitCurrency("GBP", "Pounds", 0.67));
+      unitsOfCurrency.addUnit(new UnitCurrency("BTC", "Bitcoins", 0.004,
               "http://blockchain.info/tobtc?currency=USD&value=1"));
 
       unitsOfCurrency.addUnit(new UnitHistCurrency("USD", "Dollars", al, 1913, 1975));
-		unitsOfCurrency.addUnit(new UnitCurrency("CHF", "Swiss Francs", 0.91));
-      unitsOfCurrency.addUnit(new UnitCurrency("JPY", "Yen", 103.9));
+		unitsOfCurrency.addUnit(new UnitCurrency("CHF", "Swiss Francs", 0.967));
+      unitsOfCurrency.addUnit(new UnitCurrency("JPY", "Yen", 119.7));
 		unitsOfCurrency.addUnit(new UnitCurrency("HKD", "Hong Kong Dollars", 7.75));
 
 
-      unitsOfCurrency.addUnit(new UnitCurrency("AUD", "Australian Dollars", 1.07));
-      unitsOfCurrency.addUnit(new UnitCurrency("SGD", "Singapore Dollars", 1.25));
-		unitsOfCurrency.addUnit(new UnitCurrency("CNY", "Chinese Yuans", 6.15)); 
-		unitsOfCurrency.addUnit(new UnitCurrency("RUB", "Russian Rubles", 39.7));
+      unitsOfCurrency.addUnit(new UnitCurrency("AUD", "Australian Dollars", 1.314));
+      unitsOfCurrency.addUnit(new UnitCurrency("SGD", "Singapore Dollars", 1.363));
+		unitsOfCurrency.addUnit(new UnitCurrency("CNY", "Chinese Yuans", 6.198));
+      unitsOfCurrency.addUnit(new UnitCurrency("RUB", "Russian Rubles", 57.62));
+      unitsOfCurrency.addUnit(new UnitCurrency("AED", "UAE Dirhams", 3.673));
 		unitTypeArray.add(unitsOfCurrency);
 
 		//refreshAllDynamicUnits();		
@@ -83,6 +84,7 @@ public class UnitInitializer {
 		unitsOfWeight.addUnit(new UnitScalar("gr", "Grains", 1/6.479891E-5)); //exact
 		unitsOfWeight.addUnit(new UnitScalar("dwt", "Pennyweights", 20/0.0311034768)); //exact, 1/20 troy oz
 		unitsOfWeight.addUnit(new UnitScalar("CD", "Carats", 5000)); // =200mg
+      unitsOfWeight.addUnit(new UnitScalar("Llama", "Avg Llama Weight", 1/165.0)); //avg of 130 and 200kg
 		unitTypeArray.add(unitsOfWeight);
 
 
@@ -106,7 +108,8 @@ public class UnitInitializer {
 		unitsOfLength.addUnit(new UnitScalar("nmi", "Nautical Miles", 1/1852.0));
 		unitsOfLength.addUnit(new UnitScalar("ly", "Light Years", 1/9.4607E15));
 		unitsOfLength.addUnit(new UnitScalar("au", "Astronomical Units", 1/1.495978707E11)); //exact
-		unitTypeArray.add(unitsOfLength);	
+      unitsOfLength.addUnit(new UnitScalar("Llama", "Avg Llama Height", 1/1.75));
+		unitTypeArray.add(unitsOfLength);
 
 
 		UnitType unitsOfArea = new UnitType("Area");
@@ -215,8 +218,8 @@ public class UnitInitializer {
 
 		unitsOfEnergy.addUnit(new UnitScalar("Nm", "Newton-Meters", 1));
 		unitsOfEnergy.addUnit(new UnitScalar("MJ", "Megajoules", 1E-6));
-      unitsOfEnergy.addUnit(new UnitScalar("eV", "Electronvolts", 6.241509E18));
-      unitsOfEnergy.addUnit(new UnitScalar("Ha", "Hartrees", 2.29371044869059200E17));
+        unitsOfEnergy.addUnit(new UnitScalar("eV", "Electronvolts", 6.241509E18));
+        unitsOfEnergy.addUnit(new UnitScalar("Ha", "Hartrees", 2.29371044869059200E17));
 		unitTypeArray.add(unitsOfEnergy);
 
 		
@@ -265,7 +268,9 @@ public class UnitInitializer {
 		unitsOfPressure.addUnit(new UnitScalar("mmHg", "Millimeters of Mercury", 1/133.322387415)); //exact
 		unitsOfPressure.addUnit(new UnitScalar("N/cm\u00B2", "Newton/Square Centimeters", 1E-4));
 		unitsOfPressure.addUnit(new UnitScalar("N/mm\u00B2", "Newton/Square Millimeters", 1E-6));
-		unitsOfPressure.addUnit(new UnitScalar("kg/cm\u00B2", "Kilogram/Square Centimeter", 1/98066.5)); //approx?
+      unitsOfPressure.addUnit(new UnitScalar("kg/cm\u00B2", "Kilogram/Square Centimeter", 1/98066.5)); //approx?
+      unitsOfPressure.addUnit(new UnitScalar("Torr", "Torr", 760/101325.0)); //exact
+      unitsOfPressure.addUnit(new UnitScalar("mTorr", "Millitorr", 760/101.325)); //exact
 		unitTypeArray.add(unitsOfPressure);
 
 		return unitTypeArray;

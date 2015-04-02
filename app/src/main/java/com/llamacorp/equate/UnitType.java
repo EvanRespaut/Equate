@@ -28,6 +28,8 @@ public class UnitType {
 	private int mCurrUnitPos;
 	private boolean mIsUnitSelected;
 	private boolean mContainsDynamicUnits = false;
+   //used to tell if unit type needs to be refreshed after app update
+   private int mVersion;
 
 
 	public UnitType(String name){

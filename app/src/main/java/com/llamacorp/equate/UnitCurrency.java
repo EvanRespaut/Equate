@@ -47,7 +47,7 @@ public class UnitCurrency extends Unit {
 
 	public UnitCurrency(String name, String longName, double value){
 		super(name, longName, value);
-		mTimeLastUpdated = new GregorianCalendar(2014,4,1,1,11).getTime();
+		mTimeLastUpdated = new GregorianCalendar(2015,4,1,1,11).getTime();
 	}	
 
 	public UnitCurrency(String name, String longName, double value, String URL){

@@ -158,7 +158,6 @@ public class Calculator{
 			mExpression = new Expression(jObjState.getJSONObject(JSON_EXPRESSION), intDisplayPrecision);
 			mHints = new Hints(jObjState.getJSONObject(JSON_HINTS));
 
-
 			JSONArray jResultArray = jObjState.getJSONArray(JSON_RESULT_LIST);
 			// build the array of results from JSONObjects
 			for (int i = 0; i < jResultArray.length(); i++) {
@@ -167,7 +166,8 @@ public class Calculator{
 
 			int newSize = mUnitTypeArray.size();
 			JSONArray jUnitTypeArray = jObjState.getJSONArray(JSON_UNIT_TYPE_ARRAY);
-			//only load in saved unit types only if same size as current
+			//only load saved unitTypes if same size as current, otherwise keep
+         //newly loaded array (from constructor)
 			if(jUnitTypeArray.length()==newSize){
 				mUnitTypeArray.clear();
 				// build the array of results from JSONObjects
@@ -175,7 +175,6 @@ public class Calculator{
 					mUnitTypeArray.add(new UnitType(jUnitTypeArray.getJSONObject(i)));
 				}
 			}
-
 
 		} catch (FileNotFoundException e) {
 			// we will ignore this one, since it happens when we start fresh
@@ -226,7 +225,6 @@ public class Calculator{
 		//load the calculating precision
 		mSolver = new Solver(intCalcPrecision);
 
-		mUnitTypeArray.clear();
 		initiateUnits();
 	}
 
