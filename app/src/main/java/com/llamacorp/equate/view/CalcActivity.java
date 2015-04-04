@@ -22,7 +22,6 @@ import android.widget.Toast;
 
 import com.llamacorp.equate.Calculator;
 import com.llamacorp.equate.R;
-import com.llamacorp.equate.Unit;
 import com.llamacorp.equate.view.ConvKeysFragment.OnConvertKeySelectedListener;
 import com.llamacorp.equate.view.ResultListFragment.OnResultSelectedListener;
 import com.viewpagerindicator.TabPageIndicator;
@@ -72,7 +71,7 @@ implements OnResultSelectedListener, OnConvertKeySelectedListener{
 
 
 	//Crude fix: used to tell the ConvKeyViewPager what unit to select after scrolling to correct UnitType
-	private Unit unitToSelectAfterScroll;
+	private int unitPosToSelectAfterScroll=-1;
 
 
 	@Override
@@ -352,9 +351,9 @@ implements OnResultSelectedListener, OnConvertKeySelectedListener{
 				mCalc.getCurrUnitType().clearUnitSelection();
 
 				//this change UnitType was result of unit-ed result, select that unit
-				if(unitToSelectAfterScroll != null){
-					getConvKeyFrag(mUnitTypeViewPager.getCurrentItem()).selectUnit(unitToSelectAfterScroll);
-					unitToSelectAfterScroll = null;
+				if(unitPosToSelectAfterScroll != -1){
+					getConvKeyFrag(mUnitTypeViewPager.getCurrentItem()).selectUnit(unitPosToSelectAfterScroll);
+					unitPosToSelectAfterScroll = -1;
 				}
 				//clear out the unit in expression if it's now cleared
 				updateScreen(false);
@@ -404,14 +403,14 @@ implements OnResultSelectedListener, OnConvertKeySelectedListener{
 	 * Selects the a unit (used by result list)
 	 * @see com.llamacorp.equate.view.ResultListFragment.OnResultSelectedListener
 	 */
-	public void selectUnit(Unit unit, int unitTypePos){
+	public void selectUnit(int unitPos, int unitTypePos){
 		//if not on right page, scroll there first
 		if(unitTypePos != mUnitTypeViewPager.getCurrentItem()){
-			unitToSelectAfterScroll = unit;
+			unitPosToSelectAfterScroll = unitPos;
 			mUnitTypeViewPager.setCurrentItem(unitTypePos);
 		}
 		else
-			getConvKeyFrag(mUnitTypeViewPager.getCurrentItem()).selectUnit(unit);
+			getConvKeyFrag(mUnitTypeViewPager.getCurrentItem()).selectUnit(unitPos);
 	}
 
 

@@ -29,19 +29,19 @@ public class UnitScalar extends Unit {
 		super();
 	}
 
-	/** Load in the extra inverted flag */
-	public UnitScalar(JSONObject json) throws JSONException {
-		super(json);
-		mInverted = json.getBoolean(JSON_INVERTED);
-	}
-	
-	/** Save in the extra inverted flag */
-	@Override
-	public JSONObject toJSON() throws JSONException {
-		JSONObject json = super.toJSON();
-		json.put(JSON_INVERTED, isInverted());
-		return json;
-	}
+//	/** Load in the extra inverted flag */
+//	public UnitScalar(JSONObject json) throws JSONException {
+//		super(json);
+//		mInverted = json.getBoolean(JSON_INVERTED);
+//	}
+//
+//	/** Save in the extra inverted flag */
+//	@Override
+//	public JSONObject toJSON() throws JSONException {
+//		JSONObject json = super.toJSON();
+//		json.put(JSON_INVERTED, isInverted());
+//		return json;
+//	}
 
 	public boolean isInverted(){
 		return mInverted;

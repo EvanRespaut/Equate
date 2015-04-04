@@ -28,8 +28,8 @@ public class Result {
 	private String mAnswerUnitText;
 	private String mQueryUnitTextLong;
 	private String mAnswerUnitTextLong;
-	private Unit mQueryUnit;
-	private Unit mAnswerUnit;
+	private int mQueryUnitPos;
+	private int mAnswerUnitPos;
 	private int mUnitTypePos;
 	boolean mContainsUnits;
 	private long mTimestamp;
@@ -37,8 +37,8 @@ public class Result {
 	public Result(String query, String answer){
 		setQueryWithSep(query);
 		setAnswerWithSep(answer);
-		mQueryUnit = new UnitScalar();
-		mAnswerUnit = new UnitScalar();
+		mQueryUnitPos = -1;
+		mAnswerUnitPos = -1;
 		mContainsUnits = false;
 		mTimestamp = 0;
 		mQueryUnitText = "";
@@ -50,8 +50,8 @@ public class Result {
 	public Result(JSONObject json) throws JSONException {
 		setQuery(json.getString(JSON_QUERY));
 		setAnswer(json.getString(JSON_ANSWER));
-		mQueryUnit = Unit.getUnit(json.getJSONObject(JSON_QUERY_UNIT)); 
-		mAnswerUnit = Unit.getUnit(json.getJSONObject(JSON_ANSWER_UNIT));
+		mQueryUnitPos = json.getInt(JSON_QUERY_UNIT);
+		mAnswerUnitPos = json.getInt(JSON_ANSWER_UNIT);
 		mAnswerUnitText = json.getString(JSON_ANSWER_UNIT_TEXT);
 		mAnswerUnitTextLong = json.getString(JSON_ANSWER_UNIT_TEXT_LONG);
 		mQueryUnitText = json.getString(JSON_QUERY_UNIT_TEXT);
@@ -66,8 +66,8 @@ public class Result {
 
 		json.put(JSON_QUERY, getQuery());
 		json.put(JSON_ANSWER, getAnswer());
-		json.put(JSON_QUERY_UNIT, mQueryUnit.toJSON());
-		json.put(JSON_ANSWER_UNIT, mAnswerUnit.toJSON());
+		json.put(JSON_QUERY_UNIT, mQueryUnitPos);
+		json.put(JSON_ANSWER_UNIT, mAnswerUnitPos);
 		json.put(JSON_QUERY_UNIT_TEXT, mQueryUnitText);
 		json.put(JSON_ANSWER_UNIT_TEXT, mAnswerUnitText);
 		json.put(JSON_QUERY_UNIT_TEXT_LONG, mQueryUnitTextLong);
@@ -113,23 +113,21 @@ public class Result {
 		mAnswer = answer;
 	}
 
-	public Unit getQueryUnit() {
-		return mQueryUnit;
-	}
 
 	/** Set the query and answer units, and the overarching UnitType array 
 	 * position
 	 * @param queryUnit is the Unit to set for this query
 	 * @param answerUnit is the Unit to set for this answer
 	 * @param unitTypePos is the position in the UnitType array */
-	public void setResultUnit(Unit queryUnit, Unit answerUnit, 
-			int unitTypePos) {
+	public void setResultUnit(Unit queryUnit, int queryUnitPos, Unit answerUnit,
+			int answerUnitPos, int unitTypePos) {
 
-		mAnswerUnit = answerUnit;
+
+		mAnswerUnitPos = answerUnitPos;
 		mAnswerUnitText = answerUnit.toString();
 		mAnswerUnitTextLong = answerUnit.getLowercaseLongName();
 
-		mQueryUnit = queryUnit;
+		mQueryUnitPos = queryUnitPos;
 		//if we're dealing with the same historical currency, then the
 		//years are most likely different
 		if(queryUnit == answerUnit && queryUnit.isHistorical()){
@@ -144,12 +142,12 @@ public class Result {
 
 		mUnitTypePos = unitTypePos;
 		mContainsUnits = true;
-		if(mAnswerUnit.isDynamic() && mQueryUnit.isDynamic()){
+		if(answerUnit.isDynamic() && queryUnit.isDynamic()){
 			//the default unit (USD) doesn't get updated
-			if(mAnswerUnit.toString().equals(UnitCurrency.DEFAULT_CURRENCY))
-				mTimestamp = ((UnitCurrency)mQueryUnit).getTimeOfUpdate();
+			if(answerUnit.toString().equals(UnitCurrency.DEFAULT_CURRENCY))
+				mTimestamp = ((UnitCurrency)queryUnit).getTimeOfUpdate();
 			else
-				mTimestamp = ((UnitCurrency)mAnswerUnit).getTimeOfUpdate();
+				mTimestamp = ((UnitCurrency)answerUnit).getTimeOfUpdate();
 		}
 	}
 
@@ -175,9 +173,13 @@ public class Result {
 		return mUnitTypePos;
 	}
 
-	public Unit getAnswerUnit() {
-		return mAnswerUnit;
+	public int getAnswerUnit() {
+		return mAnswerUnitPos;
 	}
+
+   public int getQueryUnit() {
+      return mQueryUnitPos;
+   }
 
 	public boolean containsUnits() {
 		return mContainsUnits;

@@ -17,10 +17,10 @@ import com.llamacorp.equate.UnitCurrency.OnConvertKeyUpdateFinishedListener;
  */
 public class UnitType {
 	private static final String JSON_NAME = "name";
-	private static final String JSON_UNIT_ARRAY = "unit_array";
+	private static final String JSON_UNIT_DISP_ORDER = "unit_disp_order";
 	private static final String JSON_CURR_POS = "pos";
 	private static final String JSON_IS_SELECTED = "selected";
-	private static final String JSON_DYNAMIC = "dynamic";
+   private static final String JSON_UNIT_ARRAY = "unit_array";
 
 	private String mName;
 	private ArrayList<Unit> mUnitArray;
@@ -28,66 +28,106 @@ public class UnitType {
 	private int mCurrUnitPos;
 	private boolean mIsUnitSelected;
 	private boolean mContainsDynamicUnits = false;
-   //used to tell if unit type needs to be refreshed after app update
-   private int mVersion;
+   //Order to display units (based on mUnitArray index
+   private ArrayList<Integer> mUnitDisplayOrder;
 
 
+   /**
+    * Default constructor used by UnitType Initializer
+    */
 	public UnitType(String name){
 		mName = name;
 		mUnitArray = new ArrayList<Unit>();
+      mUnitDisplayOrder = new ArrayList<Integer>();
 		mIsUnitSelected = false;
 	}
 
 
-	public UnitType(JSONObject json) throws JSONException {
-		this(json.getString(JSON_NAME));
+   /**
+    * Takes JSON object and loads out user saved info, such as currently
+    * selected unit and unit display order
+    * @param json is the JSON object that contains save data of UnitType
+    *             to load.
+    */
+	public void loadJSON(JSONObject json) throws JSONException {
+		//Check to make we have the right saved JSON, else leave
+      if(!getUnitTypeName().equals(json.getString(JSON_NAME)))
+         return;
+
+      if(containsDynamicUnits()) {
+         //load in saved data from Units (currency values and update times)
+         JSONArray jUnitArray = json.getJSONArray(JSON_UNIT_ARRAY);
+         for (int i = 0; i < jUnitArray.length(); i++) {
+            getUnit(i).loadJSON(jUnitArray.getJSONObject(i));
+         }
+      }
+
 		mCurrUnitPos = json.getInt(JSON_CURR_POS);
 		mIsUnitSelected = json.getBoolean(JSON_IS_SELECTED);
-		mContainsDynamicUnits = json.getBoolean(JSON_DYNAMIC);
 
-		JSONArray jUnitArray = json.getJSONArray(JSON_UNIT_ARRAY);
-		for (int i = 0; i < jUnitArray.length(); i++) {
-			mUnitArray.add(Unit.getUnit(jUnitArray.getJSONObject(i)));
-		}
+      JSONArray jUnitDisOrder = json.getJSONArray(JSON_UNIT_DISP_ORDER);
+      mUnitDisplayOrder.clear();
+      for (int i = 0; i < jUnitDisOrder.length(); i++) {
+         mUnitDisplayOrder.add(jUnitDisOrder.getInt(i));
+      }
+      if(mUnitDisplayOrder.size() < size()) {
+         for(int i = mUnitDisplayOrder.size(); i < size(); i++)
+            mUnitDisplayOrder.add(mUnitDisplayOrder.size());
+      }
 	}
 
+   /**
+    * Save the state of this UnitType into a JSON object for later use
+    * @return JSON object that contains this object
+    */
 	public JSONObject toJSON() throws JSONException {
 		JSONObject json = new JSONObject();
 
-		JSONArray jUnitArray = new JSONArray();
-		for (Unit unit : mUnitArray)
-			jUnitArray.put(unit.toJSON());
-		json.put(JSON_UNIT_ARRAY, jUnitArray);
+      //should only be saving data from Currency unit type
+      if(containsDynamicUnits()) {
+         JSONArray jUnitArray = new JSONArray();
+         for (Unit unit : mUnitArray)
+            jUnitArray.put(unit.toJSON());
+         json.put(JSON_UNIT_ARRAY, jUnitArray);
+      }
 
+      //used to identify this UnitType from others
 		json.put(JSON_NAME, mName);
 		json.put(JSON_CURR_POS, mCurrUnitPos);
 		json.put(JSON_IS_SELECTED, mIsUnitSelected);
-		json.put(JSON_DYNAMIC, mContainsDynamicUnits);
-		return json;
+
+      JSONArray jUnitDisOrder = new JSONArray();
+		for (Integer i : mUnitDisplayOrder)
+			jUnitDisOrder.put(i);
+		json.put(JSON_UNIT_DISP_ORDER, jUnitDisOrder);
+
+      return json;
 	}
 
 
 	/**
-	 * Used to build a UnitType
+	 * Used to build a UnitType after it has been created
 	 */
 	public void addUnit(Unit u){
 		mUnitArray.add(u);
+      //0th element is 0, 1st is 1, etc
+      mUnitDisplayOrder.add(mUnitDisplayOrder.size());
 		//if there was already a dynamic unit or this one is, UnitType still contains dynamic units
 		if(mContainsDynamicUnits || u.isDynamic()) mContainsDynamicUnits = true;
 	}
 
-	/** Swap positions of units */	
-	public void swapUnits(int pos1, int pos2){
+	/** Swap positions of units */
+   public void swapUnits(int pos1, int pos2){
 		Collections.swap(mUnitArray, pos1, pos2);
 	}
 
 	/**
 	 * Find the position of the unit in the unit array
 	 * @return -1 if selection failed, otherwise the position of the unit
-	 */		
+	 */
 	public int findUnitPosition(Unit unit){
-		for(int i=0;i<mUnitArray.size();i++){
-			if(unit.equals(mUnitArray.get(i)))
+		for(int i=0;i<size();i++){
+			if(unit.equals(getUnit(i)))
 				return i; //found the unit
 		}
 		return -1;  //if we didn't find the unit
@@ -97,7 +137,7 @@ public class UnitType {
 	/**
 	 * If mCurrUnit not set, set mCurrUnit
 	 * If mCurrUnit already set, call functions to perform a convert
-	 */		
+	 */
 	public boolean selectUnit(int pos){
 		//used to tell caller if we needed to do a conversion
 		boolean requestConvert = false;
@@ -125,9 +165,9 @@ public class UnitType {
 	/**
 	 * Update values of units that are not static (currency) via
 	 * each unit's own HTTP/JSON api call. Note that this refresh
-	 * is asynchronous and will only happen sometime in the future 
+	 * is asynchronous and will only happen sometime in the future
 	 * Internet connection permitting.
-	 */	
+	 */
 	public void refreshDynamicUnits(Context c){
 		if(containsDynamicUnits())
 			for(Unit uc : mUnitArray){
@@ -151,33 +191,33 @@ public class UnitType {
 
 	/** Check to see if unit at position pos is currently updating */
 	public boolean isUnitUpdating(int pos){
-		if(mUnitArray.get(pos).isDynamic())
-			return ((UnitCurrency)mUnitArray.get(pos)).isUpdating();
+		if(getUnit(pos).isDynamic())
+			return ((UnitCurrency)getUnit(pos)).isUpdating();
 		else
 			return false;
 	}
 
 	/** Check to see if unit at position pos is dynamic */
 	public boolean isUnitDynamic(int pos){
-		return mUnitArray.get(pos).isDynamic();
+		return getUnit(pos).isDynamic();
 	}
 
 	public void setDynamicUnitCallback(OnConvertKeyUpdateFinishedListener callback) {
 		if(containsDynamicUnits())
 			for(int i=0; i<size(); i++)
-				if(mUnitArray.get(i).isDynamic())
-					((UnitCurrency)mUnitArray.get(i)).setCallback(callback);
+				if(getUnit(i).isDynamic())
+					((UnitCurrency)getUnit(i)).setCallback(callback);
 	}
 
 	/** Check to see if unit at position pos is dynamic */
 	public boolean isUnitHistorical(int pos){
-		return mUnitArray.get(pos).isHistorical();
+		return getUnit(pos).isHistorical();
 	}
 
 
 	/**
 	 * Resets mIsUnitSelected flag
-	 */		
+	 */
 	public void clearUnitSelection(){
 		mIsUnitSelected = false;
 	}
@@ -195,15 +235,15 @@ public class UnitType {
 	 * @return String name to be displayed on convert button
 	 */
 	public String getUnitDisplayName(int pos){
-		return mUnitArray.get(pos).toString();
+		return getUnit(pos).toString();
 	}
 
 	public String getLowercaseLongName(int pos){
-		return mUnitArray.get(pos).getLowercaseLongName();
+		return getUnit(pos).getLowercaseLongName();
 	}
 
 	public String getLowercaseGenericLongName(int pos){
-		return mUnitArray.get(pos).getLowercaseGenericLongName();
+		return getUnit(pos).getLowercaseGenericLongName();
 	}
 
 	/** Method builds charSequence array of long names of undisplayed units
@@ -211,12 +251,12 @@ public class UnitType {
 	 * @return Number of units being displayed, used to find undisplayed units
 	 */
 	public CharSequence[] getUndisplayedUnitNames(int numDispUnits){
-		//ArrayList<Unit> subList = mUnitArray.subList(numDispUnits, mUnitArray.size());
+		//ArrayList<Unit> subList = mUnitArray.subList(numDispUnits, size());
 		//return subList.toArray(new CharSequence[subLists.size()]);
-		int arraySize = mUnitArray.size() - numDispUnits;
+		int arraySize = size() - numDispUnits;
 		CharSequence[] cs = new CharSequence[arraySize];
 		for(int i=0;i<arraySize;i++){
-			cs[i] = mUnitArray.get(numDispUnits+i).getGenericLongName();
+			cs[i] = getUnit(numDispUnits+i).getGenericLongName();
 		}
 		return cs;
 	}
@@ -226,13 +266,17 @@ public class UnitType {
 	}
 
 	public Unit getPrevUnit(){
-		return mUnitArray.get(mPrevUnitPos);
+		return getUnit(mPrevUnitPos);
 	}
 
 	public Unit getCurrUnit(){
-		return mUnitArray.get(mCurrUnitPos);
+		return getUnit(mCurrUnitPos);
 	}
 
+   /**
+    * Get the number of Units in this UnitType
+    * @return integer of number of Units in this UnitType
+    */
 	public int size() {
 		return mUnitArray.size();
 	}

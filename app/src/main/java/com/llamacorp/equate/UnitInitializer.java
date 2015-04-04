@@ -109,6 +109,7 @@ public class UnitInitializer {
 		unitsOfLength.addUnit(new UnitScalar("ly", "Light Years", 1/9.4607E15));
 		unitsOfLength.addUnit(new UnitScalar("au", "Astronomical Units", 1/1.495978707E11)); //exact
       unitsOfLength.addUnit(new UnitScalar("Llama", "Avg Llama Height", 1/1.75));
+      unitsOfLength.addUnit(new UnitScalar("Ll4ama", "Av234g Llama Height", 1/1.75));
 		unitTypeArray.add(unitsOfLength);
 
 
@@ -236,8 +237,8 @@ public class UnitInitializer {
 		unitsOfForce.addUnit(new UnitScalar("lbf", "Pound-Force", 1/4.4482216152605)); //exact
 		unitsOfForce.addUnit(new UnitScalar("ozf", "Ounce-Force", 16/4.4482216152605));  //exact
 		unitTypeArray.add(unitsOfForce);
-		
-		
+
+
 		UnitType unitsOfTorque = new UnitType("Torque");
 		unitsOfTorque.addUnit(new UnitScalar("Nm", "Newton Meters", 1)); 
 		unitsOfTorque.addUnit(new UnitScalar("Ncm", "Newton Centimeters", 100)); 

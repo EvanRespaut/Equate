@@ -10,6 +10,7 @@
 - Click equals again for sci notation
 
 - getting occasional null pointer from "getListView().getPositionForView((View)view.getParent());" in ResultListFrag
+- Error from getListView().setSelection(getListAdapter().getCount()-1); content view not created yet
 - When currency update, toast
 - Think about adding a graphic for shrinking unit keys
 - Make convert summary text view's font size slightly dynamic

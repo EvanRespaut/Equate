@@ -1,3 +1,6 @@
+Get on the Play store here:
+https://play.google.com/store/apps/details?id=com.llamacorp.equate&hl=en
+
 Unit converting calculator app for android.  
 
 Features:

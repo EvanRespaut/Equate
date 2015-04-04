@@ -47,7 +47,9 @@ public class UnitCurrency extends Unit {
 
 	public UnitCurrency(String name, String longName, double value){
 		super(name, longName, value);
-		mTimeLastUpdated = new GregorianCalendar(2015,4,1,1,11).getTime();
+      //Note that Jan = 0 in the Gregorian Calendar constructor below
+		mTimeLastUpdated = new GregorianCalendar(2015,3,1,1,11).getTime();
+      mTimeLastUpdated.toString();
 	}	
 
 	public UnitCurrency(String name, String longName, double value, String URL){
@@ -64,9 +66,13 @@ public class UnitCurrency extends Unit {
 	}
 
 	/** Load in the update time */
-	public UnitCurrency(JSONObject json) throws JSONException {
-		super(json);
-		mTimeLastUpdated = new Date(json.getLong(JSON_LAST_UPDATE));
+   @Override
+	public boolean loadJSON(JSONObject json) throws JSONException {
+		boolean success = super.loadJSON(json);
+      //only load in the time if the JSON object matches this UNIT
+		if(success)
+         mTimeLastUpdated = new Date(json.getLong(JSON_LAST_UPDATE));
+      return success;
 	}
 
 	/** Save the update time */

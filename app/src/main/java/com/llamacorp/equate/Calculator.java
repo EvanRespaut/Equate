@@ -1,4 +1,15 @@
 package com.llamacorp.equate;
+
+import android.content.Context;
+import android.util.Log;
+import android.view.Gravity;
+import android.widget.Toast;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONTokener;
+
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -10,17 +21,9 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.json.JSONTokener;
-
-import android.content.Context;
-import android.view.Gravity;
-import android.widget.Toast;
-
 
 public class Calculator{
+   private static final String LOG_TAG = "Testing..";
 	private static final String FILENAME = "saved_data.json";
 	private static final String JSON_RESULT_LIST = "result_list";
 	private static final String JSON_UNIT_TYPE_ARRAY = "unit_type_array";
@@ -100,6 +103,7 @@ public class Calculator{
 		}
 		//might be from a JSON object not existing (app update)
 		catch (JSONException JE){
+         JE.printStackTrace();
 			//delete the problem JSON file
 			boolean del = mAppContext.deleteFile(FILENAME);
 			String message = "Calculator reset due to JSONException. JSON file "
@@ -166,13 +170,12 @@ public class Calculator{
 
 			int newSize = mUnitTypeArray.size();
 			JSONArray jUnitTypeArray = jObjState.getJSONArray(JSON_UNIT_TYPE_ARRAY);
-			//only load saved unitTypes if same size as current, otherwise keep
-         //newly loaded array (from constructor)
-			if(jUnitTypeArray.length()==newSize){
-				mUnitTypeArray.clear();
-				// build the array of results from JSONObjects
-				for (int i = 0; i < jUnitTypeArray.length(); i++) {
-					mUnitTypeArray.add(new UnitType(jUnitTypeArray.getJSONObject(i)));
+         //if we added another UnitType, use default everything
+         //TODO idealy this should be smarter
+			if(jUnitTypeArray.length() == newSize){
+            //Load in user settings to already assembled UnitType array
+            for (int i = 0; i < jUnitTypeArray.length(); i++) {
+					mUnitTypeArray.get(i).loadJSON(jUnitTypeArray.getJSONObject(i));
 				}
 			}
 
@@ -311,8 +314,12 @@ public class Calculator{
 		//next perform numerical unit conversion
 		mSolver.convertFromTo(fromUnit, toUnit, mExpression);
 
+      int fromUnitPos = getCurrUnitType().findUnitPosition(fromUnit);
+      int toUnitPos = getCurrUnitType().findUnitPosition(toUnit);
+
 		//load units into result list (this will also set contains unit flag) (overrides that from solve)
-		mResultList.get(mResultList.size()-1).setResultUnit(fromUnit, toUnit, mUnitTypePos);
+		mResultList.get(mResultList.size()-1).setResultUnit(fromUnit, fromUnitPos,
+              toUnit, toUnitPos, mUnitTypePos);
 		//load the final value into the result list
 		mResultList.get(mResultList.size()-1).setAnswerWithSep(mExpression.toString());
 	}
@@ -339,7 +346,9 @@ public class Calculator{
 			if(isUnitSelected()){
 				//load units into result list (this will also set contains unit flag
 				Unit toUnit = getCurrUnitType().getCurrUnit();
-				mResultList.get(mResultList.size()-1).setResultUnit(toUnit, toUnit, mUnitTypePos);
+            int toUnitPos = getCurrUnitType().getCurrUnitPos();
+				mResultList.get(mResultList.size()-1).setResultUnit(toUnit, toUnitPos,
+                    toUnit, toUnitPos, mUnitTypePos);
 			}
 			return true;
 		}

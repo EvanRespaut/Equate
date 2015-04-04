@@ -189,9 +189,8 @@ public class ConvKeysFragment extends Fragment implements OnConvertKeyUpdateFini
 
 
 	/** Used by parent activity to select a unit within this fragment 
-	 * @param unit the Unit selected */
-	public void selectUnit(Unit unit) {
-		int unitPos = mUnitType.findUnitPosition(unit);
+	 * @param unitPos the postion of Unit selected */
+	public void selectUnit(int unitPos) {
 		//unitPos will be -1 if it wasn't found
 		if(unitPos != -1)
 			clickUnitButton(unitPos);

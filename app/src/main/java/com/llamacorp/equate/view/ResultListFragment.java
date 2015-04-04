@@ -26,7 +26,7 @@ public class ResultListFragment extends ListFragment {
 	// Container Activity must implement this interface
 	public interface OnResultSelectedListener {
 		public void updateScreen(boolean updateResult);
-		public void selectUnit(Unit unit, int unitTypePos);
+		public void selectUnit(int unitPos, int unitTypePos);
 	}
 
 	@Override
@@ -157,16 +157,16 @@ public class ResultListFragment extends ListFragment {
 
 					//if unit not selected in calc, and result has unit, set that unit
 					if(!calc.isUnitSelected() && thisResult.containsUnits()){
-						Unit unitPassBack;
+						int unitPosPassBack;
 						if (viewID==R.id.list_item_result_textPrevQuery)
-							unitPassBack = thisResult.getQueryUnit();
+                     unitPosPassBack = thisResult.getQueryUnit();
 						else
-							unitPassBack = thisResult.getAnswerUnit();
+                     unitPosPassBack = thisResult.getAnswerUnit();
 
 						//if the selection was a success (and we weren't in the wrong unitType), then set the color
 						//int selectedUnitPos = calc.getCurrUnitType().selectUnit(unitPassBack);
 						//if(selectedUnitPos != -1)
-						mCallback.selectUnit(unitPassBack, thisResult.getUnitTypePos());
+						mCallback.selectUnit(unitPosPassBack, thisResult.getUnitTypePos());
 					}
 
 					mCallback.updateScreen(false);
@@ -210,8 +210,8 @@ public class ResultListFragment extends ListFragment {
 			getListView().post(new Runnable() {
 		        @Override
 		        public void run() {
-		            getListView().setSelection(getListAdapter().getCount()-1);
-		        }
+                     getListView().setSelection(getListAdapter().getCount()-1);
+                 }
 		    });
 		}
 		else

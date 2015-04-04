@@ -21,9 +21,9 @@ public class UnitTemperature extends Unit {
 		super("", "", 0);
 	}
 
-	public UnitTemperature(JSONObject json) throws JSONException {
-		super(json);
-	}
+//	public UnitTemperature(JSONObject json) throws JSONException {
+//		super(json);
+//	}
 
 	@Override
 	public String convertTo(Unit toUnit, String expressionToConv){

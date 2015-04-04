@@ -28,19 +28,32 @@ public abstract class Unit  /*implements JsonSerializer<Unit>, JsonDeserializer<
 		this("", "", 0);
 	}
 
-	protected Unit(JSONObject json) throws JSONException {
-		this(json.getString(JSON_NAME),
-				json.getString(JSON_LONG_NAME),
-				json.getDouble(JSON_VALUE)); 
-	}
+//	protected Unit(JSONObject json) throws JSONException {
+//		this(json.getString(JSON_NAME),
+//				json.getString(JSON_LONG_NAME),
+//				json.getDouble(JSON_VALUE));
+//	}
 
 	/**
-	 * Convert a JSON array into it's proper Unit
-	 * @param json is they array to convert into Unit
-	 * @return generic Unit class contacting a subclasses Unit
-	 * @throws JSONException if exception is found
+	 * Load in user saved data to an existing Unit.  Example of this is the
+    * value from a Currency that has been updated.  Method makes sure Unit
+    * name of saved data matches this Unit to avoid inadvertently writing saved
+    * data to the wrong Unit
+	 * @param json JSON object containing saved data
+	 * @return boolean if this Unit matches saved Unit
+	 * @throws JSONException if can't find JSON data
 	 */
-	static protected Unit getUnit(JSONObject json) throws JSONException {
+	protected boolean loadJSON(JSONObject json) throws JSONException {
+      //if the Units moved around (and therefore have different names), don't
+      // want to load the wrong value
+      if(!json.getString(JSON_NAME).equals(toString()))
+         return false;
+
+      mValue = json.getDouble(JSON_VALUE);
+
+      return true; //successful
+
+      /*
 		String unitType = json.getString(JSON_TYPE);
 		String packageName = Unit.class.getPackage().getName();
 		Unit u;
@@ -55,20 +68,20 @@ public abstract class Unit  /*implements JsonSerializer<Unit>, JsonDeserializer<
 		} catch (Exception e){//for c.getConstructor(JSONObject.class);
 			throw new IllegalAccessError("problem with " + unitType + " class");
 		}
-		return u;
+      */
 	}
 
 	/**
-	 * Save the current Unit into a JSON object
-	 * @return JSON object encapsulating Unit
+	 * Save user changeable data of this Unit into a JSON object
+	 * @return JSON object with saved Unit data
 	 * @throws JSONException
 	 */
 	protected JSONObject toJSON() throws JSONException {
 		JSONObject json = new JSONObject();
 
-		json.put(JSON_TYPE, this.getClass().getSimpleName());
+		//json.put(JSON_TYPE, this.getClass().getSimpleName());
 		json.put(JSON_NAME, toString());
-		json.put(JSON_LONG_NAME, getLongName());
+		//json.put(JSON_LONG_NAME, getLongName());
 		json.put(JSON_VALUE, getValue());
 		return json;
 	}
