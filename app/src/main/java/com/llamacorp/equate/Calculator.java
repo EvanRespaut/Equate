@@ -103,7 +103,6 @@ public class Calculator{
 		}
 		//might be from a JSON object not existing (app update)
 		catch (JSONException JE){
-         JE.printStackTrace();
 			//delete the problem JSON file
 			boolean del = mAppContext.deleteFile(FILENAME);
 			String message = "Calculator reset due to JSONException. JSON file "

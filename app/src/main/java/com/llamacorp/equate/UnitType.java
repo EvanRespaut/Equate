@@ -32,9 +32,7 @@ public class UnitType {
    private ArrayList<Integer> mUnitDisplayOrder;
 
 
-   /**
-    * Default constructor used by UnitType Initializer
-    */
+   /** Default constructor used by UnitType Initializer   */
 	public UnitType(String name){
 		mName = name;
 		mUnitArray = new ArrayList<Unit>();
@@ -70,10 +68,8 @@ public class UnitType {
       for (int i = 0; i < jUnitDisOrder.length(); i++) {
          mUnitDisplayOrder.add(jUnitDisOrder.getInt(i));
       }
-      if(mUnitDisplayOrder.size() < size()) {
-         for(int i = mUnitDisplayOrder.size(); i < size(); i++)
-            mUnitDisplayOrder.add(mUnitDisplayOrder.size());
-      }
+      //fill in the remaining if missing (if we added a unit)
+      fillUnitDisplayOrder();
 	}
 
    /**
@@ -105,9 +101,7 @@ public class UnitType {
 	}
 
 
-	/**
-	 * Used to build a UnitType after it has been created
-	 */
+	/** Used to build a UnitType after it has been created */
 	public void addUnit(Unit u){
 		mUnitArray.add(u);
       //0th element is 0, 1st is 1, etc
@@ -118,7 +112,7 @@ public class UnitType {
 
 	/** Swap positions of units */
    public void swapUnits(int pos1, int pos2){
-		Collections.swap(mUnitArray, pos1, pos2);
+		Collections.swap(mUnitDisplayOrder, pos1, pos2);
 	}
 
 	/**
@@ -215,9 +209,7 @@ public class UnitType {
 	}
 
 
-	/**
-	 * Resets mIsUnitSelected flag
-	 */
+	/** Resets mIsUnitSelected flag */
 	public void clearUnitSelection(){
 		mIsUnitSelected = false;
 	}
@@ -261,9 +253,38 @@ public class UnitType {
 		return cs;
 	}
 
+   /**
+    * Used to get the Unit at a given position.  Note that the position is the
+    * user defined order for buttons. Uses a mask to convert displayed position
+    * into real array position.
+    * @param pos Position of unit to retrieve (user defined order)
+    * @return Unit at the given position
+    */
 	public Unit getUnit(int pos){
-		return mUnitArray.get(pos);
+      //If a unit is added
+      if(mUnitDisplayOrder.size() < size())
+         fillUnitDisplayOrder();
+      //if somehow there are more UnitDisplayOrder (unit deleted), don't want
+      //to address nonexistent element
+      if(mUnitDisplayOrder.size() > size())
+         resetUnitDipplayOrder();
+
+      return mUnitArray.get(mUnitDisplayOrder.get(pos));
 	}
+
+   /**
+    * Populate the UnitDisplayOrder array.  Will fill if empty or top off if
+    * it has less elements than UnitArray
+    */
+   private void fillUnitDisplayOrder(){
+      for(int i = mUnitDisplayOrder.size(); i < size(); i++)
+         mUnitDisplayOrder.add(mUnitDisplayOrder.size());
+   }
+
+   private void resetUnitDipplayOrder(){
+      mUnitDisplayOrder.clear();
+      fillUnitDisplayOrder();
+   }
 
 	public Unit getPrevUnit(){
 		return getUnit(mPrevUnitPos);
@@ -284,6 +305,4 @@ public class UnitType {
 	public int getCurrUnitPos(){
 		return mCurrUnitPos;
 	}
-
-
 }
