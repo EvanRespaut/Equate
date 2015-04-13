@@ -21,7 +21,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.llamacorp.equate.Calculator;
-import com.llamacorp.equate.ExpSeperatorHandler;
+import com.llamacorp.equate.ExpSeparatorHandler;
 import com.llamacorp.equate.R;
 
 public class EditTextCursorWatcher extends EditText {
@@ -38,7 +38,7 @@ public class EditTextCursorWatcher extends EditText {
 	private String mExpressionText="";
 	private String mTextSuffix="";
 
-	private ExpSeperatorHandler mSepHandler;
+	private ExpSeparatorHandler mSepHandler;
 
 	private ValueAnimator mColorAnimation;
 
@@ -64,7 +64,7 @@ public class EditTextCursorWatcher extends EditText {
 
 	private void setUpEditText(Context context, AttributeSet attrs){
 		mContext = context;
-		mSepHandler = new ExpSeperatorHandler();
+		mSepHandler = new ExpSeparatorHandler();
 
 		//grab custom resource variable
 		TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.EditTextCursorWatcher, 0, 0);

@@ -21,9 +21,28 @@ public class Solver {
 			mMcOperate = new MathContext(solvePrecision);
 	}
 
+
+   public Result tryToggleSciNote(Expression exp){
+      if(exp.isInvalid() || exp.isEmpty() || exp.containsOps()
+              || exp.containsParens())
+         return null;
+
+      String cleanedQuery = exp.toString();
+
+      //determine if we are are in sci notation already
+      if(exp.toString().matches(".*E.*"))
+         exp.roundAndCleanExpression(Expression.NumFormat.PLAIN);
+      else
+         exp.roundAndCleanExpression(Expression.NumFormat.SCINOTE);
+
+      return new Result(cleanedQuery, exp.toString());
+   }
+
+
 	/**
 	 * Solves a given Expression
-	 * Cleans off the expression, adds missing parentheses, then loads in more accurate result values if possible into expression
+	 * Cleans off the expression, adds missing parentheses, then loads in more
+    * accurate result values if possible into expression.
 	 * Iterates over expression using PEMAS order of operations
 	 * @param exp is the Expression to solve
 	 * @return the expression before conversion (potentially used for result list)
@@ -198,13 +217,13 @@ public class Solver {
 	}
 
 	private void roundAndClean(Expression exp){
-		//rounding operation may throw NumberFormatException
+		//rounding operation may throw NumberFormatExcep   tion
 		try{
-			exp.roundAndCleanExpression();
+			exp.roundAndCleanExpression(Expression.NumFormat.NORMAL);
 		}
 		catch (NumberFormatException e){
 			exp.replaceExpression(strSyntaxError);
-		}	
+		}
 	}
 
 }

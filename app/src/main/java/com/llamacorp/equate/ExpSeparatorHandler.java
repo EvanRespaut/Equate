@@ -3,13 +3,13 @@ package com.llamacorp.equate;
 import java.util.ArrayList;
 
 
-public  class  ExpSeperatorHandler {
+public  class ExpSeparatorHandler {
 	private static String THOUS_SEP = ",";
 
 	public ArrayList<Integer> mSepIndexes;
 
 
-	public ExpSeperatorHandler(){
+	public ExpSeparatorHandler(){
 		mSepIndexes = new ArrayList<Integer>();
 	}
 

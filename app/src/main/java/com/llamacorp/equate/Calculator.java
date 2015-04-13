@@ -257,8 +257,13 @@ public class Calculator{
 				return false;
 			}
 
-			//solve expression, load into result list if answer not empty
-			solveAndLoadIntoResultList();
+         Result res = mSolver.tryToggleSciNote(mExpression);
+         if(res != null){
+            loadResultToArray(res);
+         }
+         else
+            //solve expression, load into result list if answer not empty
+            solveAndLoadIntoResultList();
 			return true;
 		}
 		//check for plain text (want
@@ -327,37 +332,44 @@ public class Calculator{
 	/**
 	 * Function that is called after user hits the "=" key
 	 * Called by calculator for solving current expression
-	 * @return solved expression
+	 * @return if solved expression
 	 */
 	private boolean solveAndLoadIntoResultList(){
 		//the answer will be loaded into mExpression directly
 		Result result = mSolver.solve(mExpression);
-		//skip result list handling if no result was created
-		if(result != null){
-			mResultList.add(result);
-			//if we hit size limit, remove oldest element
-			if(mResultList.size() > RESULT_LIST_MAX_SIZE)
-				mResultList.remove(0);
-			//if result had an error, leave before setting units
-			if(Expression.isInvalid(result.getAnswerWithoutSep()))
-				return false;
-			//also set result's unit if it's selected
-			if(isUnitSelected()){
-				//load units into result list (this will also set contains unit flag
-				Unit toUnit = getCurrUnitType().getCurrUnit();
-            int toUnitPos = getCurrUnitType().getCurrUnitPos();
-				mResultList.get(mResultList.size()-1).setResultUnit(toUnit, toUnitPos,
-                    toUnit, toUnitPos, mUnitTypePos);
-			}
-			return true;
-		}
-		else
-			return false;
+      return loadResultToArray(result);
 	}
 
-	/**
-	 * Clear function for the calculator
-	 */
+   /**
+    * Add a result into the Result list array.  Method checks
+    * @param result to add into the array
+    * @return
+    */
+   private boolean loadResultToArray(Result result){
+      if(result == null)
+         return false;
+
+      //skip result list handling if no result was created
+      mResultList.add(result);
+      //if we hit size limit, remove oldest element
+      if(mResultList.size() > RESULT_LIST_MAX_SIZE)
+         mResultList.remove(0);
+      //if result had an error, leave before setting units
+      if(Expression.isInvalid(result.getAnswerWithoutSep()))
+         return false;
+      //also set result's unit if it's selected
+      if(isUnitSelected()){
+         //load units into result list (this will also set contains unit flag
+         Unit toUnit = getCurrUnitType().getCurrUnit();
+         int toUnitPos = getCurrUnitType().getCurrUnitPos();
+         mResultList.get(mResultList.size()-1).setResultUnit(toUnit, toUnitPos,
+                 toUnit, toUnitPos, mUnitTypePos);
+      }
+      return true;
+   }
+
+
+	/** Clear function for the calculator */
 	private void clear(){
 		//clear the immediate expression
 		mExpression.clearExpression();

@@ -80,7 +80,7 @@ public class Result {
 	}
 
 	public String getQueryWithoutSep(){
-		return ExpSeperatorHandler.removeSep(getQuery());
+		return ExpSeparatorHandler.removeSep(getQuery());
 	}
 	
 	/** Returns query with separators */ 
@@ -89,7 +89,7 @@ public class Result {
 	}
 
 	public void setQueryWithSep(String query){
-		setQuery(ExpSeperatorHandler.addSep(query));
+		setQuery(ExpSeparatorHandler.addSep(query));
 	}
 	
 	private void setQuery(String query) {
@@ -97,7 +97,7 @@ public class Result {
 	}
 
 	public String getAnswerWithoutSep(){
-		return ExpSeperatorHandler.removeSep(getAnswer());
+		return ExpSeparatorHandler.removeSep(getAnswer());
 	}
 	
 	/** Returns answer with separators */ 
@@ -106,7 +106,7 @@ public class Result {
 	}
 
 	public void setAnswerWithSep(String answer){
-		setAnswer(ExpSeperatorHandler.addSep(answer));
+		setAnswer(ExpSeparatorHandler.addSep(answer));
 	}
 	
 	private void setAnswer(String answer) {

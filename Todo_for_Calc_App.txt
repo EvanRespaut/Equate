@@ -5,13 +5,13 @@
 - Remove timeout not reached toast
 
 
-- Need a way to reset units instead of pull them from memory when new app installed (so user gets updated shit)
 - 2015 Historical (grab latest CPI numbers)
 - Click equals again for sci notation
 
 - getting occasional null pointer from "getListView().getPositionForView((View)view.getParent());" in ResultListFrag
 - Error from getListView().setSelection(getListAdapter().getCount()-1); content view not created yet
 - When currency update, toast
+- Make secondary buttons text change to black when clicked
 - Think about adding a graphic for shrinking unit keys
 - Make convert summary text view's font size slightly dynamic
 - Add square root
@@ -48,8 +48,6 @@ http://stackoverflow.com/questions/1309629/how-to-change-colors-of-a-drawable-in
 - For every solve or unit convert, save app state
 - Font size issues with large text sizes (also run the emulator for a few diff size screens and resolutions. 
 - When prev expression exists, operators should take last expression it back instead of doing nothing even when current expression is empty 
-- 1 m to mm back to m back to mm is 1.E9 instead of 1E9
-- Type out 100000000 is 1.e8
 - Black flash seems to happen after clear operation?
 - Construct results out of expressions such that 1/3, then delete, then recall 0.33333*3 == 1
 - "Converting inches to feet" bug still there; do unit coverts, back, then open app again
