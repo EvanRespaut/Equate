@@ -22,15 +22,18 @@ public class Solver {
 	}
 
 
-   public Result tryToggleSciNote(Expression exp){
+   public Result tryToggleSciNote(Expression exp, boolean forceEngineering){
       if(exp.isInvalid() || exp.isEmpty() || exp.containsOps()
               || exp.containsParens())
          return null;
 
       String cleanedQuery = exp.toString();
 
-      //determine if we are are in sci notation already
-      if(exp.toString().matches(".*E.*"))
+      //if we want engineering, just convert regardless if we have E already
+      if(forceEngineering)
+         exp.roundAndCleanExpression(Expression.NumFormat.ENGINEERING);
+         //determine if we are are in sci notation already
+      else if(exp.toString().matches(".*E.*"))
          exp.roundAndCleanExpression(Expression.NumFormat.PLAIN);
       else
          exp.roundAndCleanExpression(Expression.NumFormat.SCINOTE);
@@ -47,7 +50,7 @@ public class Solver {
 	 * @param exp is the Expression to solve
 	 * @return the expression before conversion (potentially used for result list)
 	 */	
-	public Result solve(Expression exp){
+	public Result solve(Expression exp, boolean useEngineering){
 		//clean off any dangling operators and E's (not parentheses!!)
 		exp.cleanDanglingOps();
 
@@ -79,7 +82,7 @@ public class Solver {
 		//save solved expression away
 		exp.replaceExpression(strExp);
 
-		roundAndClean(exp);
+		roundAndClean(exp, useEngineering);
 		
 		//flag used to tell backspace and numbers to clear the expression when pressed
 		exp.setSolved(true);
@@ -97,7 +100,7 @@ public class Solver {
 		String toSolve = fromUnit.convertTo(toUnit, exp.getPreciseResult());
 		exp.replaceExpression(toSolve);
 
-		solve(exp);
+		solve(exp, false);
 	}
 
 	/**
@@ -216,10 +219,13 @@ public class Solver {
 		return str;
 	}
 
-	private void roundAndClean(Expression exp){
-		//rounding operation may throw NumberFormatExcep   tion
+	private void roundAndClean(Expression exp, boolean useEngineering){
+		//rounding operation may throw NumberFormatException
 		try{
-			exp.roundAndCleanExpression(Expression.NumFormat.NORMAL);
+         if(useEngineering)
+            exp.roundAndCleanExpression(Expression.NumFormat.ENGINEERING);
+         else
+            exp.roundAndCleanExpression(Expression.NumFormat.NORMAL);
 		}
 		catch (NumberFormatException e){
 			exp.replaceExpression(strSyntaxError);

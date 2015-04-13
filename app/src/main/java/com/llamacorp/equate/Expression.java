@@ -245,7 +245,7 @@ public class Expression {
     * or not, and replaces the current expression with the result
 	 * @throws NumberFormatException if Expression not formatted correctly
 	 */
-	public void roundAndCleanExpression(NumFormat nf) throws NumberFormatException {
+	public void roundAndCleanExpression(NumFormat numFormat) throws NumberFormatException {
 		//if expression was displaying error (with invalid chars) leave
 		if(isInvalid() || isEmpty())
 			return;
@@ -257,7 +257,7 @@ public class Expression {
       BigDecimal bd = new BigDecimal(getExpression(), mMcDisp);
 
       String formatStr;
-      switch(nf){
+      switch(numFormat){
          case NORMAL:
             //determine if exponent (number after E) is small enough for non-engineering style print, otherwise do regular style
             if (lastNumbExponent() < mIntDisplayPrecision)

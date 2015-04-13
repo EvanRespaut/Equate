@@ -184,6 +184,8 @@ implements OnResultSelectedListener, OnConvertKeySelectedListener{
 					switch(buttonId){
 					case R.id.multiply_button: buttonValue = "^";
 					break;
+               case R.id.equals_button: buttonValue = "g";
+               break;
 					case R.id.percent_button: buttonValue = "E";
 					break;
 					case R.id.nine_button: mCalc.refreshAllDynamicUnits();

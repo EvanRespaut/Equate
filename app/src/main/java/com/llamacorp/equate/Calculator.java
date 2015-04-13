@@ -249,21 +249,22 @@ public class Calculator{
 		if(isSolved() && isUnitSelected())
 			clearSelectedUnit();
 
-		//check for equals key
-		if(sKey.equals("=")){
+
+         //check for equals key or for long press ='s key aka engineering form
+		if(sKey.equals("=") || sKey.equals("g")){
 			//if "Convert 3 in to..." is showing, help user out
 			if(isUnitSelected() & !mExpression.containsOps()){
 				//don't follow through with solve
 				return false;
 			}
 
-         Result res = mSolver.tryToggleSciNote(mExpression);
+         Result res = mSolver.tryToggleSciNote(mExpression, sKey.equals("g"));
          if(res != null){
             loadResultToArray(res);
          }
          else
             //solve expression, load into result list if answer not empty
-            solveAndLoadIntoResultList();
+            solveAndLoadIntoResultList(sKey.equals("g"));
 			return true;
 		}
 		//check for plain text (want
@@ -288,7 +289,7 @@ public class Calculator{
 
 			boolean requestSolve = mExpression.keyPresses(sKey);
 			if(requestSolve){
-				solveAndLoadIntoResultList();
+				solveAndLoadIntoResultList(false);
 				return true;
 			}
 		}
@@ -310,7 +311,7 @@ public class Calculator{
 		if(isExpressionEmpty())
 			parseKeyPressed("1");
 		//first solve the function
-		boolean solveSuccess = solveAndLoadIntoResultList();
+		boolean solveSuccess = solveAndLoadIntoResultList(false);
 		//if there solve failed because there was nothing to solve, just leave (this way result list isn't loaded)
 		if (!solveSuccess)
 			return;
@@ -334,9 +335,9 @@ public class Calculator{
 	 * Called by calculator for solving current expression
 	 * @return if solved expression
 	 */
-	private boolean solveAndLoadIntoResultList(){
+	private boolean solveAndLoadIntoResultList(boolean useEngineering){
 		//the answer will be loaded into mExpression directly
-		Result result = mSolver.solve(mExpression);
+		Result result = mSolver.solve(mExpression, useEngineering);
       return loadResultToArray(result);
 	}
 
