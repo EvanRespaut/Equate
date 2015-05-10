@@ -33,6 +33,9 @@
     <string name="minus_button">-</string>
     <string name="multiply_button">×</string>
     <string name="divide_button">÷</string>
+
+   <string name="equals_secondary_text">&#8801;</string>
+
     
     <string name="first_convert_message">Now tap the desired unit to perform conversion.</string>
     <string name="first_convert_message_no_numbers">Now enter some numbers and tap the desired unit to perform conversion.</string>
@@ -74,6 +77,8 @@
     
     
     <color name="button_secondary_text">#636363</color>
+    <color name="equals_secondary_text_color_normal">#ff969696</color>
+
     
     <color name="button_text_normal">#D4D4D4</color>
     <color name="button_text_pressed">#232323</color>

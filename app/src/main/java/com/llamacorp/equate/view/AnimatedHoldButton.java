@@ -1,7 +1,9 @@
 package com.llamacorp.equate.view;
+
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -22,6 +24,8 @@ public class AnimatedHoldButton extends SecondaryTextButton {
 	private OnLongClickListener mLongClickListen = null;
 	private Handler mColorHoldHandler;
 	private boolean mLongClickPerformed=false;
+   private Drawable mNormalDrawable;
+   private int mPressedColor;
 
 	//used to count up holding time
 	private int mHoldInc;
@@ -33,12 +37,16 @@ public class AnimatedHoldButton extends SecondaryTextButton {
 		super(context, attrs);
 		
 		mPrimaryText = "";
-		
+
+      mNormalDrawable = getBackground();
+
 		TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.AnimatedHoldButton, 0, 0);
 		try {
 			mPrimaryText = ta.getString(R.styleable.AnimatedHoldButton_primary_text);
+         mPressedColor = ta.getColor(R.styleable.AnimatedHoldButton_pressed_color,
+                 getResources().getColor(R.color.op_button_pressed));
 		} finally { ta.recycle();}
-		
+
 		//this is needed for so paint knows what to measure in layoutText
 		setText(mPrimaryText);
 	}
@@ -69,7 +77,7 @@ public class AnimatedHoldButton extends SecondaryTextButton {
 			if(!mLongClickPerformed) 
 				clickButton();
 
-			setBackgroundColor(getResources().getColor(R.color.op_button_normal));
+			setBackground(mNormalDrawable);
 			mColorHoldHandler.removeCallbacks(mColorRunnable);
 			mColorHoldHandler = null;
 
@@ -82,16 +90,16 @@ public class AnimatedHoldButton extends SecondaryTextButton {
 
 	//set up the runnable for when button is held down
 	Runnable mColorRunnable = new Runnable() {
-		private int mGradStartCol = getResources().getColor(R.color.op_button_pressed);
-		private int mGradEndCol = getResources().getColor(R.color.op_button_long_press_accent);
-		private int mAccentColor = getResources().getColor(R.color.op_button_pressed);
-		private int mFinalColor = getResources().getColor(R.color.op_button_pressed);
-
 		private static final int NUM_COLOR_CHANGES=10;
 
 		@Override 
 		public void run() {
-			//after hold operation has been performed and 100ms is up, set final color
+         int mGradStartCol = mPressedColor;
+         int mGradEndCol = getResources().getColor(R.color.op_button_long_press_accent);
+         int mAccentColor = mPressedColor;
+         int mFinalColor = mPressedColor;
+
+         //after hold operation has been performed and 100ms is up, set final color
 			if(mHoldInc==-1){
 				setBackgroundColor(mFinalColor);
 				return;

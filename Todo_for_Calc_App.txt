@@ -4,9 +4,14 @@
 - Should use API update historical USD to today's USD
 - Remove timeout not reached toast
 
+-Add rpm and rad/sec
 
+- Incorporate in yahoo's finance data http://finance.yahoo.com/webservice/v1/symbols/allcurrencies/quote
 - 2015 Historical (grab latest CPI numbers)
-- Click equals again for sci notation
+- Click equals again for sci notation - when going back into reg, grab more accurate version (store it in a precise BigDecimal
+
+&#2261;
+
 
 - getting occasional null pointer from "getListView().getPositionForView((View)view.getParent());" in ResultListFrag
 - Error from getListView().setSelection(getListAdapter().getCount()-1); content view not created yet

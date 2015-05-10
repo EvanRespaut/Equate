@@ -1,4 +1,5 @@
 package com.llamacorp.equate.view;
+
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
@@ -17,6 +18,7 @@ class SecondaryTextButton extends Button {
 
 	protected Paint mSecondaryPaint;
 	protected String mSecondaryText;
+   protected int mSecondayTextColor;
 	protected float mSecondaryTextSize;
 
 	//the following are used to determine where to place the secondary text
@@ -42,6 +44,8 @@ class SecondaryTextButton extends Button {
 			mSecondaryText = ta.getString(R.styleable.SecondaryTextButton_secondary_text);
 			secTextPerc = ta.getInteger(R.styleable.SecondaryTextButton_secondary_text_font_size_percentage,
 					SECONDARY_FONT_PERCENTAGE);
+         mSecondayTextColor = ta.getColor(R.styleable.SecondaryTextButton_secondary_text_color,
+                getResources().getColor(R.color.button_secondary_text));
 		} finally { ta.recycle();}
 
 		mSecondaryTextSize = getPaint().getTextSize() * secTextPerc / 100f;
@@ -96,8 +100,7 @@ class SecondaryTextButton extends Button {
 	protected void onDraw(Canvas canvas) {
 		if(mSecondaryText != null){
 			//draw the text in the upper corner
-			mSecondaryPaint.setColor(getResources().getColor(R.color
-					.button_secondary_text));
+			mSecondaryPaint.setColor(mSecondayTextColor);
 
 			mButtonHeight = getHeight(); // - getPaddingTop() - getPaddingBottom();
 			mButtonWidth = getWidth(); // - getPaddingLeft() - getPaddingRight();

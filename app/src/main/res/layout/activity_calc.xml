@@ -231,10 +231,14 @@
                     android:text="@string/close_para_button" />
             </LinearLayout>
 
-            <Button
-                android:id="@+id/equals_button"
-                style="@style/CalcButton.Equals"
-                android:text="@string/equals_button" />
+           <com.llamacorp.equate.view.AnimatedHoldButton
+              xmlns:customNS="http://schemas.android.com/apk/res/com.llamacorp.equate"
+              android:id="@+id/equals_button"
+              style="@style/CalcButton.Equals"
+              customNS:pressed_color="@color/equal_button_pressed"
+              customNS:primary_text="@string/equals_button"
+              customNS:secondary_text="@string/equals_secondary_text"
+              customNS:secondary_text_color="@color/equals_secondary_text_color_normal"/>
         </LinearLayout>
     </LinearLayout>
 
