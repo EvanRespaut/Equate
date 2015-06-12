@@ -7,6 +7,7 @@
 -Add rpm and rad/sec
 
 - Incorporate in yahoo's finance data http://finance.yahoo.com/webservice/v1/symbols/allcurrencies/quote
+Www.xe.com/symbols.php
 - 2015 Historical (grab latest CPI numbers)
 - Click equals again for sci notation - when going back into reg, grab more accurate version (store it in a precise BigDecimal
 
