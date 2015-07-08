@@ -250,11 +250,12 @@ public class Expression {
 		if(isInvalid() || isEmpty())
 			return;
 
-      //save the original to precise result for potential later use
-      mPreciseResult = getExpression();
-
-		//if there's any messed formatting, or if number is too big, method throws error
+		//if formatting messed ("-", "(())"), or number too big, throw error
       BigDecimal bd = new BigDecimal(getExpression(), mMcDisp);
+
+		//only after getExpression() was successfully converted to BigDecimal
+		//save the original to precise result for potential later use
+		mPreciseResult = getExpression();
 
       String formatStr;
       switch(numFormat){
@@ -276,7 +277,7 @@ public class Expression {
             break;
          default:
             throw new NumberFormatException("Invalid number format");
-      }
+		}
 
 		//finally clean the result off and set it in mExpression
 		replaceExpression(cleanFormatting(formatStr));
