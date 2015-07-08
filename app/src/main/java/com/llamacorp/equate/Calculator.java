@@ -1,9 +1,12 @@
 package com.llamacorp.equate;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.Gravity;
 import android.widget.Toast;
+
+import com.llamacorp.equate.unit.Unit;
+import com.llamacorp.equate.unit.UnitInitializer;
+import com.llamacorp.equate.unit.UnitType;
 
 import org.json.JSONArray;
 import org.json.JSONException;

@@ -1,7 +1,4 @@
-package com.llamacorp.equate;
-
-import org.json.JSONException;
-import org.json.JSONObject;
+package com.llamacorp.equate.unit;
 
 
 public class UnitTemperature extends Unit {

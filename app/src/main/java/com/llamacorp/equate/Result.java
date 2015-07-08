@@ -1,5 +1,9 @@
 package com.llamacorp.equate;
 
+import com.llamacorp.equate.unit.Unit;
+import com.llamacorp.equate.unit.UnitCurrency;
+import com.llamacorp.equate.unit.UnitHistCurrency;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;

@@ -3,11 +3,40 @@
 - When doing regular currency to historical, should change to year date code (instead of day or hour)
 - Should use API update historical USD to today's USD
 - Remove timeout not reached toast
+- Bug: type 4*5 then add - after 4, enter; then do 1+1
 
 -Add rpm and rad/sec
 
 - Incorporate in yahoo's finance data http://finance.yahoo.com/webservice/v1/symbols/allcurrencies/quote
 Www.xe.com/symbols.php
+
+
+
+Display Order Array stores order in which to index Array of Units
+
+Array of Units needs to be ordered the same in order for Display Order Array to 
+index properly
+
+Yahoo API will load ~173 currencies, assume somewhat random order.
+
+Loaded currencies missing big name, need to load those for each
+
+While loading big names for currencies, also reorder into known order
+
+Increment through known names, search for matching yahoo curr.
+
+Possible a unit from yahoo curr might be missing.  Skip it and decrement display 
+order array numbers larger than the missing curr (so USD that was index 29 will
+now properly call 28).  
+
+If missing curr is one in display order array, delete it from that array. This 
+will shift all other curr down by one, but w/e.  
+
+If missing curr wasn't in display, delete last element of display order (i think)
+
+- Once a unit in the more list has been used, move it to the top of the list of "More"
+
+- Another collection of currencies http://coinmill.com/sources.html
 - 2015 Historical (grab latest CPI numbers)
 - Click equals again for sci notation - when going back into reg, grab more accurate version (store it in a precise BigDecimal
 

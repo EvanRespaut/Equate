@@ -1,4 +1,4 @@
-package com.llamacorp.equate;
+package com.llamacorp.equate.unit;
 
 import java.util.ArrayList;
 

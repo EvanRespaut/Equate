@@ -1,4 +1,4 @@
-package com.llamacorp.equate;
+package com.llamacorp.equate.unit;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -9,7 +9,7 @@ import org.json.JSONObject;
 
 import android.content.Context;
 
-import com.llamacorp.equate.UnitCurrency.OnConvertKeyUpdateFinishedListener;
+import com.llamacorp.equate.unit.UnitCurrency.OnConvertKeyUpdateFinishedListener;
 
 /**
  * Abstract class, note that child class must implement a function to do raw

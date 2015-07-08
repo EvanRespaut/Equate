@@ -14,10 +14,9 @@ import android.widget.Button;
 
 import com.llamacorp.equate.Calculator;
 import com.llamacorp.equate.R;
-import com.llamacorp.equate.Unit;
-import com.llamacorp.equate.UnitCurrency.OnConvertKeyUpdateFinishedListener;
-import com.llamacorp.equate.UnitHistCurrency;
-import com.llamacorp.equate.UnitType;
+import com.llamacorp.equate.unit.UnitCurrency.OnConvertKeyUpdateFinishedListener;
+import com.llamacorp.equate.unit.UnitHistCurrency;
+import com.llamacorp.equate.unit.UnitType;
 
 public class ConvKeysFragment extends Fragment implements OnConvertKeyUpdateFinishedListener {
 
