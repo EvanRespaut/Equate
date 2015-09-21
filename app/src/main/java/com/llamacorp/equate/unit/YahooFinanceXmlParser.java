@@ -25,9 +25,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This class parses XML feeds from stackoverflow.com.
- * Given an InputStream representation of a feed, it returns a List of entries,
- * where each list element represents a single entry (post) in the XML feed.
+ * This class parses XML feeds from
+ * http://finance.yahoo.com/webservice/v1/symbols/allcurrencies/quote
  */
 public class YahooFinanceXmlParser {
    // We don't use namespaces

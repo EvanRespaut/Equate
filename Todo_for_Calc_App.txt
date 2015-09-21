@@ -3,7 +3,8 @@
 - When doing regular currency to historical, should change to year date code (instead of day or hour)
 - Should use API update historical USD to today's USD
 - Remove timeout not reached toast
-- Bug: type 4*5 then add - after 4, enter; then do 1+1
+- Add testing support for bug: type 4*5 then add - after 4, enter; then do 1+1
+- hold 0 to add three 0s
 
 -Add rpm and rad/sec
 
@@ -11,6 +12,24 @@
 Www.xe.com/symbols.php
 
 
+--------------------------------------------------------------------------------
+Create an array of UnitCurrencies using default known data in unit initializer
+
+This array contains three letter abbreviation, long name, price (and update time maybe?)
+
+When a update currency request is made, UnitType will be called, it will download 
+the latest xml file, pass it to the YahooFinanceXmlParser, which will return
+a single array with three letter abbreviation, price, and time.  
+
+UnitType will then loop through the new array's three letter abrevs--for each,
+the mUnitArray will be searched for a matching three letter.  If found, update 
+the price and date.  If not found (currency that Yahoo has that the app does not),
+skip it and move on.  
+
+It is possible that some units won't be updated if the yahoo API was missing them.
+This is ok, the data in them will just stay old, or will be updated by other means
+like BTC.
+--------------------------------------------------------------------------------
 
 Display Order Array stores order in which to index Array of Units
 
@@ -34,8 +53,9 @@ will shift all other curr down by one, but w/e.
 
 If missing curr wasn't in display, delete last element of display order (i think)
 
-- Once a unit in the more list has been used, move it to the top of the list of "More"
 
+
+- Once a unit in the more list has been used, move it to the top of the list of "More"
 - Another collection of currencies http://coinmill.com/sources.html
 - 2015 Historical (grab latest CPI numbers)
 - Click equals again for sci notation - when going back into reg, grab more accurate version (store it in a precise BigDecimal
