@@ -21,19 +21,18 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 
 /**
  * This class parses XML feeds from
  * http://finance.yahoo.com/webservice/v1/symbols/allcurrencies/quote
  */
-public class YahooFinanceXmlParser {
+public class YahooXmlParser {
    // We don't use namespaces
    private static final String ns = null;
 
 
-   public List<Entry> parse(InputStream in) throws XmlPullParserException, IOException {
+   public HashMap<String, Entry> parse(InputStream in) throws XmlPullParserException, IOException {
       try {
          XmlPullParser parser = Xml.newPullParser();
          parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
@@ -45,8 +44,8 @@ public class YahooFinanceXmlParser {
       }
    }
 
-   private List<Entry> findResources(XmlPullParser parser) throws XmlPullParserException, IOException {
-      List<Entry> entries = new ArrayList<Entry>();
+   private HashMap<String, Entry> findResources(XmlPullParser parser) throws XmlPullParserException, IOException {
+      HashMap<String, Entry> entries = new HashMap<String, Entry>();
 
       parser.require(XmlPullParser.START_TAG, ns, "list");
       while (parser.next() != XmlPullParser.END_TAG) {
@@ -54,7 +53,7 @@ public class YahooFinanceXmlParser {
             continue;
          }
          String name = parser.getName();
-         // Starts by looking for the entry tag
+         // Starts by looking for the resources tag
          if (name.equals("resources")) {
             entries = readList(parser);
          } else {
@@ -65,8 +64,8 @@ public class YahooFinanceXmlParser {
    }
 
 
-   private List<Entry> readList(XmlPullParser parser) throws XmlPullParserException, IOException {
-      List<Entry> entries = new ArrayList<Entry>();
+   private HashMap<String, Entry> readList(XmlPullParser parser) throws XmlPullParserException, IOException {
+      HashMap<String, Entry> entries = new HashMap<String, Entry>();
 
       parser.require(XmlPullParser.START_TAG, ns, "resources");
       while (parser.next() != XmlPullParser.END_TAG) {
@@ -74,9 +73,10 @@ public class YahooFinanceXmlParser {
             continue;
          }
          String name = parser.getName();
-         // Starts by looking for the entry tag
+         // Starts by looking for the resource tag
          if (name.equals("resource")) {
-            entries.add(readResource(parser));
+            Entry ent = readResource(parser);
+            entries.put(ent.symbol, ent);
          } else {
             skip(parser);
          }
@@ -84,8 +84,7 @@ public class YahooFinanceXmlParser {
       return entries;
    }
 
-   // This class represents a single entry (post) in the XML feed.
-   // It includes the data members "price," "symbol," and "summary."
+
    public static class Entry {
       public final String price;
       public final String symbol;
@@ -96,9 +95,14 @@ public class YahooFinanceXmlParser {
       }
    }
 
-   // Parses the contents of an entry. If it encounters a price, summary, or symbol tag, hands them
-   // off
-   // to their respective &quot;read&quot; methods for processing. Otherwise, skips the tag.
+
+   /**
+    * Parses the contents of a currency  entry. If it encounters a price,
+    * summary, or symbol tag, hands them off to their respective methods for
+    * processing. Otherwise, skips the tag.
+    * @throws XmlPullParserException
+    * @throws IOException
+    */
    private Entry readResource(XmlPullParser parser) throws XmlPullParserException, IOException {
       parser.require(XmlPullParser.START_TAG, ns, "resource");
       String price = null;
