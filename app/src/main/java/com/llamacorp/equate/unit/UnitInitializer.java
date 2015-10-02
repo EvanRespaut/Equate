@@ -101,6 +101,7 @@ public class UnitInitializer {
 		unitsOfLength.addUnit(new UnitScalar("m", "Meters", 1));
 
 		unitsOfLength.addUnit(new UnitScalar("nm", "Nanometers", 1E9));
+		unitsOfLength.addUnit(new UnitScalar("pm", "Picometers", 1E12));
 		unitsOfLength.addUnit(new UnitScalar("\u212B", "\u212Bngstr\u00F6ms", 1E10));
 		unitsOfLength.addUnit(new UnitScalar("mil", "Thousandths of an Inch", 1/2.54E-5));
 		unitsOfLength.addUnit(new UnitScalar("fur", "Furlongs", 0.00497096954));
@@ -305,7 +306,8 @@ public class UnitInitializer {
 		}
 
 
-		UnitType uc = new UnitType("Currency");
+		UnitType uc = new UnitType("Currency",
+				  "http://finance.yahoo.com/webservice/v1/symbols/allcurrencies/quote");
 		uc.addUnit(new UnitCurrency("USD", "Dollars", 1));
 		uc.addUnit(new UnitCurrency("EUR", "Euros", 0.929));
 		uc.addUnit(new UnitCurrency("CAD", "Canadian Dollars", 1.26));
@@ -374,7 +376,7 @@ public class UnitInitializer {
 		uc.addUnit(new UnitCurrency("XCD", "East Caribbean Dollar", 2.7));
 		uc.addUnit(new UnitCurrency("ECS", "Ecuadorian Sucre (obsolete)", 25000));
 		uc.addUnit(new UnitCurrency("EGP", "Egyptian Pound", 7.8305));
-		uc.addUnit(new UnitCurrency("SVC", "El Salvador Colon (obsolete)", 8.7325));
+		uc.addUnit(new UnitCurrency("SVC", "El Salvador Colon (obsolete)", 8.7325));
 		uc.addUnit(new UnitCurrency("ERN", "Eritrean Nakfa", 15.28));
 		uc.addUnit(new UnitCurrency("ETB", "Ethiopian Birr", 20.898001));
 		uc.addUnit(new UnitCurrency("FKP", "Falkland Islands Pound", 0.6485));
@@ -406,7 +408,7 @@ public class UnitInitializer {
 		uc.addUnit(new UnitCurrency("KWD", "Kuwaiti Dinar", 0.3013));
 		uc.addUnit(new UnitCurrency("KGS", "Kyrgyzstanian Som", 70.493797));
 		uc.addUnit(new UnitCurrency("LAK", "Lao Kip", 8129.950195));
-		uc.addUnit(new UnitCurrency("LVL", "Latvian Lats (obsolete)", 0.62055));
+		uc.addUnit(new UnitCurrency("LVL", "Latvian Lats (obsolete)", 0.62055));
 		uc.addUnit(new UnitCurrency("LBP", "Lebanese Pound", 1506.5));
 		uc.addUnit(new UnitCurrency("LSL", "Lesotho Loti", 13.31525));
 		uc.addUnit(new UnitCurrency("LRD", "Liberian Dollar", 84.660004));
@@ -458,7 +460,7 @@ public class UnitInitializer {
 		uc.addUnit(new UnitCurrency("SLL", "Sierra Leonean Leone", 4308));
 		uc.addUnit(new UnitCurrency("XAG", "Silver (oz)", 0.065989));
 		uc.addUnit(new UnitCurrency("SGD", "Singapore Dollar", 1.4012));
-		uc.addUnit(new UnitCurrency("SIT", "Slovenian Tolar (obsolete)", 216.486755));
+		uc.addUnit(new UnitCurrency("SIT", "Slovenian Tolar (obsolete)", 216.486755));
 		uc.addUnit(new UnitCurrency("SBD", "Solomon Islands Dollar", 7.971566));
 		uc.addUnit(new UnitCurrency("SOS", "Somali Shilling", 639.950012));
 		uc.addUnit(new UnitCurrency("ZAR", "South African Rand", 13.3139));

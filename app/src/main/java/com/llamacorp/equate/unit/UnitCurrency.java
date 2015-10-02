@@ -1,11 +1,8 @@
 package com.llamacorp.equate.unit;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.Date;
-import java.util.GregorianCalendar;
+import android.content.Context;
+import android.os.AsyncTask;
+import android.util.Log;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -14,11 +11,12 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.content.Context;
-import android.os.AsyncTask;
-import android.os.Handler;
-import android.util.Log;
-import android.widget.Toast;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 public class UnitCurrency extends Unit {
 	private static final String JSON_LAST_UPDATE = "updated";
@@ -110,16 +108,17 @@ public class UnitCurrency extends Unit {
 		Date now = new Date();
 		if(mTimeLastUpdated != null && (now.getTime() - mTimeLastUpdated.getTime()) < (60*1000*UPDATE_TIMEOUT_MIN)){ 
 			//System.out.println("Not ready to update " + getName() + " yet, wait " + (now.getTime() - mTimeLastUpdated.getTime())/(1000) + " seconds");
-			final Toast toast = Toast.makeText(mContext, "Timeout not reached for " + getName(), Toast.LENGTH_SHORT);
-			toast.show();
-
-			Handler handler = new Handler();
-			handler.postDelayed(new Runnable() {
-				@Override
-				public void run() {
-					toast.cancel(); 
-				}
-			}, 500);
+//TODO this toast cannot be called within AsyncTask
+//			final Toast toast = Toast.makeText(mContext, "Timeout not reached for " + getName(), Toast.LENGTH_SHORT);
+//			toast.show();
+//
+//			Handler handler = new Handler();
+//			handler.postDelayed(new Runnable() {
+//				@Override
+//				public void run() {
+//					toast.cancel();
+//				}
+//			}, 500);
 			return false;
 		}
 		else
@@ -156,11 +155,6 @@ public class UnitCurrency extends Unit {
 		else
 			return mURLPrefix + toString() + mURLSuffix;
 	}
-
-	private String getName(){
-		return toString();
-	}
-
 
 	/**
 	 * This class is used to create a background task that handles 

@@ -54,7 +54,7 @@ will shift all other curr down by one, but w/e.
 If missing curr wasn't in display, delete last element of display order (i think)
 
 
-
+- Hold unit to "Clear" it and move it to more menu
 - Once a unit in the more list has been used, move it to the top of the list of "More"
 - Another collection of currencies http://coinmill.com/sources.html
 - 2015 Historical (grab latest CPI numbers)

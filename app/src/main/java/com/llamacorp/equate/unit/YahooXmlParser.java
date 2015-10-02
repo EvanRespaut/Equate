@@ -86,10 +86,10 @@ public class YahooXmlParser {
 
 
    public static class Entry {
-      public final String price;
+      public final double price;
       public final String symbol;
 
-      private Entry(String price, String symbol) {
+      private Entry(double price, String symbol) {
          this.price = price;
          this.symbol = symbol;
       }
@@ -122,7 +122,7 @@ public class YahooXmlParser {
             skip(parser);
          }
       }
-      return new Entry(price, symbol);
+      return new Entry(Double.parseDouble(price), symbol);
    }
 
    // Processes price tags in the feed.

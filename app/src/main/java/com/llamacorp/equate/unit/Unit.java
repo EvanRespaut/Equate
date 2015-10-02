@@ -92,7 +92,11 @@ public abstract class Unit  /*implements JsonSerializer<Unit>, JsonDeserializer<
 	protected String getLongName() {
 		return mLongName;
 	}
-	
+
+	public String getName(){
+		return toString();
+	}
+
 	public String getGenericLongName(){
 		return mLongName;
 	}	
