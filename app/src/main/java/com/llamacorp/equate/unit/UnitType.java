@@ -1,22 +1,15 @@
 package com.llamacorp.equate.unit;
 
 import android.content.Context;
-import android.os.AsyncTask;
 
 import com.llamacorp.equate.unit.UnitCurrency.OnConvertKeyUpdateFinishedListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.xmlpull.v1.XmlPullParserException;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 
 /**
  * Abstract class, note that child class must implement a function to do raw
@@ -37,6 +30,7 @@ public class UnitType {
 	private boolean mContainsDynamicUnits = false;
    //Order to display units (based on mUnitArray index
    private ArrayList<Integer> mUnitDisplayOrder;
+
 	private String mXMLCurrencyURL;
 
 
@@ -176,134 +170,9 @@ public class UnitType {
 	 */
 	public void refreshDynamicUnits(Context c){
 		if(containsDynamicUnits()) {
-//         final Toast toast = Toast.makeText(c,
-//                 "Starting Yahoo XML load", Toast.LENGTH_SHORT);
-//         toast.show();
-         new UpdateYahooXMLAsyncTask(c).execute();
+         UnitTypeUpdater.update(this, c);
       }
    }
-
-
-
-	/**
-	 * This class is used to create a background task that handles
-	 * the actual retrieval of the Yahoo XML file that contains the current rates
-	 */
-	private class UpdateYahooXMLAsyncTask extends AsyncTask<Void, Void, Boolean> {
-      private Context mContext;
-
-      public UpdateYahooXMLAsyncTask(Context context) {
-         mContext = context;
-      }
-
-      //This method is called first
-		@Override
-		protected Boolean doInBackground(Void...voids) {
-			return updateRatesWithXML(mContext);
-		}
-
-		// This method is called after doInBackground completes
-		@Override
-		protected void onPostExecute(Boolean successful) {
-//         if (!successful) {
-//            final toast toast = toast.maketext(mcontext,
-//                    "error updating yahoo xml currencies", toast.length_short);
-//            toast.show();
-//            //todo might want to try old update strat here
-//         } else {
-//            final toast toast = toast.maketext(mcontext,
-//                    "yahoo xml rates loaded!", toast.length_short);
-//            toast.show();
-//         }
-      }
-   }
-
-
-	private boolean updateRatesWithXML(Context c){
-		//TODO need to check for timeoutReached here somehow...
-		//only try to update currencies if we have XML currency URL to work with
-		if(mXMLCurrencyURL == null) return false;
-
-		HashMap<String, YahooXmlParser.Entry> currRates = null;
-
-		//grab the array of yahoo currency units
-		try {
-			currRates = getCurrRates(mXMLCurrencyURL);
-		} catch (XmlPullParserException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		//leave if we have not updated rates
-		if(currRates == null) return false;
-
-		//update each existing curr with new rates
-		for (Unit uc : mUnitArray) {
-			//skip unit support that don't support updating (not hist)
-			if (!uc.isDynamic()) continue;
-
-			UnitCurrency u = ((UnitCurrency) uc);
-			YahooXmlParser.Entry entry = currRates.get(uc.getName());
-			if (entry != null) {
-				u.setValue(entry.price);
-				//TODO also set the update time
-			}
-			//this is for BTC
-			else {
-				//TODO should not do this this way
-				//check to see if the update timeout has been reached
-				if (u.isTimeoutReached(c))
-					u.asyncRefresh(c);
-			}
-		}
-		return true;
-	}
-
-
-	/**
-	 * Downloads XML file of current Yahoo finance currency rates
-	 * @param urlString URL of XML string
-	 * @return Array of currencies with updated values
-	 * @throws XmlPullParserException
-	 * @throws IOException
-	 */
-	private HashMap<String, YahooXmlParser.Entry> getCurrRates(String urlString)
-			  throws XmlPullParserException, IOException {
-		InputStream stream = null;
-		YahooXmlParser yahooXmlParser = new YahooXmlParser();
-		HashMap<String, YahooXmlParser.Entry> currRates = null;
-
-		try {
-			stream = downloadUrl(urlString);
-			currRates = yahooXmlParser.parse(stream);
-			// Makes sure that the InputStream is closed after the app is
-			// finished using it.
-		} finally {
-			if (stream != null) {
-				stream.close();
-			}
-		}
-		return currRates;
-	}
-
-
-	/**
-	 * Given a string representation of a URL, sets up a connection and gets
-	 * an input stream.
-	 */
-	private InputStream downloadUrl(String urlString) throws IOException {
-		URL url = new URL(urlString);
-		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-		conn.setReadTimeout(10000 /* milliseconds */);
-		conn.setConnectTimeout(15000 /* milliseconds */);
-		conn.setRequestMethod("GET");
-		conn.setDoInput(true);
-		// Starts the query
-		conn.connect();
-		InputStream stream = conn.getInputStream();
-		return stream;
-	}
 
 
 
@@ -404,6 +273,16 @@ public class UnitType {
       return mUnitArray.get(mUnitDisplayOrder.get(pos));
 	}
 
+	/**
+	 * Get the unit given a position of the original mUnitArray.  This does not
+	 * use the mUnitDisplayOrder like getUnit uses.
+	 * @param pos position of unit in mUnitArray
+	 * @return unit from mUnitArray
+	 */
+	public Unit getUnitAtOriginalPos(int pos) {
+		return mUnitArray.get(pos);
+	}
+
    /**
     * Populate the UnitDisplayOrder array.  Will fill if empty or top off if
     * it has less elements than UnitArray
@@ -417,6 +296,12 @@ public class UnitType {
       mUnitDisplayOrder.clear();
       fillUnitDisplayOrder();
    }
+
+
+	public String getXMLCurrencyURL() {
+		return mXMLCurrencyURL;
+	}
+
 
 	public Unit getPrevUnit(){
 		return getUnit(mPrevUnitPos);
