@@ -2,6 +2,7 @@ package com.llamacorp.equate.unit;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.widget.Toast;
 
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -9,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Date;
 import java.util.HashMap;
 
 /**
@@ -17,37 +19,69 @@ import java.util.HashMap;
  * Created by Evan on 10/2/2015.
  */
 public class UnitTypeUpdater {
+   public static int UPDATE_TIMEOUT_MIN = 30;
+   private static Date mLastUpdateTime;
    private static Context mContext;
 
    public static void update(UnitType ut, Context c) {
       if(!ut.containsDynamicUnits()) return;
       mContext = c;
 
-      new UpdateYahooXMLAsyncTask().execute(ut);
+      //only do update if timeout period has passed
+      if(isTimeoutReached()) {
+         //add "Updating" text
+         ut.setUpdating(true);
+         new UpdateYahooXMLAsyncTask(ut).execute();
+      }
+   }
+
+   private static boolean isTimeoutReached(){
+      Date now = new Date();
+      if(mLastUpdateTime != null && (now.getTime() - mLastUpdateTime.getTime())
+              < (60*1000*UPDATE_TIMEOUT_MIN)){
+         return false;
+      }
+      else
+         return true;
    }
 
    /**
     * This class is used to create a background task that handles
     * the actual retrieval of the Yahoo XML file that contains the current rates
     */
-   private static class UpdateYahooXMLAsyncTask extends AsyncTask<UnitType, Void, Boolean> {
+   private static class UpdateYahooXMLAsyncTask extends AsyncTask<Void, Void, Boolean> {
+      private UnitType mUnitType;
+
+      public UpdateYahooXMLAsyncTask(UnitType unitType) {
+         mUnitType = unitType;
+      }
+
       //This method is called first
       @Override
-      protected Boolean doInBackground(UnitType...unitTypes) {
-         return updateRatesWithXML(unitTypes[0]);
+      protected Boolean doInBackground(Void...voids) {
+         return updateRatesWithXML(mUnitType);
       }
 
       // This method is called after doInBackground completes
       @Override
       protected void onPostExecute(Boolean successful) {
+         if (successful) {
+            mLastUpdateTime = new Date();
+            final Toast toast = Toast.makeText(mContext,
+                    mLastUpdateTime.toString(), Toast.LENGTH_SHORT);
+            toast.show();
+         }
+
+         //remove text "Updating"
+         mUnitType.setUpdating(false);
 //         if (!successful) {
-//            final toast toast = toast.maketext(mcontext,
-//                    "error updating yahoo xml currencies", toast.length_short);
+//            final Toast toast = toast.maketext(mContext,
+//                    "error updating yahoo xml currencies", toast.LENGTH_SHORT);
 //            toast.show();
 //            //todo might want to try old update strat here
 //         } else {
-//            final toast toast = toast.maketext(mcontext,
-//                    "yahoo xml rates loaded!", toast.length_short);
+//            final Toast toast = toast.maketext(mContext,
+//                    "yahoo xml rates loaded!", toast.LENGTH_SHORT);
 //            toast.show();
 //         }
       }
@@ -55,7 +89,6 @@ public class UnitTypeUpdater {
 
 
    private static boolean updateRatesWithXML(UnitType ut){
-      //TODO need to check for timeoutReached here somehow...
       //only try to update currencies if we have XML currency URL to work with
       if(ut.getXMLCurrencyURL() == null) return false;
 
@@ -82,7 +115,7 @@ public class UnitTypeUpdater {
          YahooXmlParser.Entry entry = currRates.get(u.getName());
          if (entry != null) {
             u.setValue(entry.price);
-            //TODO also set the update time
+            u.setUpdateTime(entry.date);
          }
          //this is for BTC
          else {

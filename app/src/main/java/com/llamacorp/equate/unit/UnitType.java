@@ -2,8 +2,6 @@ package com.llamacorp.equate.unit;
 
 import android.content.Context;
 
-import com.llamacorp.equate.unit.UnitCurrency.OnConvertKeyUpdateFinishedListener;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -32,6 +30,16 @@ public class UnitType {
    private ArrayList<Integer> mUnitDisplayOrder;
 
 	private String mXMLCurrencyURL;
+	private boolean mUpdating;
+
+
+
+	//this is for communication with fragment hosting convert keys
+	OnConvertKeyUpdateFinishedListener mCallback;
+
+	public interface OnConvertKeyUpdateFinishedListener {
+		void updateDynamicUnitButtons();
+	}
 
 
 	/** Default constructor used by UnitType Initializer   */
@@ -40,6 +48,7 @@ public class UnitType {
 		mUnitArray = new ArrayList<Unit>();
       mUnitDisplayOrder = new ArrayList<Integer>();
 		mIsUnitSelected = false;
+		mUpdating = false;
 	}
 
 	public UnitType(String name, String URL) {
@@ -198,10 +207,12 @@ public class UnitType {
 	}
 
 	public void setDynamicUnitCallback(OnConvertKeyUpdateFinishedListener callback) {
-		if(containsDynamicUnits())
-			for(int i=0; i<size(); i++)
-				if(getUnit(i).isDynamic())
-					((UnitCurrency)getUnit(i)).setCallback(callback);
+		if(containsDynamicUnits()) {
+			mCallback = callback;
+//			for (int i = 0; i < size(); i++)
+//				if (getUnit(i).isDynamic())
+//					((UnitCurrency) getUnit(i)).setCallback(mCallback);
+		}
 	}
 
 	/** Check to see if unit at position pos is dynamic */
@@ -321,5 +332,15 @@ public class UnitType {
 
 	public int getCurrUnitPos(){
 		return mCurrUnitPos;
+	}
+
+	public void setUpdating(boolean updating) {
+		mUpdating = updating;
+		//refresh text
+		mCallback.updateDynamicUnitButtons();
+	}
+
+	public boolean isUpdating() {
+		return mUpdating;
 	}
 }

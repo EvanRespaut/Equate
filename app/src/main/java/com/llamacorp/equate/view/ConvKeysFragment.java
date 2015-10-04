@@ -1,7 +1,5 @@
 package com.llamacorp.equate.view;
 
-import java.util.ArrayList;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -14,9 +12,11 @@ import android.widget.Button;
 
 import com.llamacorp.equate.Calculator;
 import com.llamacorp.equate.R;
-import com.llamacorp.equate.unit.UnitCurrency.OnConvertKeyUpdateFinishedListener;
 import com.llamacorp.equate.unit.UnitHistCurrency;
 import com.llamacorp.equate.unit.UnitType;
+import com.llamacorp.equate.unit.UnitType.OnConvertKeyUpdateFinishedListener;
+
+import java.util.ArrayList;
 
 public class ConvKeysFragment extends Fragment implements OnConvertKeyUpdateFinishedListener {
 
@@ -195,15 +195,16 @@ public class ConvKeysFragment extends Fragment implements OnConvertKeyUpdateFini
 			clickUnitButton(unitPos);
 	}
 
-	public void updateDynamicUnitButtons(String text){
+	public void updateDynamicUnitButtons(){
 		if(!mUnitType.containsDynamicUnits())
 			return;
 		//add or remove dynamic unit updating indicator
 		for(int i=0;i<mConvButton.size();i++){
 			//first check if each particular unit is dynamic
 			if(mUnitType.isUnitDynamic(i)){
-				if(mUnitType.isUnitUpdating(i))
-					mConvButton.get(i).setText(text);
+//				if(mUnitType.isUnitUpdating(i))
+				if(mUnitType.isUpdating())
+					mConvButton.get(i).setText(getText(R.string.word_updating));
 				else
 					refreshButtonText(i);
 			}

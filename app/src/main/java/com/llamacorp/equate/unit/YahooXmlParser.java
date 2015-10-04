@@ -21,7 +21,11 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 
 /**
  * This class parses XML feeds from
@@ -88,10 +92,12 @@ public class YahooXmlParser {
    public static class Entry {
       public final double price;
       public final String symbol;
+      public final Date date;
 
-      private Entry(double price, String symbol) {
+      private Entry(double price, String symbol, Date date) {
          this.price = price;
          this.symbol = symbol;
+         this.date = date;
       }
    }
 
@@ -107,6 +113,7 @@ public class YahooXmlParser {
       parser.require(XmlPullParser.START_TAG, ns, "resource");
       String price = null;
       String symbol = null;
+      Date date = null;
       while (parser.next() != XmlPullParser.END_TAG) {
          if (parser.getEventType() != XmlPullParser.START_TAG) {
             continue;
@@ -118,11 +125,21 @@ public class YahooXmlParser {
             price = readPrice(parser);
          } else if (name.equals("symbol")) {
             symbol = readSymbol(parser);
+
+         } else if (name.equals("utctime")) {
+            SimpleDateFormat sdf =
+                    new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.US);
+
+            try {
+               date = sdf.parse(readSymbol(parser));
+            } catch (ParseException e) {
+               e.printStackTrace();
+            }
          } else {
             skip(parser);
          }
       }
-      return new Entry(Double.parseDouble(price), symbol);
+      return new Entry(Double.parseDouble(price), symbol, date);
    }
 
    // Processes price tags in the feed.
