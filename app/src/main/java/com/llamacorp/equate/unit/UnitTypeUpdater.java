@@ -28,11 +28,13 @@ public class UnitTypeUpdater {
       mContext = c;
 
       //only do update if timeout period has passed
-      if(isTimeoutReached()) {
+      //TODO timeout section commented out for debugging purposed atm
+      //TODO timeout will need to be added into the JSON array
+//      if(isTimeoutReached()) {
          //add "Updating" text
          ut.setUpdating(true);
          new UpdateYahooXMLAsyncTask(ut).execute();
-      }
+//      }
    }
 
    private static boolean isTimeoutReached(){

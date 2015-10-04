@@ -337,7 +337,8 @@ public class UnitType {
 	public void setUpdating(boolean updating) {
 		mUpdating = updating;
 		//refresh text
-		mCallback.updateDynamicUnitButtons();
+		if(mCallback != null)
+			mCallback.updateDynamicUnitButtons();
 	}
 
 	public boolean isUpdating() {
