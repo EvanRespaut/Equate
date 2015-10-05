@@ -184,9 +184,9 @@ public class UnitType {
 	 * is asynchronous and will only happen sometime in the future
 	 * Internet connection permitting.
 	 */
-	public void refreshDynamicUnits(Context c){
+	public void refreshDynamicUnits(Context c, boolean forced){
 		if(containsDynamicUnits()) {
-         UnitTypeUpdater.update(this, c);
+         UnitTypeUpdater.update(this, c, forced);
       }
    }
 

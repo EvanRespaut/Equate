@@ -23,12 +23,12 @@ public class UnitTypeUpdater {
    public static int UPDATE_TIMEOUT_MIN = 30;
    private static Context mContext;
 
-   public static void update(UnitType ut, Context c) {
+   public static void update(UnitType ut, Context c, boolean forced) {
       if(!ut.containsDynamicUnits()) return;
       mContext = c;
 
       //only do update if timeout period has passed
-      if (isTimeoutReached(ut)) {
+      if (isTimeoutReached(ut) || forced) {
          //add "Updating" text
          ut.setUpdating(true);
          new UpdateYahooXMLAsyncTask(ut).execute();

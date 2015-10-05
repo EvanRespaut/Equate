@@ -409,12 +409,13 @@ public class Calculator{
 	 * each unit's own HTTP/JSON API call. Note that this refresh
 	 * is asynchronous and will only happen sometime in the future
 	 * Internet connection permitting.
+	 * @param forced should update be forced without waiting for time-out
 	 */
-	public void refreshAllDynamicUnits(){
+	public void refreshAllDynamicUnits(boolean forced){
 		//JUnit tests can't find AsynTask class, so skip it for test calc
 		if(!mIsTestCalc)
 			for(UnitType ut : mUnitTypeArray)
-				ut.refreshDynamicUnits(mAppContext);
+				ut.refreshDynamicUnits(mAppContext, forced);
 	}
 
 	/**
