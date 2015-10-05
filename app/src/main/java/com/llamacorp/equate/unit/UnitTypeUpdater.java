@@ -19,8 +19,8 @@ import java.util.HashMap;
  * Created by Evan on 10/2/2015.
  */
 public class UnitTypeUpdater {
+   //TODO should maybe make this not static
    public static int UPDATE_TIMEOUT_MIN = 30;
-   private static Date mLastUpdateTime;
    private static Context mContext;
 
    public static void update(UnitType ut, Context c) {
@@ -28,18 +28,19 @@ public class UnitTypeUpdater {
       mContext = c;
 
       //only do update if timeout period has passed
-      //TODO timeout section commented out for debugging purposed atm
-      //TODO timeout will need to be added into the JSON array
-//      if(isTimeoutReached()) {
+      if (isTimeoutReached(ut)) {
          //add "Updating" text
          ut.setUpdating(true);
          new UpdateYahooXMLAsyncTask(ut).execute();
-//      }
+      } else {
+         toast("Timeout not reached");
+      }
    }
 
-   private static boolean isTimeoutReached(){
+   private static boolean isTimeoutReached(UnitType ut){
       Date now = new Date();
-      if(mLastUpdateTime != null && (now.getTime() - mLastUpdateTime.getTime())
+      if(ut.getLastUpdateTime() != null && (now.getTime() -
+              ut.getLastUpdateTime().getTime())
               < (60*1000*UPDATE_TIMEOUT_MIN)){
          return false;
       }
@@ -68,10 +69,8 @@ public class UnitTypeUpdater {
       @Override
       protected void onPostExecute(Boolean successful) {
          if (successful) {
-            mLastUpdateTime = new Date();
-            final Toast toast = Toast.makeText(mContext,
-                    mLastUpdateTime.toString(), Toast.LENGTH_SHORT);
-            toast.show();
+            mUnitType.setLastUpdateTime(new Date());
+            toast("Updated " + mUnitType.getLastUpdateTime().toString());
          }
 
          //remove text "Updating"
@@ -173,5 +172,12 @@ public class UnitTypeUpdater {
       conn.connect();
       InputStream stream = conn.getInputStream();
       return stream;
+   }
+
+
+
+   private static void toast(String text) {
+      final Toast toast = Toast.makeText(mContext, text, Toast.LENGTH_SHORT);
+      toast.show();
    }
 }

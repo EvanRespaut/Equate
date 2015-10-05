@@ -8,6 +8,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 /**
  * Abstract class, note that child class must implement a function to do raw
@@ -18,7 +20,8 @@ public class UnitType {
 	private static final String JSON_UNIT_DISP_ORDER = "unit_disp_order";
 	private static final String JSON_CURR_POS = "pos";
 	private static final String JSON_IS_SELECTED = "selected";
-   private static final String JSON_UNIT_ARRAY = "unit_array";
+	private static final String JSON_UNIT_ARRAY = "unit_array";
+	private static final String JSON_UPDATE_TIME = "update_time";
 
 	private String mName;
 	private ArrayList<Unit> mUnitArray;
@@ -30,15 +33,15 @@ public class UnitType {
    private ArrayList<Integer> mUnitDisplayOrder;
 
 	private String mXMLCurrencyURL;
-	private boolean mUpdating;
-
+	private boolean mUpdating = false;
+	private Date mLastUpdateTime;
 
 
 	//this is for communication with fragment hosting convert keys
 	OnConvertKeyUpdateFinishedListener mCallback;
 
 	public interface OnConvertKeyUpdateFinishedListener {
-		void updateDynamicUnitButtons();
+		void refreshAllButtonsText();
 	}
 
 
@@ -49,6 +52,7 @@ public class UnitType {
       mUnitDisplayOrder = new ArrayList<Integer>();
 		mIsUnitSelected = false;
 		mUpdating = false;
+		mLastUpdateTime = new GregorianCalendar(2015,3,1,1,11).getTime();
 	}
 
 	public UnitType(String name, String URL) {
@@ -77,6 +81,7 @@ public class UnitType {
 
 		mCurrUnitPos = json.getInt(JSON_CURR_POS);
 		mIsUnitSelected = json.getBoolean(JSON_IS_SELECTED);
+		setLastUpdateTime(new Date(json.getLong(JSON_UPDATE_TIME)));
 
       JSONArray jUnitDisOrder = json.getJSONArray(JSON_UNIT_DISP_ORDER);
       mUnitDisplayOrder.clear();
@@ -106,8 +111,10 @@ public class UnitType {
 		json.put(JSON_NAME, mName);
 		json.put(JSON_CURR_POS, mCurrUnitPos);
 		json.put(JSON_IS_SELECTED, mIsUnitSelected);
+		json.put(JSON_UPDATE_TIME, getLastUpdateTime().getTime());
 
-      JSONArray jUnitDisOrder = new JSONArray();
+
+		JSONArray jUnitDisOrder = new JSONArray();
 		for (Integer i : mUnitDisplayOrder)
 			jUnitDisOrder.put(i);
 		json.put(JSON_UNIT_DISP_ORDER, jUnitDisOrder);
@@ -338,10 +345,19 @@ public class UnitType {
 		mUpdating = updating;
 		//refresh text
 		if(mCallback != null)
-			mCallback.updateDynamicUnitButtons();
+			mCallback.refreshAllButtonsText();
 	}
 
 	public boolean isUpdating() {
 		return mUpdating;
+	}
+
+
+	public Date getLastUpdateTime() {
+		return mLastUpdateTime;
+	}
+
+	public void setLastUpdateTime(Date mLastUpdateTime) {
+		this.mLastUpdateTime = mLastUpdateTime;
 	}
 }

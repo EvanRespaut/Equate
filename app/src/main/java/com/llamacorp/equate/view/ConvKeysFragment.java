@@ -195,22 +195,6 @@ public class ConvKeysFragment extends Fragment implements OnConvertKeyUpdateFini
 			clickUnitButton(unitPos);
 	}
 
-	public void updateDynamicUnitButtons(){
-		if(!mUnitType.containsDynamicUnits())
-			return;
-		//add or remove dynamic unit updating indicator
-		for(int i=0;i<mConvButton.size();i++){
-			//first check if each particular unit is dynamic
-			if(mUnitType.isUnitDynamic(i)){
-//				if(mUnitType.isUnitUpdating(i))
-				if(mUnitType.isUpdating())
-					mConvButton.get(i).setText(getText(R.string.word_updating));
-				else
-					refreshButtonText(i);
-			}
-		}
-	}
-
 
 	/**
 	 * Helper function to build a dialog box that list overflow units not shown
@@ -230,6 +214,11 @@ public class ConvKeysFragment extends Fragment implements OnConvertKeyUpdateFini
 		alert.show();
 	}
 
+	public void refreshAllButtonsText() {
+		for (int i = 0; i < mConvButton.size(); i++) {
+			refreshButtonText(i);
+		}
+	}
 
 	private void refreshButtonText(int buttonPos){
 		refreshButtonText("", buttonPos);
@@ -244,6 +233,11 @@ public class ConvKeysFragment extends Fragment implements OnConvertKeyUpdateFini
 		if(displayText.equals(""))
 			return;
 		displayText = textPrefix + displayText;
+
+		if(mUnitType.containsDynamicUnits() && mUnitType.isUpdating())
+			if(mUnitType.isUnitDynamic(buttonPos))
+				displayText = (String) getText(R.string.word_updating);
+
 		Button button = mConvButton.get(buttonPos);
 
 		button.setText(displayText);
