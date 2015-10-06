@@ -185,10 +185,11 @@ public class UnitType {
 	 * Internet connection permitting.
 	 */
 	public void refreshDynamicUnits(Context c, boolean forced){
-		if(containsDynamicUnits()) {
-         UnitTypeUpdater.update(this, c, forced);
-      }
-   }
+		if(containsDynamicUnits()){
+			UnitTypeUpdater utp = new UnitTypeUpdater(c);
+			utp.update(this, forced);
+		}
+	}
 
 
 

@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -19,25 +20,29 @@ import java.util.HashMap;
  * Created by Evan on 10/2/2015.
  */
 public class UnitTypeUpdater {
-   //TODO should maybe make this not static
    public static int UPDATE_TIMEOUT_MIN = 30;
-   private static Context mContext;
+   private Context mContext;
+   private ArrayList<Integer> mUnitsToUpdate;
 
-   public static void update(UnitType ut, Context c, boolean forced) {
+   public UnitTypeUpdater(Context mContext) {
+      this.mContext = mContext;
+      mUnitsToUpdate = new ArrayList<>();
+   }
+
+   public void update(UnitType ut, boolean forced) {
       if(!ut.containsDynamicUnits()) return;
-      mContext = c;
 
       //only do update if timeout period has passed
       if (isTimeoutReached(ut) || forced) {
          //add "Updating" text
          ut.setUpdating(true);
-         new UpdateYahooXMLAsyncTask(ut).execute();
+         new UpdateYahooXMLAsyncTask(ut, forced).execute();
       } else {
          toast("Timeout not reached");
       }
    }
 
-   private static boolean isTimeoutReached(UnitType ut){
+   private boolean isTimeoutReached(UnitType ut){
       Date now = new Date();
       if(ut.getLastUpdateTime() != null && (now.getTime() -
               ut.getLastUpdateTime().getTime())
@@ -52,11 +57,13 @@ public class UnitTypeUpdater {
     * This class is used to create a background task that handles
     * the actual retrieval of the Yahoo XML file that contains the current rates
     */
-   private static class UpdateYahooXMLAsyncTask extends AsyncTask<Void, Void, Boolean> {
+   private class UpdateYahooXMLAsyncTask extends AsyncTask<Void, Void, Boolean> {
       private UnitType mUnitType;
+      private Boolean mForced;
 
-      public UpdateYahooXMLAsyncTask(UnitType unitType) {
+      public UpdateYahooXMLAsyncTask(UnitType unitType, Boolean forced) {
          mUnitType = unitType;
+         mForced = forced;
       }
 
       //This method is called first
@@ -70,26 +77,27 @@ public class UnitTypeUpdater {
       protected void onPostExecute(Boolean successful) {
          if (successful) {
             mUnitType.setLastUpdateTime(new Date());
-            toast("Updated " + mUnitType.getLastUpdateTime().toString());
+            String text = "Updated at";
+            if(mForced) text = "FORCED update at ";
+            toastLong(text + mUnitType.getLastUpdateTime().toString());
+         }
+
+         //update the remaining units that got missed by yahoo xml
+         if (mUnitsToUpdate != null) {
+            for (int i = 0; i < mUnitsToUpdate.size(); i++) {
+               UnitCurrency u = (UnitCurrency) mUnitType.getUnitAtOriginalPos(mUnitsToUpdate.get(i));
+               if (u.isTimeoutReached(mContext))
+                  u.asyncRefresh(mContext);
+            }
          }
 
          //remove text "Updating"
          mUnitType.setUpdating(false);
-//         if (!successful) {
-//            final Toast toast = toast.maketext(mContext,
-//                    "error updating yahoo xml currencies", toast.LENGTH_SHORT);
-//            toast.show();
-//            //todo might want to try old update strat here
-//         } else {
-//            final Toast toast = toast.maketext(mContext,
-//                    "yahoo xml rates loaded!", toast.LENGTH_SHORT);
-//            toast.show();
-//         }
       }
    }
 
 
-   private static boolean updateRatesWithXML(UnitType ut){
+   private boolean updateRatesWithXML(UnitType ut){
       //only try to update currencies if we have XML currency URL to work with
       if(ut.getXMLCurrencyURL() == null) return false;
 
@@ -98,9 +106,7 @@ public class UnitTypeUpdater {
       //grab the array of yahoo currency units
       try {
          currRates = getCurrRates(ut.getXMLCurrencyURL());
-      } catch (XmlPullParserException e) {
-         e.printStackTrace();
-      } catch (IOException e) {
+      } catch (XmlPullParserException | IOException e) {
          e.printStackTrace();
       }
 
@@ -118,12 +124,9 @@ public class UnitTypeUpdater {
             u.setValue(entry.price);
             u.setUpdateTime(entry.date);
          }
-         //this is for BTC
          else {
-            //TODO should not do this this way
-            //check to see if the update timeout has been reached
-            if (u.isTimeoutReached(mContext))
-               u.asyncRefresh(mContext);
+            //this is for BTC and other units that don't get updated by yahoo
+            mUnitsToUpdate.add(i);
          }
       }
       return true;
@@ -137,7 +140,7 @@ public class UnitTypeUpdater {
     * @throws XmlPullParserException
     * @throws IOException
     */
-   private static HashMap<String, YahooXmlParser.Entry> getCurrRates(String urlString)
+   private HashMap<String, YahooXmlParser.Entry> getCurrRates(String urlString)
            throws XmlPullParserException, IOException {
       InputStream stream = null;
       YahooXmlParser yahooXmlParser = new YahooXmlParser();
@@ -161,7 +164,7 @@ public class UnitTypeUpdater {
     * Given a string representation of a URL, sets up a connection and gets
     * an input stream.
     */
-   private static InputStream downloadUrl(String urlString) throws IOException {
+   private InputStream downloadUrl(String urlString) throws IOException {
       URL url = new URL(urlString);
       HttpURLConnection conn = (HttpURLConnection) url.openConnection();
       conn.setReadTimeout(10000 /* milliseconds */);
@@ -170,13 +173,16 @@ public class UnitTypeUpdater {
       conn.setDoInput(true);
       // Starts the query
       conn.connect();
-      InputStream stream = conn.getInputStream();
-      return stream;
+      return conn.getInputStream();
    }
 
 
+   private void toastLong(String text) {
+      final Toast toast = Toast.makeText(mContext, text, Toast.LENGTH_LONG);
+      toast.show();
+   }
 
-   private static void toast(String text) {
+   private void toast(String text) {
       final Toast toast = Toast.makeText(mContext, text, Toast.LENGTH_SHORT);
       toast.show();
    }

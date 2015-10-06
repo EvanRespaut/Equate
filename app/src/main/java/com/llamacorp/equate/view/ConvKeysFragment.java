@@ -235,7 +235,7 @@ public class ConvKeysFragment extends Fragment implements OnConvertKeyUpdateFini
 		displayText = textPrefix + displayText;
 
 		if(mUnitType.containsDynamicUnits() && mUnitType.isUpdating())
-			if(mUnitType.isUnitDynamic(buttonPos))
+			if(mUnitType.isUnitDynamic(buttonPos) && isAdded())
 				displayText = (String) getText(R.string.word_updating);
 
 		Button button = mConvButton.get(buttonPos);
