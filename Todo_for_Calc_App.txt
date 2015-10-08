@@ -4,10 +4,7 @@
 - Should use API update historical USD to today's USD
 - Remove timeout not reached toast
 - Add testing support for bug: type 4*5 then add - after 4, enter; then do 1+1
-<<<<<<< HEAD
-=======
 - hold 0 to add three 0s
->>>>>>> YahooCurrency
 
 -Add rpm and rad/sec
 
@@ -15,8 +12,6 @@
 Www.xe.com/symbols.php
 
 
-<<<<<<< HEAD
-=======
 --------------------------------------------------------------------------------
 Create an array of UnitCurrencies using default known data in unit initializer
 
@@ -35,7 +30,6 @@ It is possible that some units won't be updated if the yahoo API was missing the
 This is ok, the data in them will just stay old, or will be updated by other means
 like BTC.
 --------------------------------------------------------------------------------
->>>>>>> YahooCurrency
 
 Display Order Array stores order in which to index Array of Units
 
@@ -59,14 +53,9 @@ will shift all other curr down by one, but w/e.
 
 If missing curr wasn't in display, delete last element of display order (i think)
 
-<<<<<<< HEAD
-- Once a unit in the more list has been used, move it to the top of the list of "More"
-
-=======
 
 - Hold unit to "Clear" it and move it to more menu
 - Once a unit in the more list has been used, move it to the top of the list of "More"
->>>>>>> YahooCurrency
 - Another collection of currencies http://coinmill.com/sources.html
 - 2015 Historical (grab latest CPI numbers)
 - Click equals again for sci notation - when going back into reg, grab more accurate version (store it in a precise BigDecimal
