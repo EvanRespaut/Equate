@@ -33,7 +33,7 @@
                 android:layout_height="2dp"
                 android:background="@color/prev_curr_exp_divider" />
 
-            <com.llamacorp.equate.view.EditTextCursorWatcher
+            <com.llamacorp.equate.view.EditTextDisplay
                 xmlns:customNS="http://schemas.android.com/apk/res/com.llamacorp.equate"
                 android:id="@+id/textDisplay"
                 android:layout_width="match_parent"

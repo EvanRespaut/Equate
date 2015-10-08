@@ -263,6 +263,7 @@ public class Calculator{
 
          Result res = mSolver.tryToggleSciNote(mExpression, sKey.equals("g"));
          if(res != null){
+				setSolved(true);
             loadResultToArray(res);
          }
          else
@@ -494,6 +495,10 @@ public class Calculator{
 
 	public int getSelectionStart(){
 		return mExpression.getSelectionStart();
+	}
+
+	public Expression.NumFormat getNumberFormat() {
+		return mExpression.getmNumFormat();
 	}
 
 	/**

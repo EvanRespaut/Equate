@@ -31,7 +31,7 @@ implements OnResultSelectedListener, OnConvertKeySelectedListener{
 	private Context mAppContext;  //used for toasts and the like
 
 	private ResultListFragment mResultListFrag;	//scroll-able history
-	private EditTextCursorWatcher mDisplay;  		//main display
+	private EditTextDisplay mDisplay;  		//main display
 	private ViewPager mUnitTypeViewPager;			//controls and displays UnitType 
 
 	private Button mEqualsButton; //used for changing color
@@ -84,7 +84,7 @@ implements OnResultSelectedListener, OnConvertKeySelectedListener{
 		mCalc = Calculator.getCalculator(this);
 
 		//main result display
-		mDisplay = (EditTextCursorWatcher)findViewById(R.id.textDisplay);
+		mDisplay = (EditTextDisplay)findViewById(R.id.textDisplay);
 		mDisplay.setCalc(mCalc);
 		mDisplay.disableSoftInputFromAppearing();
 

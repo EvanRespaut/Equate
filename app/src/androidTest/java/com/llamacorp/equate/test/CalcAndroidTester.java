@@ -26,7 +26,7 @@ import android.widget.TextView;
 import com.llamacorp.equate.R;
 import com.llamacorp.equate.view.CalcActivity;
 import com.llamacorp.equate.view.ConvKeysFragment;
-import com.llamacorp.equate.view.EditTextCursorWatcher;
+import com.llamacorp.equate.view.EditTextDisplay;
 import com.llamacorp.equate.view.ResultListFragment;
 
 /**
@@ -43,14 +43,14 @@ public class CalcAndroidTester extends ActivityInstrumentationTestCase2<CalcActi
 
 	//private static final int DELAY_BEFORE_SELECTED_READ = 300;
 
-	private EditTextCursorWatcher mExpressionTextView;
+	private EditTextDisplay mExpressionTextView;
 	private CalcActivity mActivity;
 	private ResultListFragment mResultFragment;
 	private ListView mResultListView;
 	private ViewPager mConKeysViewPager; 
 	private ConvKeysFragment mConvertFragment;
 
-	Map<String, Integer> mUnitToPos = new HashMap<String, Integer>();
+	Map<String, Integer> mUnitToPos = new HashMap<>();
 
 	private int[] convertButtonIds = {	
 			R.id.convert_button1,
@@ -118,7 +118,7 @@ public class CalcAndroidTester extends ActivityInstrumentationTestCase2<CalcActi
 		FragmentStatePagerAdapter tempAdapter = (FragmentStatePagerAdapter) mConKeysViewPager.getAdapter();
 		mConvertFragment = (ConvKeysFragment) tempAdapter.instantiateItem(mConKeysViewPager, mConKeysViewPager.getCurrentItem());
 
-		mExpressionTextView = (EditTextCursorWatcher) mActivity.findViewById(R.id.textDisplay);
+		mExpressionTextView = (EditTextDisplay) mActivity.findViewById(R.id.textDisplay);
 	}
 
 	//	@MediumTest

@@ -24,7 +24,7 @@
             android:layout_height="2dp"
             android:background="@color/prev_curr_exp_divider" />
 
-        <com.llamacorp.equate.view.EditTextCursorWatcher
+        <com.llamacorp.equate.view.EditTextDisplay
             android:id="@+id/textDisplay"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

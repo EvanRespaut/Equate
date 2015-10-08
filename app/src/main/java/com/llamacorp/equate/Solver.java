@@ -32,8 +32,9 @@ public class Solver {
       String cleanedQuery = exp.toString();
 
       //if we want engineering, just convert regardless if we have E already
-      if(forceEngineering)
-         exp.roundAndCleanExpression(Expression.NumFormat.ENGINEERING);
+      if(forceEngineering){
+			exp.roundAndCleanExpression(Expression.NumFormat.ENGINEERING);
+		}
          //determine if we are are in sci notation already
       else if(exp.toString().matches(".*E.*"))
          exp.roundAndCleanExpression(Expression.NumFormat.PLAIN);

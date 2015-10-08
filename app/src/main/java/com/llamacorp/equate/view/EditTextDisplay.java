@@ -22,9 +22,11 @@ import android.widget.Toast;
 
 import com.llamacorp.equate.Calculator;
 import com.llamacorp.equate.ExpSeparatorHandler;
+import com.llamacorp.equate.Expression;
 import com.llamacorp.equate.R;
+import com.llamacorp.equate.SISuffixHelper;
 
-public class EditTextCursorWatcher extends EditText {
+public class EditTextDisplay extends EditText {
 	private Calculator mCalc;
 	private Context mContext;
 
@@ -34,7 +36,7 @@ public class EditTextCursorWatcher extends EditText {
 	private int mSelStart = 0;
 	private int mSelEnd = 0;
 
-	private String mTextPrefex="";
+	private String mTextPrefix ="";
 	private String mExpressionText="";
 	private String mTextSuffix="";
 
@@ -48,16 +50,16 @@ public class EditTextCursorWatcher extends EditText {
 	static long LAST_CUT_OR_COPY_TIME;
 
 
-	public EditTextCursorWatcher(Context context) {
+	public EditTextDisplay(Context context) {
 		this(context, null);
 	}	
 
-	public EditTextCursorWatcher(Context context, AttributeSet attrs) {
+	public EditTextDisplay(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		setUpEditText(context, attrs);
 	}
 
-	public EditTextCursorWatcher(Context context, AttributeSet attrs, int defStyle) {
+	public EditTextDisplay(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
 		setUpEditText(context, attrs);
 	}
@@ -67,9 +69,9 @@ public class EditTextCursorWatcher extends EditText {
 		mSepHandler = new ExpSeparatorHandler();
 
 		//grab custom resource variable
-		TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.EditTextCursorWatcher, 0, 0);
+		TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.EditTextDisplay, 0, 0);
 		try {
-			mMinTextSize = ta.getDimension(R.styleable.EditTextCursorWatcher_minimumTextSize,
+			mMinTextSize = ta.getDimension(R.styleable.EditTextDisplay_minimumTextSize,
 					getTextSize());
 		} finally {	ta.recycle();}
 	}
@@ -93,7 +95,7 @@ public class EditTextCursorWatcher extends EditText {
 	 * Updates the text and selection with current value from calc
 	 */
 	public void updateTextFromCalc(){
-		mTextPrefex = "";
+		mTextPrefix = "";
 		mExpressionText = getSepDispText();
 		mTextSuffix = "";
 
@@ -106,17 +108,37 @@ public class EditTextCursorWatcher extends EditText {
 			mTextSuffix = " " + mCalc.getCurrUnitType().getCurrUnit().toString();
 			//about to do conversion
 			if(!mCalc.isSolved()){
-				mTextPrefex = getResources().getString(R.string.word_Convert) + " ";
+				mTextPrefix = getResources().getString(R.string.word_Convert) + " ";
 				mTextSuffix = mTextSuffix + " " + getResources().getString(R.string.word_to) + ":";
 
-				mSelStart = mSelStart + mTextPrefex.length();
-				mSelEnd = mSelEnd + mTextPrefex.length();
+				//bump cursor position to the right by prefix text length
+				mSelStart = mSelStart + mTextPrefix.length();
+				mSelEnd = mSelEnd + mTextPrefix.length();
 			}
+		}
+
+		if(mCalc.isSolved() &&
+				  mCalc.getNumberFormat() == Expression.NumFormat.ENGINEERING){
+			mTextSuffix = " " + SISuffixHelper.getSuffixName(mExpressionText);
 		}
 		//update the main display
 		setTextHtml(mExpressionText);
 
 		//Set up a animator to highlight parts red and fade to white
+		setupHighlighting();
+
+		//updating the text restarts selection to 0,0, so load in the current selection
+		setSelection(mSelStart, mSelEnd);
+
+		//if expression not solved, set cursor to visible (and visa-versa)
+		setCursorVisible(!mCalc.isSolved());
+	}
+
+
+	/**
+	 * Helper method to setup the highlighting
+	 */
+	public void setupHighlighting() {
 		if(mCalc.isHighlighted()){
 			Integer colorFrom = Color.RED;
 			Integer colorTo = Color.WHITE;
@@ -140,9 +162,9 @@ public class EditTextCursorWatcher extends EditText {
 						for(int i=0; i < len;i++){
 							int finish = mExpressionText.length();
 							if(i != len - 1) finish = highlist.get(i + 1);
-							coloredExp = coloredExp + "<font color='" + color + "'>" + 
-									mExpressionText.substring(highlist.get(i), highlist.get(i) + 1) +
-									"</font>" + mExpressionText.substring(highlist.get(i) + 1, finish);
+							coloredExp = coloredExp + "<font color='" + color + "'>" +
+									  mExpressionText.substring(highlist.get(i), highlist.get(i) + 1) +
+									  "</font>" + mExpressionText.substring(highlist.get(i) + 1, finish);
 						}
 					}
 
@@ -152,7 +174,7 @@ public class EditTextCursorWatcher extends EditText {
 					//updating the text restarts selection to 0,0, so load in the current selection
 					setSelection(mSelStart, mSelEnd);
 				}
-			});	
+			});
 			mColorAnimation.addListener(new AnimatorListenerAdapter() {
 				@Override
 				public void onAnimationEnd(Animator animation) {
@@ -162,13 +184,8 @@ public class EditTextCursorWatcher extends EditText {
 			mColorAnimation.setDuration(ANIMATE_DURR);
 			mColorAnimation.start();
 		}
-
-		//updating the text restarts selection to 0,0, so load in the current selection
-		setSelection(mSelStart, mSelEnd);
-
-		//if expression not solved, set cursor to visible (and visa-versa)
-		setCursorVisible(!mCalc.isSolved());
 	}
+
 
 	public void clearHighlighted(){
 		mCalc.clearHighlighted();
@@ -189,7 +206,7 @@ public class EditTextCursorWatcher extends EditText {
 	 * @param expStr is the main expression to update
 	 */
 	private void setTextHtml(String expStr){
-		setText(Html.fromHtml("<font color='gray'>" + mTextPrefex + "</font>" + 
+		setText(Html.fromHtml("<font color='gray'>" + mTextPrefix + "</font>" +
 				expStr + 
 				"<font color='gray'>" + mTextSuffix + "</font>"));
 	}
@@ -197,7 +214,7 @@ public class EditTextCursorWatcher extends EditText {
 
 	/** Sets the current selection to the end of the expression */
 	public void setSelectionToEnd(){
-		int expLen = mExpressionText.length() + mTextPrefex.length();
+		int expLen = mExpressionText.length() + mTextPrefix.length();
 		setSelection(expLen, expLen);
 	}
 
@@ -304,7 +321,7 @@ public class EditTextCursorWatcher extends EditText {
 	@Override   
 	protected void onSelectionChanged(int selStart, int selEnd) { 
 		if(mCalc!=null){
-			int preLen = mTextPrefex.length();
+			int preLen = mTextPrefix.length();
 			int expLen = mExpressionText.length();
 
 			int fixedSelStart = mSepHandler.makeIndexValid(selStart - preLen) + preLen;

@@ -18,8 +18,7 @@ public class Expression {
 	private static final String JSON_END = "sel_end";
 	private static final String JSON_SOLVED = "sel_end";
 
-
-   public enum NumFormat {NORMAL, PLAIN, SCINOTE, ENGINEERING}
+	public enum NumFormat {NORMAL, PLAIN, SCINOTE, ENGINEERING}
 
 	//the main expression string
 	private String mExpression;
@@ -34,6 +33,8 @@ public class Expression {
 
 	//stores whether or not this expression was just solved
 	private boolean mSolved;
+
+	private NumFormat mNumFormat = NumFormat.NORMAL;
 
 	//list of indexes of characters to highlight
 	private ArrayList<Integer> mHighlightedCharList;
@@ -229,8 +230,8 @@ public class Expression {
 	 */
 	public void pasteIntoExpression(String str){
 		//first replace all substitutable characters
-		for(int i = 0; i < substituteChars.length; i++)
-			str = str.replaceAll(substituteChars[i][0], substituteChars[i][1]);
+		for (String[] substituteChar : substituteChars)
+			str = str.replaceAll(substituteChar[0], substituteChar[1]);
 		//next remove all invalid chars
 		str = str.replaceAll(regexInvalidChars,"");
 		//then just blindly insert text without case checking
@@ -249,6 +250,9 @@ public class Expression {
 		//if expression was displaying error (with invalid chars) leave
 		if(isInvalid() || isEmpty())
 			return;
+
+		//save current numformat (used to tell if we want to show eng prefix)
+		setmNumFormat(numFormat);
 
 		//if formatting messed ("-", "(())"), or number too big, throw error
       BigDecimal bd = new BigDecimal(getExpression(), mMcDisp);
@@ -611,6 +615,14 @@ public class Expression {
 		setSelection(length(), length());
 	}
 
+
+	public NumFormat getmNumFormat() {
+		return mNumFormat;
+	}
+
+	public void setmNumFormat(NumFormat mNumFormat) {
+		this.mNumFormat = mNumFormat;
+	}
 
 	public boolean isSolved() {
 		return mSolved;
