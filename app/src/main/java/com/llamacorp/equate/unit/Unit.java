@@ -1,6 +1,5 @@
-package com.llamacorp.equate;
+package com.llamacorp.equate.unit;
 
-import java.lang.reflect.Constructor;
 import java.util.Locale;
 
 import org.json.JSONException;
@@ -93,7 +92,11 @@ public abstract class Unit  /*implements JsonSerializer<Unit>, JsonDeserializer<
 	protected String getLongName() {
 		return mLongName;
 	}
-	
+
+	public String getName(){
+		return toString();
+	}
+
 	public String getGenericLongName(){
 		return mLongName;
 	}	
@@ -133,7 +136,7 @@ public abstract class Unit  /*implements JsonSerializer<Unit>, JsonDeserializer<
 	}
 	
 
-	protected abstract String convertTo(Unit toUnit, String expressionToConv);
+	public abstract String convertTo(Unit toUnit, String expressionToConv);
 
 	@Override
 	public boolean equals(Object other){

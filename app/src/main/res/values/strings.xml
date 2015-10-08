@@ -48,6 +48,8 @@
 	<string name="word_Convert">Convert</string>
 	<string name="word_Converting">Converting</string>
 	<string name="word_to">to</string>
+	<string name="word_updating">Updating</string>
+
    
     <string name="convert_arrow">&#10140;&#160;</string>
     <string name="convert_toast_converting">Converting</string>

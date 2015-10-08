@@ -1,7 +1,5 @@
 package com.llamacorp.equate.view;
 
-import java.util.ArrayList;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -14,10 +12,11 @@ import android.widget.Button;
 
 import com.llamacorp.equate.Calculator;
 import com.llamacorp.equate.R;
-import com.llamacorp.equate.Unit;
-import com.llamacorp.equate.UnitCurrency.OnConvertKeyUpdateFinishedListener;
-import com.llamacorp.equate.UnitHistCurrency;
-import com.llamacorp.equate.UnitType;
+import com.llamacorp.equate.unit.UnitHistCurrency;
+import com.llamacorp.equate.unit.UnitType;
+import com.llamacorp.equate.unit.UnitType.OnConvertKeyUpdateFinishedListener;
+
+import java.util.ArrayList;
 
 public class ConvKeysFragment extends Fragment implements OnConvertKeyUpdateFinishedListener {
 
@@ -196,21 +195,6 @@ public class ConvKeysFragment extends Fragment implements OnConvertKeyUpdateFini
 			clickUnitButton(unitPos);
 	}
 
-	public void updateDynamicUnitButtons(String text){
-		if(!mUnitType.containsDynamicUnits())
-			return;
-		//add or remove dynamic unit updating indicator
-		for(int i=0;i<mConvButton.size();i++){
-			//first check if each particular unit is dynamic
-			if(mUnitType.isUnitDynamic(i)){
-				if(mUnitType.isUnitUpdating(i))
-					mConvButton.get(i).setText(text);
-				else
-					refreshButtonText(i);
-			}
-		}
-	}
-
 
 	/**
 	 * Helper function to build a dialog box that list overflow units not shown
@@ -230,6 +214,11 @@ public class ConvKeysFragment extends Fragment implements OnConvertKeyUpdateFini
 		alert.show();
 	}
 
+	public void refreshAllButtonsText() {
+		for (int i = 0; i < mConvButton.size(); i++) {
+			refreshButtonText(i);
+		}
+	}
 
 	private void refreshButtonText(int buttonPos){
 		refreshButtonText("", buttonPos);
@@ -244,6 +233,11 @@ public class ConvKeysFragment extends Fragment implements OnConvertKeyUpdateFini
 		if(displayText.equals(""))
 			return;
 		displayText = textPrefix + displayText;
+
+		if(mUnitType.containsDynamicUnits() && mUnitType.isUpdating())
+			if(mUnitType.isUnitDynamic(buttonPos) && isAdded())
+				displayText = (String) getText(R.string.word_updating);
+
 		Button button = mConvButton.get(buttonPos);
 
 		button.setText(displayText);

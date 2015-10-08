@@ -1,5 +1,7 @@
 package com.llamacorp.equate;
 
+import com.llamacorp.equate.unit.Unit;
+
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.util.regex.Matcher;

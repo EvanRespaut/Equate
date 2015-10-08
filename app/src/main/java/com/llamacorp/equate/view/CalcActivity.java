@@ -188,7 +188,7 @@ implements OnResultSelectedListener, OnConvertKeySelectedListener{
                break;
 					case R.id.percent_button: buttonValue = "E";
 					break;
-					case R.id.nine_button: mCalc.refreshAllDynamicUnits();
+					case R.id.nine_button: mCalc.refreshAllDynamicUnits(true);
 					break;
 					case R.id.minus_button: buttonValue = "n";
 					break;
@@ -343,7 +343,7 @@ implements OnResultSelectedListener, OnConvertKeySelectedListener{
 
 				//if we just switched to a dynamic unit, attempt an update
 				if(mCalc.getCurrUnitType().containsDynamicUnits())
-					mCalc.refreshAllDynamicUnits();
+					mCalc.refreshAllDynamicUnits(false);
 
 				//clear selected unit from adjacent convert key fragment so you can't see a bit of them
 				int currUnitTypePos = mUnitTypeViewPager.getCurrentItem();
@@ -505,7 +505,7 @@ implements OnResultSelectedListener, OnConvertKeySelectedListener{
 			return;
 
 		if(mCalc.getCurrUnitType().containsDynamicUnits())
-			mCalc.refreshAllDynamicUnits();
+			mCalc.refreshAllDynamicUnits(false);
 
 		//only set display to Equate if no expression is there yet
 		if(mCalc.toString().equals("") && mCalc.getResultList().size()==0){

@@ -1,11 +1,8 @@
-package com.llamacorp.equate;
+package com.llamacorp.equate.unit;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.Date;
-import java.util.GregorianCalendar;
+import android.content.Context;
+import android.os.AsyncTask;
+import android.util.Log;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -14,11 +11,12 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.content.Context;
-import android.os.AsyncTask;
-import android.os.Handler;
-import android.util.Log;
-import android.widget.Toast;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 public class UnitCurrency extends Unit {
 	private static final String JSON_LAST_UPDATE = "updated";
@@ -26,7 +24,6 @@ public class UnitCurrency extends Unit {
 
 	//	private static String JSON_URL_RATE_TAG = "rate";
 	private static String JSON_URL_RATE_TAG = "Rate";
-	private static int UPDATE_TIMEOUT_MIN = 30;
 
 	private Date mTimeLastUpdated;
 	//	private String mURLPrefix = "http://rate-exchange.appspot.com/currency?from=USD&to=";
@@ -35,12 +32,12 @@ public class UnitCurrency extends Unit {
 	private String mURLSuffix = "";
 
 	//this is for communication with fragment hosting convert keys
-	OnConvertKeyUpdateFinishedListener mCallback;
+//	OnConvertKeyUpdateFinishedListener mCallback;
 	Context mContext;
-
-	public interface OnConvertKeyUpdateFinishedListener {
-		public void updateDynamicUnitButtons(String text);
-	}
+//
+//	public interface OnConvertKeyUpdateFinishedListener {
+//		public void updateDynamicUnitButtons(String text);
+//	}
 
 	//used to tell parent classes if the asyncRefresh is currently running
 	private boolean mUpdating = false;
@@ -71,7 +68,7 @@ public class UnitCurrency extends Unit {
 		boolean success = super.loadJSON(json);
       //only load in the time if the JSON object matches this UNIT
 		if(success)
-         mTimeLastUpdated = new Date(json.getLong(JSON_LAST_UPDATE));
+			setUpdateTime(new Date(json.getLong(JSON_LAST_UPDATE)));
       return success;
 	}
 
@@ -81,6 +78,10 @@ public class UnitCurrency extends Unit {
 		JSONObject json = super.toJSON();
 		json.put(JSON_LAST_UPDATE, mTimeLastUpdated.getTime());
 		return json;
+	}
+
+	public void setUpdateTime(Date date) {
+		mTimeLastUpdated = date;
 	}
 
 	public long getTimeOfUpdate(){
@@ -94,10 +95,10 @@ public class UnitCurrency extends Unit {
 		return mUpdating;
 	}
 
-
-	public void setCallback(OnConvertKeyUpdateFinishedListener callback) {
-		mCallback = callback;
-	}
+//
+//	public void setCallback(OnConvertKeyUpdateFinishedListener callback) {
+//		mCallback = callback;
+//	}
 
 	@Override
 	public String convertTo(Unit toUnit, String expressionToConv) {
@@ -108,18 +109,19 @@ public class UnitCurrency extends Unit {
 	public boolean isTimeoutReached(Context c){
 		mContext = c;
 		Date now = new Date();
-		if(mTimeLastUpdated != null && (now.getTime() - mTimeLastUpdated.getTime()) < (60*1000*UPDATE_TIMEOUT_MIN)){ 
+		if(mTimeLastUpdated != null && (now.getTime() - mTimeLastUpdated.getTime()) < (60*1000* UnitTypeUpdater.UPDATE_TIMEOUT_MIN)){
 			//System.out.println("Not ready to update " + getName() + " yet, wait " + (now.getTime() - mTimeLastUpdated.getTime())/(1000) + " seconds");
-			final Toast toast = Toast.makeText(mContext, "Timeout not reached for " + getName(), Toast.LENGTH_SHORT);
-			toast.show();
-
-			Handler handler = new Handler();
-			handler.postDelayed(new Runnable() {
-				@Override
-				public void run() {
-					toast.cancel(); 
-				}
-			}, 500);
+//TODO this toast cannot be called within AsyncTask
+//			final Toast toast = Toast.makeText(mContext, "Timeout not reached for " + getName(), Toast.LENGTH_SHORT);
+//			toast.show();
+//
+//			Handler handler = new Handler();
+//			handler.postDelayed(new Runnable() {
+//				@Override
+//				public void run() {
+//					toast.cancel();
+//				}
+//			}, 500);
 			return false;
 		}
 		else
@@ -157,11 +159,6 @@ public class UnitCurrency extends Unit {
 			return mURLPrefix + toString() + mURLSuffix;
 	}
 
-	private String getName(){
-		return toString();
-	}
-
-
 	/**
 	 * This class is used to create a background task that handles 
 	 * the actual HTTP getting and JSON parsing
@@ -192,13 +189,13 @@ public class UnitCurrency extends Unit {
 
 			//record time of update only if we actually updated
 			if(updateSuccess){
-				mTimeLastUpdated = new Date(); 
+				setUpdateTime(new Date());
 			}
 
 			//updating is complete
 			mUpdating = false;
-			if(mCallback != null)
-				mCallback.updateDynamicUnitButtons("Updating"); 
+//			if(mCallback != null)
+//				mCallback.updateDynamicUnitButtons("Updating");
 		}
 
 		/**

@@ -15,7 +15,6 @@ import android.widget.Toast;
 
 import com.llamacorp.equate.Calculator;
 import com.llamacorp.equate.Result;
-import com.llamacorp.equate.Unit;
 import com.llamacorp.equate.R;
 
 public class ResultListFragment extends ListFragment {

@@ -1,15 +1,15 @@
-package com.llamacorp.equate;
+package com.llamacorp.equate.unit;
 
-import java.util.ArrayList;
-import java.util.Collections;
+import android.content.Context;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.content.Context;
-
-import com.llamacorp.equate.UnitCurrency.OnConvertKeyUpdateFinishedListener;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 /**
  * Abstract class, note that child class must implement a function to do raw
@@ -20,7 +20,8 @@ public class UnitType {
 	private static final String JSON_UNIT_DISP_ORDER = "unit_disp_order";
 	private static final String JSON_CURR_POS = "pos";
 	private static final String JSON_IS_SELECTED = "selected";
-   private static final String JSON_UNIT_ARRAY = "unit_array";
+	private static final String JSON_UNIT_ARRAY = "unit_array";
+	private static final String JSON_UPDATE_TIME = "update_time";
 
 	private String mName;
 	private ArrayList<Unit> mUnitArray;
@@ -31,15 +32,33 @@ public class UnitType {
    //Order to display units (based on mUnitArray index
    private ArrayList<Integer> mUnitDisplayOrder;
 
+	private String mXMLCurrencyURL;
+	private boolean mUpdating = false;
+	private Date mLastUpdateTime;
 
-   /** Default constructor used by UnitType Initializer   */
+
+	//this is for communication with fragment hosting convert keys
+	OnConvertKeyUpdateFinishedListener mCallback;
+
+	public interface OnConvertKeyUpdateFinishedListener {
+		void refreshAllButtonsText();
+	}
+
+
+	/** Default constructor used by UnitType Initializer   */
 	public UnitType(String name){
 		mName = name;
 		mUnitArray = new ArrayList<Unit>();
       mUnitDisplayOrder = new ArrayList<Integer>();
 		mIsUnitSelected = false;
+		mUpdating = false;
+		mLastUpdateTime = new GregorianCalendar(2015,3,1,1,11).getTime();
 	}
 
+	public UnitType(String name, String URL) {
+		this(name);
+		mXMLCurrencyURL = URL;
+	}
 
    /**
     * Takes JSON object and loads out user saved info, such as currently
@@ -62,6 +81,7 @@ public class UnitType {
 
 		mCurrUnitPos = json.getInt(JSON_CURR_POS);
 		mIsUnitSelected = json.getBoolean(JSON_IS_SELECTED);
+		setLastUpdateTime(new Date(json.getLong(JSON_UPDATE_TIME)));
 
       JSONArray jUnitDisOrder = json.getJSONArray(JSON_UNIT_DISP_ORDER);
       mUnitDisplayOrder.clear();
@@ -91,8 +111,10 @@ public class UnitType {
 		json.put(JSON_NAME, mName);
 		json.put(JSON_CURR_POS, mCurrUnitPos);
 		json.put(JSON_IS_SELECTED, mIsUnitSelected);
+		json.put(JSON_UPDATE_TIME, getLastUpdateTime().getTime());
 
-      JSONArray jUnitDisOrder = new JSONArray();
+
+		JSONArray jUnitDisOrder = new JSONArray();
 		for (Integer i : mUnitDisplayOrder)
 			jUnitDisOrder.put(i);
 		json.put(JSON_UNIT_DISP_ORDER, jUnitDisOrder);
@@ -162,18 +184,14 @@ public class UnitType {
 	 * is asynchronous and will only happen sometime in the future
 	 * Internet connection permitting.
 	 */
-	public void refreshDynamicUnits(Context c){
-		if(containsDynamicUnits())
-			for(Unit uc : mUnitArray){
-				//check to make sure each unit supports updating
-				if(uc.isDynamic()){
-					UnitCurrency u = ((UnitCurrency) uc);
-					//check to see if the update timeout has been reached
-					if(u.isTimeoutReached(c))
-						u.asyncRefresh(c);
-				}
-			}
+	public void refreshDynamicUnits(Context c, boolean forced){
+		if(containsDynamicUnits()){
+			UnitTypeUpdater utp = new UnitTypeUpdater(c);
+			utp.update(this, forced);
+		}
 	}
+
+
 
 	/**
 	 * Check to see if this UnitType holds any units that have values that
@@ -197,10 +215,12 @@ public class UnitType {
 	}
 
 	public void setDynamicUnitCallback(OnConvertKeyUpdateFinishedListener callback) {
-		if(containsDynamicUnits())
-			for(int i=0; i<size(); i++)
-				if(getUnit(i).isDynamic())
-					((UnitCurrency)getUnit(i)).setCallback(callback);
+		if(containsDynamicUnits()) {
+			mCallback = callback;
+//			for (int i = 0; i < size(); i++)
+//				if (getUnit(i).isDynamic())
+//					((UnitCurrency) getUnit(i)).setCallback(mCallback);
+		}
 	}
 
 	/** Check to see if unit at position pos is dynamic */
@@ -272,6 +292,16 @@ public class UnitType {
       return mUnitArray.get(mUnitDisplayOrder.get(pos));
 	}
 
+	/**
+	 * Get the unit given a position of the original mUnitArray.  This does not
+	 * use the mUnitDisplayOrder like getUnit uses.
+	 * @param pos position of unit in mUnitArray
+	 * @return unit from mUnitArray
+	 */
+	public Unit getUnitAtOriginalPos(int pos) {
+		return mUnitArray.get(pos);
+	}
+
    /**
     * Populate the UnitDisplayOrder array.  Will fill if empty or top off if
     * it has less elements than UnitArray
@@ -285,6 +315,12 @@ public class UnitType {
       mUnitDisplayOrder.clear();
       fillUnitDisplayOrder();
    }
+
+
+	public String getXMLCurrencyURL() {
+		return mXMLCurrencyURL;
+	}
+
 
 	public Unit getPrevUnit(){
 		return getUnit(mPrevUnitPos);
@@ -304,5 +340,25 @@ public class UnitType {
 
 	public int getCurrUnitPos(){
 		return mCurrUnitPos;
+	}
+
+	public void setUpdating(boolean updating) {
+		mUpdating = updating;
+		//refresh text
+		if(mCallback != null)
+			mCallback.refreshAllButtonsText();
+	}
+
+	public boolean isUpdating() {
+		return mUpdating;
+	}
+
+
+	public Date getLastUpdateTime() {
+		return mLastUpdateTime;
+	}
+
+	public void setLastUpdateTime(Date mLastUpdateTime) {
+		this.mLastUpdateTime = mLastUpdateTime;
 	}
 }

@@ -41,3 +41,7 @@ proguard/
 
 #Screenshots
 Icon/
+
+#Excel Files
+*.xls
+*.xlsx

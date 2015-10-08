@@ -1,11 +1,7 @@
-package com.llamacorp.equate;
+package com.llamacorp.equate.unit;
 
 import java.util.ArrayList;
 import java.util.Locale;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 public class UnitHistCurrency extends Unit {
 	private static String JSON_NAME_PREFIX_TAG = "suf";
