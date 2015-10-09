@@ -1,12 +1,11 @@
 package com.llamacorp.equate;
 
 import android.content.Context;
-import android.view.Gravity;
-import android.widget.Toast;
 
 import com.llamacorp.equate.unit.Unit;
 import com.llamacorp.equate.unit.UnitInitializer;
 import com.llamacorp.equate.unit.UnitType;
+import com.llamacorp.equate.view.ViewUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -26,7 +25,6 @@ import java.util.List;
 
 
 public class Calculator{
-   private static final String LOG_TAG = "Testing..";
 	private static final String FILENAME = "saved_data.json";
 	private static final String JSON_RESULT_LIST = "result_list";
 	private static final String JSON_UNIT_TYPE_ARRAY = "unit_type_array";
@@ -65,12 +63,12 @@ public class Calculator{
 
 	//------THIS IS FOR TESTING ONLY-----------------
 	private Calculator(){
-		mResultList = new ArrayList<Result>();
+		mResultList = new ArrayList<>();
 		mExpression=new Expression(intDisplayPrecision);
 		//mMcOperate = new MathContext(intCalcPrecision);
 		mSolver = new Solver(intCalcPrecision);
 		mUnitTypePos=UNIT_TYPE_DEFAULT_POS;
-		mUnitTypeArray = new ArrayList<UnitType>();
+		mUnitTypeArray = new ArrayList<>();
 		mIsTestCalc=true;
 		initiateUnits();
 		mHints = new Hints();
@@ -87,7 +85,7 @@ public class Calculator{
 		//save our context
 		mAppContext = appContext;
 
-		mResultList = new ArrayList<Result>();
+		mResultList = new ArrayList<>();
 		mExpression = new Expression(intDisplayPrecision);
 		//set the unit type to length by default
 		mUnitTypePos=UNIT_TYPE_DEFAULT_POS;
@@ -96,7 +94,7 @@ public class Calculator{
 		//load the calculating precision
 		mSolver = new Solver(intCalcPrecision);
 
-		mUnitTypeArray = new ArrayList<UnitType>();
+		mUnitTypeArray = new ArrayList<>();
 		//call helper method to actually load in units
 		initiateUnits();
 
@@ -110,11 +108,11 @@ public class Calculator{
 			boolean del = mAppContext.deleteFile(FILENAME);
 			String message = "Calculator reset due to JSONException. JSON file "
 					+ (del ? "successfully" : "NOT") + " deleted.";
-			toastErrorMsg(message);
+			toast(message);
 			resetCalc(); //reset the calc and we should be good
 		}
 		catch (Exception e) {
-			toastErrorMsg("Exception in Calculator.loadState():" + e.toString());
+			toast("Exception in Calculator.loadState():" + e.toString());
 		}
 	}
 
@@ -128,10 +126,8 @@ public class Calculator{
 	}
 
 
-	private void toastErrorMsg(String msg){
-		Toast toast = Toast.makeText(mAppContext, msg, Toast.LENGTH_LONG);
-		toast.setGravity(Gravity.CENTER, 0, 0);
-		toast.show();
+	private void toast(String msg){
+		ViewUtils.toastLongCentered(msg, mAppContext);
 	}
 
 
@@ -253,49 +249,52 @@ public class Calculator{
 			clearSelectedUnit();
 
 
-         //check for equals key or for long press ='s key aka engineering form
-		if(sKey.equals("=") || sKey.equals("g")){
-			//if "Convert 3 in to..." is showing, help user out
-			if(isUnitSelected() & !mExpression.containsOps()){
-				//don't follow through with solve
-				return false;
-			}
+		switch (sKey) {
+			//check for equals key or for long press ='s key aka engineering form
+			case "=":
+			case "g":
+				//if "Convert 3 in to..." is showing, help user out
+				if (isUnitSelected() & !mExpression.containsOps()){
+					//don't follow through with solve
+					return false;
+				}
 
-         Result res = mSolver.tryToggleSciNote(mExpression, sKey.equals("g"));
-         if(res != null){
-				setSolved(true);
-            loadResultToArray(res);
-         }
-         else
-            //solve expression, load into result list if answer not empty
-            solveAndLoadIntoResultList(sKey.equals("g"));
-			return true;
-		}
-		//check for plain text (want
-		//check for backspace key
-		else if(sKey.equals("b"))
-			backspace();
-
-		//check for clear key
-		else if(sKey.equals("c")){
-			clear();
-		}
-		//else try all other potential numbers and operators, as well as result list
-		else{
-			//if just hit equals, and we hit [.0-9(], then clear current unit type
-			if(mExpression.isSolved() && sKey.matches("[.0-9(]"))
-				clearSelectedUnit();
-
-			//if we hit an operator other than minus, load in the prev answer
-			if(mExpression.isEmpty() && sKey.matches("[" + Expression.regexNonNegOperators + "]"))
-				if(!mResultList.isEmpty())
-					sKey = mResultList.get(mResultList.size()-1).getAnswerWithoutSep() + sKey;
-
-			boolean requestSolve = mExpression.keyPresses(sKey);
-			if(requestSolve){
-				solveAndLoadIntoResultList(false);
+				Result res = mSolver.tryToggleSciNote(mExpression, sKey.equals("g"));
+				if (res != null){
+					setSolved(true);
+					loadResultToArray(res);
+				} else
+					//solve expression, load into result list if answer not empty
+					solveAndLoadIntoResultList(sKey.equals("g"));
 				return true;
-			}
+
+			//check for plain text (want
+			//check for backspace key
+			case "b":
+				backspace();
+				break;
+
+			//check for clear key
+			case "c":
+				clear();
+				break;
+			//else try all other potential numbers and operators, as well as result list
+			default:
+				//if just hit equals, and we hit [.0-9(], then clear current unit type
+				if (mExpression.isSolved() && sKey.matches("[.0-9(]"))
+					clearSelectedUnit();
+
+				//if we hit an operator other than minus, load in the prev answer
+				if (mExpression.isEmpty() && sKey.matches("[" + Expression.regexNonNegOperators + "]"))
+					if (!mResultList.isEmpty())
+						sKey = mResultList.get(mResultList.size() - 1).getAnswerWithoutSep() + sKey;
+
+				boolean requestSolve = mExpression.keyPresses(sKey);
+				if (requestSolve){
+					solveAndLoadIntoResultList(false);
+					return true;
+				}
+				break;
 		}
 		return false;
 	}
@@ -348,7 +347,6 @@ public class Calculator{
    /**
     * Add a result into the Result list array.  Method checks
     * @param result to add into the array
-    * @return
     */
    private boolean loadResultToArray(Result result){
       if(result == null)

@@ -35,6 +35,12 @@ public class  ViewUtils {
 		return (int) Math.ceil(fl);
 	}
 
+	public static void toastLongCentered(String text, Context c) {
+		final Toast toast = Toast.makeText(c, text, Toast.LENGTH_LONG);
+		toast.setGravity(Gravity.CENTER, 0, 0);
+		toast.show();
+	}
+
 	public static void toastCentered(String text, Context c) {
 		final Toast toast = Toast.makeText(c, text, Toast.LENGTH_SHORT);
 		toast.setGravity(Gravity.CENTER, 0, 0);

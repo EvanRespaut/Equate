@@ -48,8 +48,8 @@ public class UnitType {
 	/** Default constructor used by UnitType Initializer   */
 	public UnitType(String name){
 		mName = name;
-		mUnitArray = new ArrayList<Unit>();
-      mUnitDisplayOrder = new ArrayList<Integer>();
+		mUnitArray = new ArrayList<>();
+      mUnitDisplayOrder = new ArrayList<>();
 		mIsUnitSelected = false;
 		mUpdating = false;
 		mLastUpdateTime = new GregorianCalendar(2015,3,1,1,11).getTime();
@@ -71,8 +71,9 @@ public class UnitType {
       if(!getUnitTypeName().equals(json.getString(JSON_NAME)))
          return;
 
+		//load in saved data from Units (currency values and update times)
+		//note that no other type of unit is loaded
       if(containsDynamicUnits()) {
-         //load in saved data from Units (currency values and update times)
          JSONArray jUnitArray = json.getJSONArray(JSON_UNIT_ARRAY);
          for (int i = 0; i < jUnitArray.length(); i++) {
             getUnit(i).loadJSON(jUnitArray.getJSONObject(i));
@@ -153,6 +154,7 @@ public class UnitType {
 	/**
 	 * If mCurrUnit not set, set mCurrUnit
 	 * If mCurrUnit already set, call functions to perform a convert
+	 * @return returns if a conversion is requested
 	 */
 	public boolean selectUnit(int pos){
 		//used to tell caller if we needed to do a conversion
@@ -164,7 +166,7 @@ public class UnitType {
 				//if historical unit, allow selection again (for a different year)
 				if(!getUnit(pos).isHistorical()){
 					mIsUnitSelected = false;
-					return requestConvert;
+					return false;
 				}
 			}
 			mPrevUnitPos = mCurrUnitPos;
@@ -201,13 +203,16 @@ public class UnitType {
 		return mContainsDynamicUnits;
 	}
 
-	/** Check to see if unit at position pos is currently updating */
-	public boolean isUnitUpdating(int pos){
-		if(getUnit(pos).isDynamic())
-			return ((UnitCurrency)getUnit(pos)).isUpdating();
-		else
-			return false;
-	}
+//	/** Check to see if unit at position pos is currently updating */
+//	public boolean isUnitUpdating(int pos){
+//		//TODO have this return true if isUpdating is true, otherwise do the following
+//		//TODO also make conv keys reflect this change (so all will show updating)
+//		//TODO but once yahoo xml update is finished, individuals will show updating
+//		if(getUnit(pos).isDynamic())
+//			return ((UnitCurrency)getUnit(pos)).isUpdating();
+//		else
+//			return false;
+//	}
 
 	/** Check to see if unit at position pos is dynamic */
 	public boolean isUnitDynamic(int pos){
@@ -248,10 +253,6 @@ public class UnitType {
 	 */
 	public String getUnitDisplayName(int pos){
 		return getUnit(pos).toString();
-	}
-
-	public String getLowercaseLongName(int pos){
-		return getUnit(pos).getLowercaseLongName();
 	}
 
 	public String getLowercaseGenericLongName(int pos){

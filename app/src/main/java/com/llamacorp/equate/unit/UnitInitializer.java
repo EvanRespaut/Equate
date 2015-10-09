@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class UnitInitializer {
 
 	public static ArrayList<UnitType> getDefaultUnitArray(){
-		ArrayList<UnitType> unitTypeArray = new ArrayList<UnitType>();
+		ArrayList<UnitType> unitTypeArray = new ArrayList<>();
 
 //
 //      //array of values from 1914 $10 bill; starts with 1913; uses the CPI index
@@ -298,7 +298,7 @@ public class UnitInitializer {
 				  184, 188.9, 195.3, 201.6, 207.342, 215.303, 214.537, 218.056, 224.939,
 				  229.594, 232.957, 236.911};
 
-		ArrayList<Double> al = new ArrayList<Double>();
+		ArrayList<Double> al = new ArrayList<>();
 		for(double val : cpiTable){
 			//convert values such that 1 is current 2014 dollar
 			double normalizedValue = val/cpiTable[cpiTable.length-1];

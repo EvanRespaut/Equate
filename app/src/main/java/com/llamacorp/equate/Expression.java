@@ -5,9 +5,7 @@ import org.json.JSONObject;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
-import java.math.RoundingMode;
 import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -69,7 +67,7 @@ public class Expression {
 		clearExpression();
 		mPreciseResult="";
 		setSelection(0, 0);
-		mHighlightedCharList = new ArrayList<Integer>();
+		mHighlightedCharList = new ArrayList<>();
 		clearHighlightedList();
 		//skip precise unit usage if precision is set to 0
 		if(dispPrecision>0){
@@ -727,8 +725,7 @@ public class Expression {
 			setSelection(getSelectionStart()-1, getSelectionEnd()-1);
 
 		//mark indexes of elements added
-		int[] addedIndexArray = {frontLen-3, frontLen-2, frontLen-1, frontLen + lenFirstNum};
-		return addedIndexArray;
+		return new int[]{frontLen-3, frontLen-2, frontLen-1, frontLen + lenFirstNum};
 	}
 
 

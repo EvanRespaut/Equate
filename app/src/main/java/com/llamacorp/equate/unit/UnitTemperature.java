@@ -1,6 +1,5 @@
 package com.llamacorp.equate.unit;
 
-
 public class UnitTemperature extends Unit {
 	public static final double FAHRENHEIT = 1;
 	public static final double CELSIUS = 2;
@@ -8,10 +7,6 @@ public class UnitTemperature extends Unit {
 
 	public UnitTemperature(String name, String longName, double tempType){
 		super(name, longName, tempType);
-	}
-
-	public UnitTemperature(String name, double tempType){
-		super(name, name, tempType);
 	}
 
 	public UnitTemperature(){

@@ -25,8 +25,8 @@ public class ConvKeysFragment extends Fragment implements OnConvertKeyUpdateFini
 
 	// Container Activity must implement this interface
 	public interface OnConvertKeySelectedListener {
-		public void updateScreen(boolean updateResult);
-		public void setEqualButtonColor(boolean unitSet);
+		void updateScreen(boolean updateResult);
+		void setEqualButtonColor(boolean unitSet);
 	}
 
 	@Override
@@ -98,7 +98,7 @@ public class ConvKeysFragment extends Fragment implements OnConvertKeyUpdateFini
 	public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState){
 		View v = inflater.inflate(R.layout.fragment_convert_keys, parent, false);
 
-		mConvButton = new ArrayList<Button>();
+		mConvButton = new ArrayList<>();
 
 		mNumConvButtons =  convertButtonIds.length;
 

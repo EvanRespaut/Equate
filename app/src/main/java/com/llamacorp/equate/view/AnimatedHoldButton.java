@@ -13,8 +13,7 @@ import android.view.View;
 import com.llamacorp.equate.R;
 
 public class AnimatedHoldButton extends SecondaryTextButton {
-	protected static final int SECONDARY_FONT_PERCENTAGE = 85;
-	private static final int CLICK_HOLD_TIME = 300;	
+	private static final int CLICK_HOLD_TIME = 300;
 
 	protected float mSecAdditionalXOffset = getContext().getResources().
 			getDimensionPixelSize(R.dimen.button_secondary_text_additional_offset_x);
@@ -56,7 +55,7 @@ public class AnimatedHoldButton extends SecondaryTextButton {
 	}
 
 	@Override
-	protected void findSecondaryTextCoord(){
+	protected void findSecondaryTextCoordinates(){
 		mSecXCoord = mButtonWidth - mSecTextWidth - mSecAdditionalXOffset;
 		mSecYCoord = 0 + mSecTextHeight + mSecAdditionalYOffset;
 	}

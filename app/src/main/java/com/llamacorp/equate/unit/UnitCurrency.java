@@ -22,14 +22,10 @@ public class UnitCurrency extends Unit {
 	private static final String JSON_LAST_UPDATE = "updated";
 	public static final String DEFAULT_CURRENCY = "USD";
 
-	//	private static String JSON_URL_RATE_TAG = "rate";
-	private static String JSON_URL_RATE_TAG = "Rate";
-
 	private Date mTimeLastUpdated;
 	//	private String mURLPrefix = "http://rate-exchange.appspot.com/currency?from=USD&to=";
 	private String mURLPrefix = "http://rate-exchange.herokuapp.com/fetchRate?from=" 
 			+ DEFAULT_CURRENCY + "&to=";
-	private String mURLSuffix = "";
 
 	//this is for communication with fragment hosting convert keys
 //	OnConvertKeyUpdateFinishedListener mCallback;
@@ -46,21 +42,12 @@ public class UnitCurrency extends Unit {
 		super(name, longName, value);
       //Note that Jan = 0 in the Gregorian Calendar constructor below
 		mTimeLastUpdated = new GregorianCalendar(2015,3,1,1,11).getTime();
-      mTimeLastUpdated.toString();
-	}	
+	}
 
 	public UnitCurrency(String name, String longName, double value, String URL){
 		this(name, longName, value);
 		mURLPrefix = URL;
 	}	
-
-	public UnitCurrency(String name, double value){
-		this(name, name, value);
-	}	
-
-	public UnitCurrency(){
-		this("","",0);
-	}
 
 	/** Load in the update time */
    @Override
@@ -109,27 +96,8 @@ public class UnitCurrency extends Unit {
 	public boolean isTimeoutReached(Context c){
 		mContext = c;
 		Date now = new Date();
-		if(mTimeLastUpdated != null && (now.getTime() - mTimeLastUpdated.getTime()) < (60*1000* UnitTypeUpdater.UPDATE_TIMEOUT_MIN)){
-			//System.out.println("Not ready to update " + getName() + " yet, wait " + (now.getTime() - mTimeLastUpdated.getTime())/(1000) + " seconds");
-//TODO this toast cannot be called within AsyncTask
-//			final Toast toast = Toast.makeText(mContext, "Timeout not reached for " + getName(), Toast.LENGTH_SHORT);
-//			toast.show();
-//
-//			Handler handler = new Handler();
-//			handler.postDelayed(new Runnable() {
-//				@Override
-//				public void run() {
-//					toast.cancel();
-//				}
-//			}, 500);
-			return false;
-		}
-		else
-			return true;
-		//		if(mTimeLastUpdated == null)
-		//			System.out.println("Update will be performed: mTimeLastUpdated = null - " + getName());
-		//		else
-		//			System.out.println("Update will be performed: TIMEOUT REACHED, last update = " + getUpdateTime());
+		return !(mTimeLastUpdated != null && (now.getTime() - mTimeLastUpdated.getTime())
+				  < (60 * 1000 * UnitTypeUpdater.UPDATE_TIMEOUT_MIN));
 	}
 
 	/**
@@ -156,7 +124,7 @@ public class UnitCurrency extends Unit {
 		if(getName().equals("BTC"))
 			return mURLPrefix;
 		else
-			return mURLPrefix + toString() + mURLSuffix;
+			return mURLPrefix + toString();
 	}
 
 	/**
@@ -207,6 +175,7 @@ public class UnitCurrency extends Unit {
 			try {
 				//System.out.println("Trying to parse \"" + result + "\"");
 				JSONObject json = new JSONObject(result);
+				final String JSON_URL_RATE_TAG = "Rate";
 				double rate = json.getDouble(JSON_URL_RATE_TAG);
 				setValue(rate);
 				updateSuccess = true;

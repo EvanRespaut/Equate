@@ -10,7 +10,7 @@ public  class ExpSeparatorHandler {
 
 
 	public ExpSeparatorHandler(){
-		mSepIndexes = new ArrayList<Integer>();
+		mSepIndexes = new ArrayList<>();
 	}
 
 	/**
@@ -90,7 +90,7 @@ public  class ExpSeparatorHandler {
 	 * Same as translateToSepIndex, except for list of indexes
 	 */
 	public ArrayList<Integer> translateIndexListToSep(ArrayList<Integer> inList){
-		ArrayList<Integer> outList = new ArrayList<Integer>();
+		ArrayList<Integer> outList = new ArrayList<>();
 		for(int i = 0; i < inList.size(); i++)
 			outList.add(i, translateToSepIndex(inList.get(i)));
 		return outList;

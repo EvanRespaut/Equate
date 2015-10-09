@@ -2,11 +2,11 @@ package com.llamacorp.equate.unit;
 
 
 public class UnitScalar extends Unit {
-	private static final String JSON_INVERTED = "inverted";
-	
+//	private static final String JSON_INVERTED = "inverted";
+
 	//flag used to distinguish if the Unit needs to be inverted before converting
-	//for example min/miles should be inverted to miles/min before conv into mph
-	private boolean mInverted=false; 
+	//eg: min/miles should be inverted to miles/min before conversion to mph
+	private boolean mInverted=false;
 
 	public UnitScalar(String name, String longName, double value, boolean inverted){
 		super(name, longName, value);
@@ -16,12 +16,7 @@ public class UnitScalar extends Unit {
 	public UnitScalar(String name, String longName, double value){
 		super(name, longName, value);
 	}	
-	
-	//TODO do we need this?
-	public UnitScalar(String name, double value){
-		super(name, name, value);
-	}	
-	
+
 	public UnitScalar(){
 		super();
 	}

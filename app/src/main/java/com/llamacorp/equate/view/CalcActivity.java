@@ -12,13 +12,11 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.llamacorp.equate.Calculator;
 import com.llamacorp.equate.R;
@@ -37,16 +35,9 @@ implements OnResultSelectedListener, OnConvertKeySelectedListener{
 	private Button mEqualsButton; //used for changing color
 
 	private static final int[] BUTTON_IDS = {
-		R.id.zero_button,
-		R.id.one_button, 
-		R.id.two_button,
-		R.id.three_button,
-		R.id.four_button,
-		R.id.five_button, 
-		R.id.six_button,
-		R.id.seven_button,
-		R.id.eight_button,
-		R.id.nine_button,
+		R.id.zero_button, R.id.one_button,  R.id.two_button, R.id.three_button,
+		R.id.four_button,	R.id.five_button, R.id.six_button, R.id.seven_button,
+		R.id.eight_button,R.id.nine_button,
 
 		R.id.plus_button,
 		R.id.minus_button,
@@ -69,10 +60,9 @@ implements OnResultSelectedListener, OnConvertKeySelectedListener{
 	//main calculator object
 	public Calculator mCalc;// = new Calculator();
 
-
-	//Crude fix: used to tell the ConvKeyViewPager what unit to select after scrolling to correct UnitType
+	//Crude fix: used to tell the ConvKeyViewPager what unit to select after
+	// scrolling to correct UnitType
 	private int unitPosToSelectAfterScroll=-1;
-
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -226,13 +216,17 @@ implements OnResultSelectedListener, OnConvertKeySelectedListener{
 
 			//extra long click for buttons with settings
 			if(button instanceof AnimatedHoldButton){
-				AnimatedHoldButton ahb = (AnimatedHoldButton)button;
+				final AnimatedHoldButton ahb = (AnimatedHoldButton)button;
 				ahb.setOnExtraLongClickListener(new AnimatedHoldButton.OnExtraLongClickListener() {
 					@Override
 					public void onExtraLongClick(View view) {
 						int buttonId = view.getId();
 						if (buttonId == R.id.percent_button){
 							//TODO add code to pop up dialog to switch buttons
+							//TODO dialog reads "Set primary button function:"
+							//TODO options will be %, E, ^, 1/x, and +/-
+							//TODO
+							ahb.setSecondaryText("blob");
 						}
 					}
 				});
@@ -369,16 +363,19 @@ implements OnResultSelectedListener, OnConvertKeySelectedListener{
 				if(mCalc.getCurrUnitType().containsDynamicUnits())
 					mCalc.refreshAllDynamicUnits(false);
 
-				//clear selected unit from adjacent convert key fragment so you can't see a bit of them
+				//clear selected unit from adjacent convert key fragment so you
+				//a bit of it
 				int currUnitTypePos = mUnitTypeViewPager.getCurrentItem();
 				clearUnitSelection(currUnitTypePos-1);
 				clearUnitSelection(currUnitTypePos);
 				clearUnitSelection(currUnitTypePos+1);
 				mCalc.getCurrUnitType().clearUnitSelection();
 
-				//this change UnitType was result of unit-ed result, select that unit
+				//if this change in UnitType was result of unit-ed result selection,
+				// select that unit
 				if(unitPosToSelectAfterScroll != -1){
-					getConvKeyFrag(mUnitTypeViewPager.getCurrentItem()).selectUnit(unitPosToSelectAfterScroll);
+					ConvKeysFragment frag = getConvKeyFrag(mUnitTypeViewPager.getCurrentItem());
+					if (frag != null) frag.selectUnit(unitPosToSelectAfterScroll);
 					unitPosToSelectAfterScroll = -1;
 				}
 				//clear out the unit in expression if it's now cleared
@@ -435,8 +432,10 @@ implements OnResultSelectedListener, OnConvertKeySelectedListener{
 			unitPosToSelectAfterScroll = unitPos;
 			mUnitTypeViewPager.setCurrentItem(unitTypePos);
 		}
-		else
-			getConvKeyFrag(mUnitTypeViewPager.getCurrentItem()).selectUnit(unitPos);
+		else {
+			ConvKeysFragment frag = getConvKeyFrag(mUnitTypeViewPager.getCurrentItem());
+			if (frag != null) frag.selectUnit(unitPos);
+		}
 	}
 
 
@@ -501,9 +500,8 @@ implements OnResultSelectedListener, OnConvertKeySelectedListener{
 				(FragmentStatePagerAdapter) mUnitTypeViewPager.getAdapter();
 		//make sure we aren't trying to access an invalid page fragment
 		if(pos < tempAdapter.getCount() && pos >= 0){
-			ConvKeysFragment currFrag = (ConvKeysFragment) tempAdapter.
+			return (ConvKeysFragment) tempAdapter.
 					instantiateItem(mUnitTypeViewPager, pos);
-			return currFrag;
 		}
 		else return null;
 	}

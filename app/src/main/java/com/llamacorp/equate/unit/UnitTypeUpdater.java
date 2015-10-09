@@ -2,7 +2,6 @@ package com.llamacorp.equate.unit;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.widget.Toast;
 
 import com.llamacorp.equate.view.ViewUtils;
 

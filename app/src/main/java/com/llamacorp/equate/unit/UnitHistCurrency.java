@@ -4,12 +4,6 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 public class UnitHistCurrency extends Unit {
-	private static String JSON_NAME_PREFIX_TAG = "suf";
-	private static String JSON_LONG_NAME_PREFIX_TAG = "long";
-	private static String JSON_YEAR_TAG = "year";
-	private static String JSON_OFFSET_TAG = "offset";
-	private static String JSON_VALUES_TAG = "values";
-
 	private static String GENERIC_PREFIX = "Historical ";
 	private static String GENERIC_SUFFIX = " (CPI)";
 
@@ -33,39 +27,6 @@ public class UnitHistCurrency extends Unit {
 			mYearIndex = defaultStartYear - indexStartYear;
 		setYearIndex(mYearIndex);
 	}
-
-//	/** Load in the update time */
-//	public UnitHistCurrency(JSONObject json) throws JSONException {
-//		mNamePrefix = json.getString(JSON_NAME_PREFIX_TAG);
-//		mLongNamePrefix = json.getString(JSON_LONG_NAME_PREFIX_TAG);
-//		mYearIndex = json.getInt(JSON_YEAR_TAG);
-//		mStartYearOffset = json.getInt(JSON_OFFSET_TAG);
-//
-//		mHistoricalValueArray = new ArrayList<Double>();
-//		JSONArray jUnitArray = json.getJSONArray(JSON_VALUES_TAG);
-//		for (int i = 0; i < jUnitArray.length(); i++) {
-//			mHistoricalValueArray.add(jUnitArray.getDouble(i));
-//		}
-//		setYearIndex(mYearIndex);
-//	}
-//
-//	/** Save the update time */
-//	@Override
-//	public JSONObject toJSON() throws JSONException {
-//		JSONObject json = super.toJSON();
-//
-//		json.put(JSON_NAME_PREFIX_TAG, mNamePrefix);
-//		json.put(JSON_LONG_NAME_PREFIX_TAG, mLongNamePrefix);
-//		json.put(JSON_YEAR_TAG, mYearIndex);
-//		json.put(JSON_OFFSET_TAG, mStartYearOffset);
-//
-//		JSONArray jUnitArray = new JSONArray();
-//		for (Double d : mHistoricalValueArray)
-//			jUnitArray.put(d);
-//		json.put(JSON_VALUES_TAG, jUnitArray);
-//
-//		return json;
-//	}
 
 	@Override
 	public String convertTo(Unit toUnit, String expressionToConv) {

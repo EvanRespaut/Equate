@@ -113,7 +113,7 @@ class SecondaryTextButton extends Button {
 			mSecAdditionalYOffset = getContext().getResources()
 					.getDimensionPixelSize(R.dimen.button_ellipses_additional_offset_y);
 
-			findSecondaryTextCoord();
+			findSecondaryTextCoordinates();
 
 			canvas.drawText(mSecondaryText, 0, mSecondaryText.length(), 
 					mSecXCoord, mSecYCoord, mSecondaryPaint);
@@ -134,15 +134,13 @@ class SecondaryTextButton extends Button {
 	
 	
 	protected String getPrimaryText(){
-		if(getText().toString()==null)
-			return "";
 		return getText().toString();
 	}
 
 
 	/** Calculate where to put secondary text
-	 * This method should get overriden to change text location */
-	protected void findSecondaryTextCoord(){
+	 * This method should get overridden to change text location */
+	protected void findSecondaryTextCoordinates(){
 		mSecXCoord = mButtonWidth - mSecTextWidth - mSecAdditionalXOffset;
 		mSecYCoord = mButtonHeight - 0 - mSecAdditionalYOffset;
 	}

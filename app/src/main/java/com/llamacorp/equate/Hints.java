@@ -21,12 +21,4 @@ public class Hints {
 		json.put(JSON_PERFORMED_CONVERT, mHasClickedUnit);
 		return json;
 	}	
-	
-	public boolean isHasClickedUnit(){
-		return mHasClickedUnit;
-	}
-	
-	public void setHasClickedUnitTrue(){
-		mHasClickedUnit = true;
-	}
 }

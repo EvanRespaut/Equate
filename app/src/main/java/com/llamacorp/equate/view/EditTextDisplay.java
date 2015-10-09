@@ -147,7 +147,7 @@ public class EditTextDisplay extends EditText {
 			mColorAnimation.addUpdateListener(new AnimatorUpdateListener() {
 				@Override
 				public void onAnimationUpdate(ValueAnimator animator) {
-					String coloredExp = "";
+					String coloredExp;
 					//if the highlight got canceled during the async animation update, cancel
 					if(!mCalc.isHighlighted()){
 						animator.cancel();

@@ -7,16 +7,14 @@ import org.json.JSONObject;
 
 public abstract class Unit  /*implements JsonSerializer<Unit>, JsonDeserializer<Unit> */{
 	private static final String JSON_NAME = "name";
-	private static final String JSON_LONG_NAME = "long_name";
+//	private static final String JSON_LONG_NAME = "long_name";
 	private static final String JSON_VALUE = "value";
-	private static final String JSON_TYPE = "type";
 
 
 	private String mDispName;
 	private String mLongName;
 	protected double mValue;
 
-	//intercept's only known need is temp conversions
 	protected Unit(String name, String longName, double value){
 		mDispName = name;
 		mLongName = longName;
