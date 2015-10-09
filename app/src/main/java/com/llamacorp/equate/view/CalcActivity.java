@@ -125,7 +125,7 @@ implements OnResultSelectedListener, OnConvertKeySelectedListener{
 
 
 		for(int id : BUTTON_IDS) {
-			Button button = (Button)findViewById(id);
+			final Button button = (Button)findViewById(id);
 
 			//used for coloring the equals button
 			if(id == R.id.equals_button) mEqualsButton = button;
@@ -134,39 +134,50 @@ implements OnResultSelectedListener, OnConvertKeySelectedListener{
 				@Override
 				public void onClick(View view) {
 					int buttonId = view.getId();
-					String buttonValue="";
-					switch(buttonId){
-					case R.id.plus_button: buttonValue="+";
-					break;
-					case R.id.minus_button: buttonValue="-";
-					break;
-					case R.id.multiply_button:  buttonValue="*";
-					break;
-					case R.id.divide_button: buttonValue="/";
-					break;
-					case R.id.percent_button: buttonValue="%";
-					break;
-					case R.id.decimal_button: buttonValue=".";
-					break;
-					case R.id.equals_button: buttonValue="=";
-					break;
-					//					case R.id.ee_button: buttonValue="E";
-					//					break;
-					//					case R.id.power_button: buttonValue="^";
-					//					break;
-					case R.id.clear_button: buttonValue="c";
-					break;
-					case R.id.open_para_button: buttonValue="(";
-					break;
-					case R.id.close_para_button: buttonValue=")";
-					break;
-					case R.id.backspace_button: buttonValue="b";
-					break;
-					default: 					
-						//this for loop checks for numerical values
-						for(int i=0;i<10;i++)
-							if(buttonId==BUTTON_IDS[i])
-								buttonValue=String.valueOf(i);
+					String buttonValue = "";
+					switch (buttonId) {
+						case R.id.plus_button:
+							buttonValue = "+";
+							break;
+						case R.id.minus_button:
+							buttonValue = "-";
+							break;
+						case R.id.multiply_button:
+							buttonValue = "*";
+							break;
+						case R.id.divide_button:
+							buttonValue = "/";
+							break;
+						case R.id.percent_button:
+							buttonValue = "%";
+							break;
+						case R.id.decimal_button:
+							buttonValue = ".";
+							break;
+						case R.id.equals_button:
+							buttonValue = "=";
+							break;
+						//					case R.id.ee_button: buttonValue="E";
+						//					break;
+						//					case R.id.power_button: buttonValue="^";
+						//					break;
+						case R.id.clear_button:
+							buttonValue = "c";
+							break;
+						case R.id.open_para_button:
+							buttonValue = "(";
+							break;
+						case R.id.close_para_button:
+							buttonValue = ")";
+							break;
+						case R.id.backspace_button:
+							buttonValue = "b";
+							break;
+						default:
+							//this for loop checks for numerical values
+							for (int i = 0; i < 10; i++)
+								if (buttonId == BUTTON_IDS[i])
+									buttonValue = String.valueOf(i);
 					}
 					//pass button to calc, change conv key colors (maybe) and update screen
 					numButtonPressed(buttonValue);
@@ -212,61 +223,74 @@ implements OnResultSelectedListener, OnConvertKeySelectedListener{
 					return true;
 				}
 			});
+
+			//extra long click for buttons with settings
+			if(button instanceof AnimatedHoldButton){
+				AnimatedHoldButton ahb = (AnimatedHoldButton)button;
+				ahb.setOnExtraLongClickListener(new AnimatedHoldButton.OnExtraLongClickListener() {
+					@Override
+					public void onExtraLongClick(View view) {
+						int buttonId = view.getId();
+						if (buttonId == R.id.percent_button){
+							//TODO add code to pop up dialog to switch buttons
+						}
+					}
+				});
+			}
+
 		}
 
 
 		ImageButton backspaceButton = (ImageButton) findViewById(R.id.backspace_button);
 		backspaceButton.setOnTouchListener(new View.OnTouchListener() {
 			private Handler mColorHoldHandler;
-			private Handler mResetHandler;			
+			private Handler mResetHandler;
 			private View mView;
-			private static final int RESET_HOLD_TIME=2200;			
-			private static final int CLEAR_HOLD_TIME=300;	
+			private static final int RESET_HOLD_TIME = 2200;
+			private static final int CLEAR_HOLD_TIME = 300;
 			//private int startTime;
 
-			@Override 
+			@Override
 			public boolean onTouch(View view, MotionEvent event) {
-				switch(event.getAction()) {
-				case MotionEvent.ACTION_DOWN:
-					mView=view;
-					mInc=0;
+				switch (event.getAction()) {
+					case MotionEvent.ACTION_DOWN:
+						mView = view;
+						mInc = 0;
 
-					if (mColorHoldHandler != null) return true;
-					mColorHoldHandler = new Handler();
-					mColorHoldHandler.postDelayed(mBackspaceColor, 10);
+						if (mColorHoldHandler != null) return true;
+						mColorHoldHandler = new Handler();
+						mColorHoldHandler.postDelayed(mBackspaceColor, 10);
 
-					if (mResetHandler != null) return true;
-					mResetHandler = new Handler();
-					mResetHandler.postDelayed(mBackspaceReset, RESET_HOLD_TIME);
+						if (mResetHandler != null) return true;
+						mResetHandler = new Handler();
+						mResetHandler.postDelayed(mBackspaceReset, RESET_HOLD_TIME);
 
-					break;
-				case MotionEvent.ACTION_UP:
-					if (mColorHoldHandler == null) return true;
-					if (mResetHandler == null) return true;
-					numButtonPressed("b");
-					view.setBackgroundColor(getResources().getColor(R.color.op_button_normal));
-					mColorHoldHandler.removeCallbacks(mBackspaceColor);
-					mColorHoldHandler = null;
+						break;
+					case MotionEvent.ACTION_UP:
+						if (mColorHoldHandler == null) return true;
+						if (mResetHandler == null) return true;
+						numButtonPressed("b");
+						view.setBackgroundColor(getResources().getColor(R.color.op_button_normal));
+						mColorHoldHandler.removeCallbacks(mBackspaceColor);
+						mColorHoldHandler = null;
 
-					mResetHandler.removeCallbacks(mBackspaceReset);
-					mResetHandler = null;
-					break;
+						mResetHandler.removeCallbacks(mBackspaceReset);
+						mResetHandler = null;
+						break;
 				}
 				return false;
 			}
 
 
 			Runnable mBackspaceReset = new Runnable() {
-				@Override 
+				@Override
 				public void run() {
 					mCalc.resetCalc();
 					setupUnitTypePager();
 					updateScreen(true);
-					Toast toast = Toast.makeText(mAppContext, (CharSequence)"Calculator reset", Toast.LENGTH_SHORT);
-					toast.setGravity(Gravity.CENTER, 0, 0);
-					toast.show();
+					ViewUtils.toastCentered("Calculator reset", mAppContext);
 				}
-			};			
+			};
 
 
 			private int mInc;
@@ -275,34 +299,34 @@ implements OnResultSelectedListener, OnConvertKeySelectedListener{
 				private int mStartColor = getResources().getColor(R.color.op_button_pressed);
 				private int mEndColor = getResources().getColor(R.color.backspace_button_held);
 
-				private static final int NUM_COLOR_CHANGES=10;
+				private static final int NUM_COLOR_CHANGES = 10;
 
-				@Override 
+				@Override
 				public void run() {
 					//after clear had been performed and 100ms is up, set color back to default
-					if(mInc==-1){
+					if (mInc == -1){
 						mView.setBackgroundColor(mEndColor);
 						return;
 					}
 					//color the button black for a second and then clear
-					if(mInc==NUM_COLOR_CHANGES){
+					if (mInc == NUM_COLOR_CHANGES){
 						numButtonPressed("c");
 						mView.setBackgroundColor(Color.argb(255, 0, 0, 0));
 						mColorHoldHandler.postDelayed(this, 100);
-						mInc=-1;
+						mInc = -1;
 						return;
 					}
-					mColorHoldHandler.postDelayed(this, CLEAR_HOLD_TIME/NUM_COLOR_CHANGES);
+					mColorHoldHandler.postDelayed(this, CLEAR_HOLD_TIME / NUM_COLOR_CHANGES);
 
-					float deltaRed= (float)Color.red(mStartColor) + ((float)Color.red(mEndColor)-(float)Color.red(mStartColor))*((float)mInc*(float)mInc*(float)mInc)/((float)NUM_COLOR_CHANGES*(float)NUM_COLOR_CHANGES*(float)NUM_COLOR_CHANGES);
+					float deltaRed = (float) Color.red(mStartColor) + ((float) Color.red(mEndColor) - (float) Color.red(mStartColor)) * ((float) mInc * (float) mInc * (float) mInc) / ((float) NUM_COLOR_CHANGES * (float) NUM_COLOR_CHANGES * (float) NUM_COLOR_CHANGES);
 
-					int deltaGreen= Color.green(mStartColor) + ((Color.green(mEndColor)-Color.green(mStartColor))*mInc)/NUM_COLOR_CHANGES;
-					int deltaBlue= Color.blue(mStartColor) + ((Color.blue(mEndColor)-Color.blue(mStartColor))*mInc)/NUM_COLOR_CHANGES;
+					int deltaGreen = Color.green(mStartColor) + ((Color.green(mEndColor) - Color.green(mStartColor)) * mInc) / NUM_COLOR_CHANGES;
+					int deltaBlue = Color.blue(mStartColor) + ((Color.blue(mEndColor) - Color.blue(mStartColor)) * mInc) / NUM_COLOR_CHANGES;
 
-					mView.setBackgroundColor(Color.argb(255, (int)deltaRed, deltaGreen, deltaBlue));
+					mView.setBackgroundColor(Color.argb(255, (int) deltaRed, deltaGreen, deltaBlue));
 					mInc++;
 				}
-			};			
+			};
 		});
 	}
 

@@ -4,6 +4,8 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
+import com.llamacorp.equate.view.ViewUtils;
+
 import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
@@ -38,7 +40,7 @@ public class UnitTypeUpdater {
          ut.setUpdating(true);
          new UpdateYahooXMLAsyncTask(ut, forced).execute();
       } else {
-         toast("Timeout not reached");
+         ViewUtils.toast("Timeout not reached", mContext);
       }
    }
 
@@ -79,7 +81,8 @@ public class UnitTypeUpdater {
             mUnitType.setLastUpdateTime(new Date());
             String text = "Updated at";
             if(mForced) text = "FORCED update at ";
-            toastLong(text + mUnitType.getLastUpdateTime().toString());
+            ViewUtils.toastLong(text + mUnitType.getLastUpdateTime().toString(),
+                    mContext);
          }
 
          //update the remaining units that got missed by yahoo xml
@@ -174,16 +177,5 @@ public class UnitTypeUpdater {
       // Starts the query
       conn.connect();
       return conn.getInputStream();
-   }
-
-
-   private void toastLong(String text) {
-      final Toast toast = Toast.makeText(mContext, text, Toast.LENGTH_LONG);
-      toast.show();
-   }
-
-   private void toast(String text) {
-      final Toast toast = Toast.makeText(mContext, text, Toast.LENGTH_SHORT);
-      toast.show();
    }
 }

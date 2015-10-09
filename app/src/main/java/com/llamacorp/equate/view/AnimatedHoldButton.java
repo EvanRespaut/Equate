@@ -4,9 +4,11 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
+import android.view.View;
 
 import com.llamacorp.equate.R;
 
@@ -22,8 +24,10 @@ public class AnimatedHoldButton extends SecondaryTextButton {
 	
 	private OnClickListener mClickListen = null;
 	private OnLongClickListener mLongClickListen = null;
+	private OnExtraLongClickListener mExtraLongClickListener = null;
 	private Handler mColorHoldHandler;
-	private boolean mLongClickPerformed=false;
+	private boolean mLongClickPerformed = false;
+	private boolean mWaitingForExtraLongClick = false;
    private Drawable mNormalDrawable;
    private int mPressedColor;
 
@@ -62,11 +66,11 @@ public class AnimatedHoldButton extends SecondaryTextButton {
 	 * before the long click timeout.  As the long click timeout is 
 	 * expiring, button's color will change and finally flash at the timeout
 	 * event, at which point the long click function will be called. */
+	@SuppressWarnings("deprecation") //for setBackgroundDrawable
 	public boolean onTouchEvent(MotionEvent event) {
 		switch (event.getAction()) {
 		case MotionEvent.ACTION_DOWN:
 			mHoldInc=0;
-			mLongClickPerformed = false;
 
 			if (mColorHoldHandler != null) return true;
 			mColorHoldHandler = new Handler();
@@ -77,7 +81,13 @@ public class AnimatedHoldButton extends SecondaryTextButton {
 			if(!mLongClickPerformed) 
 				clickButton();
 
-			setBackground(mNormalDrawable);
+			mLongClickPerformed = false;
+			mWaitingForExtraLongClick = false;
+
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
+				setBackground(mNormalDrawable);
+			else setBackgroundDrawable(mNormalDrawable);
+
 			mColorHoldHandler.removeCallbacks(mColorRunnable);
 			mColorHoldHandler = null;
 
@@ -90,30 +100,38 @@ public class AnimatedHoldButton extends SecondaryTextButton {
 
 	//set up the runnable for when button is held down
 	Runnable mColorRunnable = new Runnable() {
-		private static final int NUM_COLOR_CHANGES=10;
+		private static final int NUM_COLOR_CHANGES = 10;
+		private Integer mGradStartCol, mGradEndCol, mAccentColor, mFinalColor;
 
-		@Override 
+		@Override
 		public void run() {
-         int mGradStartCol = mPressedColor;
-         int mGradEndCol = getResources().getColor(R.color.op_button_long_press_accent);
-         int mAccentColor = mPressedColor;
-         int mFinalColor = mPressedColor;
+			initializeColors();
 
-         //after hold operation has been performed and 100ms is up, set final color
-			if(mHoldInc==-1){
-				setBackgroundColor(mFinalColor);
+			if (mWaitingForExtraLongClick){
+				extraLongClickButton();
 				return;
 			}
+
+         //after hold operation is performed and 100ms is up, set final color
+			if(mLongClickPerformed){
+				setBackgroundColor(mFinalColor);
+
+				//set up another delay to wait for a very long click
+				mColorHoldHandler.postDelayed(this, 2000);
+				mWaitingForExtraLongClick = true;
+				return;
+			}
+
 			//color the button black for a second and perform long click operation
-			if(mHoldInc==NUM_COLOR_CHANGES){
+			if(mHoldInc == NUM_COLOR_CHANGES){
 				longClickButton();
 				mLongClickPerformed = true;
 				setBackgroundColor(mAccentColor);
 				//only post again so it runs to catch the final bit of code
 				mColorHoldHandler.postDelayed(this, 100);
-				mHoldInc=-1;
 				return;
 			}
+
 			mColorHoldHandler.postDelayed(this, CLICK_HOLD_TIME/NUM_COLOR_CHANGES);
 
 			float deltaRed= (float)Color.red(mGradStartCol) + ((float)Color.red(mGradEndCol)-(float)Color.red(mGradStartCol))*((float)mHoldInc)/((float)NUM_COLOR_CHANGES);
@@ -122,6 +140,18 @@ public class AnimatedHoldButton extends SecondaryTextButton {
 
 			setBackgroundColor(Color.argb(255, (int)deltaRed, (int)deltaGreen, (int)deltaBlue));
 			mHoldInc++;
+		}
+
+		/**
+		 * Helper method so colors only get initialed once
+		 */
+		private void initializeColors(){
+			if(mGradStartCol == null){
+				mGradStartCol = mPressedColor;
+				mGradEndCol = getResources().getColor(R.color.op_button_long_press_accent);
+				mAccentColor = mPressedColor;
+				mFinalColor = mPressedColor;
+			}
 		}
 	};		
 
@@ -135,6 +165,11 @@ public class AnimatedHoldButton extends SecondaryTextButton {
 	private void longClickButton(){
 		if(mLongClickListen != null)
 			mLongClickListen.onLongClick(this);
+	}
+
+	private void extraLongClickButton(){
+		if(mExtraLongClickListener != null)
+			mExtraLongClickListener.onExtraLongClick(this);
 	}
 
 	@Override
@@ -152,6 +187,14 @@ public class AnimatedHoldButton extends SecondaryTextButton {
 	@Override
 	public void setOnLongClickListener(OnLongClickListener l){
 		mLongClickListen = l;
+	}
+
+	public void setOnExtraLongClickListener(OnExtraLongClickListener l) {
+		mExtraLongClickListener = l;
+	}
+
+	public interface OnExtraLongClickListener {
+		void onExtraLongClick(View var1);
 	}
 }
 

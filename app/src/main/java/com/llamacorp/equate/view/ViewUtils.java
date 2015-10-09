@@ -1,6 +1,8 @@
 package com.llamacorp.equate.view;
 
 import android.content.Context;
+import android.view.Gravity;
+import android.widget.Toast;
 
 public class  ViewUtils {
 	public static float pixelsToSp(Context context, float px) {
@@ -31,5 +33,21 @@ public class  ViewUtils {
 	
 	public static int floatToInt(float fl){
 		return (int) Math.ceil(fl);
+	}
+
+	public static void toastCentered(String text, Context c) {
+		final Toast toast = Toast.makeText(c, text, Toast.LENGTH_SHORT);
+		toast.setGravity(Gravity.CENTER, 0, 0);
+		toast.show();
+	}
+
+	public static void toastLong(String text, Context c) {
+		final Toast toast = Toast.makeText(c, text, Toast.LENGTH_LONG);
+		toast.show();
+	}
+
+	public static void toast(String text, Context c) {
+		final Toast toast = Toast.makeText(c, text, Toast.LENGTH_SHORT);
+		toast.show();
 	}
 }
