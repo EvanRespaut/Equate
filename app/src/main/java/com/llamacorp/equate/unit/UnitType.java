@@ -8,6 +8,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
@@ -18,15 +19,15 @@ import java.util.GregorianCalendar;
 public class UnitType {
 	private static final String JSON_NAME = "name";
 	private static final String JSON_UNIT_DISP_ORDER = "unit_disp_order";
-	private static final String JSON_CURR_POS = "pos";
+	private static final String JSON_CURR_UNIT_POS_IN_ARRAY = "pos";
 	private static final String JSON_IS_SELECTED = "selected";
 	private static final String JSON_UNIT_ARRAY = "unit_array";
 	private static final String JSON_UPDATE_TIME = "update_time";
 
 	private String mName;
 	private ArrayList<Unit> mUnitArray;
-	private int mPrevUnitPos;
-	private int mCurrUnitPos;
+	private Unit mPrevUnit;
+	private Unit mCurrUnit;
 	private boolean mIsUnitSelected;
 	private boolean mContainsDynamicUnits = false;
    //Order to display units (based on mUnitArray index
@@ -80,7 +81,7 @@ public class UnitType {
          }
       }
 
-		mCurrUnitPos = json.getInt(JSON_CURR_POS);
+		mCurrUnit = getUnitPosInUnitArray(json.getInt(JSON_CURR_UNIT_POS_IN_ARRAY));
 		mIsUnitSelected = json.getBoolean(JSON_IS_SELECTED);
 		setLastUpdateTime(new Date(json.getLong(JSON_UPDATE_TIME)));
 
@@ -110,7 +111,7 @@ public class UnitType {
 
       //used to identify this UnitType from others
 		json.put(JSON_NAME, mName);
-		json.put(JSON_CURR_POS, mCurrUnitPos);
+		json.put(JSON_CURR_UNIT_POS_IN_ARRAY, findUnitPosInUnitArray(mCurrUnit));
 		json.put(JSON_IS_SELECTED, mIsUnitSelected);
 		json.put(JSON_UPDATE_TIME, getLastUpdateTime().getTime());
 
@@ -139,10 +140,39 @@ public class UnitType {
 	}
 
 	/**
-	 * Find the position of the unit in the unit array
+	 * Rotates the units in the display order such that the unit at toIndex - 1
+	 * now has position fromIndex, the unit at fromIndex has position fromIndex +
+	 * 1, etc.
+	 * @param fromIndex is inclusive
+	 * @param toIndex is exclusive
+	 */
+	public void rotateUnitSublist(int fromIndex, int toIndex){
+		Collections.rotate(mUnitDisplayOrder.subList(fromIndex, toIndex), 1);
+	}
+
+
+	/**
+	 * Sorts a sublist of units in display order by name
+	 * @param fromIndex is inclusive
+	 * @param toIndex is exclusive
+	 */
+	public void sortUnitSublist(int fromIndex, int toIndex){
+		Collections.sort(mUnitDisplayOrder.subList(fromIndex, toIndex),
+				  new Comparator<Integer>() {
+					  public int compare(Integer s1, Integer s2) {
+						  return mUnitArray.get(s1).getLongName()
+									 .compareTo(mUnitArray.get(s2).getLongName());
+					  }
+				  });
+	}
+
+	/**
+	 * Find the position of the unit in the current unit button order
 	 * @return -1 if selection failed, otherwise the position of the unit
 	 */
-	public int findUnitPosition(Unit unit){
+	public int findUnitButtonPosition(Unit unit){
+		if (unit == null)
+			return - 1;
 		for(int i=0;i<size();i++){
 			if(unit.equals(getUnit(i)))
 				return i; //found the unit
@@ -151,30 +181,44 @@ public class UnitType {
 	}
 
 
+	public int findUnitPosInUnitArray(Unit unit){
+		for(int i=0;i<size();i++){
+			if(unit.equals(getUnitPosInUnitArray(i)))
+				return i; //found the unit
+		}
+		return -1;  //if we didn't find the unit
+	}
+
+	public int findButtonPositionforUnitArrayPos(int pos) {
+		return mUnitDisplayOrder.indexOf(new Integer(pos));
+	}
+
 	/**
 	 * If mCurrUnit not set, set mCurrUnit
 	 * If mCurrUnit already set, call functions to perform a convert
 	 * @return returns if a conversion is requested
 	 */
-	public boolean selectUnit(int pos){
+	public boolean selectUnit(int clickedButPos) {
+		Unit unitPressed = getUnit(clickedButPos);
+
 		//used to tell caller if we needed to do a conversion
 		boolean requestConvert = false;
 		//If we've already selected a unit, do conversion
-		if(mIsUnitSelected){
+		if (mIsUnitSelected){
 			//if the unit is the same as before, de-select it
-			if(mCurrUnitPos == pos){
+			if (getCurrUnitButtonPos() == clickedButPos){
 				//if historical unit, allow selection again (for a different year)
-				if(!getUnit(pos).isHistorical()){
+				if (!unitPressed.isHistorical()){
 					mIsUnitSelected = false;
 					return false;
 				}
 			}
-			mPrevUnitPos = mCurrUnitPos;
+			mPrevUnit = mCurrUnit;
 			requestConvert = true;
 		}
 
 		//Select new unit regardless
-		mCurrUnitPos = pos;
+		mCurrUnit = unitPressed;
 		//Engage set flag
 		mIsUnitSelected = true;
 		return requestConvert;
@@ -278,10 +322,10 @@ public class UnitType {
     * Used to get the Unit at a given position.  Note that the position is the
     * user defined order for buttons. Uses a mask to convert displayed position
     * into real array position.
-    * @param pos Position of unit to retrieve (user defined order)
+    * @param buttonPos Position of unit to retrieve (user defined order)
     * @return Unit at the given position
     */
-	public Unit getUnit(int pos){
+	public Unit getUnit(int buttonPos){
       //If a unit is added
       if(mUnitDisplayOrder.size() < size())
          fillUnitDisplayOrder();
@@ -290,7 +334,7 @@ public class UnitType {
       if(mUnitDisplayOrder.size() > size())
          resetUnitDipplayOrder();
 
-      return mUnitArray.get(mUnitDisplayOrder.get(pos));
+      return mUnitArray.get(mUnitDisplayOrder.get(buttonPos));
 	}
 
 	/**
@@ -299,7 +343,7 @@ public class UnitType {
 	 * @param pos position of unit in mUnitArray
 	 * @return unit from mUnitArray
 	 */
-	public Unit getUnitAtOriginalPos(int pos) {
+	public Unit getUnitPosInUnitArray(int pos) {
 		return mUnitArray.get(pos);
 	}
 
@@ -324,11 +368,11 @@ public class UnitType {
 
 
 	public Unit getPrevUnit(){
-		return getUnit(mPrevUnitPos);
+		return mPrevUnit;
 	}
 
 	public Unit getCurrUnit(){
-		return getUnit(mCurrUnitPos);
+		return mCurrUnit;
 	}
 
    /**
@@ -339,8 +383,8 @@ public class UnitType {
 		return mUnitArray.size();
 	}
 
-	public int getCurrUnitPos(){
-		return mCurrUnitPos;
+	public int getCurrUnitButtonPos() {
+		return findUnitButtonPosition(mCurrUnit);
 	}
 
 	public void setUpdating(boolean updating) {

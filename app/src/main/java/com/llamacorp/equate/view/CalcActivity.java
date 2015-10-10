@@ -375,7 +375,7 @@ implements OnResultSelectedListener, OnConvertKeySelectedListener{
 				// select that unit
 				if(unitPosToSelectAfterScroll != -1){
 					ConvKeysFragment frag = getConvKeyFrag(mUnitTypeViewPager.getCurrentItem());
-					if (frag != null) frag.selectUnit(unitPosToSelectAfterScroll);
+					if (frag != null) frag.selectUnitAtUnitArrayPos(unitPosToSelectAfterScroll);
 					unitPosToSelectAfterScroll = -1;
 				}
 				//clear out the unit in expression if it's now cleared
@@ -426,7 +426,7 @@ implements OnResultSelectedListener, OnConvertKeySelectedListener{
 	 * Selects the a unit (used by result list)
 	 * @see com.llamacorp.equate.view.ResultListFragment.OnResultSelectedListener
 	 */
-	public void selectUnit(int unitPos, int unitTypePos){
+	public void selectUnitAtUnitArrayPos(int unitPos, int unitTypePos){
 		//if not on right page, scroll there first
 		if(unitTypePos != mUnitTypeViewPager.getCurrentItem()){
 			unitPosToSelectAfterScroll = unitPos;
@@ -434,7 +434,7 @@ implements OnResultSelectedListener, OnConvertKeySelectedListener{
 		}
 		else {
 			ConvKeysFragment frag = getConvKeyFrag(mUnitTypeViewPager.getCurrentItem());
-			if (frag != null) frag.selectUnit(unitPos);
+			if (frag != null) frag.selectUnitAtUnitArrayPos(unitPos);
 		}
 	}
 

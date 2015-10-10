@@ -87,7 +87,7 @@ public class UnitTypeUpdater {
          //update the remaining units that got missed by yahoo xml
          if (mUnitsToUpdate != null) {
             for (int i = 0; i < mUnitsToUpdate.size(); i++) {
-               UnitCurrency u = (UnitCurrency) mUnitType.getUnitAtOriginalPos(mUnitsToUpdate.get(i));
+               UnitCurrency u = (UnitCurrency) mUnitType.getUnitPosInUnitArray(mUnitsToUpdate.get(i));
                if (u.isTimeoutReached(mContext))
                   u.asyncRefresh(mContext);
             }
@@ -118,9 +118,9 @@ public class UnitTypeUpdater {
       //update each existing curr with new rates
       for (int i = 0; i < ut.size(); i++) {
          //skip unit support that don't support updating (not hist)
-         if (!ut.getUnitAtOriginalPos(i).isDynamic()) continue;
+         if (!ut.getUnitPosInUnitArray(i).isDynamic()) continue;
 
-         UnitCurrency u = ((UnitCurrency) ut.getUnitAtOriginalPos(i));
+         UnitCurrency u = ((UnitCurrency) ut.getUnitPosInUnitArray(i));
          YahooXmlParser.Entry entry = currRates.get(u.getName());
          if (entry != null) {
             u.setValue(entry.price);

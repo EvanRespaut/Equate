@@ -322,8 +322,11 @@ public class Calculator{
 		//next perform numerical unit conversion
 		mSolver.convertFromTo(fromUnit, toUnit, mExpression);
 
-      int fromUnitPos = getCurrUnitType().findUnitPosition(fromUnit);
-      int toUnitPos = getCurrUnitType().findUnitPosition(toUnit);
+		//TODO this saves current button position to result - NOT GOOD
+		//TODO button positions can move at any time, so this doesn't at all
+		//TODO guarantee that the correct unit will be recalled when result tapped
+      int fromUnitPos = getCurrUnitType().findUnitPosInUnitArray(fromUnit);
+      int toUnitPos = getCurrUnitType().findUnitPosInUnitArray(toUnit);
 
 		//load units into result list (this will also set contains unit flag) (overrides that from solve)
 		mResultList.get(mResultList.size()-1).setResultUnit(fromUnit, fromUnitPos,
@@ -364,7 +367,7 @@ public class Calculator{
       if(isUnitSelected()){
          //load units into result list (this will also set contains unit flag
          Unit toUnit = getCurrUnitType().getCurrUnit();
-         int toUnitPos = getCurrUnitType().getCurrUnitPos();
+         int toUnitPos = getCurrUnitType().getCurrUnitButtonPos();
          mResultList.get(mResultList.size()-1).setResultUnit(toUnit, toUnitPos,
                  toUnit, toUnitPos, mUnitTypePos);
       }

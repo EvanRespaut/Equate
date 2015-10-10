@@ -46,6 +46,9 @@ public class ConvKeysFragment extends Fragment implements OnConvertKeyUpdateFini
 	//used for the extra
 	//TODO use getPackageName() instead
 	private static final String EXTRA_UNIT_TYPE_POS = "com.llamacorp.equate.unit_type_pos";
+	private static final int NUM_MORE_FAVORITES = 3;
+	private static final int NUM_UNITS_REQUIRED_FOR_FAVORITES = 25;
+
 	//holds UnitType for this fragment aka series of convert buttons
 	private UnitType mUnitType;
 	private ArrayList<Button> mConvButton;
@@ -119,6 +122,7 @@ public class ConvKeysFragment extends Fragment implements OnConvertKeyUpdateFini
 						@Override
 						public void onClick(DialogInterface dialog, int item) {
 							clickUnitButton(item + mNumConvButtons);
+							updateFavorites(item + mNumConvButtons);
 						}
 					});
 				}
@@ -189,10 +193,10 @@ public class ConvKeysFragment extends Fragment implements OnConvertKeyUpdateFini
 
 	/** Used by parent activity to select a unit within this fragment 
 	 * @param unitPos the postion of Unit selected */
-	public void selectUnit(int unitPos) {
+	public void selectUnitAtUnitArrayPos(int unitPos) {
 		//unitPos will be -1 if it wasn't found
 		if(unitPos != -1)
-			clickUnitButton(unitPos);
+			clickUnitButton(mUnitType.findButtonPositionforUnitArrayPos(unitPos));
 	}
 
 
@@ -318,7 +322,7 @@ public class ConvKeysFragment extends Fragment implements OnConvertKeyUpdateFini
 
 		if(mUnitType.isUnitSelected()){
 			for(int i=0;i<mConvButton.size();i++){
-				if(i != mUnitType.getCurrUnitPos()){
+				if(i != mUnitType.getCurrUnitButtonPos()){
 					refreshButtonText(getResources().getString(R.string.convert_arrow), i);
 				}
 			}
@@ -326,7 +330,17 @@ public class ConvKeysFragment extends Fragment implements OnConvertKeyUpdateFini
 		}			
 	}
 
+	private void updateFavorites(int clickedButtonPos){
+		//only populate a favorite units if we have a min numb items in the dialog
+		if(NUM_UNITS_REQUIRED_FOR_FAVORITES > (mUnitType.size()))
+			return;
 
+		int indexLastMoreFav = mNumConvButtons + NUM_MORE_FAVORITES - 1;
+
+		mUnitType.swapUnits(clickedButtonPos, indexLastMoreFav);
+		mUnitType.rotateUnitSublist(mNumConvButtons, indexLastMoreFav + 1);
+		mUnitType.sortUnitSublist(indexLastMoreFav + 1, mUnitType.size());
+	}
 
 	/** Clears the button unit selection */
 	public void clearButtonSelection(){
@@ -348,8 +362,13 @@ public class ConvKeysFragment extends Fragment implements OnConvertKeyUpdateFini
 	private void setSelectedButtonHighlight(boolean highlighted){
 		mCallback.setEqualButtonColor(highlighted);
 		//Don't color if "More" button was selected
-		if(mUnitType.getCurrUnitPos() < mNumConvButtons)
+		if(mUnitType.getCurrUnitButtonPos() < mNumConvButtons){
+			int currButtonPos = mUnitType.getCurrUnitButtonPos();
+			//if no button is selected, return
+			if(currButtonPos == -1)
+				return;
 			//set the current button to highlighted or not
-			mConvButton.get(mUnitType.getCurrUnitPos()).setSelected(highlighted);	
+			mConvButton.get(currButtonPos).setSelected(highlighted);
+		}
 	}
 }

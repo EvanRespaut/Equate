@@ -32,8 +32,8 @@ public class Result {
 	private String mAnswerUnitText;
 	private String mQueryUnitTextLong;
 	private String mAnswerUnitTextLong;
-	private int mQueryUnitPos;
-	private int mAnswerUnitPos;
+	private int mQueryUnitPosInUnitArray;
+	private int mAnswerUnitPosInUnitArray;
 	private int mUnitTypePos;
 	boolean mContainsUnits;
 	private long mTimestamp;
@@ -41,8 +41,8 @@ public class Result {
 	public Result(String query, String answer){
 		setQueryWithSep(query);
 		setAnswerWithSep(answer);
-		mQueryUnitPos = -1;
-		mAnswerUnitPos = -1;
+		mQueryUnitPosInUnitArray = -1;
+		mAnswerUnitPosInUnitArray = -1;
 		mContainsUnits = false;
 		mTimestamp = 0;
 		mQueryUnitText = "";
@@ -54,8 +54,8 @@ public class Result {
 	public Result(JSONObject json) throws JSONException {
 		setQuery(json.getString(JSON_QUERY));
 		setAnswer(json.getString(JSON_ANSWER));
-		mQueryUnitPos = json.getInt(JSON_QUERY_UNIT);
-		mAnswerUnitPos = json.getInt(JSON_ANSWER_UNIT);
+		mQueryUnitPosInUnitArray = json.getInt(JSON_QUERY_UNIT);
+		mAnswerUnitPosInUnitArray = json.getInt(JSON_ANSWER_UNIT);
 		mAnswerUnitText = json.getString(JSON_ANSWER_UNIT_TEXT);
 		mAnswerUnitTextLong = json.getString(JSON_ANSWER_UNIT_TEXT_LONG);
 		mQueryUnitText = json.getString(JSON_QUERY_UNIT_TEXT);
@@ -70,8 +70,8 @@ public class Result {
 
 		json.put(JSON_QUERY, getQuery());
 		json.put(JSON_ANSWER, getAnswer());
-		json.put(JSON_QUERY_UNIT, mQueryUnitPos);
-		json.put(JSON_ANSWER_UNIT, mAnswerUnitPos);
+		json.put(JSON_QUERY_UNIT, mQueryUnitPosInUnitArray);
+		json.put(JSON_ANSWER_UNIT, mAnswerUnitPosInUnitArray);
 		json.put(JSON_QUERY_UNIT_TEXT, mQueryUnitText);
 		json.put(JSON_ANSWER_UNIT_TEXT, mAnswerUnitText);
 		json.put(JSON_QUERY_UNIT_TEXT_LONG, mQueryUnitTextLong);
@@ -127,11 +127,11 @@ public class Result {
 			int answerUnitPos, int unitTypePos) {
 
 
-		mAnswerUnitPos = answerUnitPos;
+		mAnswerUnitPosInUnitArray = answerUnitPos;
 		mAnswerUnitText = answerUnit.toString();
 		mAnswerUnitTextLong = answerUnit.getLowercaseLongName();
 
-		mQueryUnitPos = queryUnitPos;
+		mQueryUnitPosInUnitArray = queryUnitPos;
 		//if we're dealing with the same historical currency, then the
 		//years are most likely different
 		if(queryUnit == answerUnit && queryUnit.isHistorical()){
@@ -177,12 +177,12 @@ public class Result {
 		return mUnitTypePos;
 	}
 
-	public int getAnswerUnit() {
-		return mAnswerUnitPos;
+	public int getAnswerUnitPos() {
+		return mAnswerUnitPosInUnitArray;
 	}
 
-   public int getQueryUnit() {
-      return mQueryUnitPos;
+   public int getQueryUnitPos() {
+      return mQueryUnitPosInUnitArray;
    }
 
 	public boolean containsUnits() {

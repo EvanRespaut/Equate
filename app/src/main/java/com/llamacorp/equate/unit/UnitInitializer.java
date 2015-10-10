@@ -321,10 +321,9 @@ public class UnitInitializer {
 		uc.addUnit(new UnitCurrency("HKD", "Hong Kong Dollars", 7.75));
 
 
-		uc.addUnit(new UnitCurrency("AUD", "Australian Dollars", 1.314));
+		uc.addUnit(new UnitCurrency("AUD", "Australian Dollars", 1.390144));
 		uc.addUnit(new UnitCurrency("CNY", "Chinese Yuans", 6.198));
-		uc.addUnit(new UnitCurrency("SGD", "Singapore Dollars", 1.363));
-		uc.addUnit(new UnitCurrency("RUB", "Russian Rubles", 57.62));
+		uc.addUnit(new UnitCurrency("RUB", "Russian Rubles", 66.499496));
 
 		uc.addUnit(new UnitCurrency("AFN", "Afghan Afghani", 64.349998));
 		uc.addUnit(new UnitCurrency("ALL", "Albanian Lek", 122.059502));
@@ -333,7 +332,6 @@ public class UnitInitializer {
 		uc.addUnit(new UnitCurrency("ARS", "Argentine Peso", 9.3998));
 		uc.addUnit(new UnitCurrency("AMD", "Armenian Dram", 481.73999));
 		uc.addUnit(new UnitCurrency("AWG", "Aruban Florin", 1.79));
-		uc.addUnit(new UnitCurrency("AUD", "Australian Dollar", 1.390144));
 		uc.addUnit(new UnitCurrency("AZN", "Azerbaijani Manat", 1.0568));
 		uc.addUnit(new UnitCurrency("BSD", "Bahamian Dollar", 1));
 		uc.addUnit(new UnitCurrency("BHD", "Bahraini Dinar", 0.3774));
@@ -358,7 +356,6 @@ public class UnitInitializer {
 		uc.addUnit(new UnitCurrency("CLP", "Chilean Peso", 678.554993));
 		uc.addUnit(new UnitCurrency("CLF", "Chilean Unidad de Fomento", 0.0246));
 		uc.addUnit(new UnitCurrency("CNH", "Chinese Offshore Yuan", 6.38755));
-		uc.addUnit(new UnitCurrency("CNY", "Chinese Yuan", 6.37025));
 		uc.addUnit(new UnitCurrency("COP", "Colombian Peso", 2984.830078));
 		uc.addUnit(new UnitCurrency("KMF", "Comorian Franc", 435.543213));
 		uc.addUnit(new UnitCurrency("CDF", "Congolese Franc", 927.5));
@@ -449,7 +446,6 @@ public class UnitInitializer {
 		uc.addUnit(new UnitCurrency("PLN", "Polish Zloty", 3.7231));
 		uc.addUnit(new UnitCurrency("QAR", "Qatari Riyal", 3.6438));
 		uc.addUnit(new UnitCurrency("RON", "Romanian Leu", 3.82225));
-		uc.addUnit(new UnitCurrency("RUB", "Russian Ruble", 66.499496));
 		uc.addUnit(new UnitCurrency("RWF", "Rwandan Franc", 732.080017));
 		uc.addUnit(new UnitCurrency("WST", "Samoan Tala", 2.658703));
 		uc.addUnit(new UnitCurrency("STD", "Sao Tome Dobra", 21495));
@@ -458,7 +454,7 @@ public class UnitInitializer {
 		uc.addUnit(new UnitCurrency("SCR", "Seychelles Rupee", 13.09995));
 		uc.addUnit(new UnitCurrency("SLL", "Sierra Leonean Leone", 4308));
 		uc.addUnit(new UnitCurrency("XAG", "Silver (oz)", 0.065989));
-		uc.addUnit(new UnitCurrency("SGD", "Singapore Dollar", 1.4012));
+		uc.addUnit(new UnitCurrency("SGD", "Singapore Dollars", 1.363));
 		uc.addUnit(new UnitCurrency("SIT", "Slovenian Tolar (obsolete)", 216.486755));
 		uc.addUnit(new UnitCurrency("SBD", "Solomon Islands Dollar", 7.971566));
 		uc.addUnit(new UnitCurrency("SOS", "Somali Shilling", 639.950012));

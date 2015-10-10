@@ -5,7 +5,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by Evan on 10/8/2015.
+ * Helper class used to give the name equivelent of decades of numbers
+ * For example 1E6 is mega, and E-9 is nano
  */
 public class SISuffixHelper {
    private static final Map<String, String> mSISuffixMap;
