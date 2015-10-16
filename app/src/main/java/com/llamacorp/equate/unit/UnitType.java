@@ -182,6 +182,7 @@ public class UnitType {
 
 
 	public int findUnitPosInUnitArray(Unit unit){
+		if(unit == null) return -1;
 		for(int i=0;i<size();i++){
 			if(unit.equals(getUnitPosInUnitArray(i)))
 				return i; //found the unit
@@ -339,11 +340,13 @@ public class UnitType {
 
 	/**
 	 * Get the unit given a position of the original mUnitArray.  This does not
-	 * use the mUnitDisplayOrder like getUnit uses.
+	 * use the mUnitDisplayOrder like getUnit uses. Will return null if pos is
+	 * invalid (less than 0 or greater than mUnitArray size)
 	 * @param pos position of unit in mUnitArray
 	 * @return unit from mUnitArray
 	 */
 	public Unit getUnitPosInUnitArray(int pos) {
+		if(pos < 0 || pos >= mUnitArray.size()) return null;
 		return mUnitArray.get(pos);
 	}
 

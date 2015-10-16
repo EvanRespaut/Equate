@@ -90,6 +90,7 @@ public class AnimatedHoldButton extends SecondaryTextButton {
 			mColorHoldHandler.removeCallbacks(mColorRunnable);
 			mColorHoldHandler = null;
 
+			postInvalidate();
 			break;
 		}
 		return true;
@@ -169,6 +170,11 @@ public class AnimatedHoldButton extends SecondaryTextButton {
 	private void extraLongClickButton(){
 		if(mExtraLongClickListener != null)
 			mExtraLongClickListener.onExtraLongClick(this);
+	}
+
+	public void setPrimaryText(CharSequence text) {
+		super.setText(text);
+		mPrimaryText = text.toString();
 	}
 
 	@Override

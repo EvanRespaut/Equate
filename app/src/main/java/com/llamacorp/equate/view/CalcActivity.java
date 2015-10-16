@@ -120,6 +120,13 @@ implements OnResultSelectedListener, OnConvertKeySelectedListener{
 			//used for coloring the equals button
 			if(id == R.id.equals_button) mEqualsButton = button;
 
+			if(id == R.id.percent_button) {
+				((AnimatedHoldButton) button)
+						  .setPrimaryText(mCalc.mPreferences.getPercentButMain());
+				((AnimatedHoldButton) button)
+						  .setSecondaryText(mCalc.mPreferences.getPercentButSec());
+			}
+
 			button.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View view) {
@@ -139,7 +146,10 @@ implements OnResultSelectedListener, OnConvertKeySelectedListener{
 							buttonValue = "/";
 							break;
 						case R.id.percent_button:
-							buttonValue = "%";
+							if(mCalc.mPreferences.getPercentButMain().equals("%"))
+								buttonValue = "%";
+							else
+								buttonValue = "E";
 							break;
 						case R.id.decimal_button:
 							buttonValue = ".";
@@ -187,7 +197,11 @@ implements OnResultSelectedListener, OnConvertKeySelectedListener{
 					break;
                case R.id.equals_button: buttonValue = "g";
                break;
-					case R.id.percent_button: buttonValue = "E";
+					case R.id.percent_button:
+						if(mCalc.mPreferences.getPercentButSec().equals("EE"))
+							buttonValue = "E";
+						else
+							buttonValue = "%";
 					break;
 					case R.id.nine_button: mCalc.refreshAllDynamicUnits(true);
 					break;
@@ -225,9 +239,18 @@ implements OnResultSelectedListener, OnConvertKeySelectedListener{
 							//TODO add code to pop up dialog to switch buttons
 							//TODO dialog reads "Set primary button function:"
 							//TODO options will be %, E, ^, 1/x, and +/-
-							//TODO
-							ahb.setSecondaryText("blob");
+							//simple swap
+							String main = mCalc.mPreferences.getPercentButMain();
+							String sec = mCalc.mPreferences.getPercentButSec();
+							mCalc.mPreferences.setPercentButMain(sec);
+							mCalc.mPreferences.setPercentButSec(main);
+							ViewUtils.toastLong("Button changed to " + sec, mAppContext);
 						}
+//						if (buttonId == R.id.divide_button) {
+//							ViewUtils.toast("Long hold!", mAppContext);
+//							AnimatedHoldButton perc = (AnimatedHoldButton) findViewById(R.id.percent_button);
+//							perc.invalidate();
+//						}
 					}
 				});
 			}
@@ -514,7 +537,7 @@ implements OnResultSelectedListener, OnConvertKeySelectedListener{
 			Calculator.getCalculator(this).saveState();
 		} catch (Exception e) {
 			e.printStackTrace();
-		} 
+		}
 	}
 
 

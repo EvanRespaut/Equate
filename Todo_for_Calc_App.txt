@@ -1,5 +1,5 @@
 ------------------ToDo Next--------------------
-- More list should have frequently used at the top and a little divider, then all the units below when above a certain size
+- Curr search function
 - Should perhaps standardized date styling using pure HTML (instead of extra textView)
 - When doing regular currency to historical, should change to year date code (instead of day or hour)
 - Should use API update historical USD to today's USD

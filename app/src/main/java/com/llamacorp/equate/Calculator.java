@@ -52,7 +52,7 @@ public class Calculator{
 	//stores the current location in mUnitTypeArray
 	private int mUnitTypePos;
 
-	public Hints mHints;
+	public Preferences mPreferences;
 
 	//precision for all calculations
 	public static final int intDisplayPrecision = 8;
@@ -71,7 +71,7 @@ public class Calculator{
 		mUnitTypeArray = new ArrayList<>();
 		mIsTestCalc=true;
 		initiateUnits();
-		mHints = new Hints();
+		mPreferences = new Preferences();
 	}
 	//------THIS IS FOR TESTING ONLY-----------------
 	public static Calculator getTestCalculator(){ mCaculator=new Calculator(); return mCaculator; }
@@ -89,7 +89,7 @@ public class Calculator{
 		mExpression = new Expression(intDisplayPrecision);
 		//set the unit type to length by default
 		mUnitTypePos=UNIT_TYPE_DEFAULT_POS;
-		mHints = new Hints();
+		mPreferences = new Preferences();
 
 		//load the calculating precision
 		mSolver = new Solver(intCalcPrecision);
@@ -158,7 +158,7 @@ public class Calculator{
 			JSONObject jObjState = (JSONObject) new JSONTokener(jsonString.toString()).nextValue();
 			mUnitTypePos = jObjState.getInt(JSON_UNIT_TYPE);
 			mExpression = new Expression(jObjState.getJSONObject(JSON_EXPRESSION), intDisplayPrecision);
-			mHints = new Hints(jObjState.getJSONObject(JSON_HINTS));
+			mPreferences = new Preferences(jObjState.getJSONObject(JSON_HINTS));
 
 			JSONArray jResultArray = jObjState.getJSONArray(JSON_RESULT_LIST);
 			// build the array of results from JSONObjects
@@ -189,7 +189,7 @@ public class Calculator{
       JSONObject jObjState = new JSONObject();
       jObjState.put(JSON_EXPRESSION, mExpression.toJSON());
       jObjState.put(JSON_UNIT_TYPE, mUnitTypePos);
-      jObjState.put(JSON_HINTS, mHints.toJSON());
+      jObjState.put(JSON_HINTS, mPreferences.toJSON());
 
       JSONArray jResultArray = new JSONArray();
       for (Result result : mResultList)
@@ -219,7 +219,7 @@ public class Calculator{
 	public void resetCalc(){
 		mResultList.clear();
 		mExpression = new Expression(intDisplayPrecision);
-		mHints = new Hints();
+		mPreferences = new Preferences();
 		//set the unit type to length by default
 		mUnitTypePos = UNIT_TYPE_DEFAULT_POS;
 
