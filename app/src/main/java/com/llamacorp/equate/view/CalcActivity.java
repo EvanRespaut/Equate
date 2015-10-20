@@ -245,16 +245,13 @@ implements OnResultSelectedListener, OnConvertKeySelectedListener{
 							mCalc.mPreferences.setPercentButMain(sec);
 							mCalc.mPreferences.setPercentButSec(main);
 							ViewUtils.toastLong("Button changed to " + sec, mAppContext);
+							ahb.setPrimaryText(sec);
+							ahb.setSecondaryText(main);
+							ahb.invalidate();
 						}
-//						if (buttonId == R.id.divide_button) {
-//							ViewUtils.toast("Long hold!", mAppContext);
-//							AnimatedHoldButton perc = (AnimatedHoldButton) findViewById(R.id.percent_button);
-//							perc.invalidate();
-//						}
 					}
 				});
 			}
-
 		}
 
 
