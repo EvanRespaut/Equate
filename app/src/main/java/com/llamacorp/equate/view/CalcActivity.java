@@ -24,8 +24,8 @@ import com.llamacorp.equate.view.ConvKeysFragment.OnConvertKeySelectedListener;
 import com.llamacorp.equate.view.ResultListFragment.OnResultSelectedListener;
 import com.viewpagerindicator.TabPageIndicator;
 
-public class CalcActivity  extends FragmentActivity 
-implements OnResultSelectedListener, OnConvertKeySelectedListener{
+public class CalcActivity  extends FragmentActivity
+		  implements OnResultSelectedListener, OnConvertKeySelectedListener{
 	private Context mAppContext;  //used for toasts and the like
 
 	private ResultListFragment mResultListFrag;	//scroll-able history
@@ -35,25 +35,25 @@ implements OnResultSelectedListener, OnConvertKeySelectedListener{
 	private Button mEqualsButton; //used for changing color
 
 	private static final int[] BUTTON_IDS = {
-		R.id.zero_button, R.id.one_button,  R.id.two_button, R.id.three_button,
-		R.id.four_button,	R.id.five_button, R.id.six_button, R.id.seven_button,
-		R.id.eight_button,R.id.nine_button,
+			  R.id.zero_button, R.id.one_button,  R.id.two_button, R.id.three_button,
+			  R.id.four_button,	R.id.five_button, R.id.six_button, R.id.seven_button,
+			  R.id.eight_button,R.id.nine_button,
 
-		R.id.plus_button,
-		R.id.minus_button,
-		R.id.multiply_button,
-		R.id.divide_button,
-		R.id.percent_button,
+			  R.id.plus_button,
+			  R.id.minus_button,
+			  R.id.multiply_button,
+			  R.id.divide_button,
+			  R.id.percent_button,
 
-		R.id.decimal_button,
-		R.id.equals_button,
-		//		R.id.ee_button,
-		//		R.id.power_button,
+			  R.id.decimal_button,
+			  R.id.equals_button,
+			  //		R.id.ee_button,
+			  //		R.id.power_button,
 
-		R.id.clear_button,
+			  R.id.clear_button,
 
-		R.id.open_para_button,
-		R.id.close_para_button,
+			  R.id.open_para_button,
+			  R.id.close_para_button,
 
 	};
 
@@ -90,7 +90,7 @@ implements OnResultSelectedListener, OnConvertKeySelectedListener{
 
 		//clicking display will set solve=false, and will make the cursor visible
 		mDisplay.setOnTouchListener(new View.OnTouchListener() {
-			@Override 
+			@Override
 			public boolean onTouch(View view, MotionEvent event) {
 				if(event.getAction()==MotionEvent.ACTION_DOWN){
 					//once the user clicks on part of the expression, don't want # to delete it
@@ -108,7 +108,7 @@ implements OnResultSelectedListener, OnConvertKeySelectedListener{
 
 		if(mResultListFrag == null){
 			mResultListFrag = new ResultListFragment();
-			fm.beginTransaction().add(R.id.resultListfragmentContainer, mResultListFrag).commit();	
+			fm.beginTransaction().add(R.id.resultListfragmentContainer, mResultListFrag).commit();
 		}
 
 		setupUnitTypePager();
@@ -188,38 +188,44 @@ implements OnResultSelectedListener, OnConvertKeySelectedListener{
 
 
 			button.setOnLongClickListener(new View.OnLongClickListener() {
-				@Override 
+				@Override
 				public boolean onLongClick(View view) {
 					int buttonId = view.getId();
 					String buttonValue="";
 					switch(buttonId){
-					case R.id.multiply_button: buttonValue = "^";
-					break;
-               case R.id.equals_button: buttonValue = "g";
-               break;
-					case R.id.percent_button:
-						if(mCalc.mPreferences.getPercentButSec().equals("EE"))
-							buttonValue = "E";
-						else
-							buttonValue = "%";
-					break;
-					case R.id.nine_button: mCalc.refreshAllDynamicUnits(true);
-					break;
-					case R.id.minus_button: buttonValue = "n";
-					break;
-					case R.id.divide_button: buttonValue = "i";
-					break;
-					case R.id.eight_button:
-                  if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-                     if (mUnitContain.getVisibility() == LinearLayout.GONE) {
-                        mUnitContain.setVisibility(LinearLayout.VISIBLE);
-                        updateScreen(true, true);
-                     } else
-                        mUnitContain.setVisibility(LinearLayout.GONE);
-                  }
-						break;
-					default: 					
-						return true;
+						case R.id.multiply_button: buttonValue = "^";
+							break;
+						case R.id.equals_button: buttonValue = "g";
+							break;
+						case R.id.percent_button:
+							if(mCalc.mPreferences.getPercentButSec().equals("EE"))
+								buttonValue = "E";
+							else
+								buttonValue = "%";
+							break;
+						case R.id.nine_button: mCalc.refreshAllDynamicUnits(true);
+							break;
+						case R.id.minus_button: buttonValue = "n";
+							break;
+						case R.id.divide_button: buttonValue = "i";
+							break;
+						case R.id.eight_button:
+							if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+								if (mUnitContain.getVisibility() == LinearLayout.GONE) {
+									mUnitContain.setVisibility(LinearLayout.VISIBLE);
+									updateScreen(true, true);
+								} else
+									mUnitContain.setVisibility(LinearLayout.GONE);
+							}
+							break;
+						case R.id.open_para_button:
+							buttonValue = "[";
+							break;
+						case R.id.close_para_button:
+							buttonValue = "]";
+							break;
+						default:
+							return true;
 					}
 					//pass button to calc, change conv key colors (maybe) and update screen
 					if(!buttonValue.equals(""))
@@ -430,10 +436,10 @@ implements OnResultSelectedListener, OnConvertKeySelectedListener{
 		// a dialog is hard
 		if(keyPressed.equals("=") && mCalc.isUnitSelected() && !mCalc.isSolved()){
 			new AlertDialog.Builder(this)
-			.setMessage("Click a different unit to convert")
-			.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int which) {}})
-				.show();
+					  .setMessage("Click a different unit to convert")
+					  .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+						  public void onClick(DialogInterface dialog, int which) {}})
+					  .show();
 		}
 
 		//update the result list and do it with the normal scroll (not fast)
@@ -485,7 +491,7 @@ implements OnResultSelectedListener, OnConvertKeySelectedListener{
 		if(!mCalc.isUnitSelected())
 			clearUnitSelection(mUnitTypeViewPager.getCurrentItem());
 	}
-	
+
 
 	/**
 	 * Changes equals button color according the the input boolean value.
@@ -516,12 +522,12 @@ implements OnResultSelectedListener, OnConvertKeySelectedListener{
 	 * @return will return the fragment or null if it doesn't exist at that position
 	 */
 	private ConvKeysFragment getConvKeyFrag(int pos){
-		FragmentStatePagerAdapter tempAdapter = 
-				(FragmentStatePagerAdapter) mUnitTypeViewPager.getAdapter();
+		FragmentStatePagerAdapter tempAdapter =
+				  (FragmentStatePagerAdapter) mUnitTypeViewPager.getAdapter();
 		//make sure we aren't trying to access an invalid page fragment
 		if(pos < tempAdapter.getCount() && pos >= 0){
 			return (ConvKeysFragment) tempAdapter.
-					instantiateItem(mUnitTypeViewPager, pos);
+					  instantiateItem(mUnitTypeViewPager, pos);
 		}
 		else return null;
 	}

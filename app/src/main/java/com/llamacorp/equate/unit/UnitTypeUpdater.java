@@ -78,7 +78,7 @@ public class UnitTypeUpdater {
       protected void onPostExecute(Boolean successful) {
          if (successful) {
             mUnitType.setLastUpdateTime(new Date());
-            String text = "Updated at";
+            String text = "Updated at ";
             if(mForced) text = "FORCED update at ";
             ViewUtils.toastLong(text + mUnitType.getLastUpdateTime().toString(),
                     mContext);
