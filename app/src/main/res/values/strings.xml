@@ -53,6 +53,7 @@
    <string name="word_to">to</string>
    <string name="word_updating">Updating</string>
 
+   <string name="words_units_up_to_date">Units up to date.</string>
 
    <string name="convert_arrow">&#10140;&#160;</string>
    <string name="convert_toast_converting">Converting</string>

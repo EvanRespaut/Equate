@@ -3,6 +3,7 @@ package com.llamacorp.equate.unit;
 import android.content.Context;
 import android.os.AsyncTask;
 
+import com.llamacorp.equate.R;
 import com.llamacorp.equate.view.ViewUtils;
 
 import org.xmlpull.v1.XmlPullParserException;
@@ -21,7 +22,7 @@ import java.util.HashMap;
  * Created by Evan on 10/2/2015.
  */
 public class UnitTypeUpdater {
-   public static int UPDATE_TIMEOUT_MIN = 30;
+   public static int UPDATE_TIMEOUT_MIN = 90;
    private Context mContext;
    private ArrayList<Integer> mUnitsToUpdate;
 
@@ -39,7 +40,8 @@ public class UnitTypeUpdater {
          ut.setUpdating(true);
          new UpdateYahooXMLAsyncTask(ut, forced).execute();
       } else {
-         ViewUtils.toast("Timeout not reached", mContext);
+         ViewUtils.toast(mContext.getText(R.string.words_units_up_to_date)
+                 .toString(), mContext);
       }
    }
 
