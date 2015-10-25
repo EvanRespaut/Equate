@@ -135,7 +135,7 @@ public class ConvKeysFragment extends Fragment implements OnConvertKeyUpdateFini
 
 			//add ellipses for long press
 			if(mUnitType.size() > mNumConvButtons)
-				((SecondaryTextButton)button).setSecondaryText((String) getText(R.string.conv_button_hint));
+				((SecondaryTextButton)button).setSecondaryText((String) getText(R.string.ellipsis));
 
 			//add to our list of conv buttons
 			mConvButton.add(button);			

@@ -1,109 +1,112 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Equate</string>
-    <string name="action_settings">Settings</string>
-    
-    <string name="decimal_button">.</string>
-    <string name="equals_button">=</string>
-    <string name="ee_button">EE</string>
-    <string name="power_button">^</string>
-    <string name="backspace_button">Backspace</string>
-    <string name="open_para_button">(</string>
-    <string name="close_para_button">)</string>
-    <string name="percent_button">%</string>
-    <string name="negate_button">&#177;</string>
-    <string name="invert_button">1/x</string>
-    <string name="clear_button">C</string>
-    
-    
-    
-    <string name="zero_button">0</string>
-    <string name="one_button">1</string>
-    <string name="two_button">2</string>
-    <string name="three_button">3</string>
-    <string name="four_button">4</string>
-    <string name="five_button">5</string>
-    <string name="six_button">6</string>
-    <string name="seven_button">7</string>
-    <string name="eight_button">8</string>
-    <string name="nine_button">9</string>
-    
-    <string name="plus_button">+</string>
-    <string name="minus_button">-</string>
-    <string name="multiply_button">×</string>
-    <string name="divide_button">÷</string>
+   <string name="app_name">Equate</string>
+   <string name="action_settings">Settings</string>
+
+   <string name="decimal_button">.</string>
+   <string name="equals_button">=</string>
+   <string name="ee_button">EE</string>
+   <string name="power_button">^</string>
+   <string name="backspace_button">Backspace</string>
+   <string name="open_para_button">(</string>
+   <string name="close_para_button">)</string>
+   <string name="percent_button">%</string>
+   <string name="negate_button">&#177;</string>
+   <string name="invert_button">1/x</string>
+   <string name="clear_button">C</string>
+
+   <string name="open_para_long_button">&#8230;)</string>
+   <string name="close_para_long_button">(&#8230;</string>
+
+
+
+   <string name="zero_button">0</string>
+   <string name="one_button">1</string>
+   <string name="two_button">2</string>
+   <string name="three_button">3</string>
+   <string name="four_button">4</string>
+   <string name="five_button">5</string>
+   <string name="six_button">6</string>
+   <string name="seven_button">7</string>
+   <string name="eight_button">8</string>
+   <string name="nine_button">9</string>
+
+   <string name="plus_button">+</string>
+   <string name="minus_button">-</string>
+   <string name="multiply_button">×</string>
+   <string name="divide_button">÷</string>
 
    <string name="equals_secondary_text">&#8801;</string>
 
-    
-    <string name="first_convert_message">Now tap the desired unit to perform conversion.</string>
-    <string name="first_convert_message_no_numbers">Now enter some numbers and tap the desired unit to perform conversion.</string>
- 
-    <string name="more_button">More&#8230;</string>
-    <string name="select_unit">Select a unit:</string>
-    <string name="word_Change">Change</string>
-	<string name="word_historical">historical</string>
+
+   <string name="first_convert_message">Now tap the desired unit to perform conversion.</string>
+   <string name="first_convert_message_no_numbers">Now enter some numbers and tap the desired unit to perform conversion.</string>
+
+   <string name="more_button">More&#8230;</string>
+   <string name="select_unit">Select a unit:</string>
+   <string name="word_Change">Change</string>
+   <string name="word_historical">historical</string>
    <string name="historical_dialog_title">Select date:</string>
-	<string name="word_Convert">Convert</string>
-	<string name="word_Converting">Converting</string>
-	<string name="word_to">to</string>
-	<string name="word_updating">Updating</string>
+   <string name="word_Convert">Convert</string>
+   <string name="word_Converting">Converting</string>
+   <string name="word_to">to</string>
+   <string name="word_updating">Updating</string>
 
-   
-    <string name="convert_arrow">&#10140;&#160;</string>
-    <string name="convert_toast_converting">Converting</string>
-    <string name="convert_toast_no_numbers">No numbers to convert</string>
-    <string name="conv_button_hint">&#8230;</string>
-    
-    <color name="equal_button_normal">#176B17</color>
-    <color name="equal_button_pressed">#ff7cc97c</color>
-    <color name="equal_button_text_normal">#D4D4D4</color>
-    <color name="equal_button_text_pressed">#232323</color>
-    
-    <color name="clear_button_normal">#232323</color>
-    <color name="clear_button_pressed">#B23535</color>
-    
-    <color name="num_button_normal">#191919</color>
-    <color name="num_button_pressed">#ff80a172</color> <!--used to be 93795B -->
- 
-    <color name="op_button_normal">#232323</color>
-    <color name="op_button_pressed">#61AD61</color>
-    <color name="op_button_long_press_accent">#000000</color>
-    
-    <color name="backspace_button_held">#E10000</color>
-    
-    <color name="conv_button_normal">#191919</color>
-    <color name="conv_button_selected">#738E68</color>
-    <color name="conv_button_pressed">#97BC89</color>
-    
-    
-    <color name="button_secondary_text">#636363</color>
-    <color name="equals_secondary_text_color_normal">#ff969696</color>
 
-    
-    <color name="button_text_normal">#D4D4D4</color>
-    <color name="button_text_pressed">#232323</color>
-    
-    <!-- This is for the conv button that has been selected -->
-    <color name="button_text_conv_normal">#282828</color>
-    <color name="button_text_conv_pressed">#232323</color>
-    
-    <!-- Accent color for convert buttons NOT selected -->
-   	<color name="button_text_conv_not_selected">#1BC41B</color>
-     
-    <color name="prev_curr_exp_divider">#252525</color>
-    
-    
-    <color name="result_text">#FFFFFF</color>
-   
-    <color name="prev_result_text">#808080</color>
-    <color name="prev_result_text_pressed">#000000</color>
+   <string name="convert_arrow">&#10140;&#160;</string>
+   <string name="convert_toast_converting">Converting</string>
+   <string name="convert_toast_no_numbers">No numbers to convert</string>
+   <string name="ellipsis">&#8230;</string>
 
-    <color name="prev_result_text_timestamp">#606060</color>
+   <color name="equal_button_normal">#176B17</color>
+   <color name="equal_button_pressed">#ff7cc97c</color>
+   <color name="equal_button_text_normal">#D4D4D4</color>
+   <color name="equal_button_text_pressed">#232323</color>
 
-    
-    <color name="app_background">#000000</color>
-    <dimen name="button_radius">0dp</dimen>
-    
+   <color name="clear_button_normal">#232323</color>
+   <color name="clear_button_pressed">#B23535</color>
+
+   <color name="num_button_normal">#191919</color>
+   <color name="num_button_pressed">#ff80a172</color> <!--used to be 93795B -->
+
+   <color name="op_button_normal">#232323</color>
+   <color name="op_button_pressed">#61AD61</color>
+   <color name="op_button_long_press_accent">#000000</color>
+
+   <color name="backspace_button_held">#E10000</color>
+
+   <color name="conv_button_normal">#191919</color>
+   <color name="conv_button_selected">#738E68</color>
+   <color name="conv_button_pressed">#97BC89</color>
+
+
+   <color name="button_secondary_text">#636363</color>
+   <color name="equals_secondary_text_color_normal">#ff969696</color>
+
+
+   <color name="button_text_normal">#D4D4D4</color>
+   <color name="button_text_pressed">#232323</color>
+
+   <!-- This is for the conv button that has been selected -->
+   <color name="button_text_conv_normal">#282828</color>
+   <color name="button_text_conv_pressed">#232323</color>
+
+   <!-- Accent color for convert buttons NOT selected -->
+   <color name="button_text_conv_not_selected">#1BC41B</color>
+
+   <color name="prev_curr_exp_divider">#252525</color>
+
+
+   <color name="result_text">#FFFFFF</color>
+
+   <color name="prev_result_text">#808080</color>
+   <color name="prev_result_text_pressed">#000000</color>
+
+   <color name="prev_result_text_timestamp">#606060</color>
+
+
+   <color name="app_background">#000000</color>
+   <dimen name="button_radius">0dp</dimen>
+
 </resources>
