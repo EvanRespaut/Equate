@@ -476,7 +476,6 @@ public class UnitInitializer {
 		uc.addUnit(new UnitCurrency("TND", "Tunisian Dinar", 1.95155));
 		uc.addUnit(new UnitCurrency("TRY", "Turkish Lira", 3.00635));
 		uc.addUnit(new UnitCurrency("TMT", "Turkmenistan Manat", 3.5));
-		uc.addUnit(new UnitCurrency("AED", "UAE Dirhams", 3.673));
 		uc.addUnit(new UnitCurrency("UGX", "Uganda Shilling", 3650));
 		uc.addUnit(new UnitCurrency("UAH", "Ukrainian Hryvnia", 21.799999));
 		uc.addUnit(new UnitCurrency("AED", "United Arab Emirates Dirham", 3.67275));

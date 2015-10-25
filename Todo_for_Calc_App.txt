@@ -1,17 +1,12 @@
 ------------------ToDo Next--------------------
-- Hold for para auto complete (and backspace to delete)
 - Curr search function
 - Should perhaps standardized date styling using pure HTML (instead of extra textView)
 - When doing regular currency to historical, should change to year date code (instead of day or hour)
 - Should use API update historical USD to today's USD
-- Remove timeout not reached toast
 - Add testing support for bug: type 4*5 then add - after 4, enter; then do 1+1
 - hold 0 to add three 0s
 
 -Add rpm and rad/sec
-
-- Incorporate in yahoo's finance data http://finance.yahoo.com/webservice/v1/symbols/allcurrencies/quote
-Www.xe.com/symbols.php
 
 
 --------------------------------------------------------------------------------
@@ -157,3 +152,6 @@ Why singleton:
 - Where would calc live otherwise (in the activity seems like a dumb place for it)
 - How would fragments access it easily (passing between frag to activity seems uncessarily difficult)
 - This also somewhat solves saving issues
+
+http://finance.yahoo.com/webservice/v1/symbols/allcurrencies/quote
+Www.xe.com/symbols.php
