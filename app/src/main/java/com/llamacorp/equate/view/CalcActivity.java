@@ -429,12 +429,10 @@ public class CalcActivity  extends FragmentActivity
 	 * @param keyPressed ASCII representation of the key pressed ("1", "=" "*", etc)
 	 */
 	public void numButtonPressed(String keyPressed){
-		//pass button value to CalcAcitvity to pass to calc
-		boolean performedSolve = mCalc.parseKeyPressed(keyPressed);
+		//pass button value to CalcActivity to pass to calc
+		Calculator.CalculatorResultFlags flags = mCalc.parseKeyPressed(keyPressed);
 
-		//TODO this logic belongs in Calculator, but passing back to display
-		// a dialog is hard
-		if(keyPressed.equals("=") && mCalc.isUnitSelected() && !mCalc.isSolved()){
+		if(flags.createDiffUnitDialog){
 			new AlertDialog.Builder(this)
 					  .setMessage("Click a different unit to convert")
 					  .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
@@ -443,7 +441,7 @@ public class CalcActivity  extends FragmentActivity
 		}
 
 		//update the result list and do it with the normal scroll (not fast)
-		updateScreen(performedSolve);
+		updateScreen(flags.performedSolve);
 	}
 
 

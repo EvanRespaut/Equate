@@ -1,4 +1,10 @@
 ------------------ToDo Next--------------------
+- Double tap on the 15 of 15E-19 should just select 15 (not 15E) and double tapping on -19 should grab the - sign and not just 19
+- Look into adding app theme engine https://github.com/afollestad/app-theme-engine
+- Save state (or really just result list) after every equals
+- Put brackets around nano or mega, otherwise implies like 10E6 [mega]
+- fix for LTL to EUR (and other obsoleted currencies)
+	As for the price of LTL, you are correct. I'm using Yahoo's prices, who look like they do the conversion wrong, as does google. What's going on here is the value of LTL that I'm using from Yahoo is dollars to LTL on June 22, 2015 (not sure why it has that date). But when you convert dollars to EUR using the current conversion rate of ~.906 instead of that from June 22, 2015 of ~.88, you get ~3.36 instead of 3.45280. I'll look into adding a fix to this (probably the same thing is occurring for other obsoleted currencies).
 - Curr search function
 - Should perhaps standardized date styling using pure HTML (instead of extra textView)
 - When doing regular currency to historical, should change to year date code (instead of day or hour)

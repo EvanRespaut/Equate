@@ -230,12 +230,29 @@ public class Calculator{
 	}
 
 
+	/**
+	 * Used to store some booleans used by CalculatorActivity after the
+	 * Calculator class handled the key-press
+	 */
+	public class CalculatorResultFlags {
+		//has a solve been performed (used to determine if result list update is necessary)
+		public boolean performedSolve = false;
+		//has a unit been selected and then equals been pressed (give user feedback
+		//that the user needs to select another unit
+		public boolean createDiffUnitDialog = false;
+		//used to determine if the instant result should be displayed
+		public boolean displayInstantResult = false;
+	}
+
 
 	/**
 	 * Passed a key from calculator (num/op/back/clear/eq) and distributes it to its proper function
 	 * @param sKey is either single character (but still a String) or a string from result list
 	 */
-	public boolean parseKeyPressed(String sKey){
+	public CalculatorResultFlags parseKeyPressed(String sKey){
+		//create a return object
+		CalculatorResultFlags resultFlags = new CalculatorResultFlags();
+
 		//first clear any highlighted chars (and the animation)
 		clearHighlighted();
 
@@ -250,25 +267,27 @@ public class Calculator{
 
 
 		switch (sKey) {
-			//check for equals key or for long press ='s key aka engineering form
+			//check for equals or for "g" aka long press equals (engineering form)
 			case "=":
 			case "g":
 				//if "Convert 3 in to..." is showing, help user out
 				if (isUnitSelected() & !mExpression.containsOps()){
 					//don't follow through with solve
-					return false;
+					resultFlags.createDiffUnitDialog = true;
+					return resultFlags;
 				}
-
+				// Display sci notation if expression valid
 				Result res = mSolver.tryToggleSciNote(mExpression, sKey.equals("g"));
 				if (res != null){
 					setSolved(true);
 					loadResultToArray(res);
-				} else
+				} else {
 					//solve expression, load into result list if answer not empty
 					solveAndLoadIntoResultList(sKey.equals("g"));
-				return true;
+				}
+				resultFlags.performedSolve = isSolved();
+				return resultFlags;
 
-			//check for plain text (want
 			//check for backspace key
 			case "b":
 				backspace();
@@ -289,14 +308,18 @@ public class Calculator{
 					if (!mResultList.isEmpty())
 						sKey = mResultList.get(mResultList.size() - 1).getAnswerWithoutSep() + sKey;
 
+				//deal with all other cases in expression
 				boolean requestSolve = mExpression.keyPresses(sKey);
+
+				//used when inverter key used after expression is solved
 				if (requestSolve){
 					solveAndLoadIntoResultList(false);
-					return true;
+					resultFlags.performedSolve = isSolved();
+					return resultFlags;
 				}
 				break;
 		}
-		return false;
+		return resultFlags;
 	}
 
 	/**
@@ -431,7 +454,10 @@ public class Calculator{
 		return mExpression.getHighlighted();
 	}
 
-
+	/**
+	 * Clear highlighted character (those that are turned red, for example the
+	 * open bracket when close bracket is held down.
+	 */
 	public void clearHighlighted() {
 		mExpression.clearHighlightedList();
 	}

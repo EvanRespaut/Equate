@@ -101,9 +101,11 @@ public class Expression {
 
 
 	/**
-	 * This function will try to add a number or operator, or entire result list to the current expression
-	 * Note that there is lots of error checking to be sure user can't entire an invalid operator/number
-	 * @param sKey should only be single valid number or operator character, or longer previous results
+	 * This function will try to add a number or operator, or entire result list
+	 * to the current expression. Note that there is lots of error checking to
+	 * sure user can't entire an invalid operator/number
+	 * @param sKey should only be single valid number or operator character,
+	 *               or longer previous results
 	 * @return returns if a solve should be performed
 	 */
 	public boolean keyPresses(String sKey){
