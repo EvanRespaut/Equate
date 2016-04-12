@@ -87,6 +87,22 @@ public class Expression {
 		setSolved(json.getBoolean(JSON_SOLVED));
 	}
 
+	/**
+	 * Used to create a copy of expression.
+	 * @param exp template to use as copy
+    */
+	public Expression(Expression exp) {
+		replaceExpression(exp.toString());
+		mPreciseResult = exp.getPreciseResult();
+		mIntDisplayPrecision = exp.mIntDisplayPrecision;
+		mMcDisp = exp.mMcDisp;
+		mSelectionEnd = exp.getSelectionEnd();
+		mSelectionStart = exp.getSelectionStart();
+		mSolved = exp.isSolved();
+		mNumFormat = exp.mNumFormat;
+		mHighlightedCharList = exp.getHighlighted();
+	}
+
 	public JSONObject toJSON()  throws JSONException {
 		JSONObject json = new JSONObject();
 
@@ -475,7 +491,6 @@ public class Expression {
 		}
 	}
 
-
 	/**
 	 * Load in more precise result if possible
 	 */
@@ -552,9 +567,13 @@ public class Expression {
 
 	/** Returns if this expression is empty */
 	public boolean isEmpty(){
-		return getExpression().equals("");
+		return isEmpty(getExpression());
 	}
 
+	/** Returns if input parameter expression is empty */
+	public static boolean isEmpty(String str){
+		return str.equals("");
+	}
 
 	/** Returns if this expression is has invalid characters */
 	public static boolean isInvalid(String str){

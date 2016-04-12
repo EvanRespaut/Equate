@@ -106,6 +106,8 @@
 
    <color name="prev_result_text_timestamp">#606060</color>
 
+   <color name="preview_text_color">#B23535</color>
+
 
    <color name="app_background">#000000</color>
    <dimen name="button_radius">0dp</dimen>

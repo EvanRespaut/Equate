@@ -200,6 +200,7 @@ public class ResultListFragment extends ListFragment {
 	 * otherwise use scroll instantly
 	 */
 	public void refresh(boolean instaScroll) {
+		if(getListAdapter() == null) return;
 		//notify the adapter that the listview needs to be updated
 		((ResultAdapter)getListAdapter()).notifyDataSetChanged();
 

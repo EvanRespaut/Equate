@@ -74,4 +74,9 @@
         <item name="android:textSize">18sp</item>
     </style>
 
+    <style name="ResultPreview">
+        <item name="android:background">@drawable/result_textview</item>
+        <item name="android:textColor">@drawable/preview_textview_text_color</item>
+        <item name="android:textSize">30sp</item>
+    </style>
 </resources>

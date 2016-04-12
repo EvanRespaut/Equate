@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.llamacorp.equate.Calculator;
 import com.llamacorp.equate.R;
@@ -31,6 +32,7 @@ public class CalcActivity  extends FragmentActivity
 	private ResultListFragment mResultListFrag;	//scroll-able history
 	private EditTextDisplay mDisplay;  		//main display
 	private ViewPager mUnitTypeViewPager;			//controls and displays UnitType 
+	private TextView mResultPreview;	//Result preview
 
 	private Button mEqualsButton; //used for changing color
 
@@ -75,6 +77,7 @@ public class CalcActivity  extends FragmentActivity
 
 		//main result display
 		mDisplay = (EditTextDisplay)findViewById(R.id.textDisplay);
+		mResultPreview = (TextView)findViewById(R.id.resultPreview);
 		mDisplay.setCalc(mCalc);
 		mDisplay.disableSoftInputFromAppearing();
 
@@ -111,7 +114,6 @@ public class CalcActivity  extends FragmentActivity
 			fm.beginTransaction().add(R.id.resultListfragmentContainer, mResultListFrag).commit();
 		}
 
-		setupUnitTypePager();
 
 
 		for(int id : BUTTON_IDS) {
@@ -471,6 +473,20 @@ public class CalcActivity  extends FragmentActivity
 	private void updateScreen(boolean updateResult, boolean instaScroll){
 		mDisplay.updateTextFromCalc(); //Update EditText view
 
+		//will preview become visible during this screen update?
+		boolean makePreviewVisible = !mCalc.isSolved() 
+				&& !mCalc.isPreviewEmpty() && !mCalc.isUnitSelected();
+
+		//if we preview just appeared, move the history list up so the last item
+		//doesn't get hidden by the preview
+		if(!isPreviewVisible() && makePreviewVisible){
+			updateResult = true;
+			instaScroll = true;
+		}
+
+		setPreviewVisible(makePreviewVisible);
+		updatePreviewText();
+
 		//if we hit equals, update result list
 		if(updateResult)
 			mResultListFrag.refresh(instaScroll);
@@ -490,6 +506,21 @@ public class CalcActivity  extends FragmentActivity
 			clearUnitSelection(mUnitTypeViewPager.getCurrentItem());
 	}
 
+
+	private boolean isPreviewVisible(){
+		if(mResultPreview.getVisibility() == View.VISIBLE)
+			return true;
+		else
+			return false;
+	}
+
+	private void setPreviewVisible(boolean visible){
+		mResultPreview.setVisibility(visible ? View.VISIBLE : View.GONE);
+	}
+
+	private void updatePreviewText(){
+		mResultPreview.setText("= " + mCalc.getPreviewText());
+	}
 
 	/**
 	 * Changes equals button color according the the input boolean value.
@@ -549,6 +580,8 @@ public class CalcActivity  extends FragmentActivity
 		//maybe fixes that random crash?
 		if(mCalc == null)
 			return;
+
+		setupUnitTypePager();
 
 		if(mCalc.getCurrUnitType().containsDynamicUnits())
 			mCalc.refreshAllDynamicUnits(false);

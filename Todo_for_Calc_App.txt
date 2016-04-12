@@ -1,4 +1,23 @@
 ------------------ToDo Next--------------------
+- Instant result functionality:
+	- Will be red when valid and turn pink or gray when syntax error
+	- If solved flag is set, remove it
+	- Not sure if we want to make it instantly start displaying the same number
+		you start typing???
+			- Maybe just do inverse of regular and sci notation?
+				So if you type 10000, it will say "=1E" and visa versa
+		
+	
+	- Tap equals with just a number to put sci note in the insta result box
+	- Hold equals with just a number to put engineering note in the insta box
+	- I don't think there's a need to load these into the result history
+	- Hold on instant result field to open dialog to disable feature
+	- Animate a shrink in size and fade to gray, make box not visible, then fade 
+		in result (fast)
+	
+
+- Consider putting instant results in unit buttons before pressing them (red text)
+- Tap * again to get ^
 - Double tap on the 15 of 15E-19 should just select 15 (not 15E) and double tapping on -19 should grab the - sign and not just 19
 - Look into adding app theme engine https://github.com/afollestad/app-theme-engine
 - Save state (or really just result list) after every equals

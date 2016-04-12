@@ -60,6 +60,7 @@ public class Calculator{
 
 
 	private boolean mIsTestCalc = false;
+	private Preview mPreview;
 
 	//------THIS IS FOR TESTING ONLY-----------------
 	private Calculator(){
@@ -93,6 +94,8 @@ public class Calculator{
 
 		//load the calculating precision
 		mSolver = new Solver(intCalcPrecision);
+
+		mPreview = new Preview(mSolver);
 
 		mUnitTypeArray = new ArrayList<>();
 		//call helper method to actually load in units
@@ -319,6 +322,9 @@ public class Calculator{
 				}
 				break;
 		}
+		//want to make a copy of expression so original doesn't change
+		mPreview.set(new Expression(mExpression));
+
 		return resultFlags;
 	}
 
@@ -526,6 +532,14 @@ public class Calculator{
 
 	public Expression.NumFormat getNumberFormat() {
 		return mExpression.getmNumFormat();
+	}
+
+	public boolean isPreviewEmpty(){
+		return mPreview.isEmpty();
+	}
+
+	public String getPreviewText(){
+		return mPreview.getText();
 	}
 
 	/**
