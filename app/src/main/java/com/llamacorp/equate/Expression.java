@@ -37,6 +37,7 @@ public class Expression {
 	//list of indexes of characters to highlight
 	private ArrayList<Integer> mHighlightedCharList;
 
+	public static final String regexDecimal = "\\.";
 	public static final String regexGroupedExponent = "(\\^)";
 	public static final String regexGroupedMultDiv = "([/*])";
 	public static final String regexGroupedAddSub = "([+-])";
@@ -515,6 +516,8 @@ public class Expression {
 		//don't want to trim off %'s so long as there's at least one char before it
 		if(getExpression().matches(".+%$")) return;
 		replaceExpression(getExpression().replaceAll(regexAnyOperatorOrE + "+$", ""));
+		// if result is just ".", remove it
+		replaceExpression(getExpression().replaceAll("^" + regexDecimal+ "$", ""));
 	}
 
 
