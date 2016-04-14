@@ -107,6 +107,7 @@
    <color name="prev_result_text_timestamp">#606060</color>
 
    <color name="preview_text_color">#B23535</color>
+   <color name="preview_si_suffix_text_color">#B23535</color>
 
 
    <color name="app_background">#000000</color>

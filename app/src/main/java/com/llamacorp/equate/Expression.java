@@ -276,7 +276,7 @@ public class Expression {
 			return;
 
 		//save current numformat (used to tell if we want to show eng prefix)
-		setmNumFormat(numFormat);
+		setFormat(numFormat);
 
 		//if formatting messed ("-", "(())"), or number too big, throw error
 		BigDecimal bd = new BigDecimal(getExpression(), mMcDisp);
@@ -649,8 +649,8 @@ public class Expression {
 		return mNumFormat;
 	}
 
-	public void setmNumFormat(NumFormat mNumFormat) {
-		this.mNumFormat = mNumFormat;
+	public void setFormat(NumFormat numFormat) {
+		this.mNumFormat = numFormat;
 	}
 
 	public boolean isSolved() {

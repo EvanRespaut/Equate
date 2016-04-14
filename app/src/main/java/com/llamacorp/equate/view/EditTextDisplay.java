@@ -201,7 +201,7 @@ public class EditTextDisplay extends EditText {
 	}
 
 	/**
-	 * Helper method used to set the main display with HTML formating, without
+	 * Helper method used to set the main display with HTML formatting, without
 	 * highlighting
 	 * @param expStr is the main expression to update
 	 */

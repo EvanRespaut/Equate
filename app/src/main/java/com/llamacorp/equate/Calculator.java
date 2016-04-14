@@ -1,6 +1,7 @@
 package com.llamacorp.equate;
 
 import android.content.Context;
+import android.text.Spanned;
 
 import com.llamacorp.equate.unit.Unit;
 import com.llamacorp.equate.unit.UnitInitializer;
@@ -94,6 +95,7 @@ public class Calculator{
 
 		//load the calculating precision
 		mSolver = new Solver(intCalcPrecision);
+
 
 		mPreview = new Preview(mSolver);
 
@@ -270,27 +272,30 @@ public class Calculator{
 
 
 		switch (sKey) {
-			//check for equals or for "g" aka long press equals (engineering form)
+			//check for equals
 			case "=":
-			case "g":
-				//if "Convert 3 in to..." is showing, help user out
+				// Help dialog: if "Convert 3 in to..." is showing, help user out
 				if (isUnitSelected() & !mExpression.containsOps()){
 					//don't follow through with solve
 					resultFlags.createDiffUnitDialog = true;
 					return resultFlags;
 				}
-				// Display sci notation if expression valid
-				Result res = mSolver.tryToggleSciNote(mExpression, sKey.equals("g"));
+				// Display sci/engineering notation if expression valid
+				Result res = mSolver.tryToggleSciNote(mExpression, false);
 				if (res != null){
 					setSolved(true);
 					loadResultToArray(res);
 				} else {
 					//solve expression, load into result list if answer not empty
-					solveAndLoadIntoResultList(sKey.equals("g"));
+					solveAndLoadIntoResultList(false);
 				}
 				resultFlags.performedSolve = isSolved();
 				return resultFlags;
-
+			//check for long hold equals key
+			case "g":
+				mPreview.set(new Expression(mExpression),
+						  Expression.NumFormat.ENGINEERING);
+				return resultFlags;
 			//check for backspace key
 			case "b":
 				backspace();
@@ -323,7 +328,7 @@ public class Calculator{
 				break;
 		}
 		//want to make a copy of expression so original doesn't change
-		mPreview.set(new Expression(mExpression));
+		mPreview.set(new Expression(mExpression), Expression.NumFormat.NORMAL);
 
 		return resultFlags;
 	}
@@ -538,8 +543,8 @@ public class Calculator{
 		return mPreview.isEmpty();
 	}
 
-	public String getPreviewText(){
-		return mPreview.getText();
+	public Spanned getPreviewText(int suffixColor){
+		return mPreview.getText(suffixColor);
 	}
 
 	/**

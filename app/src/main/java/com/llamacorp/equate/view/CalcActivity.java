@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -11,6 +12,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.view.MotionEvent;
 import android.view.View;
@@ -31,7 +33,7 @@ public class CalcActivity  extends FragmentActivity
 
 	private ResultListFragment mResultListFrag;	//scroll-able history
 	private EditTextDisplay mDisplay;  		//main display
-	private ViewPager mUnitTypeViewPager;			//controls and displays UnitType 
+	private ViewPager mUnitTypeViewPager;			//controls and displays UnitType
 	private TextView mResultPreview;	//Result preview
 
 	private Button mEqualsButton; //used for changing color
@@ -474,7 +476,7 @@ public class CalcActivity  extends FragmentActivity
 		mDisplay.updateTextFromCalc(); //Update EditText view
 
 		//will preview become visible during this screen update?
-		boolean makePreviewVisible = !mCalc.isSolved() 
+		boolean makePreviewVisible = !mCalc.isSolved()
 				&& !mCalc.isPreviewEmpty() && !mCalc.isUnitSelected();
 
 		//if we preview just appeared, move the history list up so the last item
@@ -485,7 +487,7 @@ public class CalcActivity  extends FragmentActivity
 		}
 
 		setPreviewVisible(makePreviewVisible);
-		updatePreviewText();
+		updatePreviewText(getResources().getColor(R.color.preview_si_suffix_text_color));
 
 		//if we hit equals, update result list
 		if(updateResult)
@@ -518,13 +520,13 @@ public class CalcActivity  extends FragmentActivity
 		mResultPreview.setVisibility(visible ? View.VISIBLE : View.GONE);
 	}
 
-	private void updatePreviewText(){
-		mResultPreview.setText("= " + mCalc.getPreviewText());
+	private void updatePreviewText(int suffixColor){
+		mResultPreview.setText(mCalc.getPreviewText(suffixColor));
 	}
 
 	/**
 	 * Changes equals button color according the the input boolean value.
-	 * Equals button is colored normally when button is not selected. When 
+	 * Equals button is colored normally when button is not selected. When
 	 * a unit is selected, equals button looks like a regular op button
 	 */
 	public void setEqualButtonColor(boolean unHighlighted){
@@ -535,8 +537,8 @@ public class CalcActivity  extends FragmentActivity
 
 	/**
 	 * Clear the unit selection for unit type fragment at position pos
-	 * @param unitTypeFragPos the position of the desired unit type fragment 
-	 * from which to clear selected units 
+	 * @param unitTypeFragPos the position of the desired unit type fragment
+	 * from which to clear selected units
 	 */
 	private void clearUnitSelection(int unitTypeFragPos){
 		ConvKeysFragment currFragAtPos = getConvKeyFrag(unitTypeFragPos);
