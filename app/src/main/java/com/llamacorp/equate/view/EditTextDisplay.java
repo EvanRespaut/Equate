@@ -154,17 +154,17 @@ public class EditTextDisplay extends EditText {
 						coloredExp = mExpressionText;
 					}
 					else {
-						ArrayList<Integer> highlist = mCalc.getHighlighted();
-						highlist = mSepHandler.translateIndexListToSep(highlist);
+						ArrayList<Integer> highList = mCalc.getHighlighted();
+						highList = mSepHandler.translateIndexListToSep(highList);
 						int color = (Integer)animator.getAnimatedValue();
-						int len = highlist.size();
-						coloredExp = mExpressionText.substring(0,  highlist.get(0));
+						int len = highList.size();
+						coloredExp = mExpressionText.substring(0, highList.get(0));
 						for(int i=0; i < len;i++){
 							int finish = mExpressionText.length();
-							if(i != len - 1) finish = highlist.get(i + 1);
+							if(i != len - 1) finish = highList.get(i + 1);
 							coloredExp = coloredExp + "<font color='" + color + "'>" +
-									  mExpressionText.substring(highlist.get(i), highlist.get(i) + 1) +
-									  "</font>" + mExpressionText.substring(highlist.get(i) + 1, finish);
+									  mExpressionText.substring(highList.get(i), highList.get(i) + 1) +
+									  "</font>" + mExpressionText.substring(highList.get(i) + 1, finish);
 						}
 					}
 

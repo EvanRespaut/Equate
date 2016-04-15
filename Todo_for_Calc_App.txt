@@ -1,7 +1,6 @@
 ------------------ToDo Next--------------------
 - Instant result functionality:
 	- Tap equals with just a number to put sci note in the insta result box
-	- Hold equals with just a number to put engineering note in the insta box
 	- I don't think there's a need to load these into the result history
 	- Hold on instant result field to open dialog to disable feature
 	- Animate a shrink in size and fade to gray, make box not visible, then fade 
@@ -13,59 +12,16 @@
 - Bug: type 1E1000 long press equals freezes; limit plain number digits
 - Look into adding app theme engine https://github.com/afollestad/app-theme-engine
 - Save state (or really just result list) after every equals
-- Put brackets around nano or mega, otherwise implies like 10E6 [mega]
 - fix for LTL to EUR (and other obsoleted currencies)
 	As for the price of LTL, you are correct. I'm using Yahoo's prices, who look like they do the conversion wrong, as does google. What's going on here is the value of LTL that I'm using from Yahoo is dollars to LTL on June 22, 2015 (not sure why it has that date). But when you convert dollars to EUR using the current conversion rate of ~.906 instead of that from June 22, 2015 of ~.88, you get ~3.36 instead of 3.45280. I'll look into adding a fix to this (probably the same thing is occurring for other obsoleted currencies).
 - Curr search function
 - Should perhaps standardized date styling using pure HTML (instead of extra textView)
 - When doing regular currency to historical, should change to year date code (instead of day or hour)
 - Should use API update historical USD to today's USD
-- Add testing support for bug: type 4*5 then add - after 4, enter; then do 1+1
 - hold 0 to add three 0s
 
 -Add rpm and rad/sec
 
-
---------------------------------------------------------------------------------
-Create an array of UnitCurrencies using default known data in unit initializer
-
-This array contains three letter abbreviation, long name, price (and update time maybe?)
-
-When a update currency request is made, UnitType will be called, it will download 
-the latest xml file, pass it to the YahooFinanceXmlParser, which will return
-a single array with three letter abbreviation, price, and time.  
-
-UnitType will then loop through the new array's three letter abrevs--for each,
-the mUnitArray will be searched for a matching three letter.  If found, update 
-the price and date.  If not found (currency that Yahoo has that the app does not),
-skip it and move on.  
-
-It is possible that some units won't be updated if the yahoo API was missing them.
-This is ok, the data in them will just stay old, or will be updated by other means
-like BTC.
---------------------------------------------------------------------------------
-
-Display Order Array stores order in which to index Array of Units
-
-Array of Units needs to be ordered the same in order for Display Order Array to 
-index properly
-
-Yahoo API will load ~173 currencies, assume somewhat random order.
-
-Loaded currencies missing big name, need to load those for each
-
-While loading big names for currencies, also reorder into known order
-
-Increment through known names, search for matching yahoo curr.
-
-Possible a unit from yahoo curr might be missing.  Skip it and decrement display 
-order array numbers larger than the missing curr (so USD that was index 29 will
-now properly call 28).  
-
-If missing curr is one in display order array, delete it from that array. This 
-will shift all other curr down by one, but w/e.  
-
-If missing curr wasn't in display, delete last element of display order (i think)
 
 
 - Hold unit to "Clear" it and move it to more menu
@@ -73,8 +29,6 @@ If missing curr wasn't in display, delete last element of display order (i think
 - Another collection of currencies http://coinmill.com/sources.html
 - 2015 Historical (grab latest CPI numbers)
 - Click equals again for sci notation - when going back into reg, grab more accurate version (store it in a precise BigDecimal
-
-&#2261;
 
 
 - getting occasional null pointer from "getListView().getPositionForView((View)view.getParent());" in ResultListFrag
@@ -87,6 +41,8 @@ If missing curr wasn't in display, delete last element of display order (i think
 http://stackoverflow.com/questions/1309629/how-to-change-colors-of-a-drawable-in-android
 
 -----Stuff to Test (squashed bugs, etc)-----
+- hit decimal and then equals
+- Type 4*5 then add - after 4, enter; then do 1+1
 - Empty expression, tap previous result with different unit type than curr, adds a one
 - Test min/mile to mph and back again
 - Reset then hit num and then unit, unit doesn't appear
