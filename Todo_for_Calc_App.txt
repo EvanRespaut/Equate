@@ -1,4 +1,5 @@
 ------------------ToDo Next--------------------
+- Instant result doesn't look good for 1-2 digits
 - Instant result functionality:
 	- Tap equals with just a number to put sci note in the insta result box
 	- I don't think there's a need to load these into the result history
@@ -6,8 +7,10 @@
 	- Animate a shrink in size and fade to gray, make box not visible, then fade 
 		in result (fast)
 	
-
+-landscape crashes it
+- tap ( then long press ) for crash
 - Tap * again to get ^
+- Tap preview copy's to clipboard; hold press...has options to disable it? idk
 - Double tap on the 15 of 15E-19 should just select 15 (not 15E) and double tapping on -19 should grab the - sign and not just 19
 - Bug: type 1E1000 long press equals freezes; limit plain number digits
 - Look into adding app theme engine https://github.com/afollestad/app-theme-engine
@@ -19,7 +22,6 @@
 - When doing regular currency to historical, should change to year date code (instead of day or hour)
 - Should use API update historical USD to today's USD
 - hold 0 to add three 0s
-
 -Add rpm and rad/sec
 
 
@@ -125,4 +127,4 @@ Why singleton:
 - Where would calc live otherwise (in the activity seems like a dumb place for it)
 - How would fragments access it easily (passing between frag to activity seems uncessarily difficult)
 - This also somewhat solves saving issues
-
+

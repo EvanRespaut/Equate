@@ -152,11 +152,12 @@ public class Expression {
 		}
 
 		//add auto completion for close parentheses
-		if(sKey.equals("]"))
-			if(numOpenPara() <= 0){ //if more close than open, add an open
+		if(sKey.equals("]")) {
+			if (numOpenPara() <= 0) { //if more close than open, add an open
 				insertAt("(", 0);
-				sKey = ")";
 			}
+			sKey = ")";
+		}
 
 		if(sKey.equals("[")){
 			insertAt(")", length());

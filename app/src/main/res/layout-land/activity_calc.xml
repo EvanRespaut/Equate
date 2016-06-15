@@ -18,8 +18,29 @@
             android:layout_height="0dp"
             android:layout_weight="1" />
 
+        <LinearLayout
+           android:id="@+id/resultPreviewContainer"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:orientation="vertical">
+            <View
+               android:id="@+id/prev_curr_exp_divider"
+               android:layout_width="match_parent"
+               android:layout_height="1dp"
+               android:background="@color/prev_curr_exp_divider" />
+
+            <TextView
+               android:id="@+id/resultPreview"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:layout_gravity="end"
+               android:text="= 461,865"
+               style="@style/ResultPreview" >
+            </TextView>
+        </LinearLayout>
+
         <View
-            android:id="@+id/prev_curr_exp_divider"
+            android:id="@+id/prev_curr_exp_divider2"
             android:layout_width="match_parent"
             android:layout_height="2dp"
             android:background="@color/prev_curr_exp_divider" />
