@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -12,10 +11,11 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -74,6 +74,8 @@ public class CalcActivity  extends FragmentActivity
 		mAppContext = this;
 		setContentView(R.layout.activity_calc);
 
+		this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
 		//either get old calc or create a new one
 		mCalc = Calculator.getCalculator(this);
 
@@ -83,12 +85,21 @@ public class CalcActivity  extends FragmentActivity
 		mDisplay.setCalc(mCalc);
 		mDisplay.disableSoftInputFromAppearing();
 
+		//keyboard hiding wasn't working on Samsung device, brute force instead
+		mDisplay.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+				imm.hideSoftInputFromWindow(mDisplay.getWindowToken(), 0);
+			}
+		});
+
 		//hold click will select all text
 		mDisplay.setOnLongClickListener(new View.OnLongClickListener() {
 			@Override
 			public boolean onLongClick(View v) {
+				//keyboard hiding wasn't working on Samsung device, brute force instead
 				mDisplay.selectAll();
-				//return false so Android consumes the rest of the event
 				return false;
 			}
 		});
@@ -103,6 +114,12 @@ public class CalcActivity  extends FragmentActivity
 					mDisplay.setCursorVisible(true);
 					mDisplay.clearHighlighted();
 				}
+//				else if(event.getAction()==MotionEvent.ACTION_UP){
+//					ViewUtils.toast("Action Up",mAppContext);
+//					InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+//					imm.hideSoftInputFromWindow(mDisplay.getWindowToken(), 0);
+//					return true;
+//				}
 				return false;
 			}
 		});

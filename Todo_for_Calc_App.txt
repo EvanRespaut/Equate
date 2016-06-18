@@ -6,8 +6,8 @@
 	- Hold on instant result field to open dialog to disable feature
 	- Animate a shrink in size and fade to gray, make box not visible, then fade 
 		in result (fast)
-	
--landscape crashes it
+- bug when you scroll up to the top of the result list and close app, sometimes crashes
+	with "Fragment s not currently in the FragmentManager"
 - tap ( then long press ) for crash
 - Tap * again to get ^
 - Tap preview copy's to clipboard; hold press...has options to disable it? idk

@@ -1,7 +1,5 @@
 package com.llamacorp.equate.view;
 
-import java.util.ArrayList;
-
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ArgbEvaluator;
@@ -25,6 +23,8 @@ import com.llamacorp.equate.ExpSeparatorHandler;
 import com.llamacorp.equate.Expression;
 import com.llamacorp.equate.R;
 import com.llamacorp.equate.SISuffixHelper;
+
+import java.util.ArrayList;
 
 public class EditTextDisplay extends EditText {
 	private Calculator mCalc;
