@@ -235,7 +235,7 @@
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_margin="1dp"
+                android:layout_margin="@dimen/CalcButtonMargin"
                 android:layout_weight="1"
                 android:background="@color/app_background" >
 
@@ -243,7 +243,7 @@
                    xmlns:customNS="http://schemas.android.com/apk/res/com.llamacorp.equate"
                    android:id="@+id/open_para_button"
                    style="@style/SmallOperator"
-                   android:layout_marginRight="1dp"
+                   android:layout_marginRight="@dimen/CalcButtonMargin"
                    customNS:primary_text="@string/open_para_button"
                    customNS:secondary_text="@string/open_para_long_button"
                    customNS:secondary_text_font_size_percentage="45"/>
@@ -253,7 +253,7 @@
                    xmlns:customNS="http://schemas.android.com/apk/res/com.llamacorp.equate"
                    android:id="@+id/close_para_button"
                    style="@style/SmallOperator"
-                   android:layout_marginLeft="1dp"
+                   android:layout_marginLeft="@dimen/CalcButtonMargin"
                    customNS:primary_text="@string/close_para_button"
                    customNS:secondary_text="@string/close_para_long_button"
                    customNS:secondary_text_font_size_percentage="45"/>

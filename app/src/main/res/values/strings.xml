@@ -65,13 +65,12 @@
    <color name="equal_button_text_normal">#D4D4D4</color>
    <color name="equal_button_text_pressed">#232323</color>
 
-   <color name="clear_button_normal">#232323</color>
    <color name="clear_button_pressed">#B23535</color>
 
    <color name="num_button_normal">#191919</color>
    <color name="num_button_pressed">#ff80a172</color> <!--used to be 93795B -->
 
-   <color name="op_button_normal">#232323</color>
+   <color name="op_button_normal">#282828</color>
    <color name="op_button_pressed">#61AD61</color>
    <color name="op_button_long_press_accent">#000000</color>
 
