@@ -56,8 +56,8 @@ public class AnimatedHoldButton extends SecondaryTextButton {
 
 	@Override
 	protected void findSecondaryTextCoordinates(){
-		mSecXCoord = mButtonWidth - mSecTextWidth - mSecAdditionalXOffset;
-		mSecYCoord = 0 + mSecTextHeight + mSecAdditionalYOffset;
+		mSecXCord = mButtonWidth - mSecTextWidth - mSecAdditionalXOffset;
+		mSecYCord = 0 + mSecTextHeight + mSecAdditionalYOffset;
 	}
 
 	/** Setup custom clicking and long clicking handlers

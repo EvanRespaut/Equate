@@ -43,8 +43,9 @@
                    android:layout_width="wrap_content"
                    android:layout_height="wrap_content"
                    android:layout_gravity="end"
+                   android:paddingRight="@dimen/ResultPrevPadding"
                    android:text="= 461,865"
-                   style="@style/ResultPreview" >
+                   style="@style/ResultPreview">
                 </TextView>
             </LinearLayout>
 
@@ -59,8 +60,7 @@
                 android:id="@+id/textDisplay"
                 android:layout_width="match_parent"
                 android:layout_height="54sp"
-                android:layout_marginRight="5dp"
-                android:layout_marginEnd="5dp"
+                android:layout_marginRight="@dimen/ResultPadding"
                 android:background="@color/app_background"
                 android:gravity="end|bottom"
                 android:inputType="textNoSuggestions"

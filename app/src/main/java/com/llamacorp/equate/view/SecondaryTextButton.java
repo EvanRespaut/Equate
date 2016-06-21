@@ -18,7 +18,7 @@ class SecondaryTextButton extends Button {
 
 	protected Paint mSecondaryPaint;
 	protected String mSecondaryText;
-   protected int mSecondayTextColor;
+   protected int mSecondaryTextColor;
 	protected float mSecondaryTextSize;
 
 	//the following are used to determine where to place the secondary text
@@ -30,25 +30,25 @@ class SecondaryTextButton extends Button {
 	protected float mSecAdditionalYOffset;
 
 	//x and y coordinates for the secondary text
-	protected float mSecXCoord;
-	protected float mSecYCoord;
+	protected float mSecXCord;
+	protected float mSecYCord;
 
 
 	public SecondaryTextButton(Context context, AttributeSet attrs) {
 		super(context, attrs);
 
-		int secTextPerc = SECONDARY_FONT_PERCENTAGE;
+		int secTextPct = SECONDARY_FONT_PERCENTAGE;
 		//grab custom resource variable
 		TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.SecondaryTextButton, 0, 0);
 		try {
 			mSecondaryText = ta.getString(R.styleable.SecondaryTextButton_secondary_text);
-			secTextPerc = ta.getInteger(R.styleable.SecondaryTextButton_secondary_text_font_size_percentage,
+			secTextPct = ta.getInteger(R.styleable.SecondaryTextButton_secondary_text_font_size_percentage,
 					SECONDARY_FONT_PERCENTAGE);
-         mSecondayTextColor = ta.getColor(R.styleable.SecondaryTextButton_secondary_text_color,
+         mSecondaryTextColor = ta.getColor(R.styleable.SecondaryTextButton_secondary_text_color,
                 getResources().getColor(R.color.button_secondary_text));
 		} finally { ta.recycle();}
 
-		mSecondaryTextSize = getPaint().getTextSize() * secTextPerc / 100f;
+		mSecondaryTextSize = getPaint().getTextSize() * secTextPct / 100f;
 
 		mSecondaryPaint = new Paint(getPaint());
 	}
@@ -100,7 +100,7 @@ class SecondaryTextButton extends Button {
 	protected void onDraw(Canvas canvas) {
 		if(mSecondaryText != null){
 			//draw the text in the upper corner
-			mSecondaryPaint.setColor(mSecondayTextColor);
+			mSecondaryPaint.setColor(mSecondaryTextColor);
 
 			mButtonHeight = getHeight(); // - getPaddingTop() - getPaddingBottom();
 			mButtonWidth = getWidth(); // - getPaddingLeft() - getPaddingRight();
@@ -115,8 +115,8 @@ class SecondaryTextButton extends Button {
 
 			findSecondaryTextCoordinates();
 
-			canvas.drawText(mSecondaryText, 0, mSecondaryText.length(), 
-					mSecXCoord, mSecYCoord, mSecondaryPaint);
+			canvas.drawText(mSecondaryText, 0, mSecondaryText.length(),
+					  mSecXCord, mSecYCord, mSecondaryPaint);
 		}
 		
 		drawMainText(canvas);
@@ -141,8 +141,8 @@ class SecondaryTextButton extends Button {
 	/** Calculate where to put secondary text
 	 * This method should get overridden to change text location */
 	protected void findSecondaryTextCoordinates(){
-		mSecXCoord = mButtonWidth - mSecTextWidth - mSecAdditionalXOffset;
-		mSecYCoord = mButtonHeight - 0 - mSecAdditionalYOffset;
+		mSecXCord = mButtonWidth - mSecTextWidth - mSecAdditionalXOffset;
+		mSecYCord = mButtonHeight - 0 - mSecAdditionalYOffset;
 	}
 }
 
