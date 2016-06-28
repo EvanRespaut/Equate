@@ -1,6 +1,8 @@
 package com.llamacorp.equate.view;
 
 import android.app.AlertDialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Configuration;
@@ -84,6 +86,28 @@ public class CalcActivity  extends FragmentActivity
 		mResultPreview = (TextView)findViewById(R.id.resultPreview);
 		mDisplay.setCalc(mCalc);
 		mDisplay.disableSoftInputFromAppearing();
+
+		mDisplay.disableSoftInputFromAppearing();
+
+		mResultPreview.setOnClickListener(new View.OnClickListener(){
+			@Override
+			public void onClick(View v){
+				numButtonPressed("=");
+			}
+		});
+
+		mResultPreview.setOnLongClickListener(new View.OnLongClickListener() {
+			@Override
+			public boolean onLongClick(View v){
+				CharSequence copiedText = mResultPreview.getText();
+
+				ClipboardManager clipboard = (ClipboardManager) mAppContext.getSystemService(Context.CLIPBOARD_SERVICE);
+				clipboard.setPrimaryClip(ClipData.newPlainText(null, copiedText));
+
+				ViewUtils.toast("Copied: \"" + copiedText + "\"", mAppContext);
+				return true;
+			}
+		});
 
 		//keyboard hiding wasn't working on Samsung device, brute force instead
 		mDisplay.setOnClickListener(new View.OnClickListener() {

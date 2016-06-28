@@ -42,8 +42,11 @@ public class Preview {
 
    public Spanned getText(int suffixColor) {
       String suffix = "";
-      if(mNumFormat == Expression.NumFormat.ENGINEERING)
-         suffix = "[" + SISuffixHelper.getSuffixName(mText) + "]";
+      if(mNumFormat == Expression.NumFormat.ENGINEERING){
+         String suffixText = SISuffixHelper.getSuffixName(mText);
+         if(!suffixText.isEmpty())
+            suffix = "[" + SISuffixHelper.getSuffixName(mText) + "]";
+      }
 
       return Html.fromHtml("= " + mText + " <font color=" + suffixColor
               + ">" + suffix + "</font>");

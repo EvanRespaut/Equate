@@ -309,12 +309,12 @@ public class EditTextDisplay extends EditText {
 	/** Try to paste the current clipboard text into this EditText */
 	private void onTextPaste(){
 		String textToPaste;
-		ClipboardManager clipboard =  (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE); 
+		ClipboardManager clipboard =  (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
 		ClipData clip = clipboard.getPrimaryClip();
 		textToPaste = clip.getItemAt(0).coerceToText(getContext()).toString();
 		Toast.makeText(mContext, "Pasted: \"" + textToPaste + "\"", Toast.LENGTH_SHORT).show();
 		mCalc.pasteIntoExpression(textToPaste);
-	}	
+	}
 
 
 

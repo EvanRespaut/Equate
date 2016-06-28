@@ -1,5 +1,4 @@
 ------------------ToDo Next--------------------
-- Instant result doesn't look good for 1-2 digits
 - Instant result functionality:
 	- Tap equals with just a number to put sci note in the insta result box
 	- I don't think there's a need to load these into the result history
