@@ -1,4 +1,8 @@
 ------------------ToDo Next--------------------
+- Make answer result field have a min size. It got squished with "50+6*40+2*35+6*10+20+3*30+50+2*50+25+30"
+- add llama to all conversations
+- add kegs
+- Custom units
 - Instant result functionality:
 	- Tap equals with just a number to put sci note in the insta result box
 	- I don't think there's a need to load these into the result history
@@ -7,7 +11,7 @@
 		in result (fast)
 - bug when you scroll up to the top of the result list and close app, sometimes crashes
 	with "Fragment s not currently in the FragmentManager"
-- tap ( then long press ) for crash
+- Add bit/byte etc
 - Tap * again to get ^
 - Tap preview copy's to clipboard; hold press...has options to disable it? idk
 - Double tap on the 15 of 15E-19 should just select 15 (not 15E) and double tapping on -19 should grab the - sign and not just 19
