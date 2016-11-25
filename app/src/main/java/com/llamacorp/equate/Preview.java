@@ -7,17 +7,17 @@ import android.text.Spanned;
  * Class used to store and operate on the result preview shows the user the
  * temporarily solved expression
  */
-public class Preview {
+class Preview {
    private String mText;
    private Solver mSolver;
    private Expression.NumFormat mNumFormat;
 
-   public Preview(){
+   private Preview(){
       mText = "";
       mNumFormat = Expression.NumFormat.NORMAL;
    }
 
-   public Preview(Solver solver) {
+   Preview(Solver solver) {
       this();
       mSolver = solver;
    }
@@ -28,15 +28,15 @@ public class Preview {
       //engineering boolean determines if we put the preview into engineering
       //sci notation, which later gets an SI suffix
       boolean engineering = false;
-      if(numFormat == Expression.NumFormat.ENGINEERING) engineering = true;
-      Result res = mSolver.solve(expr, engineering);
+      //if(numFormat == Expression.NumFormat.ENGINEERING) engineering = true;
+      Result res = mSolver.solve(expr, numFormat);
       if(res == null)
          setText("");
       else
          setText(res.getTextAnswer());
    }
 
-   public boolean isEmpty(){
+   boolean isEmpty(){
       return mText.isEmpty();
    }
 

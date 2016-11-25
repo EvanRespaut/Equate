@@ -280,14 +280,19 @@ public class Calculator{
 					resultFlags.createDiffUnitDialog = true;
 					return resultFlags;
 				}
-				// Display sci/engineering notation if expression valid
-				Result res = mSolver.tryToggleSciNote(mExpression, false);
-				if (res != null){
-					setSolved(true);
-					loadResultToArray(res);
+				// Display sci/engineering notation if expression is just a number
+				//Result res = mSolver.tryToggleSciNote(mExpression, false);
+				if(mExpression.isOnlyValidNumber()) {
+					if(mExpression.isSciNotation())
+						mPreview.set(mExpression, Expression.NumFormat.PLAIN);
+					else
+						mPreview.set(mExpression, Expression.NumFormat.SCINOTE);
+					setSolved(false);
+					return resultFlags;
+					//loadResultToArray(res);
 				} else {
 					//solve expression, load into result list if answer not empty
-					solveAndLoadIntoResultList(false);
+					solveAndLoadIntoResultList();
 				}
 				resultFlags.performedSolve = isSolved();
 				return resultFlags;
@@ -321,7 +326,7 @@ public class Calculator{
 
 				//used when inverter key used after expression is solved
 				if (requestSolve){
-					solveAndLoadIntoResultList(false);
+					solveAndLoadIntoResultList();
 					resultFlags.performedSolve = isSolved();
 					return resultFlags;
 				}
@@ -348,7 +353,7 @@ public class Calculator{
 		if(isExpressionEmpty())
 			parseKeyPressed("1");
 		//first solve the function
-		boolean solveSuccess = solveAndLoadIntoResultList(false);
+		boolean solveSuccess = solveAndLoadIntoResultList();
 		//if there solve failed because there was nothing to solve, just leave (this way result list isn't loaded)
 		if (!solveSuccess)
 			return;
@@ -375,9 +380,9 @@ public class Calculator{
 	 * Called by calculator for solving current expression
 	 * @return if solved expression
 	 */
-	private boolean solveAndLoadIntoResultList(boolean useEngineering){
+	private boolean solveAndLoadIntoResultList(){
 		//the answer will be loaded into mExpression directly
-		Result result = mSolver.solve(mExpression, useEngineering);
+		Result result = mSolver.solve(mExpression, Expression.NumFormat.NORMAL);
       return loadResultToArray(result);
 	}
 

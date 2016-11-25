@@ -18,30 +18,31 @@ public class Solver {
 	private MathContext mMcOperate;
 	
 	
-	public Solver(int solvePrecision){
+	Solver(int solvePrecision){
 		if(solvePrecision>0)
 			mMcOperate = new MathContext(solvePrecision);
 	}
 
 
-   public Result tryToggleSciNote(Expression exp, boolean forceEngineering){
-      if(exp.isInvalid() || exp.isEmpty() || exp.containsOps()
-              || exp.containsParens())
+   Result tryToggleSciNote(Expression exp, boolean forceEngineering){
+		//only proceed if only a number is in the expression
+      if(exp.isOnlyValidNumber())
          return null;
 
-      String cleanedQuery = exp.toString();
+		//get and save query before operating on it
+      String query = exp.toString();
 
       //if we want engineering, just convert regardless if we have E already
       if(forceEngineering){
 			exp.roundAndCleanExpression(Expression.NumFormat.ENGINEERING);
 		}
-         //determine if we are are in sci notation already
-      else if(exp.toString().matches(".*E.*"))
+		//determine if we are are in sci notation already
+      else if(exp.isSciNotation())
          exp.roundAndCleanExpression(Expression.NumFormat.PLAIN);
       else
          exp.roundAndCleanExpression(Expression.NumFormat.SCINOTE);
 
-      return new Result(cleanedQuery, exp.toString());
+      return new Result(query, exp.toString());
    }
 
 
@@ -53,7 +54,7 @@ public class Solver {
 	 * @param exp is the Expression to solve
 	 * @return the expression before conversion (potentially used for result list)
 	 */	
-	public Result solve(Expression exp, boolean useEngineering){
+	Result solve(Expression exp, Expression.NumFormat numFormat){
 		//clean off any dangling operators and E's (not parentheses!!)
 		exp.cleanDanglingOps();
 
@@ -85,7 +86,7 @@ public class Solver {
 		//save solved expression away
 		exp.replaceExpression(strExp);
 
-		roundAndClean(exp, useEngineering);
+		roundAndClean(exp, numFormat);
 		
 		//flag used to tell backspace and numbers to clear the expression when pressed
 		exp.setSolved(true);
@@ -99,11 +100,11 @@ public class Solver {
 	 * @param fromUnit is unit being converted from
 	 * @param toUnit is unit being converted to
 	 */		
-	public void convertFromTo(Unit fromUnit, Unit toUnit, Expression exp){
+	void convertFromTo(Unit fromUnit, Unit toUnit, Expression exp){
 		String toSolve = fromUnit.convertTo(toUnit, exp.getPreciseResult());
 		exp.replaceExpression(toSolve);
 
-		solve(exp, false);
+		solve(exp, Expression.NumFormat.NORMAL);
 	}
 
 	/**
@@ -222,13 +223,10 @@ public class Solver {
 		return str;
 	}
 
-	private void roundAndClean(Expression exp, boolean useEngineering){
+	private void roundAndClean(Expression exp, Expression.NumFormat numFormat){
 		//rounding operation may throw NumberFormatException
 		try{
-         if(useEngineering)
-            exp.roundAndCleanExpression(Expression.NumFormat.ENGINEERING);
-         else
-            exp.roundAndCleanExpression(Expression.NumFormat.NORMAL);
+            exp.roundAndCleanExpression(numFormat);
 		}
 		catch (NumberFormatException e){
 			exp.replaceExpression(strSyntaxError);

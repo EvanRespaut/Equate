@@ -574,6 +574,11 @@ public class Expression {
 		return isEmpty(getExpression());
 	}
 
+	/** determine if we are are in sci notation already */
+	public boolean isSciNotation(){
+		return toString().matches(".*E.*");
+	}
+
 	/** Returns if input parameter expression is empty */
 	public static boolean isEmpty(String str){
 		return str.equals("");
@@ -589,6 +594,13 @@ public class Expression {
 	public boolean isInvalid(){
 		return isInvalid(getExpression());
 	}
+
+
+	/** Returns if expression just contains a valid number */
+	public boolean isOnlyValidNumber(){
+		return !(isInvalid() || isEmpty() || containsOps() || containsParens());
+	}
+
 
 	/**
 	 * Tell whether or not this expression contains operators
