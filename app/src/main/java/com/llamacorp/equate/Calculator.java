@@ -284,9 +284,11 @@ public class Calculator{
 				//Result res = mSolver.tryToggleSciNote(mExpression, false);
 				if(mExpression.isOnlyValidNumber()) {
 					if(mExpression.isSciNotation())
-						mPreview.set(mExpression, Expression.NumFormat.PLAIN);
+						//mPreview.set(mExpression, Expression.NumFormat.PLAIN);
+						mExpression.roundAndCleanExpression(Expression.NumFormat.PLAIN);
 					else
-						mPreview.set(mExpression, Expression.NumFormat.SCINOTE);
+						//mPreview.set(mExpression, Expression.NumFormat.SCINOTE);
+						mExpression.roundAndCleanExpression(Expression.NumFormat.SCINOTE);
 					setSolved(false);
 					return resultFlags;
 					//loadResultToArray(res);

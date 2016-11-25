@@ -42,8 +42,9 @@ public class SISuffixHelper {
     * @return SI unit name (for 2E9 return giga, for 1E-12 pico)
     */
    public static String getSuffixName(String number) {
-      //if we have more that one E for some reason, leave
-      if(number.matches(".*E.*E.*")) return "";
+      //if we have more that one E for some reason, OR
+      //if there is no E in the expression, leave
+      if(number.matches(".*E.*E.*") || !number.contains("E")) return "";
 
       String result = mSISuffixMap.get(number.substring(number.indexOf("E")));
 
