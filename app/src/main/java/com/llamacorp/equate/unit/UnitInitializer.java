@@ -143,10 +143,10 @@ public class UnitInitializer {
 		unitsOfVolume.addUnit(new UnitScalar("mL", "Milliliters", 1E6)); 
 		unitsOfVolume.addUnit(new UnitScalar("L", "Liters", 1000));
 
-		unitsOfVolume.addUnit(new UnitScalar("cL", "Centiliter", 1E5));
+		unitsOfVolume.addUnit(new UnitScalar("cL", "Centiliters", 1E5));
 		unitsOfVolume.addUnit(new UnitScalar("dL", "Deciliters", 1E4));
 		unitsOfVolume.addUnit(new UnitScalar("gal uk", "Gallons (UK)", 1000/4.54609));//exact: 4.54609L/gal uk
-		unitsOfVolume.addUnit(new UnitScalar("qt uk", "Quart (UK)", 1000/1.1365225));//exact: gal uk/4
+		unitsOfVolume.addUnit(new UnitScalar("qt uk", "Quarts (UK)", 1000/1.1365225));//exact: gal uk/4
 		unitsOfVolume.addUnit(new UnitScalar("pt uk", "Pints (UK)", 1000/0.56826125));//exact: gal uk/8
 		unitsOfVolume.addUnit(new UnitScalar("fl oz uk", "Fluid Ounces (UK)", 1000/0.0284130625));//exact: gal uk/160
 		unitsOfVolume.addUnit(new UnitScalar("shot", "Shots (US)", 1/0.00004436029434375));//exact for 1.5 fl oz
@@ -173,6 +173,22 @@ public class UnitInitializer {
 		unitsOfSpeed.addUnit(new UnitScalar("m/s", "Meters per Second", 1));
 		unitsOfSpeed.addUnit(new UnitScalar("kph", "Kilometers per Hour", 3.6));
 		unitTypeArray.add(unitsOfSpeed);
+
+
+		UnitType unitsOfTime = new UnitType("Time");
+		unitsOfTime.addUnit(new UnitScalar("sec","Seconds", 1));
+		unitsOfTime.addUnit(new UnitScalar("min","Minutes", 1/60.0));
+		unitsOfTime.addUnit(new UnitScalar("hour","Hours", 1/3600.0));
+		unitsOfTime.addUnit(new UnitScalar("day","Days", 1/86400.0));
+		unitsOfTime.addUnit(new UnitScalar("week","Weeks", 1/604800.0));
+
+		unitsOfTime.addUnit(new UnitScalar("mo","Months", 1/2629743.84)); //Exact - average month -- below divided by 12
+		unitsOfTime.addUnit(new UnitScalar("year","Years", 1/31556926.08)); //Exact - Nasa says 365.2422 days per year avg
+		unitsOfTime.addUnit(new UnitScalar("ms", "Milliseconds", 1000));
+		unitsOfTime.addUnit(new UnitScalar("\u00B5s", "Microseconds", 1E6));
+		unitsOfTime.addUnit(new UnitScalar("ns", "Nanoseconds", 1E9));
+
+		unitTypeArray.add(unitsOfTime);
 
 
 		UnitType unitsOfFuel = new UnitType("Fuel Eco");
@@ -227,13 +243,13 @@ public class UnitInitializer {
 		UnitType unitsOfForce = new UnitType("Force");
 		unitsOfForce.addUnit(new UnitScalar());
 		unitsOfForce.addUnit(new UnitScalar());
-		unitsOfForce.addUnit(new UnitScalar("dyn", "Dyne", 1E5)); 
+		unitsOfForce.addUnit(new UnitScalar("dyn", "Dynes", 1E5));
 		unitsOfForce.addUnit(new UnitScalar("kgf", "Kilogram-Force", 1/9.80665)); //exact
-		unitsOfForce.addUnit(new UnitScalar("N", "Newton", 1)); 
+		unitsOfForce.addUnit(new UnitScalar("N", "Newtons", 1));
 
 		unitsOfForce.addUnit(new UnitScalar());
 		unitsOfForce.addUnit(new UnitScalar());
-		unitsOfForce.addUnit(new UnitScalar("pdl", "Poundal", 1/0.138254954376)); //exact
+		unitsOfForce.addUnit(new UnitScalar("pdl", "Poundals", 1/0.138254954376)); //exact
 		unitsOfForce.addUnit(new UnitScalar("lbf", "Pound-Force", 1/4.4482216152605)); //exact
 		unitsOfForce.addUnit(new UnitScalar("ozf", "Ounce-Force", 16/4.4482216152605));  //exact
 		unitTypeArray.add(unitsOfForce);
