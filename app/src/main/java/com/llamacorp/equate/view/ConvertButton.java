@@ -104,7 +104,7 @@ public class ConvertButton extends SecondaryTextButton {
 	 */
 	@Override
 	protected void drawMainText(Canvas canvas){
-		String text = (String) getText();
+		String text = getText().toString();
 		if(text.contains("/")){
 
 			getPaint().setColor(getCurrentTextColor());

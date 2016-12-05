@@ -1,8 +1,10 @@
 ------------------ToDo Next--------------------
+- Make long press C open dialog asking for clear history
 - Add 0.1 to 12,345,678 yields 12,345,678. -> this isn't a bug, we just have 8 sig figs. might want to increase this though? or go sci not one digit earlier
 - add llama to all conversations
 - add kegs
 - Custom units
+- Add Ethereum currency?
 - Instant result functionality:
 	- Hold on instant result field to open dialog to disable feature
 	- Animate a shrink in size and fade to gray, make box not visible, then fade 

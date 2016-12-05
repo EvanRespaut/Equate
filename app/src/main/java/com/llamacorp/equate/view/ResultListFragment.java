@@ -210,6 +210,8 @@ public class ResultListFragment extends ListFragment {
 			getListView().post(new Runnable() {
 		        @Override
 		        public void run() {
+					  		//attempt to fix bug:
+					  		if(getListAdapter() == null) return;
                      getListView().setSelection(getListAdapter().getCount()-1);
                  }
 		    });
