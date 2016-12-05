@@ -421,6 +421,7 @@ public class CalcActivity  extends FragmentActivity
 
 		TabPageIndicator unitTypePageIndicator = (TabPageIndicator)findViewById(R.id.titles);
 		unitTypePageIndicator.setViewPager(mUnitTypeViewPager);
+		unitTypePageIndicator.setVisibility(View.VISIBLE);
 
 		//need to tell calc when a new UnitType page is selected
 		unitTypePageIndicator.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {

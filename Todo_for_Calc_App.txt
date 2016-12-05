@@ -1,11 +1,9 @@
 ------------------ToDo Next--------------------
-- Make answer result field have a min size. It got squished with "50+6*40+2*35+6*10+20+3*30+50+2*50+25+30"
+- Add 0.1 to 12,345,678 yields 12,345,678. -> this isn't a bug, we just have 8 sig figs. might want to increase this though? or go sci not one digit earlier
 - add llama to all conversations
 - add kegs
 - Custom units
 - Instant result functionality:
-	- Tap equals with just a number to put sci note in the insta result box
-	- I don't think there's a need to load these into the result history
 	- Hold on instant result field to open dialog to disable feature
 	- Animate a shrink in size and fade to gray, make box not visible, then fade 
 		in result (fast)

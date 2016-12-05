@@ -24,8 +24,8 @@ public class ResultListFragment extends ListFragment {
 
 	// Container Activity must implement this interface
 	public interface OnResultSelectedListener {
-		public void updateScreen(boolean updateResult);
-		public void selectUnitAtUnitArrayPos(int unitPos, int unitTypePos);
+		void updateScreen(boolean updateResult);
+		void selectUnitAtUnitArrayPos(int unitPos, int unitTypePos);
 	}
 
 	@Override
@@ -51,7 +51,7 @@ public class ResultListFragment extends ListFragment {
 
 
 	private class ResultAdapter extends ArrayAdapter<Result> {
-		public ResultAdapter(List<Result> prevTest){
+		ResultAdapter(List<Result> prevTest){
 			super(getActivity(), 0, prevTest);
 		}
 
@@ -71,7 +71,7 @@ public class ResultListFragment extends ListFragment {
 			TextView textViewUnitTimestamp = (TextView)convertView.
 					findViewById(R.id.list_item_result_currencyTimestamp);
 			textViewUnitTimestamp.setVisibility(View.GONE);
-			if(result.containsUnits()){
+			if(result != null && result.containsUnits()){
 				String text = getResources().getString(R.string.word_Converting) +
 						" " + result.getQueryUnitTextLong() +
 						" " + getResources().getString(R.string.word_to) +

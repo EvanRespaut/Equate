@@ -30,7 +30,8 @@
             android:id="@+id/list_item_result_textPrevAnswer"
             style="@style/ResultText"
             android:gravity="right"
-            android:paddingLeft="15dp" >
+            android:paddingLeft="15dp"
+            android:minEms="6">
         </TextView>
 		
         <TextView

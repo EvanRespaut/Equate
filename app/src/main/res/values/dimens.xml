@@ -12,6 +12,6 @@
     <dimen name="ResultPrevPadding">2dp</dimen>
     <dimen name="ResultPadding">9dp</dimen>
 
-    <dimen name="CalcButtonMargin">.5dp</dimen>
+    <dimen name="CalcButtonMargin">0.5dp</dimen>
 
 </resources>
