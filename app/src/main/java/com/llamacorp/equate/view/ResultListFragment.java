@@ -1,7 +1,5 @@
 package com.llamacorp.equate.view;
 
-import java.util.List;
-
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
@@ -14,8 +12,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.llamacorp.equate.Calculator;
-import com.llamacorp.equate.Result;
 import com.llamacorp.equate.R;
+import com.llamacorp.equate.Result;
+
+import java.util.List;
 
 public class ResultListFragment extends ListFragment {
 	//this is for communication with the parent activity
@@ -66,7 +66,7 @@ public class ResultListFragment extends ListFragment {
 			// Configure the view for this result
 			Result result = getItem(position);
 
-			TextView textViewUnitDesc = (TextView)convertView.
+			DynamicTextView textViewUnitDesc = (DynamicTextView)convertView.
 					findViewById(R.id.list_item_result_convertUnitDesc);
 			TextView textViewUnitTimestamp = (TextView)convertView.
 					findViewById(R.id.list_item_result_currencyTimestamp);

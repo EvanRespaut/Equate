@@ -1,54 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/list_item_result_convertUnitDesc"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingLeft="3dp"
-        android:gravity="left"
-        android:textSize="18sp" />
+   <com.llamacorp.equate.view.DynamicTextView
+      android:id="@+id/list_item_result_convertUnitDesc"
+      xmlns:customNS="http://schemas.android.com/apk/res/com.llamacorp.equate"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:gravity="left"
+      android:paddingLeft="3dp"
+      android:paddingRight="3dp"
+      android:textSize="18sp"
+      customNS:minimumTextSize="12sp"/>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal"
-        android:paddingLeft="@dimen/ResultHistPadding"
-        android:paddingRight="@dimen/ResultHistPadding">
+   <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:orientation="horizontal"
+      android:paddingLeft="@dimen/ResultHistPadding"
+      android:paddingRight="@dimen/ResultHistPadding">
 
-        <TextView
-            android:id="@+id/list_item_result_textPrevQuery"
-            style="@style/ResultText"
-            android:gravity="left"
-            android:paddingRight="15dp" >
-        </TextView>
+      <TextView
+         android:id="@+id/list_item_result_textPrevQuery"
+         style="@style/ResultText"
+         android:gravity="left"
+         android:paddingRight="15dp">
+      </TextView>
 
-        <TextView
-            android:id="@+id/list_item_result_textPrevAnswer"
-            style="@style/ResultText"
-            android:gravity="right"
-            android:paddingLeft="15dp"
-            android:minEms="6">
-        </TextView>
-		
-        <TextView
-            android:id="@+id/list_item_result_currencyTimestamp"
-            style="@style/ResultText"
-            android:gravity="right"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
-			   android:layout_weight="0"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:background="@drawable/result_textview"
-			   android:textColor="@color/prev_result_text_timestamp"
-			   android:textSize="14sp"
-            android:text="[3:26 pm]"
-			>
-        </TextView>		
-    </LinearLayout>
+      <TextView
+         android:id="@+id/list_item_result_textPrevAnswer"
+         style="@style/ResultText"
+         android:gravity="right"
+         android:minEms="6"
+         android:paddingLeft="15dp">
+      </TextView>
+
+      <TextView
+         android:id="@+id/list_item_result_currencyTimestamp"
+         style="@style/ResultText"
+         android:layout_width="wrap_content"
+         android:layout_height="match_parent"
+         android:layout_weight="0"
+         android:background="@drawable/result_textview"
+         android:gravity="right"
+         android:paddingLeft="5dp"
+         android:paddingRight="5dp"
+         android:text="[3:26 pm]"
+         android:textColor="@color/prev_result_text_timestamp"
+         android:textSize="14sp"
+         >
+      </TextView>
+   </LinearLayout>
 
 </LinearLayout>

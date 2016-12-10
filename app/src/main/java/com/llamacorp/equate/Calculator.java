@@ -90,7 +90,7 @@ public class Calculator{
 		mResultList = new ArrayList<>();
 		mExpression = new Expression(intDisplayPrecision);
 		//set the unit type to length by default
-		mUnitTypePos=UNIT_TYPE_DEFAULT_POS;
+		mUnitTypePos = UNIT_TYPE_DEFAULT_POS;
 		mPreferences = new Preferences();
 
 		//load the calculating precision

@@ -21,7 +21,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.llamacorp.equate.Calculator;
 import com.llamacorp.equate.R;
@@ -36,7 +35,7 @@ public class CalcActivity  extends FragmentActivity
 	private ResultListFragment mResultListFrag;	//scroll-able history
 	private EditTextDisplay mDisplay;  		//main display
 	private ViewPager mUnitTypeViewPager;			//controls and displays UnitType
-	private TextView mResultPreview;	//Result preview
+	private DynamicTextView mResultPreview;	//Result preview
 
 	private Button mEqualsButton; //used for changing color
 
@@ -83,11 +82,14 @@ public class CalcActivity  extends FragmentActivity
 
 		//main result display
 		mDisplay = (EditTextDisplay)findViewById(R.id.textDisplay);
-		mResultPreview = (TextView)findViewById(R.id.resultPreview);
+		mResultPreview = (DynamicTextView)findViewById(R.id.resultPreview);
 		mDisplay.setCalc(mCalc);
 		mDisplay.disableSoftInputFromAppearing();
 
 		mDisplay.disableSoftInputFromAppearing();
+
+		//we don't want the text view to go to two lines ever. this fixes that
+		mResultPreview.setHorizontallyScrolling(true);
 
 		mResultPreview.setOnClickListener(new View.OnClickListener(){
 			@Override

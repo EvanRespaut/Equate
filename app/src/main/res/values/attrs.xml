@@ -11,7 +11,7 @@
       <attr name="pressed_color" format="color" />
    </declare-styleable>
 
-   <declare-styleable name="EditTextDisplay">
+   <declare-styleable name="DynamicText">
       <attr name="minimumTextSize" format="dimension" />
    </declare-styleable>
 </resources>

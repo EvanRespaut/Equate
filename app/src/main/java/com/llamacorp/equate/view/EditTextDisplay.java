@@ -69,9 +69,9 @@ public class EditTextDisplay extends EditText {
 		mSepHandler = new ExpSeparatorHandler();
 
 		//grab custom resource variable
-		TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.EditTextDisplay, 0, 0);
+		TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.DynamicText, 0, 0);
 		try {
-			mMinTextSize = ta.getDimension(R.styleable.EditTextDisplay_minimumTextSize,
+			mMinTextSize = ta.getDimension(R.styleable.DynamicText_minimumTextSize,
 					getTextSize());
 		} finally {	ta.recycle();}
 	}
