@@ -68,11 +68,11 @@ public class UnitInitializer {
 
 
 		UnitType unitsOfWeight = new UnitType("Weight");
-		unitsOfWeight.addUnit(new UnitScalar("oz", "Ounces", 1/0.0283495));
-		unitsOfWeight.addUnit(new UnitScalar("lb", "Pounds", 1/0.453592));
-		unitsOfWeight.addUnit(new UnitScalar("ton us", "Short Tons", 1/907.184));
-		unitsOfWeight.addUnit(new UnitScalar("ton uk", "Long Tons", 1/1016.04608));
-		unitsOfWeight.addUnit(new UnitScalar("st", "Stones", 1/6.350288));
+		unitsOfWeight.addUnit(new UnitScalar("oz", "Ounces", 1/0.028349523125)); //exact
+		unitsOfWeight.addUnit(new UnitScalar("lb", "Pounds", 1/0.45359237)); //exact
+		unitsOfWeight.addUnit(new UnitScalar("ton US", "Short Tons", 1/907.18474)); //exact
+		unitsOfWeight.addUnit(new UnitScalar("ton UK", "Long Tons", 1/1016.0469088)); //exact
+		unitsOfWeight.addUnit(new UnitScalar("st", "Stones", 1/6.35029318)); //exact
 
 		unitsOfWeight.addUnit(new UnitScalar("\u00B5g", "Micrograms", 1/1e-9));
 		unitsOfWeight.addUnit(new UnitScalar("mg", "Milligrams", 1/1e-6));
@@ -145,10 +145,10 @@ public class UnitInitializer {
 
 		unitsOfVolume.addUnit(new UnitScalar("cL", "Centiliters", 1E5));
 		unitsOfVolume.addUnit(new UnitScalar("dL", "Deciliters", 1E4));
-		unitsOfVolume.addUnit(new UnitScalar("gal uk", "Gallons (UK)", 1000/4.54609));//exact: 4.54609L/gal uk
-		unitsOfVolume.addUnit(new UnitScalar("qt uk", "Quarts (UK)", 1000/1.1365225));//exact: gal uk/4
-		unitsOfVolume.addUnit(new UnitScalar("pt uk", "Pints (UK)", 1000/0.56826125));//exact: gal uk/8
-		unitsOfVolume.addUnit(new UnitScalar("fl oz uk", "Fluid Ounces (UK)", 1000/0.0284130625));//exact: gal uk/160
+		unitsOfVolume.addUnit(new UnitScalar("gal UK", "Gallons (UK)", 1000/4.54609));//exact: 4.54609L/gal uk
+		unitsOfVolume.addUnit(new UnitScalar("qt UK", "Quarts (UK)", 1000/1.1365225));//exact: gal uk/4
+		unitsOfVolume.addUnit(new UnitScalar("pt UK", "Pints (UK)", 1000/0.56826125));//exact: gal uk/8
+		unitsOfVolume.addUnit(new UnitScalar("fl oz UK", "Fluid Ounces (UK)", 1000/0.0284130625));//exact: gal uk/160
 		unitsOfVolume.addUnit(new UnitScalar("shot", "Shots (US)", 1/0.00004436029434375));//exact for 1.5 fl oz
 		unitsOfVolume.addUnit(new UnitScalar("m^3", "Cubic Meters", 1));
 		unitsOfVolume.addUnit(new UnitScalar("in\u00B3", "Cubic Inches", 1/0.000016387064));//exact: gal/231
@@ -195,8 +195,8 @@ public class UnitInitializer {
 		unitsOfFuel.addUnit(new UnitScalar());
 		unitsOfFuel.addUnit(new UnitScalar());
 		unitsOfFuel.addUnit(new UnitScalar());
-		unitsOfFuel.addUnit(new UnitScalar("mpg us", "Miles per Gallon (US)", 3.785411784/1.609344)); //exact
-		unitsOfFuel.addUnit(new UnitScalar("mpg uk", "Miles per Gallon (UK)", 4.54609/1.609344)); //exact
+		unitsOfFuel.addUnit(new UnitScalar("mpg US", "Miles per Gallon (US)", 3.785411784/1.609344)); //exact
+		unitsOfFuel.addUnit(new UnitScalar("mpg UK", "Miles per Gallon (UK)", 4.54609/1.609344)); //exact
 
 		unitsOfFuel.addUnit(new UnitScalar());
 		unitsOfFuel.addUnit(new UnitScalar());
@@ -207,17 +207,17 @@ public class UnitInitializer {
 
 
 		UnitType unitsOfPower = new UnitType("Power");
-		unitsOfPower.addUnit(new UnitScalar());
 		unitsOfPower.addUnit(new UnitScalar("MW", "Megawatts", 1E-6));
 		unitsOfPower.addUnit(new UnitScalar("kW", "Kilowatts", 1E-3));
 		unitsOfPower.addUnit(new UnitScalar("W", "Watts", 1));
-		unitsOfPower.addUnit(new UnitScalar("hp", "Horsepower", 1/745.699872)); //don't think it's exact
+		unitsOfPower.addUnit(new UnitScalar("hp", "Imperial Horsepower", 0.00134102208959503)); //exact, see below
+		unitsOfPower.addUnit(new UnitScalar("PS", "Metric Horsepower", 1/735.49875)); //exact from wiki?
 
 		unitsOfPower.addUnit(new UnitScalar());
 		unitsOfPower.addUnit(new UnitScalar("Btu/hr", "Btus/Hour", 3.412141632)); //approx
 		unitsOfPower.addUnit(new UnitScalar("Btu/min", "Btus/Minute", 0.0568690272)); //approx
-		unitsOfPower.addUnit(new UnitScalar("ft-lb/min", "Foot-Pounds/Minute", 44.2537289)); //most likely approx
-		unitsOfPower.addUnit(new UnitScalar("ft-lb/sec", "Foot-Pounds/Second", 0.73756215)); //most likely approx
+		unitsOfPower.addUnit(new UnitScalar("ft-lb/min", "Foot-Pounds/Minute", 0.737562149277265*60)); //exact, see below
+		unitsOfPower.addUnit(new UnitScalar("ft-lb/sec", "Foot-Pounds/Second", 0.737562149277265)); //exact, see below
 		unitTypeArray.add(unitsOfPower);
 
 
@@ -225,8 +225,8 @@ public class UnitInitializer {
 		unitsOfEnergy.addUnit(new UnitScalar("cal", "Calories", 0.239005736)); //approx
 		unitsOfEnergy.addUnit(new UnitScalar("kCal", "Kilocalories", 0.239005736/1E3)); //approx, but exact comp to cal
 		unitsOfEnergy.addUnit(new UnitScalar("BTU", "British Thermal Units", 0.00094781712)); //approx
-		unitsOfEnergy.addUnit(new UnitScalar("ft-lb", "Foot-pounds", 1/1.3558179483314)); //approx
-		unitsOfEnergy.addUnit(new UnitScalar("in-lb", "Inch-pounds", 12/1.3558179483314)); //approx
+		unitsOfEnergy.addUnit(new UnitScalar("ft-lb", "Foot-pounds", 0.737562149277265)); //exact - assumes g=9.80665m^2/s
+		unitsOfEnergy.addUnit(new UnitScalar("in-lb", "Inch-pounds", 12/0.737562149277265)); //exact from ft-lb
 
 		unitsOfEnergy.addUnit(new UnitScalar("kJ", "Kilojoules", 0.001));
 		unitsOfEnergy.addUnit(new UnitScalar("J", "Joules", 1));

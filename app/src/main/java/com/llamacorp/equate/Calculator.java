@@ -56,7 +56,7 @@ public class Calculator{
 	public Preferences mPreferences;
 
 	//precision for all calculations
-	public static final int intDisplayPrecision = 8;
+	public static final int intDisplayPrecision = 15;
 	public static final int intCalcPrecision = intDisplayPrecision+2;
 
 
