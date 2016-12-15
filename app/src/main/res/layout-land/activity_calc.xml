@@ -29,14 +29,19 @@
                android:layout_height="1dp"
                android:background="@color/prev_curr_exp_divider" />
 
-            <TextView
+            <com.llamacorp.equate.view.DynamicTextView
                android:id="@+id/resultPreview"
-               android:layout_width="wrap_content"
+               style="@style/ResultPreview"
+               xmlns:customNS="http://schemas.android.com/apk/res/com.llamacorp.equate"
+               android:layout_width="match_parent"
                android:layout_height="wrap_content"
                android:layout_gravity="end"
-               android:text="= 461,865"
-               style="@style/ResultPreview" >
-            </TextView>
+               android:paddingRight="@dimen/ResultPrevPadding"
+               android:paddingLeft="@dimen/ResultPrevPadding"
+               android:gravity="end"
+               android:scrollHorizontally="true"
+               customNS:minimumTextSize="15sp">
+            </com.llamacorp.equate.view.DynamicTextView>
         </LinearLayout>
 
         <View

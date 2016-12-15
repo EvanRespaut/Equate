@@ -282,6 +282,15 @@ public class Calculator{
 				}
 				// Display sci/engineering notation if expression is just a number
 				//Result res = mSolver.tryToggleSciNote(mExpression, false);
+					//solve expression, load into result list if answer not empty
+					solveAndLoadIntoResultList();
+
+				resultFlags.performedSolve = isSolved();
+				return resultFlags;
+			//check for long hold equals key
+			case "g":
+				mPreview.set(new Expression(mExpression),
+						  Expression.NumFormat.ENGINEERING);
 				if(mExpression.isOnlyValidNumber()) {
 					if(mExpression.isSciNotation())
 						//mPreview.set(mExpression, Expression.NumFormat.PLAIN);
@@ -290,18 +299,7 @@ public class Calculator{
 						//mPreview.set(mExpression, Expression.NumFormat.SCINOTE);
 						mExpression.roundAndCleanExpression(Expression.NumFormat.SCINOTE);
 					setSolved(false);
-					return resultFlags;
-					//loadResultToArray(res);
-				} else {
-					//solve expression, load into result list if answer not empty
-					solveAndLoadIntoResultList();
 				}
-				resultFlags.performedSolve = isSolved();
-				return resultFlags;
-			//check for long hold equals key
-			case "g":
-				mPreview.set(new Expression(mExpression),
-						  Expression.NumFormat.ENGINEERING);
 				return resultFlags;
 			//check for backspace key
 			case "b":
