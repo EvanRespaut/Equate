@@ -194,6 +194,9 @@ public class Expression {
 		}
 		//if there's already an operator, replace it with the new operator, except for -, let that stack up
 		else if (sKey.matches(regexInvalidStartChar) && expressionToSelection().matches(".*" + regexAnyOpExceptPercent + "$")){
+			//if * is already there, swap operator fo ^
+			if (sKey.equals("*") && expressionToSelection().matches(".*" + "[*]" + "$"))
+				sKey = "^";
 			//if we have something highlighted, delete it first
 			if (getSelectionEnd() > getSelectionStart()) backspaceAtSelection();
 			backspaceAtSelection();
