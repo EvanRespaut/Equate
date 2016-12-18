@@ -24,8 +24,8 @@ public class UnitCurrency extends Unit {
 
 	private Date mTimeLastUpdated;
 	//	private String mURLPrefix = "http://rate-exchange.appspot.com/currency?from=USD&to=";
-	private String mURLPrefix = "http://rate-exchange.herokuapp.com/fetchRate?from=" 
-			+ DEFAULT_CURRENCY + "&to=";
+	private String mURLPrefix = "http://rate-exchange.herokuapp.com/fetchRate?from="
+			  + DEFAULT_CURRENCY + "&to=";
 
 	//this is for communication with fragment hosting convert keys
 //	OnConvertKeyUpdateFinishedListener mCallback;
@@ -38,28 +38,32 @@ public class UnitCurrency extends Unit {
 	//used to tell parent classes if the asyncRefresh is currently running
 	private boolean mUpdating = false;
 
-	public UnitCurrency(String name, String longName, double value){
+	public UnitCurrency(String name, String longName, double value) {
 		super(name, longName, value);
-      //Note that Jan = 0 in the Gregorian Calendar constructor below
-		mTimeLastUpdated = new GregorianCalendar(2015,3,1,1,11).getTime();
+		//Note that Jan = 0 in the Gregorian Calendar constructor below
+		mTimeLastUpdated = new GregorianCalendar(2015, 3, 1, 1, 11).getTime();
 	}
 
-	public UnitCurrency(String name, String longName, double value, String URL){
+	public UnitCurrency(String name, String longName, double value, String URL) {
 		this(name, longName, value);
 		mURLPrefix = URL;
-	}	
-
-	/** Load in the update time */
-   @Override
-	public boolean loadJSON(JSONObject json) throws JSONException {
-		boolean success = super.loadJSON(json);
-      //only load in the time if the JSON object matches this UNIT
-		if(success)
-			setUpdateTime(new Date(json.getLong(JSON_LAST_UPDATE)));
-      return success;
 	}
 
-	/** Save the update time */
+	/**
+	 * Load in the update time
+	 */
+	@Override
+	public boolean loadJSON(JSONObject json) throws JSONException {
+		boolean success = super.loadJSON(json);
+		//only load in the time if the JSON object matches this UNIT
+		if (success)
+			setUpdateTime(new Date(json.getLong(JSON_LAST_UPDATE)));
+		return success;
+	}
+
+	/**
+	 * Save the update time
+	 */
 	@Override
 	public JSONObject toJSON() throws JSONException {
 		JSONObject json = super.toJSON();
@@ -71,14 +75,14 @@ public class UnitCurrency extends Unit {
 		mTimeLastUpdated = date;
 	}
 
-	public long getTimeOfUpdate(){
-		if(mTimeLastUpdated != null)
+	public long getTimeOfUpdate() {
+		if (mTimeLastUpdated != null)
 			return mTimeLastUpdated.getTime();
 		else
 			return 0;
 	}
 
-	public boolean isUpdating(){ 
+	public boolean isUpdating() {
 		return mUpdating;
 	}
 
@@ -93,7 +97,7 @@ public class UnitCurrency extends Unit {
 	}
 
 
-	public boolean isTimeoutReached(Context c){
+	public boolean isTimeoutReached(Context c) {
 		mContext = c;
 		Date now = new Date();
 		return !(mTimeLastUpdated != null && (now.getTime() - mTimeLastUpdated.getTime())
@@ -102,14 +106,14 @@ public class UnitCurrency extends Unit {
 
 	/**
 	 * Asynchronously try to update the currency rate by fetching the
-	 * value via an HTTP JSON API call.  Note that this call will take 
+	 * value via an HTTP JSON API call.  Note that this call will take
 	 * some time to update the value, since it runs in the background.
 	 * Also note that the value may or may not even be updated, dependent
-	 * on Internet connection.  
+	 * on Internet connection.
 	 */
-	public void asyncRefresh(Context c){
-		if(getName().equals("") || getName().equals(DEFAULT_CURRENCY)) return;
-		if(mUpdating) return;
+	public void asyncRefresh(Context c) {
+		if (getName().equals("") || getName().equals(DEFAULT_CURRENCY)) return;
+		if (mUpdating) return;
 
 		mContext = c;
 
@@ -119,16 +123,16 @@ public class UnitCurrency extends Unit {
 		new HttpAsyncTask().execute(getURL());
 	}
 
-	private String getURL(){
+	private String getURL() {
 		//crude method, want something better later
-		if(getName().equals("BTC"))
+		if (getName().equals("BTC"))
 			return mURLPrefix;
 		else
 			return mURLPrefix + toString();
 	}
 
 	/**
-	 * This class is used to create a background task that handles 
+	 * This class is used to create a background task that handles
 	 * the actual HTTP getting and JSON parsing
 	 */
 	private class HttpAsyncTask extends AsyncTask<String, Void, String> {
@@ -145,18 +149,18 @@ public class UnitCurrency extends Unit {
 			boolean updateSuccess = false;
 
 			//this is crude, but works until we have more URLs each with unique formats
-			if(getName().equals("BTC"))
-				try{
+			if (getName().equals("BTC"))
+				try {
 					setValue(Double.parseDouble(result));
 					updateSuccess = true;
-				} catch (Exception e){
+				} catch (Exception e) {
 					//System.out.println("Parsing Exception for BTC, result = " + result);
 				}
 			else
 				updateSuccess = parseRateFromJSONString(result);
 
 			//record time of update only if we actually updated
-			if(updateSuccess){
+			if (updateSuccess){
 				setUpdateTime(new Date());
 			}
 
@@ -169,8 +173,8 @@ public class UnitCurrency extends Unit {
 		/**
 		 * Attempt to take a JSON string, parse it, and set the value
 		 * of this current Currency Unit
-		 */		
-		private boolean parseRateFromJSONString(String result){
+		 */
+		private boolean parseRateFromJSONString(String result) {
 			boolean updateSuccess = false;
 			try {
 				//System.out.println("Trying to parse \"" + result + "\"");
@@ -189,8 +193,10 @@ public class UnitCurrency extends Unit {
 			return updateSuccess;
 		}
 
-		/** Helper function for above method*/
-		private String GET(String url){
+		/**
+		 * Helper function for above method
+		 */
+		private String GET(String url) {
 			InputStream inputStream;
 			String result = "";
 			try {
@@ -204,7 +210,7 @@ public class UnitCurrency extends Unit {
 				inputStream = httpResponse.getEntity().getContent();
 
 				// convert inputstream to string
-				if(inputStream != null)
+				if (inputStream != null)
 					result = convertInputStreamToString(inputStream);
 				else
 					result = "Did not work!";
@@ -216,12 +222,14 @@ public class UnitCurrency extends Unit {
 			return result;
 		}
 
-		/** Helper function for above method*/
-		private String convertInputStreamToString(InputStream inputStream) throws IOException{
-			BufferedReader bufferedReader = new BufferedReader( new InputStreamReader(inputStream));
+		/**
+		 * Helper function for above method
+		 */
+		private String convertInputStreamToString(InputStream inputStream) throws IOException {
+			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
 			String line;
 			String result = "";
-			while((line = bufferedReader.readLine()) != null)
+			while ((line = bufferedReader.readLine()) != null)
 				result += line;
 
 			inputStream.close();

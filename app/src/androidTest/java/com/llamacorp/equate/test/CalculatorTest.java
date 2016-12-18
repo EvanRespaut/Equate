@@ -166,7 +166,7 @@ public class CalculatorTest extends TestCase {
 
 		//test conversion of long numbers into and out of E
 		calc.parseKeyPressed("6");
-		for(int i=0;i<Calculator.intDisplayPrecision;i++)
+		for(int i = 0; i<Calculator.DISPLAY_PRECISION; i++)
 			calc.parseKeyPressed("0");
 		calc.parseKeyPressed("=");
 		//not sure if we'll be keeping the . after the 6, both will pass for now
@@ -175,7 +175,7 @@ public class CalculatorTest extends TestCase {
 		//make sure the number one less than the precision is display as plain text
 		String tester="6";
 		calc.parseKeyPressed(tester);
-		for(int i=0;i<Calculator.intDisplayPrecision-1;i++){
+		for(int i = 0; i<Calculator.DISPLAY_PRECISION -1; i++){
 			calc.parseKeyPressed("0");
 			tester=tester+"0";
 		}

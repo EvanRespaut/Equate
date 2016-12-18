@@ -10,11 +10,11 @@ public class Preferences {
 	private String mPercentButMain; //main function of percent button
 	private String mPercentButSec; //secondary function of percent button
 
-	public Preferences(){
+	public Preferences() {
 		setPercentButMain("%");
 		setPercentButSec("EE");
 	}
-	
+
 	public Preferences(JSONObject json) throws JSONException {
 		setPercentButMain(json.getString(JSON_PERCENT_BUT_MAIN));
 		setPercentButSec(json.getString(JSON_PERCENT_BUT_SEC));

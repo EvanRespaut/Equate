@@ -1,18 +1,18 @@
 <resources>
 
-    <!-- Default screen margins, per the Android Design guidelines. -->
-    <dimen name="activity_horizontal_margin">16dp</dimen>
-    <dimen name="activity_vertical_margin">16dp</dimen>
-    <dimen name="button_ellipses_additional_offset_x">3dp</dimen>
-    <dimen name="button_ellipses_additional_offset_y">4dp</dimen>
-    <dimen name="button_secondary_text_additional_offset_x">6dp</dimen>
-    <dimen name="button_secondary_text_additional_offset_y">2dp</dimen>
+   <!-- Default screen margins, per the Android Design guidelines. -->
+   <dimen name="activity_horizontal_margin">16dp</dimen>
+   <dimen name="activity_vertical_margin">16dp</dimen>
+   <dimen name="button_ellipses_additional_offset_x">3dp</dimen>
+   <dimen name="button_ellipses_additional_offset_y">4dp</dimen>
+   <dimen name="button_secondary_text_additional_offset_x">6dp</dimen>
+   <dimen name="button_secondary_text_additional_offset_y">2dp</dimen>
 
-    <dimen name="ResultHistPadding">7dp</dimen>
-    <dimen name="ResultPrevPadding">2dp</dimen>
-    <dimen name="ResultPadding">9dp</dimen>
-    <dimen name="ResultPaddingLeft">2dp</dimen>
+   <dimen name="ResultHistPadding">7dp</dimen>
+   <dimen name="ResultPrevPadding">2dp</dimen>
+   <dimen name="ResultPadding">9dp</dimen>
+   <dimen name="ResultPaddingLeft">2dp</dimen>
 
-    <dimen name="CalcButtonMargin">0.5dp</dimen>
+   <dimen name="CalcButtonMargin">0.5dp</dimen>
 
 </resources>

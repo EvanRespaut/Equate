@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class Calculator{
+public class Calculator {
 	private static final String FILENAME = "saved_data.json";
 	private static final String JSON_RESULT_LIST = "result_list";
 	private static final String JSON_UNIT_TYPE_ARRAY = "unit_type_array";
@@ -56,39 +56,43 @@ public class Calculator{
 	public Preferences mPreferences;
 
 	//precision for all calculations
-	public static final int intDisplayPrecision = 15;
-	public static final int intCalcPrecision = intDisplayPrecision+2;
+	public static final int DISPLAY_PRECISION = 15;
+	public static final int intCalcPrecision = DISPLAY_PRECISION + 2;
 
 
 	private boolean mIsTestCalc = false;
 	private Preview mPreview;
 
 	//------THIS IS FOR TESTING ONLY-----------------
-	private Calculator(){
+	private Calculator() {
 		mResultList = new ArrayList<>();
-		mExpression=new Expression(intDisplayPrecision);
+		mExpression = new Expression(DISPLAY_PRECISION);
 		//mMcOperate = new MathContext(intCalcPrecision);
 		mSolver = new Solver(intCalcPrecision);
-		mUnitTypePos=UNIT_TYPE_DEFAULT_POS;
+		mUnitTypePos = UNIT_TYPE_DEFAULT_POS;
 		mUnitTypeArray = new ArrayList<>();
-		mIsTestCalc=true;
+		mIsTestCalc = true;
 		initiateUnits();
 		mPreferences = new Preferences();
 	}
+
 	//------THIS IS FOR TESTING ONLY-----------------
-	public static Calculator getTestCalculator(){ mCaculator=new Calculator(); return mCaculator; }
+	public static Calculator getTestCalculator() {
+		mCaculator = new Calculator();
+		return mCaculator;
+	}
 
 
 	/**
 	 * Method turns calculator class into a singleton class
 	 * (one instance allowed)
 	 */
-	private Calculator(Context appContext){
+	private Calculator(Context appContext) {
 		//save our context
 		mAppContext = appContext;
 
 		mResultList = new ArrayList<>();
-		mExpression = new Expression(intDisplayPrecision);
+		mExpression = new Expression(DISPLAY_PRECISION);
 		//set the unit type to length by default
 		mUnitTypePos = UNIT_TYPE_DEFAULT_POS;
 		mPreferences = new Preferences();
@@ -108,15 +112,14 @@ public class Calculator{
 			loadState();
 		}
 		//might be from a JSON object not existing (app update)
-		catch (JSONException JE){
+		catch (JSONException JE) {
 			//delete the problem JSON file
 			boolean del = mAppContext.deleteFile(FILENAME);
 			String message = "Calculator reset due to JSONException. JSON file "
-					+ (del ? "successfully" : "NOT") + " deleted.";
+					  + (del ? "successfully" : "NOT") + " deleted.";
 			toast(message);
 			resetCalc(); //reset the calc and we should be good
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			toast("Exception in Calculator.loadState():" + e.toString());
 		}
 	}
@@ -124,14 +127,14 @@ public class Calculator{
 	/**
 	 * Method turns calculator class into a singleton class (one instance allowed)
 	 */
-	public static Calculator getCalculator(Context c){
-		if(mCaculator == null)
+	public static Calculator getCalculator(Context c) {
+		if (mCaculator == null)
 			mCaculator = new Calculator(c.getApplicationContext());
 		return mCaculator;
 	}
 
 
-	private void toast(String msg){
+	private void toast(String msg) {
 		ViewUtils.toastLongCentered(msg, mAppContext);
 	}
 
@@ -139,11 +142,10 @@ public class Calculator{
 	/**
 	 * Helper method used to initiate the array of various types of units
 	 */
-	private void initiateUnits(){
+	private void initiateUnits() {
 		mUnitTypeArray.clear();
 		mUnitTypeArray = UnitInitializer.getDefaultUnitArray();
 	}
-
 
 
 	private void loadState() throws IOException, JSONException {
@@ -162,7 +164,7 @@ public class Calculator{
 			// parse the JSON using JSONTokener
 			JSONObject jObjState = (JSONObject) new JSONTokener(jsonString.toString()).nextValue();
 			mUnitTypePos = jObjState.getInt(JSON_UNIT_TYPE);
-			mExpression = new Expression(jObjState.getJSONObject(JSON_EXPRESSION), intDisplayPrecision);
+			mExpression = new Expression(jObjState.getJSONObject(JSON_EXPRESSION), DISPLAY_PRECISION);
 			mPreferences = new Preferences(jObjState.getJSONObject(JSON_HINTS));
 
 			JSONArray jResultArray = jObjState.getJSONArray(JSON_RESULT_LIST);
@@ -173,11 +175,11 @@ public class Calculator{
 
 			int newSize = mUnitTypeArray.size();
 			JSONArray jUnitTypeArray = jObjState.getJSONArray(JSON_UNIT_TYPE_ARRAY);
-         //if we added another UnitType, use default everything
-         //TODO idealy this should be smarter
-			if(jUnitTypeArray.length() == newSize){
-            //Load in user settings to already assembled UnitType array
-            for (int i = 0; i < jUnitTypeArray.length(); i++) {
+			//if we added another UnitType, use default everything
+			//TODO idealy this should be smarter
+			if (jUnitTypeArray.length() == newSize){
+				//Load in user settings to already assembled UnitType array
+				for (int i = 0; i < jUnitTypeArray.length(); i++) {
 					mUnitTypeArray.get(i).loadJSON(jUnitTypeArray.getJSONObject(i));
 				}
 			}
@@ -187,27 +189,27 @@ public class Calculator{
 		} finally {
 			if (reader != null)
 				reader.close();
-      }
-   }
+		}
+	}
 
-   public void saveState() throws JSONException, IOException {
-      JSONObject jObjState = new JSONObject();
-      jObjState.put(JSON_EXPRESSION, mExpression.toJSON());
-      jObjState.put(JSON_UNIT_TYPE, mUnitTypePos);
-      jObjState.put(JSON_HINTS, mPreferences.toJSON());
+	public void saveState() throws JSONException, IOException {
+		JSONObject jObjState = new JSONObject();
+		jObjState.put(JSON_EXPRESSION, mExpression.toJSON());
+		jObjState.put(JSON_UNIT_TYPE, mUnitTypePos);
+		jObjState.put(JSON_HINTS, mPreferences.toJSON());
 
-      JSONArray jResultArray = new JSONArray();
-      for (Result result : mResultList)
-         jResultArray.put(result.toJSON());
-      jObjState.put(JSON_RESULT_LIST, jResultArray);
+		JSONArray jResultArray = new JSONArray();
+		for (Result result : mResultList)
+			jResultArray.put(result.toJSON());
+		jObjState.put(JSON_RESULT_LIST, jResultArray);
 
 
-      JSONArray jUnitTypeArray = new JSONArray();
-      for (UnitType unitType : mUnitTypeArray)
-         jUnitTypeArray.put(unitType.toJSON());
-      jObjState.put(JSON_UNIT_TYPE_ARRAY, jUnitTypeArray);
+		JSONArray jUnitTypeArray = new JSONArray();
+		for (UnitType unitType : mUnitTypeArray)
+			jUnitTypeArray.put(unitType.toJSON());
+		jObjState.put(JSON_UNIT_TYPE_ARRAY, jUnitTypeArray);
 
-      // write the file to disk
+		// write the file to disk
 		Writer writer = null;
 		try {
 			OutputStream out = mAppContext.openFileOutput(FILENAME, Context.MODE_PRIVATE);
@@ -220,10 +222,12 @@ public class Calculator{
 	}
 
 
-	/** Clears the result list, expression, and unit selection */
-	public void resetCalc(){
+	/**
+	 * Clears the result list, expression, and unit selection
+	 */
+	public void resetCalc() {
 		mResultList.clear();
-		mExpression = new Expression(intDisplayPrecision);
+		mExpression = new Expression(DISPLAY_PRECISION);
 		mPreferences = new Preferences();
 		//set the unit type to length by default
 		mUnitTypePos = UNIT_TYPE_DEFAULT_POS;
@@ -252,9 +256,10 @@ public class Calculator{
 
 	/**
 	 * Passed a key from calculator (num/op/back/clear/eq) and distributes it to its proper function
+	 *
 	 * @param sKey is either single character (but still a String) or a string from result list
 	 */
-	public CalculatorResultFlags parseKeyPressed(String sKey){
+	public CalculatorResultFlags parseKeyPressed(String sKey) {
 		//create a return object
 		CalculatorResultFlags resultFlags = new CalculatorResultFlags();
 
@@ -262,12 +267,12 @@ public class Calculator{
 		clearHighlighted();
 
 		//if expression was displaying "Syntax Error" or similar (containing invalid chars) clear it
-		if(isExpressionInvalid())
+		if (isExpressionInvalid())
 			mExpression.clearExpression();
 
 		//if a convert was just done, main display will show "16 in", but no button will be colored
 		//want this treated the same as 16 (as if no unit is actually selected)
-		if(isSolved() && isUnitSelected())
+		if (isSolved() && isUnitSelected())
 			clearSelectedUnit();
 
 
@@ -282,8 +287,8 @@ public class Calculator{
 				}
 				// Display sci/engineering notation if expression is just a number
 				//Result res = mSolver.tryToggleSciNote(mExpression, false);
-					//solve expression, load into result list if answer not empty
-					solveAndLoadIntoResultList();
+				//solve expression, load into result list if answer not empty
+				solveAndLoadIntoResultList();
 
 				resultFlags.performedSolve = isSolved();
 				return resultFlags;
@@ -293,9 +298,9 @@ public class Calculator{
 				//if (mPreview.isNumFormatEngineering())
 				//	mPreview.set(new Expression(mExpression), Expression.NumFormat.NORMAL);
 				//else
-					mPreview.set(new Expression(mExpression), Expression.NumFormat.ENGINEERING);
-				if(mExpression.isOnlyValidNumber()) {
-					if(mExpression.isSciNotation())
+				mPreview.set(new Expression(mExpression), Expression.NumFormat.ENGINEERING);
+				if (mExpression.isOnlyValidNumber()){
+					if (mExpression.isSciNotation())
 						//mPreview.set(mExpression, Expression.NumFormat.PLAIN);
 						mExpression.roundAndCleanExpression(Expression.NumFormat.PLAIN);
 					else
@@ -343,17 +348,18 @@ public class Calculator{
 
 	/**
 	 * Function used to convert from one unit to another
+	 *
 	 * @param fromUnit is unit being converted from
-	 * @param toUnit is unit being converted to
+	 * @param toUnit   is unit being converted to
 	 */
-	public void convertFromTo(Unit fromUnit, Unit toUnit){
+	public void convertFromTo(Unit fromUnit, Unit toUnit) {
 		//if expression was displaying "Syntax Error" or similar (containing invalid chars) clear it
-		if(isExpressionInvalid()){
+		if (isExpressionInvalid()){
 			mExpression.clearExpression();
 			return;
 		}
 		//want to add a 1 if we just hit one unit and another
-		if(isExpressionEmpty())
+		if (isExpressionEmpty())
 			parseKeyPressed("1");
 		//first solve the function
 		boolean solveSuccess = solveAndLoadIntoResultList();
@@ -367,58 +373,62 @@ public class Calculator{
 		//TODO this saves current button position to result - NOT GOOD
 		//TODO button positions can move at any time, so this doesn't at all
 		//TODO guarantee that the correct unit will be recalled when result tapped
-      int fromUnitPos = getCurrUnitType().findUnitPosInUnitArray(fromUnit);
-      int toUnitPos = getCurrUnitType().findUnitPosInUnitArray(toUnit);
+		int fromUnitPos = getCurrUnitType().findUnitPosInUnitArray(fromUnit);
+		int toUnitPos = getCurrUnitType().findUnitPosInUnitArray(toUnit);
 
 		//load units into result list (this will also set contains unit flag) (overrides that from solve)
-		mResultList.get(mResultList.size()-1).setResultUnit(fromUnit, fromUnitPos,
-              toUnit, toUnitPos, mUnitTypePos);
+		mResultList.get(mResultList.size() - 1).setResultUnit(fromUnit, fromUnitPos,
+				  toUnit, toUnitPos, mUnitTypePos);
 		//load the final value into the result list
-		mResultList.get(mResultList.size()-1).setAnswerWithSep(mExpression.toString());
+		mResultList.get(mResultList.size() - 1).setAnswerWithSep(mExpression.toString());
 	}
 
 
 	/**
 	 * Function that is called after user hits the "=" key
 	 * Called by calculator for solving current expression
+	 *
 	 * @return if solved expression
 	 */
-	private boolean solveAndLoadIntoResultList(){
+	private boolean solveAndLoadIntoResultList() {
 		//the answer will be loaded into mExpression directly
 		Result result = mSolver.solve(mExpression, Expression.NumFormat.NORMAL);
-      return loadResultToArray(result);
+		return loadResultToArray(result);
 	}
 
-   /**
-    * Add a result into the Result list array.  Method checks
-    * @param result to add into the array
-    */
-   private boolean loadResultToArray(Result result){
-      if(result == null)
-         return false;
+	/**
+	 * Add a result into the Result list array.  Method checks
+	 *
+	 * @param result to add into the array
+	 */
+	private boolean loadResultToArray(Result result) {
+		if (result == null)
+			return false;
 
-      //skip result list handling if no result was created
-      mResultList.add(result);
-      //if we hit size limit, remove oldest element
-      if(mResultList.size() > RESULT_LIST_MAX_SIZE)
-         mResultList.remove(0);
-      //if result had an error, leave before setting units
-      if(Expression.isInvalid(result.getAnswerWithoutSep()))
-         return false;
-      //also set result's unit if it's selected
-      if(isUnitSelected()){
-         //load units into result list (this will also set contains unit flag
-         Unit toUnit = getCurrUnitType().getCurrUnit();
-         int toUnitPos = getCurrUnitType().getCurrUnitButtonPos();
-         mResultList.get(mResultList.size()-1).setResultUnit(toUnit, toUnitPos,
-                 toUnit, toUnitPos, mUnitTypePos);
-      }
-      return true;
-   }
+		//skip result list handling if no result was created
+		mResultList.add(result);
+		//if we hit size limit, remove oldest element
+		if (mResultList.size() > RESULT_LIST_MAX_SIZE)
+			mResultList.remove(0);
+		//if result had an error, leave before setting units
+		if (Expression.isInvalid(result.getAnswerWithoutSep()))
+			return false;
+		//also set result's unit if it's selected
+		if (isUnitSelected()){
+			//load units into result list (this will also set contains unit flag
+			Unit toUnit = getCurrUnitType().getCurrUnit();
+			int toUnitPos = getCurrUnitType().getCurrUnitButtonPos();
+			mResultList.get(mResultList.size() - 1).setResultUnit(toUnit, toUnitPos,
+					  toUnit, toUnitPos, mUnitTypePos);
+		}
+		return true;
+	}
 
 
-	/** Clear function for the calculator */
-	private void clear(){
+	/**
+	 * Clear function for the calculator
+	 */
+	private void clear() {
 		//clear the immediate expression
 		mExpression.clearExpression();
 
@@ -430,9 +440,9 @@ public class Calculator{
 	/**
 	 * Backspace function for the calculator
 	 */
-	private void backspace(){
+	private void backspace() {
 		//clear out unit selection and expression if we just solved or if expression empty
-		if(mExpression.isSolved() || mExpression.isEmpty()){
+		if (mExpression.isSolved() || mExpression.isEmpty()){
 			clearSelectedUnit();
 			mExpression.clearExpression();
 			//we're done. don't want to execute code below
@@ -443,7 +453,7 @@ public class Calculator{
 		mExpression.backspaceAtSelection();
 	}
 
-	private void clearSelectedUnit(){
+	private void clearSelectedUnit() {
 		mUnitTypeArray.get(mUnitTypePos).clearUnitSelection();
 	}
 
@@ -453,23 +463,24 @@ public class Calculator{
 	 * each unit's own HTTP/JSON API call. Note that this refresh
 	 * is asynchronous and will only happen sometime in the future
 	 * Internet connection permitting.
+	 *
 	 * @param forced should update be forced without waiting for time-out
 	 */
-	public void refreshAllDynamicUnits(boolean forced){
+	public void refreshAllDynamicUnits(boolean forced) {
 		//JUnit tests can't find AsynTask class, so skip it for test calc
-		if(!mIsTestCalc)
-			for(UnitType ut : mUnitTypeArray)
+		if (!mIsTestCalc)
+			for (UnitType ut : mUnitTypeArray)
 				ut.refreshDynamicUnits(mAppContext, forced);
 	}
 
 	/**
 	 * @return if there are characters marked for highlighting
 	 */
-	public boolean isHighlighted(){
+	public boolean isHighlighted() {
 		return mExpression.isHighlighted();
 	}
 
-	public ArrayList<Integer> getHighlighted(){
+	public ArrayList<Integer> getHighlighted() {
 		return mExpression.getHighlighted();
 	}
 
@@ -485,8 +496,10 @@ public class Calculator{
 		return mResultList;
 	}
 
-	/** Returns if a unit key in current UnitType is selected */
-	public boolean isUnitSelected(){
+	/**
+	 * Returns if a unit key in current UnitType is selected
+	 */
+	public boolean isUnitSelected() {
 		return mUnitTypeArray.get(mUnitTypePos).isUnitSelected();
 	}
 
@@ -498,7 +511,7 @@ public class Calculator{
 		return mUnitTypeArray.get(mUnitTypePos);
 	}
 
-	public String getUnitTypeName(int pos){
+	public String getUnitTypeName(int pos) {
 		return mUnitTypeArray.get(pos).getUnitTypeName();
 	}
 
@@ -506,7 +519,7 @@ public class Calculator{
 		return mUnitTypeArray.size();
 	}
 
-	public void setUnitTypePos(int pos){
+	public void setUnitTypePos(int pos) {
 		mUnitTypePos = pos;
 	}
 
@@ -514,32 +527,34 @@ public class Calculator{
 		return mUnitTypePos;
 	}
 
-	public boolean isExpressionEmpty(){
+	public boolean isExpressionEmpty() {
 		return mExpression.isEmpty();
 	}
 
-	public boolean isExpressionInvalid(){
+	public boolean isExpressionInvalid() {
 		return mExpression.isInvalid();
 	}
 
-	public void pasteIntoExpression(String str){
+	public void pasteIntoExpression(String str) {
 		mExpression.pasteIntoExpression(str);
 	}
 
-	public void setSolved(boolean solved){
+	public void setSolved(boolean solved) {
 		mExpression.setSolved(solved);
 	}
 
-	/** Returns if current Expresion is solved (equals/conversion was last operation) */
-	public boolean isSolved(){
+	/**
+	 * Returns if current Expresion is solved (equals/conversion was last operation)
+	 */
+	public boolean isSolved() {
 		return mExpression.isSolved();
 	}
 
-	public int getSelectionEnd(){
+	public int getSelectionEnd() {
 		return mExpression.getSelectionEnd();
 	}
 
-	public int getSelectionStart(){
+	public int getSelectionStart() {
 		return mExpression.getSelectionStart();
 	}
 
@@ -547,11 +562,11 @@ public class Calculator{
 		return mExpression.getmNumFormat();
 	}
 
-	public boolean isPreviewEmpty(){
+	public boolean isPreviewEmpty() {
 		return mPreview.isEmpty();
 	}
 
-	public Spanned getPreviewText(int suffixColor){
+	public Spanned getPreviewText(int suffixColor) {
 		return mPreview.getText(suffixColor);
 	}
 
@@ -563,7 +578,7 @@ public class Calculator{
 	}
 
 	@Override
-	public String toString(){
+	public String toString() {
 		//needed for display updating
 		return mExpression.toString();
 	}

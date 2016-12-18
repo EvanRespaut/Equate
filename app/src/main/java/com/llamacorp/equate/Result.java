@@ -4,13 +4,13 @@ import com.llamacorp.equate.unit.Unit;
 import com.llamacorp.equate.unit.UnitCurrency;
 import com.llamacorp.equate.unit.UnitHistCurrency;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 public class Result {
 	private static final String JSON_QUERY = "query";
@@ -38,7 +38,7 @@ public class Result {
 	boolean mContainsUnits;
 	private long mTimestamp;
 
-	public Result(String query, String answer){
+	public Result(String query, String answer) {
 		setQueryWithSep(query);
 		setAnswerWithSep(answer);
 		mQueryUnitPosInUnitArray = -1;
@@ -78,53 +78,60 @@ public class Result {
 		json.put(JSON_ANSWER_UNIT_TEXT_LONG, mAnswerUnitTextLong);
 		json.put(JSON_UNIT_TYPE_POS, getUnitTypePos());
 		json.put(JSON_CONTAINS_UNITS, containsUnits());
-		json.put(JSON_TIMESTAMP, mTimestamp); 
+		json.put(JSON_TIMESTAMP, mTimestamp);
 
 		return json;
 	}
 
-	public String getQueryWithoutSep(){
+	public String getQueryWithoutSep() {
 		return ExpSeparatorHandler.removeSep(getQuery());
 	}
-	
-	/** Returns query with separators */ 
+
+	/**
+	 * Returns query with separators
+	 */
 	private String getQuery() {
 		return mQuery;
 	}
 
-	public void setQueryWithSep(String query){
+	public void setQueryWithSep(String query) {
 		setQuery(ExpSeparatorHandler.addSep(query));
 	}
-	
+
 	private void setQuery(String query) {
 		mQuery = query;
 	}
 
-	public String getAnswerWithoutSep(){
+	public String getAnswerWithoutSep() {
 		return ExpSeparatorHandler.removeSep(getAnswer());
 	}
-	
-	/** Returns answer with separators */ 
+
+	/**
+	 * Returns answer with separators
+	 */
 	private String getAnswer() {
 		return mAnswer;
 	}
 
-	public void setAnswerWithSep(String answer){
+	public void setAnswerWithSep(String answer) {
 		setAnswer(ExpSeparatorHandler.addSep(answer));
 	}
-	
+
 	private void setAnswer(String answer) {
 		mAnswer = answer;
 	}
 
 
-	/** Set the query and answer units, and the overarching UnitType array 
+	/**
+	 * Set the query and answer units, and the overarching UnitType array
 	 * position
-	 * @param queryUnit is the Unit to set for this query
-	 * @param answerUnit is the Unit to set for this answer
-	 * @param unitTypePos is the position in the UnitType array */
+	 *
+	 * @param queryUnit   is the Unit to set for this query
+	 * @param answerUnit  is the Unit to set for this answer
+	 * @param unitTypePos is the position in the UnitType array
+	 */
 	public void setResultUnit(Unit queryUnit, int queryUnitPos, Unit answerUnit,
-			int answerUnitPos, int unitTypePos) {
+									  int answerUnitPos, int unitTypePos) {
 
 
 		mAnswerUnitPosInUnitArray = answerUnitPos;
@@ -134,42 +141,41 @@ public class Result {
 		mQueryUnitPosInUnitArray = queryUnitPos;
 		//if we're dealing with the same historical currency, then the
 		//years are most likely different
-		if(queryUnit == answerUnit && queryUnit.isHistorical()){
-			UnitHistCurrency uc = (UnitHistCurrency)queryUnit;
+		if (queryUnit == answerUnit && queryUnit.isHistorical()){
+			UnitHistCurrency uc = (UnitHistCurrency) queryUnit;
 			mQueryUnitText = uc.getPreviousShortName();
 			mQueryUnitTextLong = uc.getPreviousLowercaseLongName();
-		}
-		else{
+		} else {
 			mQueryUnitText = queryUnit.toString();
 			mQueryUnitTextLong = queryUnit.getLowercaseLongName();
 		}
 
 		mUnitTypePos = unitTypePos;
 		mContainsUnits = true;
-		if(answerUnit.isDynamic() && queryUnit.isDynamic()){
+		if (answerUnit.isDynamic() && queryUnit.isDynamic()){
 			//the default unit (USD) doesn't get updated
-			if(answerUnit.toString().equals(UnitCurrency.DEFAULT_CURRENCY))
-				mTimestamp = ((UnitCurrency)queryUnit).getTimeOfUpdate();
+			if (answerUnit.toString().equals(UnitCurrency.DEFAULT_CURRENCY))
+				mTimestamp = ((UnitCurrency) queryUnit).getTimeOfUpdate();
 			else
-				mTimestamp = ((UnitCurrency)answerUnit).getTimeOfUpdate();
+				mTimestamp = ((UnitCurrency) answerUnit).getTimeOfUpdate();
 		}
 	}
 
-	private String formatDate(Long ld){
+	private String formatDate(Long ld) {
 		String dateText = "";
-		if(ld==0) return dateText;
+		if (ld == 0) return dateText;
 		//format both today and date to format as 2014-330
-		String nowDay = new SimpleDateFormat("y-D",Locale.US).
-				format(new Date());
-		String ldDay = new SimpleDateFormat("y-D",Locale.US).
-				format(new Date(ld));
+		String nowDay = new SimpleDateFormat("y-D", Locale.US).
+				  format(new Date());
+		String ldDay = new SimpleDateFormat("y-D", Locale.US).
+				  format(new Date(ld));
 		//if the exact year and day of year are not same, just display month day
-		if(nowDay.equals(ldDay))
+		if (nowDay.equals(ldDay))
 			dateText = DateFormat.getTimeInstance(DateFormat.SHORT).
-			format(new Date(ld));
-		else 
-			dateText = new SimpleDateFormat("MMM d",Locale.US).
-			format(new Date(ld));
+					  format(new Date(ld));
+		else
+			dateText = new SimpleDateFormat("MMM d", Locale.US).
+					  format(new Date(ld));
 		return dateText;
 	}
 
@@ -181,27 +187,27 @@ public class Result {
 		return mAnswerUnitPosInUnitArray;
 	}
 
-   public int getQueryUnitPos() {
-      return mQueryUnitPosInUnitArray;
-   }
+	public int getQueryUnitPos() {
+		return mQueryUnitPosInUnitArray;
+	}
 
 	public boolean containsUnits() {
 		return mContainsUnits;
 	}
 
-	public String getTimestamp(){
+	public String getTimestamp() {
 		return formatDate(mTimestamp);
 	}
 
 	public String getTextQuery() {
-		if(mContainsUnits)
+		if (mContainsUnits)
 			return mQuery + " " + mQueryUnitText;
 		else
-			return mQuery;	
+			return mQuery;
 	}
 
 	public String getTextAnswer() {
-		if(mContainsUnits)
+		if (mContainsUnits)
 			return mAnswer + " " + mAnswerUnitText;
 		else
 			return mAnswer;

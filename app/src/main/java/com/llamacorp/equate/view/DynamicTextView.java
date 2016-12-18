@@ -34,13 +34,15 @@ public class DynamicTextView extends TextView {
 	}
 
 
-	private void setUpTextView(Context context, AttributeSet attrs){
+	private void setUpTextView(Context context, AttributeSet attrs) {
 		//grab custom resource variable
 		TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.DynamicText, 0, 0);
 		try {
 			mMinTextSize = ta.getDimension(R.styleable.DynamicText_minimumTextSize,
 					  getTextSize());
-		} finally {	ta.recycle();}
+		} finally {
+			ta.recycle();
+		}
 		mStartingTextSize = getTextSize();
 		Log.d("DYN", "mStartingTextSize = " + mStartingTextSize);
 	}
@@ -59,21 +61,24 @@ public class DynamicTextView extends TextView {
 		if (changed) layoutText();
 	}
 
-	/** Helper method to size text */
+	/**
+	 * Helper method to size text
+	 */
 	private void layoutText() {
-		if(getText().equals("")) return;
+		if (getText().equals("")) return;
 		Paint paint = getPaint();
 		if (mTextSize != 0f)
 			paint.setTextSize(mTextSize);
 		//if min text size is the same as normal size, just leave
-		if(mMinTextSize == getTextSize()) return;
+		if (mMinTextSize == getTextSize()) return;
 		float textWidth = paint.measureText(getText().toString());
-		float boxWidth = getWidth() - getPaddingLeft() - getPaddingRight();;//- paint.measureText("MMMM");
+		float boxWidth = getWidth() - getPaddingLeft() - getPaddingRight();
+		;//- paint.measureText("MMMM");
 		float textSize = getTextSize();
-		if (textWidth > boxWidth) {
+		if (textWidth > boxWidth){
 			float scaled = textSize * boxWidth / textWidth;
 			//scaled = scaled*0.9f;
-			if(scaled < mMinTextSize)
+			if (scaled < mMinTextSize)
 				scaled = mMinTextSize;
 			paint.setTextSize(scaled);
 			mTextSize = textSize;

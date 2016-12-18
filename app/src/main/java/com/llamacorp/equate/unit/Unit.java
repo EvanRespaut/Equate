@@ -1,13 +1,13 @@
 package com.llamacorp.equate.unit;
 
-import java.util.Locale;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public abstract class Unit  /*implements JsonSerializer<Unit>, JsonDeserializer<Unit> */{
+import java.util.Locale;
+
+public abstract class Unit  /*implements JsonSerializer<Unit>, JsonDeserializer<Unit> */ {
 	private static final String JSON_NAME = "name";
-//	private static final String JSON_LONG_NAME = "long_name";
+	//	private static final String JSON_LONG_NAME = "long_name";
 	private static final String JSON_VALUE = "value";
 
 
@@ -15,13 +15,13 @@ public abstract class Unit  /*implements JsonSerializer<Unit>, JsonDeserializer<
 	private String mLongName;
 	protected double mValue;
 
-	protected Unit(String name, String longName, double value){
+	protected Unit(String name, String longName, double value) {
 		mDispName = name;
 		mLongName = longName;
 		mValue = value;
-	}	
+	}
 
-	protected Unit(){
+	protected Unit() {
 		this("", "", 0);
 	}
 
@@ -33,22 +33,23 @@ public abstract class Unit  /*implements JsonSerializer<Unit>, JsonDeserializer<
 
 	/**
 	 * Load in user saved data to an existing Unit.  Example of this is the
-    * value from a Currency that has been updated.  Method makes sure Unit
-    * name of saved data matches this Unit to avoid inadvertently writing saved
-    * data to the wrong Unit
+	 * value from a Currency that has been updated.  Method makes sure Unit
+	 * name of saved data matches this Unit to avoid inadvertently writing saved
+	 * data to the wrong Unit
+	 *
 	 * @param json JSON object containing saved data
 	 * @return boolean if this Unit matches saved Unit
 	 * @throws JSONException if can't find JSON data
 	 */
 	protected boolean loadJSON(JSONObject json) throws JSONException {
-      //if the Units moved around (and therefore have different names), don't
-      // want to load the wrong value
-      if(!json.getString(JSON_NAME).equals(toString()))
-         return false;
+		//if the Units moved around (and therefore have different names), don't
+		// want to load the wrong value
+		if (!json.getString(JSON_NAME).equals(toString()))
+			return false;
 
-      mValue = json.getDouble(JSON_VALUE);
+		mValue = json.getDouble(JSON_VALUE);
 
-      return true; //successful
+		return true; //successful
 
       /*
 		String unitType = json.getString(JSON_TYPE);
@@ -70,6 +71,7 @@ public abstract class Unit  /*implements JsonSerializer<Unit>, JsonDeserializer<
 
 	/**
 	 * Save user changeable data of this Unit into a JSON object
+	 *
 	 * @return JSON object with saved Unit data
 	 * @throws JSONException
 	 */
@@ -83,67 +85,67 @@ public abstract class Unit  /*implements JsonSerializer<Unit>, JsonDeserializer<
 		return json;
 	}
 
-	protected void setLongName(String longName){
+	protected void setLongName(String longName) {
 		mLongName = longName;
 	}
-	
+
 	protected String getLongName() {
 		return mLongName;
 	}
 
-	public String getName(){
+	public String getName() {
 		return toString();
 	}
 
-	public String getGenericLongName(){
+	public String getGenericLongName() {
 		return mLongName;
-	}	
-	
-	public String getLowercaseGenericLongName(){
+	}
+
+	public String getLowercaseGenericLongName() {
 		return getGenericLongName().toLowerCase(Locale.US);
 	}
-	
-	public String getLowercaseLongName(){
+
+	public String getLowercaseLongName() {
 		return getLongName().toLowerCase(Locale.US);
 	}
 
-	protected void setValue(double value){
+	protected void setValue(double value) {
 		mValue = value;
 	}
-	
+
 	protected double getValue() {
 		return mValue;
 	}
 
-	protected void setDispName(String name){
-		mDispName = name; 
+	protected void setDispName(String name) {
+		mDispName = name;
 	}
-	
-	public String toString(){
+
+	public String toString() {
 		return mDispName;
 	}
 
-	public boolean isDynamic(){
+	public boolean isDynamic() {
 		//TODO this should be replaced with an interface
 		return this instanceof UnitCurrency;
 	}
-	
-	public boolean isHistorical(){
+
+	public boolean isHistorical() {
 		//TODO this should be replaced with an interface
 		return this instanceof UnitHistCurrency;
 	}
-	
+
 
 	public abstract String convertTo(Unit toUnit, String expressionToConv);
 
 	@Override
-	public boolean equals(Object other){
+	public boolean equals(Object other) {
 		if (other == null) return false;
 		if (other == this) return true;  //if objects are pointing to the same ref
 		//now check if a cast into Unit is possible and then check compatibility
-		if (!(other instanceof Unit))return false;
-		Unit otherUnit = (Unit)other;
+		if (!(other instanceof Unit)) return false;
+		Unit otherUnit = (Unit) other;
 		return (otherUnit.getValue() == this.getValue() &&
-				otherUnit.toString().equals(this.toString()));
+				  otherUnit.toString().equals(this.toString()));
 	}
 }

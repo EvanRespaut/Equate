@@ -46,9 +46,9 @@
                android:layout_width="match_parent"
                android:layout_height="wrap_content"
                android:layout_gravity="end"
-               android:paddingRight="@dimen/ResultPrevPadding"
-               android:paddingLeft="@dimen/ResultPrevPadding"
                android:gravity="end"
+               android:paddingLeft="@dimen/ResultPrevPadding"
+               android:paddingRight="@dimen/ResultPrevPadding"
                android:scrollHorizontally="true"
                customNS:minimumTextSize="15sp">
             </com.llamacorp.equate.view.DynamicTextView>
@@ -65,8 +65,8 @@
             xmlns:customNS="http://schemas.android.com/apk/res/com.llamacorp.equate"
             android:layout_width="match_parent"
             android:layout_height="54sp"
-            android:layout_marginRight="@dimen/ResultPadding"
             android:layout_marginLeft="@dimen/ResultPaddingLeft"
+            android:layout_marginRight="@dimen/ResultPadding"
             android:background="@color/app_background"
             android:gravity="end|bottom"
             android:inputType="textNoSuggestions"

@@ -4,34 +4,31 @@ import android.content.Context;
 import android.view.Gravity;
 import android.widget.Toast;
 
-public class  ViewUtils {
+public class ViewUtils {
 	public static float pixelsToSp(Context context, float px) {
-		if(context != null){
+		if (context != null){
 			float scaledDensity = context.getResources().getDisplayMetrics().scaledDensity;
-			return px/scaledDensity;
-		}
-		else return 0;
+			return px / scaledDensity;
+		} else return 0;
 	}
 
 
 	public static float spToPixels(Context context, float sp) {
-		if(context != null){
+		if (context != null){
 			float scaledDensity = context.getResources().getDisplayMetrics().scaledDensity;
-			return sp*scaledDensity;
-		}
-		else return 0;
+			return sp * scaledDensity;
+		} else return 0;
 	}
-	
+
 
 	public static float pixelsToDp(Context context, float px) {
-		if(context != null){
+		if (context != null){
 			float density = context.getResources().getDisplayMetrics().density;
 			return px / density;
-		}
-		else return 0;
+		} else return 0;
 	}
-	
-	public static int floatToInt(float fl){
+
+	public static int floatToInt(float fl) {
 		return (int) Math.ceil(fl);
 	}
 

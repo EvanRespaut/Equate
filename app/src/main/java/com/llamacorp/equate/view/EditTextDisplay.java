@@ -36,9 +36,9 @@ public class EditTextDisplay extends EditText {
 	private int mSelStart = 0;
 	private int mSelEnd = 0;
 
-	private String mTextPrefix ="";
-	private String mExpressionText="";
-	private String mTextSuffix="";
+	private String mTextPrefix = "";
+	private String mExpressionText = "";
+	private String mTextSuffix = "";
 
 	private ExpSeparatorHandler mSepHandler;
 
@@ -52,7 +52,7 @@ public class EditTextDisplay extends EditText {
 
 	public EditTextDisplay(Context context) {
 		this(context, null);
-	}	
+	}
 
 	public EditTextDisplay(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -64,7 +64,7 @@ public class EditTextDisplay extends EditText {
 		setUpEditText(context, attrs);
 	}
 
-	private void setUpEditText(Context context, AttributeSet attrs){
+	private void setUpEditText(Context context, AttributeSet attrs) {
 		mContext = context;
 		mSepHandler = new ExpSeparatorHandler();
 
@@ -72,19 +72,23 @@ public class EditTextDisplay extends EditText {
 		TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.DynamicText, 0, 0);
 		try {
 			mMinTextSize = ta.getDimension(R.styleable.DynamicText_minimumTextSize,
-					getTextSize());
-		} finally {	ta.recycle();}
+					  getTextSize());
+		} finally {
+			ta.recycle();
+		}
 	}
 
-	/** Set the singleton calc to this EditText for its own use */
+	/**
+	 * Set the singleton calc to this EditText for its own use
+	 */
 	public void setCalc(Calculator calc) {
-		mCalc = calc;		
-	} 
+		mCalc = calc;
+	}
 
 
 	/**
 	 * Disable soft keyboard from appearing, use in conjunction with
-     * android:windowSoftInputMode="stateAlwaysHidden|adjustNothing"
+	 * android:windowSoftInputMode="stateAlwaysHidden|adjustNothing"
 	 */
 	public void disableSoftInputFromAppearing() {
 		setRawInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
@@ -94,7 +98,7 @@ public class EditTextDisplay extends EditText {
 	/**
 	 * Updates the text and selection with current value from calc
 	 */
-	public void updateTextFromCalc(){
+	public void updateTextFromCalc() {
 		mTextPrefix = "";
 		mExpressionText = getSepDispText();
 		mTextSuffix = "";
@@ -104,10 +108,10 @@ public class EditTextDisplay extends EditText {
 		mSelEnd = mSepHandler.translateToSepIndex(mCalc.getSelectionEnd());
 
 		//if expression not invalid and unit selected, display it after the expression
-		if(!mCalc.isExpressionInvalid() &&  mCalc.isUnitSelected()){
+		if (!mCalc.isExpressionInvalid() && mCalc.isUnitSelected()){
 			mTextSuffix = " " + mCalc.getCurrUnitType().getCurrUnit().toString();
 			//about to do conversion
-			if(!mCalc.isSolved()){
+			if (!mCalc.isSolved()){
 				mTextPrefix = getResources().getString(R.string.word_Convert) + " ";
 				mTextSuffix = mTextSuffix + " " + getResources().getString(R.string.word_to) + ":";
 
@@ -117,7 +121,7 @@ public class EditTextDisplay extends EditText {
 			}
 		}
 
-		if(mCalc.isSolved() &&
+		if (mCalc.isSolved() &&
 				  mCalc.getNumberFormat() == Expression.NumFormat.ENGINEERING){
 			mTextSuffix = " " + SISuffixHelper.getSuffixName(mExpressionText);
 		}
@@ -139,7 +143,7 @@ public class EditTextDisplay extends EditText {
 	 * Helper method to setup the highlighting
 	 */
 	public void setupHighlighting() {
-		if(mCalc.isHighlighted()){
+		if (mCalc.isHighlighted()){
 			Integer colorFrom = Color.RED;
 			Integer colorTo = Color.WHITE;
 			final int ANIMATE_DURR = 600; //ms
@@ -149,19 +153,18 @@ public class EditTextDisplay extends EditText {
 				public void onAnimationUpdate(ValueAnimator animator) {
 					String coloredExp;
 					//if the highlight got canceled during the async animation update, cancel
-					if(!mCalc.isHighlighted()){
+					if (!mCalc.isHighlighted()){
 						animator.cancel();
 						coloredExp = mExpressionText;
-					}
-					else {
+					} else {
 						ArrayList<Integer> highList = mCalc.getHighlighted();
 						highList = mSepHandler.translateIndexListToSep(highList);
-						int color = (Integer)animator.getAnimatedValue();
+						int color = (Integer) animator.getAnimatedValue();
 						int len = highList.size();
 						coloredExp = mExpressionText.substring(0, highList.get(0));
-						for(int i=0; i < len;i++){
+						for (int i = 0; i < len; i++) {
 							int finish = mExpressionText.length();
-							if(i != len - 1) finish = highList.get(i + 1);
+							if (i != len - 1) finish = highList.get(i + 1);
 							coloredExp = coloredExp + "<font color='" + color + "'>" +
 									  mExpressionText.substring(highList.get(i), highList.get(i) + 1) +
 									  "</font>" + mExpressionText.substring(highList.get(i) + 1, finish);
@@ -187,11 +190,11 @@ public class EditTextDisplay extends EditText {
 	}
 
 
-	public void clearHighlighted(){
+	public void clearHighlighted() {
 		mCalc.clearHighlighted();
 
 		//only need to change the text if we have a animator running
-		if(mColorAnimation != null && mColorAnimation.isRunning()){
+		if (mColorAnimation != null && mColorAnimation.isRunning()){
 			//update the main display
 			setTextHtml(mExpressionText);
 
@@ -203,17 +206,20 @@ public class EditTextDisplay extends EditText {
 	/**
 	 * Helper method used to set the main display with HTML formatting, without
 	 * highlighting
+	 *
 	 * @param expStr is the main expression to update
 	 */
-	private void setTextHtml(String expStr){
+	private void setTextHtml(String expStr) {
 		setText(Html.fromHtml("<font color='gray'>" + mTextPrefix + "</font>" +
-				expStr + 
-				"<font color='gray'>" + mTextSuffix + "</font>"));
+				  expStr +
+				  "<font color='gray'>" + mTextSuffix + "</font>"));
 	}
 
 
-	/** Sets the current selection to the end of the expression */
-	public void setSelectionToEnd(){
+	/**
+	 * Sets the current selection to the end of the expression
+	 */
+	public void setSelectionToEnd() {
 		int expLen = mExpressionText.length() + mTextPrefix.length();
 		setSelection(expLen, expLen);
 	}
@@ -224,11 +230,10 @@ public class EditTextDisplay extends EditText {
 	 * This function will also set up update mSepHandler such that getting
 	 * shiftedIndexs will work with the current text.
 	 */
-	private String getSepDispText(){
+	private String getSepDispText() {
 		//return mCalc.toString();
 		return mSepHandler.getSepText(mCalc.toString());
 	}
-
 
 
 	@Override
@@ -242,51 +247,55 @@ public class EditTextDisplay extends EditText {
 	protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
 		super.onLayout(changed, left, top, right, bottom);
 		if (changed) layoutText();
-	}	
+	}
 
-	/** Helper method to size text */
+	/**
+	 * Helper method to size text
+	 */
 	private void layoutText() {
 		Paint paint = getPaint();
 		if (mTextSize != 0f) paint.setTextSize(mTextSize);
 		//if min text size is the same as normal size, just leave
-		if(mMinTextSize == getTextSize()) return;
+		if (mMinTextSize == getTextSize()) return;
 		float textWidth = paint.measureText(getText().toString());
 		float boxWidth = getWidth() - getPaddingLeft() - getPaddingRight();
 		float textSize = getTextSize();
-		if (textWidth > boxWidth) {
+		if (textWidth > boxWidth){
 			float scaled = textSize * boxWidth / textWidth;
-			if(scaled < mMinTextSize)
+			if (scaled < mMinTextSize)
 				scaled = mMinTextSize;
 			paint.setTextSize(scaled);
 			mTextSize = textSize;
-		} 
+		}
 	}
 
 
 	/**
-	 *  Custom paste and cut commands, leave the default copy operation
+	 * Custom paste and cut commands, leave the default copy operation
 	 */
 	@Override
 	public boolean onTextContextMenuItem(int id) {
 		boolean consumed = true;
 
-		switch (id){
-		case android.R.id.cut:
-			onTextCut();
-			break;
-		case android.R.id.paste:
-			onTextPaste();
-			break;
-		case android.R.id.copy:
-			consumed = super.onTextContextMenuItem(id);
+		switch (id) {
+			case android.R.id.cut:
+				onTextCut();
+				break;
+			case android.R.id.paste:
+				onTextPaste();
+				break;
+			case android.R.id.copy:
+				consumed = super.onTextContextMenuItem(id);
 		}
 		//update the view with calc's selection and text
 		updateTextFromCalc();
 		return consumed;
 	}
 
-	/** Try to cut the current clipboard text */
-	private void onTextCut(){
+	/**
+	 * Try to cut the current clipboard text
+	 */
+	private void onTextCut() {
 		int selStart = getSelectionStart();
 		int selEnd = getSelectionEnd();
 
@@ -305,11 +314,12 @@ public class EditTextDisplay extends EditText {
 	}
 
 
-
-	/** Try to paste the current clipboard text into this EditText */
-	private void onTextPaste(){
+	/**
+	 * Try to paste the current clipboard text into this EditText
+	 */
+	private void onTextPaste() {
 		String textToPaste;
-		ClipboardManager clipboard =  (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
+		ClipboardManager clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
 		ClipData clip = clipboard.getPrimaryClip();
 		textToPaste = clip.getItemAt(0).coerceToText(getContext()).toString();
 		Toast.makeText(mContext, "Pasted: \"" + textToPaste + "\"", Toast.LENGTH_SHORT).show();
@@ -317,42 +327,41 @@ public class EditTextDisplay extends EditText {
 	}
 
 
-
-	@Override   
-	protected void onSelectionChanged(int selStart, int selEnd) { 
-		if(mCalc!=null){
+	@Override
+	protected void onSelectionChanged(int selStart, int selEnd) {
+		if (mCalc != null){
 			int preLen = mTextPrefix.length();
 			int expLen = mExpressionText.length();
 
 			int fixedSelStart = mSepHandler.makeIndexValid(selStart - preLen) + preLen;
 			int fixedSelEnd = mSepHandler.makeIndexValid((selEnd - preLen)) + preLen;
 
-			if(fixedSelStart != selStart || fixedSelEnd != selEnd){
+			if (fixedSelStart != selStart || fixedSelEnd != selEnd){
 				setSelection(fixedSelStart, fixedSelEnd);
 				return;
 			}
 
 			//check to see if the unit part of the expression has been selected
-			if(selEnd > expLen + preLen){
+			if (selEnd > expLen + preLen){
 				setSelection(selStart, expLen + preLen);
 				return;
 			}
-			if(selStart > expLen + preLen){
-				setSelection(expLen+preLen, selEnd);
+			if (selStart > expLen + preLen){
+				setSelection(expLen + preLen, selEnd);
 				return;
 			}
-			if(selEnd < preLen){
+			if (selEnd < preLen){
 				setSelection(selStart, preLen);
 				return;
 			}
-			if(selStart < preLen){
+			if (selStart < preLen){
 				setSelection(preLen, selEnd);
 				return;
-			}	
+			}
 
 			//save the new selection in the calc class
-			mCalc.setSelection(mSepHandler.translateFromSepIndex(selStart-preLen),
-					mSepHandler.translateFromSepIndex(selEnd-preLen));
+			mCalc.setSelection(mSepHandler.translateFromSepIndex(selStart - preLen),
+					  mSepHandler.translateFromSepIndex(selEnd - preLen));
 			setCursorVisible(true);
 		}
 	}

@@ -25,6 +25,7 @@ public class ResultListFragment extends ListFragment {
 	// Container Activity must implement this interface
 	public interface OnResultSelectedListener {
 		void updateScreen(boolean updateResult);
+
 		void selectUnitAtUnitArrayPos(int unitPos, int unitTypePos);
 	}
 
@@ -51,52 +52,51 @@ public class ResultListFragment extends ListFragment {
 
 
 	private class ResultAdapter extends ArrayAdapter<Result> {
-		ResultAdapter(List<Result> prevTest){
+		ResultAdapter(List<Result> prevTest) {
 			super(getActivity(), 0, prevTest);
 		}
 
 
 		@Override
-		public View getView(int position, View convertView, ViewGroup parent){
+		public View getView(int position, View convertView, ViewGroup parent) {
 			// If we weren't given a view, inflate one
 			if (convertView == null)
 				convertView = getActivity().getLayoutInflater().
-					inflate(R.layout.list_item_result, parent, false);
+						  inflate(R.layout.list_item_result, parent, false);
 
 			// Configure the view for this result
 			Result result = getItem(position);
 
-			DynamicTextView textViewUnitDesc = (DynamicTextView)convertView.
-					findViewById(R.id.list_item_result_convertUnitDesc);
-			TextView textViewUnitTimestamp = (TextView)convertView.
-					findViewById(R.id.list_item_result_currencyTimestamp);
+			DynamicTextView textViewUnitDesc = (DynamicTextView) convertView.
+					  findViewById(R.id.list_item_result_convertUnitDesc);
+			TextView textViewUnitTimestamp = (TextView) convertView.
+					  findViewById(R.id.list_item_result_currencyTimestamp);
 			textViewUnitTimestamp.setVisibility(View.GONE);
-			if(result != null && result.containsUnits()){
+			if (result != null && result.containsUnits()){
 				String text = getResources().getString(R.string.word_Converting) +
-						" " + result.getQueryUnitTextLong() +
-						" " + getResources().getString(R.string.word_to) +
-						" " + result.getAnswerUnitTextLong() + ":";
+						  " " + result.getQueryUnitTextLong() +
+						  " " + getResources().getString(R.string.word_to) +
+						  " " + result.getAnswerUnitTextLong() + ":";
 				textViewUnitDesc.setText(Html.fromHtml("<i>" + text + "</i>"));
 				//ListView reuses old textViewUnitDesc sometimes; make sure old one isn't still invisible
 				textViewUnitDesc.setVisibility(View.VISIBLE);
 
 				//see if the result was dynamic and therefore has a timestamp to display
 				String timestamp = result.getTimestamp();
-				if(!timestamp.equals("")){
+				if (!timestamp.equals("")){
 					textViewUnitTimestamp.setText(timestamp);
 					textViewUnitTimestamp.setVisibility(View.VISIBLE);
 				}
-			}
-			else {
+			} else {
 				textViewUnitDesc.setVisibility(View.GONE);
 			}
 
-			TextView textViewQuery = (TextView)convertView.
-					findViewById(R.id.list_item_result_textPrevQuery);
+			TextView textViewQuery = (TextView) convertView.
+					  findViewById(R.id.list_item_result_textPrevQuery);
 			setUpResultTextView(textViewQuery, result.getTextQuery());
 
-			TextView textViewAnswer = (TextView)convertView.
-					findViewById(R.id.list_item_result_textPrevAnswer);
+			TextView textViewAnswer = (TextView) convertView.
+					  findViewById(R.id.list_item_result_textPrevAnswer);
 			setUpResultTextView(textViewAnswer, result.getTextAnswer());
 
 			return convertView;
@@ -104,10 +104,11 @@ public class ResultListFragment extends ListFragment {
 
 		/**
 		 * Helper function to reduce repeated code. Sets up the query and answer textViews
+		 *
 		 * @param textView the TextView to setup
-		 * @param text the previous query or answer String
+		 * @param text     the previous query or answer String
 		 */
-		private void setUpResultTextView(TextView textView, String text){
+		private void setUpResultTextView(TextView textView, String text) {
 			//textView.setClickable(true);
 			/*
 			//want to superscript text after a "^" character
@@ -129,15 +130,15 @@ public class ResultListFragment extends ListFragment {
 			textView.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View view) {
-               //error case
-               if(view == null){
-                  Toast toast = Toast.makeText(getActivity(), "ERROR: onClick parameter view is null", Toast.LENGTH_LONG);
-                  toast.show();
-                  return;
-               }
+					//error case
+					if (view == null){
+						Toast toast = Toast.makeText(getActivity(), "ERROR: onClick parameter view is null", Toast.LENGTH_LONG);
+						toast.show();
+						return;
+					}
 
-               //get the listView position of this answer/query
-					int position = getListView().getPositionForView((View)view.getParent());
+					//get the listView position of this answer/query
+					int position = getListView().getPositionForView((View) view.getParent());
 					//grab the calc
 					Calculator calc = Calculator.getCalculator(getActivity());
 					//grab the associated previous expression
@@ -145,22 +146,22 @@ public class ResultListFragment extends ListFragment {
 
 
 					//get text to pass back to calc
-					String textPassBack="";
+					String textPassBack = "";
 					int viewID = view.getId();
-					if (viewID==R.id.list_item_result_textPrevQuery)
+					if (viewID == R.id.list_item_result_textPrevQuery)
 						textPassBack = thisResult.getQueryWithoutSep();
-					if (viewID==R.id.list_item_result_textPrevAnswer)
+					if (viewID == R.id.list_item_result_textPrevAnswer)
 						textPassBack = thisResult.getAnswerWithoutSep();
 
 					calc.parseKeyPressed(textPassBack);
 
 					//if unit not selected in calc, and result has unit, set that unit
-					if(!calc.isUnitSelected() && thisResult.containsUnits()){
+					if (!calc.isUnitSelected() && thisResult.containsUnits()){
 						int unitPosPassBack;
-						if (viewID==R.id.list_item_result_textPrevQuery)
-                     unitPosPassBack = thisResult.getQueryUnitPos();
+						if (viewID == R.id.list_item_result_textPrevQuery)
+							unitPosPassBack = thisResult.getQueryUnitPos();
 						else
-                     unitPosPassBack = thisResult.getAnswerUnitPos();
+							unitPosPassBack = thisResult.getAnswerUnitPos();
 
 						//if the selection was a success (and we weren't in the wrong unitType), then set the color
 						//int selectedUnitPos = calc.getCurrUnitType().selectUnitAtUnitArrayPos(unitPassBack);
@@ -175,48 +176,47 @@ public class ResultListFragment extends ListFragment {
 			textView.setOnLongClickListener(new View.OnLongClickListener() {
 				@Override
 				public boolean onLongClick(View view) {
-               Toast toast = Toast.makeText(view.getContext(), "Result Deleted", Toast.LENGTH_SHORT);
-               toast.setGravity(Gravity.CENTER, 0, 0);
-               toast.show();
+					Toast toast = Toast.makeText(view.getContext(), "Result Deleted", Toast.LENGTH_SHORT);
+					toast.setGravity(Gravity.CENTER, 0, 0);
+					toast.show();
 
-               //get the listView position of this answer/query
-               int position = getListView().getPositionForView((View)view.getParent());
-               //delete associated previous expression
-               mResultArray.remove(position);
-               mCallback.updateScreen(true);
+					//get the listView position of this answer/query
+					int position = getListView().getPositionForView((View) view.getParent());
+					//delete associated previous expression
+					mResultArray.remove(position);
+					mCallback.updateScreen(true);
 
 
-               return false;
+					return false;
 				}
 			});
 		}
 	}
 
 
-
 	/**
 	 * Update the listView and scroll to the bottom
+	 *
 	 * @param instaScroll if false, use animated scroll to bottom,
-	 * otherwise use scroll instantly
+	 *                    otherwise use scroll instantly
 	 */
 	public void refresh(boolean instaScroll) {
-		if(getListAdapter() == null) return;
+		if (getListAdapter() == null) return;
 		//notify the adapter that the listview needs to be updated
-		((ResultAdapter)getListAdapter()).notifyDataSetChanged();
+		((ResultAdapter) getListAdapter()).notifyDataSetChanged();
 
 		//scroll to the bottom of the list
-		if(instaScroll){
+		if (instaScroll){
 			//post a runnable for setSelection otherwise it won't be called
 			getListView().post(new Runnable() {
-		        @Override
-		        public void run() {
-					  		//attempt to fix bug:
-					  		if(getListAdapter() == null) return;
-                     getListView().setSelection(getListAdapter().getCount()-1);
-                 }
-		    });
-		}
-		else
-			getListView().smoothScrollToPosition(getListAdapter().getCount()-1);
+				@Override
+				public void run() {
+					//attempt to fix bug:
+					if (getListAdapter() == null) return;
+					getListView().setSelection(getListAdapter().getCount() - 1);
+				}
+			});
+		} else
+			getListView().smoothScrollToPosition(getListAdapter().getCount() - 1);
 	}
 }
