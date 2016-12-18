@@ -291,6 +291,31 @@ public class UnitInitializer {
       unitsOfPressure.addUnit(new UnitScalar("mTorr", "Millitorr", 760/101.325)); //exact
 		unitTypeArray.add(unitsOfPressure);
 
+		UnitType unitsOfDigital= new UnitType("Digital");
+		unitsOfDigital.addUnit(new UnitScalar("byte", "Bytes", 1./8));
+		unitsOfDigital.addUnit(new UnitScalar("kB", "Kilobytes", 1./(8.*Math.pow(2,10))));  //approx
+		unitsOfDigital.addUnit(new UnitScalar("MB", "Megabytes", 1./(8.*Math.pow(2,20))));  //exact
+		unitsOfDigital.addUnit(new UnitScalar("GB", "Gigabytes", 1./(8.*Math.pow(2,30))));  //exact
+		unitsOfDigital.addUnit(new UnitScalar("TB", "Terabytes", 	1./(8.*Math.pow(2,40))));  //exact
+
+		unitsOfDigital.addUnit(new UnitScalar("bit", "Bits", 1));
+		unitsOfDigital.addUnit(new UnitScalar("kbit", "Kilobits", 1./Math.pow(2,10)));  //approx
+		unitsOfDigital.addUnit(new UnitScalar("Mbit", "Megabits", 1./Math.pow(2,20)));  //exact
+		unitsOfDigital.addUnit(new UnitScalar("Gbit", "Gigabits", 1./Math.pow(2,30)));  //exact
+
+
+		unitsOfDigital.addUnit(new UnitScalar("nibble", "Nibbles", 1./4.));  //exact
+		unitsOfDigital.addUnit(new UnitScalar("Tbit", "Terabits", 1./Math.pow(2,40)));  //exact
+		unitsOfDigital.addUnit(new UnitScalar("PB", "Petabytes", 	1./(8.*Math.pow(2,50))));  //approx
+		unitsOfDigital.addUnit(new UnitScalar("EB", "Exabytes", 		1./(8.*Math.pow(2,60))));  //approx
+		unitsOfDigital.addUnit(new UnitScalar("ZB", "Zettabytes", 	1./(8.*Math.pow(2,70))));  //exact
+		unitsOfDigital.addUnit(new UnitScalar("YB", "Yottabytes", 	1./(8.*Math.pow(2,80))));  //exact
+		unitsOfDigital.addUnit(new UnitScalar("Pbit", "Petabits", 	1./Math.pow(2,50)));  //approx
+		unitsOfDigital.addUnit(new UnitScalar("Ebit", "Exabits", 	1./Math.pow(2,60)));  //exact
+		unitsOfDigital.addUnit(new UnitScalar("Zbit", "Zettabits", 	1./Math.pow(2,70)));  //exact
+		unitsOfDigital.addUnit(new UnitScalar("Ybit", "Yottabits", 	1./Math.pow(2,80)));  //exact
+		unitTypeArray.add(unitsOfDigital);
+
 		return unitTypeArray;
 	}
 

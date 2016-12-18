@@ -86,7 +86,6 @@ public class CalcActivity  extends FragmentActivity
 		mDisplay.setCalc(mCalc);
 		mDisplay.disableSoftInputFromAppearing();
 
-		mDisplay.disableSoftInputFromAppearing();
 
 		//we don't want the text view to go to two lines ever. this fixes that
 		mResultPreview.setHorizontallyScrolling(true);
@@ -115,6 +114,7 @@ public class CalcActivity  extends FragmentActivity
 		mDisplay.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				//ViewUtils.toast("onClick",mAppContext);
 				InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 				imm.hideSoftInputFromWindow(mDisplay.getWindowToken(), 0);
 			}
@@ -124,7 +124,10 @@ public class CalcActivity  extends FragmentActivity
 		mDisplay.setOnLongClickListener(new View.OnLongClickListener() {
 			@Override
 			public boolean onLongClick(View v) {
-				//keyboard hiding wasn't working on Samsung device, brute force instead
+//				//keyboard hiding wasn't working on Samsung device, brute force instead
+//				ViewUtils.toast("on long click",mAppContext);
+//				InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+//				imm.hideSoftInputFromWindow(mDisplay.getWindowToken(), 0);
 				mDisplay.selectAll();
 				return false;
 			}
@@ -148,7 +151,15 @@ public class CalcActivity  extends FragmentActivity
 //				}
 				return false;
 			}
+
 		});
+
+//		mDisplay.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
+//			@Override
+//			public void onCreateContextMenu(ContextMenu contextMenu, View view, ContextMenu.ContextMenuInfo contextMenuInfo) {
+//				Log.d("DBG", "in on create context menu");
+//			}
+//		});
 
 		//use fragment manager to make the result list
 		FragmentManager fm = getSupportFragmentManager();

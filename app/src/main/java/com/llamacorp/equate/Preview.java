@@ -23,12 +23,18 @@ class Preview {
    }
 
 
+	/**
+    * Sets the preview to a solved expression.
+    * @param expr is the expression that will be solved
+    * @param numFormat is the desired number format of the expression to be
+    *                  solved.  Set to
+    *                  {@link com.llamacorp.equate.Expression.NumFormat#ENGINEERING}
+    *                  to display an SI suffix in the result.
+    */
    public void set(Expression expr, Expression.NumFormat numFormat) {
       mNumFormat = numFormat;
-      //engineering boolean determines if we put the preview into engineering
+      //engineering format determines if we put the preview into engineering
       //sci notation, which later gets an SI suffix
-      boolean engineering = false;
-      //if(numFormat == Expression.NumFormat.ENGINEERING) engineering = true;
       Result res = mSolver.solve(expr, numFormat);
       if(res == null)
          setText("");
@@ -40,6 +46,18 @@ class Preview {
       return mText.isEmpty();
    }
 
+   boolean isNumFormatEngineering() {
+      return mNumFormat == Expression.NumFormat.ENGINEERING;
+   }
+
+	/**
+    * Used to get text to display by the TextView
+    * @param suffixColor is the color of the SI suffix if the result in the
+    *                    preview is set to
+    *                    {@link com.llamacorp.equate.Expression.NumFormat#ENGINEERING}
+    * @return an HTML formatted result with the SI suffix in brackets if
+    * applicable
+    */
    public Spanned getText(int suffixColor) {
       String suffix = "";
       if(mNumFormat == Expression.NumFormat.ENGINEERING){

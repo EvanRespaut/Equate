@@ -289,8 +289,11 @@ public class Calculator{
 				return resultFlags;
 			//check for long hold equals key
 			case "g":
-				mPreview.set(new Expression(mExpression),
-						  Expression.NumFormat.ENGINEERING);
+				//toggle between SI notation and not:
+				//if (mPreview.isNumFormatEngineering())
+				//	mPreview.set(new Expression(mExpression), Expression.NumFormat.NORMAL);
+				//else
+					mPreview.set(new Expression(mExpression), Expression.NumFormat.ENGINEERING);
 				if(mExpression.isOnlyValidNumber()) {
 					if(mExpression.isSciNotation())
 						//mPreview.set(mExpression, Expression.NumFormat.PLAIN);
