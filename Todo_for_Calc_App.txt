@@ -1,4 +1,10 @@
 ------------------ToDo Next--------------------
+- Nav drawer:
+	Settings:
+		- Unit Types Shown:
+		- Solve precision
+		- Font size?
+		- 
 - instant result preview clips onto next line now, make text dynamic sized?
 - Tap equals once should give you eng?
 - hold equals for settings?
@@ -12,14 +18,8 @@ https://github.com/android/platform_frameworks_support/blob/master/v4/java/andro
 - add kegs
 - Custom units
 - Add Ethereum currency? https://coinmarketcap-nexuist.rhcloud.com/api/all
-- Instant result functionality:
-	- Hold on instant result field to open dialog to disable feature
-	- Animate a shrink in size and fade to gray, make box not visible, then fade 
-		in result (fast)
 - bug when you scroll up to the top of the result list and close app, sometimes crashes
 	with "Fragment s not currently in the FragmentManager"
-- Add bit/byte etc
-- Tap * again to get ^
 - Tap preview copy's to clipboard; hold press...has options to disable it? idk
 - Double tap on the 15 of 15E-19 should just select 15 (not 15E) and double tapping on -19 should grab the - sign and not just 19
 - Bug: type 1E1000 long press equals freezes; limit plain number digits

@@ -87,10 +87,6 @@ public class TabPageIndicator extends HorizontalScrollView implements PageIndica
         addView(mTabLayout, new ViewGroup.LayoutParams(WRAP_CONTENT, MATCH_PARENT));
     }
 
-    public void setOnTabReselectedListener(OnTabReselectedListener listener) {
-        mTabReselectedListener = listener;
-    }
-
     @Override
     public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         final int widthMode = MeasureSpec.getMode(widthMeasureSpec);
@@ -194,24 +190,20 @@ public class TabPageIndicator extends HorizontalScrollView implements PageIndica
             return;
         }
         if (mViewPager != null) {
-            mViewPager.setOnPageChangeListener(null);
+            mViewPager.addOnPageChangeListener(null);
         }
         final PagerAdapter adapter = view.getAdapter();
         if (adapter == null) {
             throw new IllegalStateException("ViewPager does not have adapter instance.");
         }
         mViewPager = view;
-        view.setOnPageChangeListener(this);
+        view.addOnPageChangeListener(this);
         notifyDataSetChanged();
     }
 
     public void notifyDataSetChanged() {
         mTabLayout.removeAllViews();
         PagerAdapter adapter = mViewPager.getAdapter();
-        IconPagerAdapter iconAdapter = null;
-        if (adapter instanceof IconPagerAdapter) {
-            iconAdapter = (IconPagerAdapter)adapter;
-        }
         final int count = adapter.getCount();
         for (int i = 0; i < count; i++) {
             CharSequence title = adapter.getPageTitle(i);
@@ -219,9 +211,6 @@ public class TabPageIndicator extends HorizontalScrollView implements PageIndica
                 title = EMPTY_TITLE;
             }
             int iconResId = 0;
-            if (iconAdapter != null) {
-                iconResId = iconAdapter.getIconResId(i);
-            }
             addTab(i, title, iconResId);
         }
         if (mSelectedTabIndex > count) {
@@ -229,12 +218,6 @@ public class TabPageIndicator extends HorizontalScrollView implements PageIndica
         }
         setCurrentItem(mSelectedTabIndex);
         requestLayout();
-    }
-
-    @Override
-    public void setViewPager(ViewPager view, int initialPosition) {
-        setViewPager(view);
-        setCurrentItem(initialPosition);
     }
 
     @Override
