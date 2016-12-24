@@ -29,7 +29,7 @@ import com.llamacorp.equate.view.ResultListFragment.OnResultSelectedListener;
 import com.viewpagerindicator.TabPageIndicator;
 
 public class CalcActivity extends FragmentActivity
-		  implements OnResultSelectedListener, OnConvertKeySelectedListener {
+		  implements OnResultSelectedListener, OnConvertKeySelectedListener{
 	private Context mAppContext;  //used for toasts and the like
 
 	private ResultListFragment mResultListFrag;   //scroll-able history
@@ -73,7 +73,7 @@ public class CalcActivity extends FragmentActivity
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		mAppContext = this;
-		setContentView(R.layout.activity_calc);
+		setContentView(R.layout.drawer_layout);
 
 		this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
@@ -576,10 +576,7 @@ public class CalcActivity extends FragmentActivity
 
 
 	private boolean isPreviewVisible() {
-		if (mResultPreview.getVisibility() == View.VISIBLE)
-			return true;
-		else
-			return false;
+		return mResultPreview.getVisibility() == View.VISIBLE;
 	}
 
 	private void setPreviewVisible(boolean visible) {

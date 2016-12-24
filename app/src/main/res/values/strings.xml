@@ -51,6 +51,8 @@
    <string name="word_Converting">Converting</string>
    <string name="word_to">to</string>
    <string name="word_updating">Updating</string>
+   <string name="add_unit">Create New Unit</string>
+
 
    <string name="words_units_up_to_date">Units up to date.</string>
 

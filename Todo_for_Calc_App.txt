@@ -1,9 +1,16 @@
 ------------------ToDo Next--------------------
+- https://forums.xamarin.com/discussion/51142/error-inflating-class-android-support-design-widget-tablayout
+- hacker news
+- oi site
 - Nav drawer:
 	Settings:
 		- Unit Types Shown:
 		- Solve precision
+		- default button chooses
 		- Font size?
+		- light/dark theme
+		- lock portrait
+		- custom units link
 		- 
 - instant result preview clips onto next line now, make text dynamic sized?
 - Tap equals once should give you eng?
@@ -13,6 +20,7 @@
 https://github.com/android/platform_frameworks_support/blob/master/v4/java/android/support/v4/view/ViewPager.java
 - Make long press C open dialog asking for clear history
 - hit same unit twice from empty should not be 1, should just be nothing
+- Shrink app size https://developer.android.com/studio/build/shrink-code.html
 - Add 0.1 to 12,345,678 yields 12,345,678. -> this isn't a bug, we just have 8 sig figs. might want to increase this though? or go sci not one digit earlier
 - add llama to all conversations
 - add kegs

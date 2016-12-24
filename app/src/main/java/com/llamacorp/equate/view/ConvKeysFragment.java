@@ -2,6 +2,7 @@ package com.llamacorp.equate.view;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -31,15 +32,15 @@ public class ConvKeysFragment extends Fragment implements OnConvertKeyUpdateFini
 	}
 
 	@Override
-	public void onAttach(Activity activity) {
-		super.onAttach(activity);
+	public void onAttach(Context context) {
+		super.onAttach(context);
 
 		// This makes sure that the container activity has implemented
 		// the callback interface. If not, it throws an exception
 		try {
-			mCallback = (OnConvertKeySelectedListener) activity;
+			mCallback = (OnConvertKeySelectedListener) context;
 		} catch (ClassCastException e) {
-			throw new ClassCastException(activity.toString()
+			throw new ClassCastException(context.toString()
 					  + " must implement OnConvertKeySelectedListener");
 		}
 	}
@@ -217,6 +218,21 @@ public class ConvKeysFragment extends Fragment implements OnConvertKeyUpdateFini
 		builder.setTitle(title);
 		builder.setItems(mUnitType.getUndisplayedUnitNames(mNumConvButtons), itemClickListener);
 		//null seems to do the same as canceling the dialog
+		builder.setPositiveButton(R.string.add_unit, new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialogInterface, int i) {
+				createCustomUnitDialog();
+			}
+		});
+		builder.setNegativeButton(android.R.string.cancel, null);
+		AlertDialog alert = builder.create();
+		alert.show();
+	}
+
+	private void createCustomUnitDialog() {
+		AlertDialog.Builder builder = new AlertDialog.
+				Builder(getActivity());
+		builder.setTitle("Create Custom Unit:");
 		builder.setNegativeButton(android.R.string.cancel, null);
 		AlertDialog alert = builder.create();
 		alert.show();
