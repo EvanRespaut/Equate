@@ -9,11 +9,16 @@ import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -28,8 +33,9 @@ import com.llamacorp.equate.view.ConvKeysFragment.OnConvertKeySelectedListener;
 import com.llamacorp.equate.view.ResultListFragment.OnResultSelectedListener;
 import com.viewpagerindicator.TabPageIndicator;
 
-public class CalcActivity extends FragmentActivity
-		  implements OnResultSelectedListener, OnConvertKeySelectedListener{
+public class CalcActivity extends AppCompatActivity
+		  implements OnResultSelectedListener, OnConvertKeySelectedListener,
+		NavigationView.OnNavigationItemSelectedListener {
 	private Context mAppContext;  //used for toasts and the like
 
 	private ResultListFragment mResultListFrag;   //scroll-able history
@@ -76,6 +82,9 @@ public class CalcActivity extends FragmentActivity
 		setContentView(R.layout.drawer_layout);
 
 		this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
+		NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+		navigationView.setNavigationItemSelectedListener(this);
 
 		//either get old calc or create a new one
 		mCalc = Calculator.getCalculator(this);
@@ -352,7 +361,7 @@ public class CalcActivity extends FragmentActivity
 						if (mColorHoldHandler == null) return true;
 						if (mResetHandler == null) return true;
 						numButtonPressed("b");
-						view.setBackgroundColor(getResources().getColor(R.color.op_button_normal));
+						ContextCompat.getColor(mAppContext, R.color.op_button_normal);
 						mColorHoldHandler.removeCallbacks(mBackspaceColor);
 						mColorHoldHandler = null;
 
@@ -378,8 +387,8 @@ public class CalcActivity extends FragmentActivity
 			private int mInc;
 			//set up the runnable for when backspace is held down
 			Runnable mBackspaceColor = new Runnable() {
-				private int mStartColor = getResources().getColor(R.color.op_button_pressed);
-				private int mEndColor = getResources().getColor(R.color.backspace_button_held);
+				private int mStartColor = ContextCompat.getColor(mAppContext, R.color.op_button_pressed);
+				private int mEndColor = ContextCompat.getColor(mAppContext, R.color.backspace_button_held);
 
 				private static final int NUM_COLOR_CHANGES = 10;
 
@@ -512,6 +521,26 @@ public class CalcActivity extends FragmentActivity
 		updateScreen(flags.performedSolve);
 	}
 
+	/**
+	 * Called when an item in the navigation menu drawer is selected
+	 * @param item that is selected
+    */
+	@Override
+	public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+		// Handle navigation view item clicks here.
+		int id = item.getItemId();
+
+		if  (id == R.id.nav_settings){
+			ViewUtils.toast("Settings", mAppContext);
+		} else if (id == R.id.nav_about){
+			ViewUtils.toast("About", mAppContext);
+		}
+
+		DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+		//drawer.closeDrawer(GravityCompat.START);
+		return true;
+	}
+
 
 	/**
 	 * Selects the a unit (used by result list)
@@ -552,7 +581,7 @@ public class CalcActivity extends FragmentActivity
 		}
 
 		setPreviewVisible(makePreviewVisible);
-		updatePreviewText(getResources().getColor(R.color.preview_si_suffix_text_color));
+		updatePreviewText(ContextCompat.getColor(mAppContext, R.color.preview_si_suffix_text_color));
 
 		//if we hit equals, update result list
 		if (updateResult)

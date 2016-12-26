@@ -62,7 +62,7 @@ public class UnitInitializer {
 		unitsOfTemp.addUnit(new UnitTemperature());
 		unitsOfTemp.addUnit(new UnitTemperature());
 		unitsOfTemp.addUnit(new UnitTemperature());
-		unitsOfTemp.addUnit(new UnitTemperature("\u00B0K", "Kelvin", UnitTemperature.KELVIN));
+		unitsOfTemp.addUnit(new UnitTemperature("K", "Kelvin", UnitTemperature.KELVIN));
 		unitsOfTemp.addUnit(new UnitTemperature("\u00B0C", "Celsius", UnitTemperature.CELSIUS));
 		unitTypeArray.add(unitsOfTemp);
 
@@ -84,7 +84,7 @@ public class UnitInitializer {
 		unitsOfWeight.addUnit(new UnitScalar("gr", "Grains", 1 / 6.479891E-5)); //exact
 		unitsOfWeight.addUnit(new UnitScalar("dwt", "Pennyweights", 20 / 0.0311034768)); //exact, 1/20 troy oz
 		unitsOfWeight.addUnit(new UnitScalar("CD", "Carats", 5000)); // =200mg
-		unitsOfWeight.addUnit(new UnitScalar("Llama", "Avg Llama Weight", 1 / 165.0)); //avg of 130 and 200kg
+		unitsOfWeight.addUnit(new UnitScalar("llama", "Avg Llama Weight", 1 / 165.0)); //avg of 130 and 200kg
 		unitTypeArray.add(unitsOfWeight);
 
 
@@ -109,7 +109,7 @@ public class UnitInitializer {
 		unitsOfLength.addUnit(new UnitScalar("nmi", "Nautical Miles", 1 / 1852.0));
 		unitsOfLength.addUnit(new UnitScalar("ly", "Light Years", 1 / 9.4607E15));
 		unitsOfLength.addUnit(new UnitScalar("au", "Astronomical Units", 1 / 1.495978707E11)); //exact
-		unitsOfLength.addUnit(new UnitScalar("Llama", "Avg Llama Height", 1 / 1.75));
+		unitsOfLength.addUnit(new UnitScalar("llama", "Avg Llama Height", 1 / 1.75));
 		unitTypeArray.add(unitsOfLength);
 
 
