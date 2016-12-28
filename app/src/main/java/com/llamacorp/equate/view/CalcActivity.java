@@ -5,6 +5,7 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -531,6 +532,8 @@ public class CalcActivity extends AppCompatActivity
 		int id = item.getItemId();
 
 		if  (id == R.id.nav_settings){
+			Intent intent = new Intent(mAppContext, SettingsActivity.class);
+			startActivity(intent);
 			ViewUtils.toast("Settings", mAppContext);
 		} else if (id == R.id.nav_about){
 			ViewUtils.toast("About", mAppContext);

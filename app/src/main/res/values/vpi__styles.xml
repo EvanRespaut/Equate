@@ -15,8 +15,7 @@
 -->
 
 <resources>
-
-   <style name="Theme.PageIndicatorDefaults" parent="AppBaseTheme">
+   <style name="Theme.PageIndicatorDefaults" parent="AppBaseTheme.NoActionBar">
       <item name="vpiIconPageIndicatorStyle">@style/Widget.IconPageIndicator
       </item>
       <item name="vpiTabPageIndicatorStyle">@style/Widget.TabPageIndicator
