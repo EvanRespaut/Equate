@@ -16,6 +16,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -522,28 +523,6 @@ public class CalcActivity extends AppCompatActivity
 		updateScreen(flags.performedSolve);
 	}
 
-	/**
-	 * Called when an item in the navigation menu drawer is selected
-	 * @param item that is selected
-    */
-	@Override
-	public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-		// Handle navigation view item clicks here.
-		int id = item.getItemId();
-
-		if  (id == R.id.nav_settings){
-			Intent intent = new Intent(mAppContext, SettingsActivity.class);
-			startActivity(intent);
-			ViewUtils.toast("Settings", mAppContext);
-		} else if (id == R.id.nav_about){
-			ViewUtils.toast("About", mAppContext);
-		}
-
-		DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-		//drawer.closeDrawer(GravityCompat.START);
-		return true;
-	}
-
 
 	/**
 	 * Selects the a unit (used by result list)
@@ -658,6 +637,38 @@ public class CalcActivity extends AppCompatActivity
 		} else return null;
 	}
 
+	/**
+	 * Called when an item in the navigation menu drawer is selected
+	 * @param item that is selected
+	 */
+	@Override
+	public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+		// Handle navigation view item clicks here.
+		int id = item.getItemId();
+
+		if  (id == R.id.nav_settings){
+			Intent intent = new Intent(mAppContext, SettingsActivity.class);
+			startActivity(intent);
+		} else if (id == R.id.nav_about){
+			ViewUtils.toast("About", mAppContext);
+		}
+
+		DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+		drawer.closeDrawer(GravityCompat.START);
+		return true;
+	}
+
+
+	@Override
+	public void onBackPressed() {
+		DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+		if (drawer.isDrawerOpen(GravityCompat.START)){
+			drawer.closeDrawer(GravityCompat.START);
+		} else {
+			super.onBackPressed();
+		}
+	}
+
 
 	@Override
 	public void onPause() {
@@ -694,4 +705,5 @@ public class CalcActivity extends AppCompatActivity
 			mDisplay.requestFocus();
 		}
 	}
+
 }

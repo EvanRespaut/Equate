@@ -4,16 +4,20 @@
 - oi site
 - Nav drawer:
 	Settings:
-		- Unit Types Shown:
-		- Solve precision
-		- default button chooses
-		- Font size?
-		- light/dark theme
-		- lock portrait
-		- custom units link
-		- 
+		- Unit Settings
+			- Unit Types Shown
+			- Add Custom Units
+		- Calculator Settings
+			- Solve precision
+			- Default button chooses
+		- Appearance Settings
+			- Font size?
+			- light/dark theme
+			- lock portrait
+
 - instant result preview clips onto next line now, make text dynamic sized?
 - Tap equals once should give you eng?
+- Make readme file markup, like https://github.com/googlesamples/android-ClippingBasic/
 - hold equals for settings?
 - Fix long press on Edittext http://stackoverflow.com/questions/14169040/enable-disable-actionbar-menu-item
 - http://fedepaol.github.io/blog/2014/09/01/dragging-with-viewdraghelper/
