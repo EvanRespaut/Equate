@@ -113,7 +113,7 @@ public class CalcAndroidTester extends ActivityInstrumentationTestCase2<CalcActi
 		mResultFragment = (ResultListFragment) fm.findFragmentById(R.id.resultListfragmentContainer);
 		mResultListView = mResultFragment.getListView();
 
-		mConKeysViewPager = (ViewPager)getActivity().findViewById(R.id.convertKeyPager);
+		mConKeysViewPager = (ViewPager)getActivity().findViewById(R.id.unit_pager);
 
 		FragmentStatePagerAdapter tempAdapter = (FragmentStatePagerAdapter) mConKeysViewPager.getAdapter();
 		mConvertFragment = (ConvKeysFragment) tempAdapter.instantiateItem(mConKeysViewPager, mConKeysViewPager.getCurrentItem());

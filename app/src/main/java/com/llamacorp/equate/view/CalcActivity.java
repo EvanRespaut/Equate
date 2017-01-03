@@ -363,7 +363,8 @@ public class CalcActivity extends AppCompatActivity
 						if (mColorHoldHandler == null) return true;
 						if (mResetHandler == null) return true;
 						numButtonPressed("b");
-						ContextCompat.getColor(mAppContext, R.color.op_button_normal);
+						view.setBackgroundColor(ContextCompat.getColor(mAppContext, R.color.op_button_normal));
+
 						mColorHoldHandler.removeCallbacks(mBackspaceColor);
 						mColorHoldHandler = null;
 
@@ -428,7 +429,7 @@ public class CalcActivity extends AppCompatActivity
 		//use fragment manager to make the result list
 		FragmentManager fm = getSupportFragmentManager();
 
-		mUnitTypeViewPager = (ViewPager) findViewById(R.id.convertKeyPager);
+		mUnitTypeViewPager = (ViewPager) findViewById(R.id.unit_pager);
 
 		mUnitTypeViewPager.setAdapter(new FragmentStatePagerAdapter(fm) {
 			@Override
@@ -447,7 +448,7 @@ public class CalcActivity extends AppCompatActivity
 			}
 		});
 
-		TabPageIndicator unitTypePageIndicator = (TabPageIndicator) findViewById(R.id.titles);
+		TabPageIndicator unitTypePageIndicator = (TabPageIndicator) findViewById(R.id.unit_type_titles);
 		unitTypePageIndicator.setViewPager(mUnitTypeViewPager);
 		unitTypePageIndicator.setVisibility(View.VISIBLE);
 
