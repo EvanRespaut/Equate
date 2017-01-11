@@ -202,7 +202,7 @@ public class UnitType {
 	}
 
 	public int findButtonPositionforUnitArrayPos(int pos) {
-		return mUnitDisplayOrder.indexOf(new Integer(pos));
+		return mUnitDisplayOrder.indexOf(pos);
 	}
 
 	/**

@@ -1,4 +1,5 @@
 ------------------ToDo Next--------------------
+- bug, back out of app, come back in and type single character, result preview size is wrong 
 - https://forums.xamarin.com/discussion/51142/error-inflating-class-android-support-design-widget-tablayout
 - hacker news
 - oi site
@@ -15,6 +16,7 @@
 			- light/dark theme
 			- lock portrait
 
+- currencies should be caps
 - instant result preview clips onto next line now, make text dynamic sized?
 - Tap equals once should give you eng?
 - Make readme file markup, like https://github.com/googlesamples/android-ClippingBasic/

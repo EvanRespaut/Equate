@@ -497,7 +497,7 @@ public class CalculatorTest extends TestCase {
 
 
 	private void clickConvKey(int unitTypePos, int convKeyPos, Calculator calc){
-		calc.setUnitTypePos(unitTypePos);
+		calc.setCurrentUnitTypePos(unitTypePos);
 		
 		boolean requestConvert = calc.getCurrUnitType().selectUnit(convKeyPos);
 

@@ -21,7 +21,7 @@ public class Result {
 	private static final String JSON_ANSWER_UNIT_TEXT = "answer_unit_text";
 	private static final String JSON_QUERY_UNIT_TEXT_LONG = "query_unit_text_long";
 	private static final String JSON_ANSWER_UNIT_TEXT_LONG = "answer_unit_text_long";
-	private static final String JSON_UNIT_TYPE_POS = "unit_type_pos";
+	private static final String JSON_UNIT_TYPE_KEY = "unit_type_key";
 	private static final String JSON_CONTAINS_UNITS = "contains_units";
 	private static final String JSON_TIMESTAMP = "timestamp";
 
@@ -34,7 +34,7 @@ public class Result {
 	private String mAnswerUnitTextLong;
 	private int mQueryUnitPosInUnitArray;
 	private int mAnswerUnitPosInUnitArray;
-	private int mUnitTypePos;
+	private String mUnitTypeKey;
 	boolean mContainsUnits;
 	private long mTimestamp;
 
@@ -49,6 +49,7 @@ public class Result {
 		mAnswerUnitText = "";
 		mQueryUnitTextLong = "";
 		mAnswerUnitTextLong = "";
+		mUnitTypeKey = "";
 	}
 
 	public Result(JSONObject json) throws JSONException {
@@ -60,7 +61,7 @@ public class Result {
 		mAnswerUnitTextLong = json.getString(JSON_ANSWER_UNIT_TEXT_LONG);
 		mQueryUnitText = json.getString(JSON_QUERY_UNIT_TEXT);
 		mQueryUnitTextLong = json.getString(JSON_QUERY_UNIT_TEXT_LONG);
-		mUnitTypePos = json.getInt(JSON_UNIT_TYPE_POS);
+		mUnitTypeKey = json.getString(JSON_UNIT_TYPE_KEY);
 		mContainsUnits = json.getBoolean(JSON_CONTAINS_UNITS);
 		mTimestamp = json.getLong(JSON_TIMESTAMP);
 	}
@@ -76,7 +77,7 @@ public class Result {
 		json.put(JSON_ANSWER_UNIT_TEXT, mAnswerUnitText);
 		json.put(JSON_QUERY_UNIT_TEXT_LONG, mQueryUnitTextLong);
 		json.put(JSON_ANSWER_UNIT_TEXT_LONG, mAnswerUnitTextLong);
-		json.put(JSON_UNIT_TYPE_POS, getUnitTypePos());
+		json.put(JSON_UNIT_TYPE_KEY, getUnitTypeKey());
 		json.put(JSON_CONTAINS_UNITS, containsUnits());
 		json.put(JSON_TIMESTAMP, mTimestamp);
 
@@ -128,10 +129,10 @@ public class Result {
 	 *
 	 * @param queryUnit   is the Unit to set for this query
 	 * @param answerUnit  is the Unit to set for this answer
-	 * @param unitTypePos is the position in the UnitType array
+	 * @param unitTypeKey is the position in the UnitType array
 	 */
 	public void setResultUnit(Unit queryUnit, int queryUnitPos, Unit answerUnit,
-									  int answerUnitPos, int unitTypePos) {
+									  int answerUnitPos, String unitTypeKey) {
 
 
 		mAnswerUnitPosInUnitArray = answerUnitPos;
@@ -150,7 +151,7 @@ public class Result {
 			mQueryUnitTextLong = queryUnit.getLowercaseLongName();
 		}
 
-		mUnitTypePos = unitTypePos;
+		mUnitTypeKey = unitTypeKey;
 		mContainsUnits = true;
 		if (answerUnit.isDynamic() && queryUnit.isDynamic()){
 			//the default unit (USD) doesn't get updated
@@ -179,8 +180,8 @@ public class Result {
 		return dateText;
 	}
 
-	public int getUnitTypePos() {
-		return mUnitTypePos;
+	public String getUnitTypeKey() {
+		return mUnitTypeKey;
 	}
 
 	public int getAnswerUnitPos() {

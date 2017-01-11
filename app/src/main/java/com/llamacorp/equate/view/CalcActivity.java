@@ -458,7 +458,7 @@ public class CalcActivity extends AppCompatActivity
 			@Override
 			public void onPageSelected(int pos) {
 				//update the calc with current UnitType selection
-				mCalc.setUnitTypePos(pos);
+				mCalc.setCurrentUnitTypePos(pos);
 
 				//if we just switched to a dynamic unit, attempt an update
 				if (mCalc.getCurrUnitType().containsDynamicUnits())
@@ -530,11 +530,12 @@ public class CalcActivity extends AppCompatActivity
 	 *
 	 * @see com.llamacorp.equate.view.ResultListFragment.OnResultSelectedListener
 	 */
-	public void selectUnitAtUnitArrayPos(int unitPos, int unitTypePos) {
+	public void selectUnitAtUnitArrayPos(int unitPos, String unitTypeKey) {
+		int visibleUnitTypeIndex = mCalc.getUnitTypeIndex(unitTypeKey);
 		//if not on right page, scroll there first
-		if (unitTypePos != mUnitTypeViewPager.getCurrentItem()){
+		if (visibleUnitTypeIndex != mUnitTypeViewPager.getCurrentItem()){
 			unitPosToSelectAfterScroll = unitPos;
-			mUnitTypeViewPager.setCurrentItem(unitTypePos);
+			mUnitTypeViewPager.setCurrentItem(visibleUnitTypeIndex);
 		} else {
 			ConvKeysFragment frag = getConvKeyFrag(mUnitTypeViewPager.getCurrentItem());
 			if (frag != null) frag.selectUnitAtUnitArrayPos(unitPos);

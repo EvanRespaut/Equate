@@ -1,10 +1,37 @@
 package com.llamacorp.equate.unit;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 
-public class UnitInitializer {
+class UnitInitializer {
 
-	public static ArrayList<UnitType> getDefaultUnitArray() {
+
+	private static class UnitInitializerError extends RuntimeException {
+	}
+
+	/**
+	 * Method to generate a default unit type array in the form of a linked
+	 * hash map using the keys supplied as a parameter.
+	 * @param keys for the returned Unit Type Hash map
+	 * @return a linked hash map of Unit Types
+	 * @throws UnitInitializerError if the supplied keys parameter is not of the
+	 * same length as the default unit type array.
+	 */
+	public static LinkedHashMap<String, UnitType> getUnitTypeMap(ArrayList<String> keys)
+			  throws UnitInitializerError {
+		LinkedHashMap<String, UnitType> unitTypeArray = new LinkedHashMap<>();
+		ArrayList<UnitType> units = getDefaultUnitArray();
+		if (units.size() != keys.size())
+			throw new UnitInitializerError();
+		else {
+			for (int i = 0; i < keys.size(); i++) {
+				unitTypeArray.put(keys.get(i), units.get(i));
+			}
+			return unitTypeArray;
+		}
+	}
+
+	private static ArrayList<UnitType> getDefaultUnitArray() {
 		ArrayList<UnitType> unitTypeArray = new ArrayList<>();
 
 //
@@ -50,7 +77,7 @@ public class UnitInitializer {
 //      unitsOfCurrency.addUnit(new UnitCurrency("AED", "UAE Dirhams", 3.673));
 		unitTypeArray.add(getCurrUnitType());
 
-		//refreshAllDynamicUnits();		
+		//refreshAllDynamicUnits();
 
 		UnitType unitsOfTemp = new UnitType("Temp");
 		unitsOfTemp.addUnit(new UnitTemperature());
@@ -238,7 +265,6 @@ public class UnitInitializer {
 		unitsOfEnergy.addUnit(new UnitScalar("eV", "Electronvolts", 6.241509E18));
 		unitsOfEnergy.addUnit(new UnitScalar("Ha", "Hartrees", 2.29371044869059200E17));
 		unitTypeArray.add(unitsOfEnergy);
-
 
 		UnitType unitsOfForce = new UnitType("Force");
 		unitsOfForce.addUnit(new UnitScalar());

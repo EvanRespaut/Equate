@@ -26,7 +26,7 @@ public class ResultListFragment extends ListFragment {
 	public interface OnResultSelectedListener {
 		void updateScreen(boolean updateResult);
 
-		void selectUnitAtUnitArrayPos(int unitPos, int unitTypePos);
+		void selectUnitAtUnitArrayPos(int unitPos, String unitTypeKey);
 	}
 
 	@Override
@@ -164,9 +164,9 @@ public class ResultListFragment extends ListFragment {
 							unitPosPassBack = thisResult.getAnswerUnitPos();
 
 						//if the selection was a success (and we weren't in the wrong unitType), then set the color
-						//int selectedUnitPos = calc.getCurrUnitType().selectUnitAtUnitArrayPos(unitPassBack);
+						//int selectedUnitPos = calc.getCurrUnitType().selectUnit(unitPassBack);
 						//if(selectedUnitPos != -1)
-						mCallback.selectUnitAtUnitArrayPos(unitPosPassBack, thisResult.getUnitTypePos());
+						mCallback.selectUnitAtUnitArrayPos(unitPosPassBack, thisResult.getUnitTypeKey());
 					}
 
 					mCallback.updateScreen(false);
