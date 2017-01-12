@@ -11,6 +11,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Set;
 
 /**
  * Class to store and manage the array of Unit Types available to the calculator
@@ -135,8 +136,7 @@ public class UnitTypeList {
 		mUnits = UnitInitializer.getUnitTypeMap(XML_KEYS);
 
 		mOrderedUnitKeys.clear();
-		//TODO make sure these aren't linked
-		mOrderedUnitKeys = XML_KEYS;
+		mOrderedUnitKeys = new ArrayList<>(XML_KEYS);
 	}
 
 	/**
@@ -198,11 +198,11 @@ public class UnitTypeList {
 	 */
 	public int getCurrentIndex() {
 		int index = getIndex(getCurrentKey());
-		// we have some error with the current key, default to 0
-		if (index == -1) {
-			setCurrent(0);
-			index = 0;
-		}
+//		// we have some error with the current key, default to 0
+//		if (index == -1) {
+//			setCurrent(0);
+//			index = 0;
+//		}
 		return index;
 	}
 
@@ -217,5 +217,13 @@ public class UnitTypeList {
 	public void refreshDynamicUnits(Context context, boolean forced) {
 		for (UnitType ut : mUnits.values())
 			ut.refreshDynamicUnits(context, forced);
+	}
+
+	public boolean setOrdered(Set<String> ordered) {
+		mOrderedUnitKeys = new ArrayList<>(XML_KEYS);
+		return mOrderedUnitKeys.retainAll(ordered);
+//		for (String s : XML_KEYS) {
+//			if (s.equals())
+//		}
 	}
 }

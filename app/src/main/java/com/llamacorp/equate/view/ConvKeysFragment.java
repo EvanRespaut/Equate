@@ -1,6 +1,5 @@
 package com.llamacorp.equate.view;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -195,7 +194,7 @@ public class ConvKeysFragment extends Fragment implements OnConvertKeyUpdateFini
 	/**
 	 * Used by parent activity to select a unit within this fragment
 	 *
-	 * @param unitPos the postion of Unit selected
+	 * @param unitPos the position of Unit selected
 	 */
 	public void selectUnitAtUnitArrayPos(int unitPos) {
 		//unitPos will be -1 if it wasn't found

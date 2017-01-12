@@ -23,6 +23,7 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 
 public class Calculator {
@@ -544,6 +545,10 @@ public class Calculator {
 
 	public Spanned getPreviewText(int suffixColor) {
 		return mPreview.getText(suffixColor);
+	}
+
+	public boolean setSelectedUnitTypes(Set<String> set) {
+		return mUnitTypeList.setOrdered(set);
 	}
 
 	/**

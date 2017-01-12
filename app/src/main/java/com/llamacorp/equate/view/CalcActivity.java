@@ -6,10 +6,12 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -35,14 +37,19 @@ import com.llamacorp.equate.view.ConvKeysFragment.OnConvertKeySelectedListener;
 import com.llamacorp.equate.view.ResultListFragment.OnResultSelectedListener;
 import com.viewpagerindicator.TabPageIndicator;
 
+import java.util.Set;
+
 public class CalcActivity extends AppCompatActivity
 		  implements OnResultSelectedListener, OnConvertKeySelectedListener,
 		NavigationView.OnNavigationItemSelectedListener {
+	public enum UnitVisibility {VISIBLE, HIDDEN, TOGGLE}
+
 	private Context mAppContext;  //used for toasts and the like
 
 	private ResultListFragment mResultListFrag;   //scroll-able history
 	private EditTextDisplay mDisplay;      //main display
 	private ViewPager mUnitTypeViewPager;         //controls and displays UnitType
+	private TabPageIndicator mUnitTypeTabIndicator;
 	private DynamicTextView mResultPreview;   //Result preview
 
 	private Button mEqualsButton; //used for changing color
@@ -252,9 +259,6 @@ public class CalcActivity extends AppCompatActivity
 				}
 			});
 
-			final LinearLayout mUnitContain = (LinearLayout) findViewById(R.id.unit_container);
-
-
 			button.setOnLongClickListener(new View.OnLongClickListener() {
 				@Override
 				public boolean onLongClick(View view) {
@@ -283,13 +287,7 @@ public class CalcActivity extends AppCompatActivity
 							buttonValue = "i";
 							break;
 						case R.id.eight_button:
-							if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
-								if (mUnitContain.getVisibility() == LinearLayout.GONE){
-									mUnitContain.setVisibility(LinearLayout.VISIBLE);
-									updateScreen(true, true);
-								} else
-									mUnitContain.setVisibility(LinearLayout.GONE);
-							}
+							setUnitViewVisibility(UnitVisibility.TOGGLE);
 							break;
 						case R.id.open_para_button:
 							buttonValue = "[";
@@ -426,10 +424,19 @@ public class CalcActivity extends AppCompatActivity
 
 
 	private void setupUnitTypePager() {
+		mUnitTypeViewPager = (ViewPager) findViewById(R.id.unit_pager);
+		mUnitTypeTabIndicator = (TabPageIndicator) findViewById(R.id.unit_type_titles);
+
+		//if we have no Unit Types selected from settings, don't show Units view
+		if (mCalc.getUnitTypeSize() == 0){
+			setUnitViewVisibility(UnitVisibility.HIDDEN);
+			return;
+		} else {
+			setUnitViewVisibility(UnitVisibility.VISIBLE);
+		}
+
 		//use fragment manager to make the result list
 		FragmentManager fm = getSupportFragmentManager();
-
-		mUnitTypeViewPager = (ViewPager) findViewById(R.id.unit_pager);
 
 		mUnitTypeViewPager.setAdapter(new FragmentStatePagerAdapter(fm) {
 			@Override
@@ -448,12 +455,11 @@ public class CalcActivity extends AppCompatActivity
 			}
 		});
 
-		TabPageIndicator unitTypePageIndicator = (TabPageIndicator) findViewById(R.id.unit_type_titles);
-		unitTypePageIndicator.setViewPager(mUnitTypeViewPager);
-		unitTypePageIndicator.setVisibility(View.VISIBLE);
+		mUnitTypeTabIndicator.setViewPager(mUnitTypeViewPager);
+		mUnitTypeTabIndicator.setVisibility(View.VISIBLE);
 
 		//need to tell calc when a new UnitType page is selected
-		unitTypePageIndicator.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+		mUnitTypeTabIndicator.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 			//as the page is being scrolled to
 			@Override
 			public void onPageSelected(int pos) {
@@ -480,6 +486,7 @@ public class CalcActivity extends AppCompatActivity
 						frag.selectUnitAtUnitArrayPos(unitPosToSelectAfterScroll);
 					unitPosToSelectAfterScroll = -1;
 				}
+
 				//clear out the unit in expression if it's now cleared
 				updateScreen(false);
 
@@ -498,6 +505,7 @@ public class CalcActivity extends AppCompatActivity
 
 		//set page back to the previously selected page
 		mUnitTypeViewPager.setCurrentItem(mCalc.getUnitTypePos());
+		mUnitTypeTabIndicator.notifyDataSetChanged();
 	}
 
 
@@ -539,6 +547,22 @@ public class CalcActivity extends AppCompatActivity
 		} else {
 			ConvKeysFragment frag = getConvKeyFrag(mUnitTypeViewPager.getCurrentItem());
 			if (frag != null) frag.selectUnitAtUnitArrayPos(unitPos);
+		}
+	}
+
+
+	private void setUnitViewVisibility(UnitVisibility uv) {
+		final LinearLayout mUnitContain = (LinearLayout) findViewById(R.id.unit_container);
+
+		if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
+			if (uv == UnitVisibility.HIDDEN || mCalc.getUnitTypeSize() == 0 ||
+					  (uv == UnitVisibility.TOGGLE && mUnitContain.getVisibility() == LinearLayout.VISIBLE))
+				mUnitContain.setVisibility(LinearLayout.GONE);
+			else {
+				mUnitContain.setVisibility(LinearLayout.VISIBLE);
+				//update the screen to move result list up
+				updateScreen(true, true);
+			}
 		}
 	}
 
@@ -691,7 +715,19 @@ public class CalcActivity extends AppCompatActivity
 		if (mCalc == null)
 			return;
 
+		//load in Unit Type arrangement prefs
+		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+		Set<String> selections = sharedPref.getStringSet("unit_type_prefs", null);
+
+		// determine if user changed the configuration of the Unit Types
+		boolean selectionChanged = false;
+		if (selections != null)
+			selectionChanged = mCalc.setSelectedUnitTypes(selections);
+
 		setupUnitTypePager();
+
+		// if the Unit Type configuration changed, update tab indicator accordingly
+//		if (selectionChanged)
 
 		if (mCalc.getCurrUnitType().containsDynamicUnits())
 			mCalc.refreshAllDynamicUnits(false);
@@ -706,6 +742,7 @@ public class CalcActivity extends AppCompatActivity
 			//pull ListFrag's focus, to be sure EditText's cursor blinks when app starts
 			mDisplay.requestFocus();
 		}
+
 	}
 
 }

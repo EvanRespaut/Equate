@@ -2,7 +2,7 @@
 
    <MultiSelectListPreference
       android:dialogTitle="@string/unit_select_title"
-      android:key="mode_repeat"
+      android:key="unit_type_prefs"
       android:summary="@string/unit_select_summary"
       android:title="@string/unit_select_title"
       android:entries="@array/unit_type_names"
