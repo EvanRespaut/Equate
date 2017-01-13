@@ -1,6 +1,7 @@
 package com.llamacorp.equate;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.text.Spanned;
 
 import com.llamacorp.equate.unit.Unit;
@@ -61,25 +62,29 @@ public class Calculator {
 	private boolean mIsTestCalc = false;
 	private Preview mPreview;
 
-//	//------THIS IS FOR TESTING ONLY-----------------
-//	private Calculator() {
-//		mResultList = new ArrayList<>();
-//		mExpression = new Expression(DISPLAY_PRECISION);
-//		//mMcOperate = new MathContext(intCalcPrecision);
-//		mSolver = new Solver(intCalcPrecision);
-//
-//		//this has problems if you ever want to do JUnit testing since we can't
-//		//pass it a context
-//		mUnitTypeList = new UnitTypeList();
-//		mIsTestCalc = true;
-//		mPreferences = new Preferences();
-//	}
-//
-//	//------THIS IS FOR TESTING ONLY-----------------
-//	public static Calculator getTestCalculator() {
-//		mCalculator = new Calculator();
-//		return mCalculator;
-//	}
+	//------THIS IS FOR TESTING ONLY-----------------
+	private Calculator(Resources mockResources) {
+		mResultList = new ArrayList<>();
+		mExpression = new Expression(DISPLAY_PRECISION);
+		//mMcOperate = new MathContext(intCalcPrecision);
+		mSolver = new Solver(intCalcPrecision);
+
+		// try passing a dummy context, make sure we don't actually use Unit Type
+		// in test
+		mUnitTypeList = new UnitTypeList(mockResources);
+		mIsTestCalc = true;
+		mPreferences = new Preferences();
+
+		//load the calculating precision
+		mSolver = new Solver(intCalcPrecision);
+		mPreview = new Preview(mSolver);
+	}
+
+	//------THIS IS FOR TESTING ONLY-----------------
+	static Calculator getTestCalculator(Resources mockResources) {
+		mCalculator = new Calculator(mockResources);
+		return mCalculator;
+	}
 
 
 	/**
@@ -101,7 +106,7 @@ public class Calculator {
 
 		mPreview = new Preview(mSolver);
 
-		mUnitTypeList = new UnitTypeList(appContext);
+		mUnitTypeList = new UnitTypeList(appContext.getResources());
 
 
 		//over-right values above if this works
@@ -160,7 +165,8 @@ public class Calculator {
 				mResultList.add(new Result(jResultArray.getJSONObject(i)));
 			}
 
-			mUnitTypeList = new UnitTypeList(mAppContext, jObjState.getJSONObject(JSON_UNIT_TYPE_LIST));
+			mUnitTypeList = new UnitTypeList(mAppContext.getResources(),
+					  jObjState.getJSONObject(JSON_UNIT_TYPE_LIST));
 
 		} catch (FileNotFoundException e) {
 			// we will ignore this one, since it happens when we start fresh

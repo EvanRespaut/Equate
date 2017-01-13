@@ -1,6 +1,7 @@
 package com.llamacorp.equate.unit;
 
 import android.content.Context;
+import android.content.res.Resources;
 
 import com.llamacorp.equate.R;
 
@@ -31,9 +32,8 @@ public class UnitTypeList {
 	//stores the current location in mUnitTypeArray
 	private String mCurrentKey;
 
-	public UnitTypeList(Context context) {
-		String[] keys = context.getResources()
-				  .getStringArray(R.array.unit_type_array_keys);
+	public UnitTypeList(Resources resources) {
+		String[] keys = resources.getStringArray(R.array.unit_type_array_keys);
 		XML_KEYS = new ArrayList<>(Arrays.asList(keys));
 
 		//initialize storage members
@@ -52,8 +52,8 @@ public class UnitTypeList {
 	 * @param json Object to load JSON from
 	 * @throws JSONException
 	 */
-	public UnitTypeList(Context context, JSONObject json) throws JSONException {
-		this(context); // initialize unit array
+	public UnitTypeList(Resources resources, JSONObject json) throws JSONException {
+		this(resources); // initialize unit array
 
 		JSONArray jUnitTypeArray = json.getJSONArray(JSON_UNIT_TYPE_MAP);
 
