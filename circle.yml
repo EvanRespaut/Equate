@@ -20,6 +20,7 @@ machine:
 #        - ANDROID_HOME=/usr/local/android-sdk-linux ./gradlew dependencies
 dependencies:
   pre:
+    - chmod +x gradlew
     # Android SDK Platform 25
     - if [ ! -d "/usr/local/android-sdk-linux/platforms/android-25" ]; then echo y | android update sdk --no-ui --all --filter "android-25"; fi
     # Android SDK Build-tools, revision 25.0.0
