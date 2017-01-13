@@ -11,8 +11,11 @@ machine:
         ANDROID_HOME: /usr/local/android-sdk-linux
 
 dependencies:
+#   cache_directories:
+#      - ~/.android
+#      - ~/android
     override:
-        - echo y | android update sdk --no-ui --all --filter tools,platform-tools,build-tools-25.0.1,android-25,extra-google-m2repository,extra-android-support
+        - echo y | android update sdk --no-ui --all --filter tools,platform-tools,build-tools-25.0.1,android-25,extra-android-support
         - chmod +x gradlew
         - ANDROID_HOME=/usr/local/android-sdk-linux ./gradlew dependencies
 
