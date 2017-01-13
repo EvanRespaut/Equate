@@ -22,6 +22,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -49,7 +50,6 @@ public class CalcActivity extends AppCompatActivity
 	private ResultListFragment mResultListFrag;   //scroll-able history
 	private EditTextDisplay mDisplay;      //main display
 	private ViewPager mUnitTypeViewPager;         //controls and displays UnitType
-	private TabPageIndicator mUnitTypeTabIndicator;
 	private DynamicTextView mResultPreview;   //Result preview
 
 	private Button mEqualsButton; //used for changing color
@@ -424,9 +424,6 @@ public class CalcActivity extends AppCompatActivity
 
 
 	private void setupUnitTypePager() {
-		mUnitTypeViewPager = (ViewPager) findViewById(R.id.unit_pager);
-		mUnitTypeTabIndicator = (TabPageIndicator) findViewById(R.id.unit_type_titles);
-
 		//if we have no Unit Types selected from settings, don't show Units view
 		if (mCalc.getUnitTypeSize() == 0){
 			setUnitViewVisibility(UnitVisibility.HIDDEN);
@@ -438,6 +435,7 @@ public class CalcActivity extends AppCompatActivity
 		//use fragment manager to make the result list
 		FragmentManager fm = getSupportFragmentManager();
 
+		mUnitTypeViewPager = (ViewPager) findViewById(R.id.unit_pager);
 		mUnitTypeViewPager.setAdapter(new FragmentStatePagerAdapter(fm) {
 			@Override
 			public int getCount() {
@@ -455,6 +453,7 @@ public class CalcActivity extends AppCompatActivity
 			}
 		});
 
+		TabPageIndicator mUnitTypeTabIndicator = (TabPageIndicator) findViewById(R.id.unit_type_titles);
 		mUnitTypeTabIndicator.setViewPager(mUnitTypeViewPager);
 		mUnitTypeTabIndicator.setVisibility(View.VISIBLE);
 
@@ -583,12 +582,13 @@ public class CalcActivity extends AppCompatActivity
 
 		//if we preview just appeared, move the history list up so the last item
 		//doesn't get hidden by the preview
-		if (!isPreviewVisible() && makePreviewVisible){
+		if (mResultPreview.getVisibility() != View.VISIBLE && makePreviewVisible){
 			updateResult = true;
 			instaScroll = true;
 		}
 
-		setPreviewVisible(makePreviewVisible);
+		mResultPreview.setVisibility(makePreviewVisible ? View.VISIBLE : View.GONE);
+
 		updatePreviewText(ContextCompat.getColor(mAppContext, R.color.preview_si_suffix_text_color));
 
 		//if we hit equals, update result list
@@ -611,17 +611,9 @@ public class CalcActivity extends AppCompatActivity
 			clearUnitSelection(mUnitTypeViewPager.getCurrentItem());
 	}
 
-
-	private boolean isPreviewVisible() {
-		return mResultPreview.getVisibility() == View.VISIBLE;
-	}
-
-	private void setPreviewVisible(boolean visible) {
-		mResultPreview.setVisibility(visible ? View.VISIBLE : View.GONE);
-	}
-
 	private void updatePreviewText(int suffixColor) {
 		mResultPreview.setText(mCalc.getPreviewText(suffixColor));
+		Log.d("tag_prev", "prev height = " + mResultPreview.getHeight());
 	}
 
 	/**
@@ -720,9 +712,8 @@ public class CalcActivity extends AppCompatActivity
 		Set<String> selections = sharedPref.getStringSet("unit_type_prefs", null);
 
 		// determine if user changed the configuration of the Unit Types
-		boolean selectionChanged = false;
 		if (selections != null)
-			selectionChanged = mCalc.setSelectedUnitTypes(selections);
+			mCalc.setSelectedUnitTypes(selections);
 
 		setupUnitTypePager();
 

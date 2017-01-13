@@ -198,7 +198,7 @@ public class ConvKeysFragment extends Fragment implements OnConvertKeyUpdateFini
 	 */
 	public void selectUnitAtUnitArrayPos(int unitPos) {
 		//unitPos will be -1 if it wasn't found
-		if (unitPos != -1)
+		if (unitPos != -1 && mUnitType != null)
 			clickUnitButton(mUnitType.findButtonPositionforUnitArrayPos(unitPos));
 	}
 
