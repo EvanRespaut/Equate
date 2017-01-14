@@ -46,7 +46,7 @@ test:
         - (./gradlew assemble):
           timeout: 360
         # copy the test results to the test results directory.
-        - cp -r app/build/test-results/* $CIRCLE_TEST_REPORTS
+        #- cp -r app/build/test-results/* $CIRCLE_TEST_REPORTS
 
 #    # copy the Android test results to the test results directory.
 #    - cp -r app/build/outputs/androidTest-results/* $CIRCLE_TEST_REPORTS
