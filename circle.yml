@@ -44,7 +44,7 @@ test:
         # run the JUnit tests located in app\src\test\java\com\llamacorp
         - ./gradlew test
         - (./gradlew assemble):
-          timeout: 360
+            timeout: 360
         # copy the test results to the test results directory.
         #- cp -r app/build/test-results/* $CIRCLE_TEST_REPORTS
 
