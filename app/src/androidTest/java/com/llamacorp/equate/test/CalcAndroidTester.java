@@ -172,7 +172,7 @@ public class CalcAndroidTester extends ActivityInstrumentationTestCase2<CalcActi
 
 		moveCursorToPos(1);
 		clickButtons("3");
-		assertExpressionEquals("1300");
+		assertExpressionEquals("1,300");
 		//clear out unit and selection
 		holdButton("b");
 
@@ -180,7 +180,8 @@ public class CalcAndroidTester extends ActivityInstrumentationTestCase2<CalcActi
 		assertCursorVisible(true);
 		setSelection(3,7);
 		assertCursorVisible(true);
-		clickButtons("47=");
+		clickButtons("47");
+		clickButtons("=");
 		assertCursorVisible(false);
 		assertExpressionEquals("0.9");
 
@@ -192,15 +193,15 @@ public class CalcAndroidTester extends ActivityInstrumentationTestCase2<CalcActi
 		moveCursorToPos(2);
 		assertCursorVisible(true);
 		clickButtons("3=");		
-		assertExpressionEquals("1300");
+		assertExpressionEquals("1,300");
 
 		moveCursorToPos(0);
 		clickButtons("q1+");
-		assertExpressionEquals("48-47.1+1300");
+		assertExpressionEquals("48-47.1+1,300");
 
 		setSelection(3,8);
 		contextCommand(android.R.id.cut);
-		assertExpressionEquals("48-1300");
+		assertExpressionEquals("48-1,300");
 
 		setSelection(0,4);
 		contextCommand(android.R.id.paste);
@@ -436,7 +437,10 @@ public class CalcAndroidTester extends ActivityInstrumentationTestCase2<CalcActi
 			else{
 				//	if(s.equals("="))
 				//prevNumInListView= mResultListView.getAdapter().getCount();
-				MyTouchUtils2.myClickView(this, getButton(s),DELAY_BETWEEN_BUTTON_PRESSES);
+				if ("E".equals(s) || "^".equals(s))
+					holdButton(s);
+				else
+					MyTouchUtils2.myClickView(this, getButton(s),DELAY_BETWEEN_BUTTON_PRESSES);
 			}
 		}
 	}
@@ -755,10 +759,10 @@ public class CalcAndroidTester extends ActivityInstrumentationTestCase2<CalcActi
 		break;
 		case "=": buttonId = R.id.equals_button;
 		break;
-//		case "E": buttonId = R.id.ee_button;
-//		break;
-//		case "^": buttonId = R.id.power_button;
-//		break;
+		case "E": buttonId = R.id.percent_button;
+		break;
+		case "^": buttonId = R.id.multiply_button;
+		break;
 		case "(": buttonId = R.id.open_para_button;
 		break;
 		case ")": buttonId = R.id.close_para_button;
