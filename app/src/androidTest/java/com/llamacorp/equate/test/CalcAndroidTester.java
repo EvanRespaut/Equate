@@ -1,9 +1,5 @@
 package com.llamacorp.equate.test;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import junit.framework.ComparisonFailure;
 import android.annotation.TargetApi;
 import android.app.Instrumentation;
 import android.graphics.Paint;
@@ -28,6 +24,11 @@ import com.llamacorp.equate.view.CalcActivity;
 import com.llamacorp.equate.view.ConvKeysFragment;
 import com.llamacorp.equate.view.EditTextDisplay;
 import com.llamacorp.equate.view.ResultListFragment;
+
+import junit.framework.ComparisonFailure;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * FOR THESE TESTS TO WORK, BE SURE SCREEN IS ON
@@ -132,7 +133,7 @@ public class CalcAndroidTester extends ActivityInstrumentationTestCase2<CalcActi
 	public void test1CalcFunctions(){
 		getActivity().mCalc.resetCalc();
 		
-		clickButtons(".1+b)4");
+		clickButtons("(.1+b)4");
 		assertExpressionEquals("(.1)*4");
 
 		clickButtons("=");

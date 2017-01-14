@@ -15,7 +15,7 @@ public class CalculatorTest extends TestCase {
 	private MathContext mcDisp = new MathContext(intDisplayPrecision);
 
 	//precision for all calculations
-	public static final int intDisplayPrecision = 8;
+	public static final int intDisplayPrecision = 15;
 	public static final int intCalcPrecision = intDisplayPrecision+2;
 
 	/**
@@ -171,7 +171,7 @@ public class CalculatorTest extends TestCase {
 
 		//try some random math
 		loadStringToCalc("30E2-2E10*=", calc);
-		assertEquals("-1.9999997E10", calc.toString());
+		assertEquals("-19999997000", calc.toString());
 
 		//tests to make sure that after a #.#E# expression, we can put a .
 		loadStringToCalc("3.2E2*.5=", calc);
@@ -184,7 +184,7 @@ public class CalculatorTest extends TestCase {
 			calc.parseKeyPressed("0");
 		calc.parseKeyPressed("=");
 		//not sure if we'll be keeping the . after the 6, both will pass for now
-		assertTrue(calc.toString().matches("6\\.?E8"));
+		assertTrue(calc.toString().matches("6\\.?E" + Calculator.DISPLAY_PRECISION));
 
 		//make sure the number one less than the precision is display as plain text
 		String tester="6";
@@ -237,7 +237,7 @@ public class CalculatorTest extends TestCase {
 		assertEquals("Number Too Large", calc.toString());
 		//test mixed exponents and powers
 		loadStringToCalc("2.1E2^1.1E2=", calc);
-		assertEquals("2.7804969E255", calc.toString());
+		assertEquals("2.78049693531908E255", calc.toString());
 
 		loadStringToCalc("3-3^2=", calc);
 		assertEquals("-6", calc.toString());
@@ -258,7 +258,7 @@ public class CalculatorTest extends TestCase {
 		assertEquals("-3", calc.toString());
 
 		loadStringToCalc("3*-2.E-3^-2.E-3=", calc);
-		assertEquals("-3.0375203", calc.toString());
+		assertEquals("-3.0375203397704", calc.toString());
 
 		loadStringToCalc("2+-1^2*-9^((.5)^1+.1+-.1^1)=", calc);
 		assertEquals("5", calc.toString());
@@ -282,7 +282,9 @@ public class CalculatorTest extends TestCase {
 		assertEquals("342+-15*3532", calc.toString());
 
 		calc.setSelection(5, 7);
-		loadStringToCalc("-*1)", calc);		
+		loadStringToCalc("-*1)", calc);
+		calc.setSelection(0, 0);
+		loadStringToCalc("(", calc);
 		assertEquals("(342*1)*3532", calc.toString());
 
 		calc.setSelection(7, 7);
@@ -407,9 +409,9 @@ public class CalculatorTest extends TestCase {
 		loadStringToCalc("(2/4)10=", calc);
 		assertEquals("5", calc.toString());
 
-		//test auto add opening para
-		loadStringToCalc("1+2+3)=", calc);
-		assertEquals("6", calc.toString());
+//		//test auto add opening para
+//		loadStringToCalc("1+2+3)=", calc);
+//		assertEquals("6", calc.toString());
 
 		//test auto add closing para; also test para followed by invalid op 
 		loadStringToCalc("(*3=", calc);
