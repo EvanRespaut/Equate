@@ -3,50 +3,50 @@
 #
 
 general:
-  artifacts:
-    - /home/ubuntu/Equate/app/build/outputs/apk/
+    artifacts:
+        - /home/ubuntu/Equate/app/build/outputs/apk/
 
 machine:
-  environment:
-    ANDROID_HOME: /usr/local/android-sdk-linux
+    environment:
+        ANDROID_HOME: /usr/local/android-sdk-linux
 
 dependencies:
 #   cache_directories:
-#    - ~/.android
-#    - ~/android
-  override:
-    - echo y | android update sdk --no-ui --all --filter "tools,platform-tools"
-    - echo y | android update sdk --no-ui --all --filter "build-tools-25.0.1"
-    - echo y | android update sdk --no-ui --all --filter "android-25"
-    - echo y | android update sdk --no-ui --all --filter "extra-google-m2repository"
-    - echo y | android update sdk --no-ui --all --filter "extra-android-m2repository"
-    #- echo y | android update sdk --no-ui --all --filter "extra-android-support"
-    - chmod +x gradlew
-    - ANDROID_HOME=/usr/local/android-sdk-linux ./gradlew dependencies
+#      - ~/.android
+#      - ~/android
+    override:
+        - echo y | android update sdk --no-ui --all --filter "tools,platform-tools"
+        - echo y | android update sdk --no-ui --all --filter "build-tools-25.0.1"
+        - echo y | android update sdk --no-ui --all --filter "android-25"
+        - echo y | android update sdk --no-ui --all --filter "extra-google-m2repository"
+        - echo y | android update sdk --no-ui --all --filter "extra-android-m2repository"
+        #- echo y | android update sdk --no-ui --all --filter "extra-android-support"
+        - chmod +x gradlew
+        - ANDROID_HOME=/usr/local/android-sdk-linux ./gradlew dependencies
 #dependencies:
 #  pre:
-#  - chmod +x gradlew
-#  # Android SDK Platform 25
-#  - if [ ! -d "/usr/local/android-sdk-linux/platforms/android-25" ]; then echo y | android update sdk --no-ui --all --filter "android-25"; fi
-#  # Android SDK Build-tools, revision 25.0.0
-#  - if [ ! -d "/usr/local/android-sdk-linux/build-tools/25.0.5" ]; then echo y | android update sdk --no-ui --all --filter "build-tools-25.0.5"; fi
-#  # Android Support Repository, revision 39 / Local Maven repository for Support Libraries
-#  - if [ ! -d "/usr/local/android-sdk-linux/extras/android/m2repository/com/android/support/design/25.0.0" ]; then echo y | android update sdk --no-ui --all --filter "extra-android-m2repository"; fi
+#    - chmod +x gradlew
+#    # Android SDK Platform 25
+#    - if [ ! -d "/usr/local/android-sdk-linux/platforms/android-25" ]; then echo y | android update sdk --no-ui --all --filter "android-25"; fi
+#    # Android SDK Build-tools, revision 25.0.0
+#    - if [ ! -d "/usr/local/android-sdk-linux/build-tools/25.0.5" ]; then echo y | android update sdk --no-ui --all --filter "build-tools-25.0.5"; fi
+#    # Android Support Repository, revision 39 / Local Maven repository for Support Libraries
+#    - if [ ! -d "/usr/local/android-sdk-linux/extras/android/m2repository/com/android/support/design/25.0.0" ]; then echo y | android update sdk --no-ui --all --filter "extra-android-m2repository"; fi
 #
 #
 #  cache_directories:
-#  - /usr/local/android-sdk-linux/platforms/android-25
-#  - /usr/local/android-sdk-linux/build-tools/25.0.0
-#  - /usr/local/android-sdk-linux/extras/android/m2repository
+#    - /usr/local/android-sdk-linux/platforms/android-25
+#    - /usr/local/android-sdk-linux/build-tools/25.0.0
+#    - /usr/local/android-sdk-linux/extras/android/m2repository
 
 test:
-  override:
-    # run the JUnit tests located in app\src\test\java\com\llamacorp
-    - ./gradlew test
-    - (./gradlew assemble):
-      timeout: 360
-    # copy the test results to the test results directory.
-    - cp -r app/build/test-results/* $CIRCLE_TEST_REPORTS
+    override:
+        # run the JUnit tests located in app\src\test\java\com\llamacorp
+        - ./gradlew test
+        - (./gradlew assemble):
+            timeout: 360
+        # copy the test results to the test results directory.
+        - cp -r app/build/test-results/* $CIRCLE_TEST_REPORTS
 
-#    # copy the Android test results to the test results directory.
-#    - cp -r app/build/outputs/androidTest-results/* $CIRCLE_TEST_REPORTS
+#        # copy the Android test results to the test results directory.
+#        - cp -r app/build/outputs/androidTest-results/* $CIRCLE_TEST_REPORTS
