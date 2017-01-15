@@ -52,8 +52,16 @@ public class CalcActivityEspressoTest {
 //		ViewInteraction appCompatButtonEquals = onView(
 //				  allOf(withId(R.id.equals_button), withText("="), isDisplayed()));
 //		appCompatButtonEquals.perform(click());
+		clickButtons("C");
+		assertExpressionEquals("");
 
-		clickButtons("C(.1+b)4");
+		clickButtons("(.1");
+		assertExpressionEquals("(.1");
+
+		clickButtons("+b");
+		assertExpressionEquals("(.1");
+
+		clickButtons(")4");
 		assertExpressionEquals("(.1)*4");
 
 		clickButtons("=");
