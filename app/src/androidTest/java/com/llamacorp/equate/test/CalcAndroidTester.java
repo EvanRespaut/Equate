@@ -132,52 +132,52 @@ public class CalcAndroidTester extends ActivityInstrumentationTestCase2<CalcActi
 	@MediumTest
 	public void test1CalcFunctions(){
 		getActivity().mCalc.resetCalc();
-		assertEquals(4, 4);
-//		clickButtons("(.1+b)4");
-//		assertExpressionEquals("(.1)*4");
-//
-//		clickButtons("=");
-//		assertExpressionEquals("0.4");
-//
-//		//now take 0.4, divide it by the last answer ("a0" is answer 0 answers ago) and get result
-//		clickButtons("/a0=");
-//		assertExpressionEquals("1");
-//
-//		clickButtons("q1bbb-6.1E0)^(a0+q0=");
-//		assertExpressionEquals("36");
-//
-//		clickButtons(".5=");
-//		assertQueryAnswerExprConvbutton(".5","0.5","0.5","");
-//
-//		clickButtons("q0=");
-//		assertQueryAnswerExprConvbutton(".5","0.5","0.5","");
-//
-//		clickButtons("+bq0=");
-//		assertPrevAnswerEquals("Syntax Error", 0);
-//		assertExpressionEquals("Syntax Error");
-//
-//		//clear out the syntax error and try to click it again (should do nothing)
-//		clickButtons("ba0");
-//		assertPrevAnswerEquals("Syntax Error", 0);
-//		assertExpressionEquals("");
-//
-//		clickButtons("=");
-//		assertExpressionEquals("");
-//
-//		clickButtons("-=");
-//		assertExpressionEquals("");
-//
-//		clickButtons("54+46=");
-//		assertExpressionEquals("100");
-//
-//		moveCursorToPos(1);
-//		clickButtons("3");
-//		assertExpressionEquals("1,300");
-//		//clear out unit and selection
-//		holdButton("b");
-//
-//		clickButtons("48-6155.1");
-//		assertCursorVisible(true);
+
+		clickButtons("(.1+b)4");
+		assertExpressionEquals("(.1)*4");
+
+		clickButtons("=");
+		assertExpressionEquals("0.4");
+
+		//now take 0.4, divide it by the last answer ("a0" is answer 0 answers ago) and get result
+		clickButtons("/a0=");
+		assertExpressionEquals("1");
+
+		clickButtons("q1bbb-6.1E0)^(a0+q0=");
+		assertExpressionEquals("36");
+
+		clickButtons(".5=");
+		assertQueryAnswerExprConvbutton(".5","0.5","0.5","");
+
+		clickButtons("q0=");
+		assertQueryAnswerExprConvbutton(".5","0.5","0.5","");
+
+		clickButtons("+bq0=");
+		assertPrevAnswerEquals("Syntax Error", 0);
+		assertExpressionEquals("Syntax Error");
+
+		//clear out the syntax error and try to click it again (should do nothing)
+		clickButtons("ba0");
+		assertPrevAnswerEquals("Syntax Error", 0);
+		assertExpressionEquals("");
+
+		clickButtons("=");
+		assertExpressionEquals("");
+
+		clickButtons("-=");
+		assertExpressionEquals("");
+
+		clickButtons("54+46=");
+		assertExpressionEquals("100");
+
+		moveCursorToPos(1);
+		clickButtons("3");
+		assertExpressionEquals("1,300");
+		//clear out unit and selection
+		holdButton("b");
+
+		clickButtons("48-6155.1");
+		assertCursorVisible(true);
 //		setSelection(3,7);
 //		assertCursorVisible(true);
 //		clickButtons("47");

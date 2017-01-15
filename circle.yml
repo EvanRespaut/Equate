@@ -61,3 +61,10 @@ test:
 
         # copy the Android test results to the test results directory.
         - cp -r app/build/outputs/androidTest-results/* $CIRCLE_TEST_REPORTS
+
+        # copy the Android test results to the test results directory.
+        - cp -r app\build\reports $CIRCLE_ARTIFACTS
+
+        # take a screenshot of the emulator and store it as a build artifact.
+        fb-adb rcmd screencap -p > $CIRCLE_ARTIFACTS/screen-$(date +"%T").png
+
