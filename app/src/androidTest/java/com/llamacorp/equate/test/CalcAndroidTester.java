@@ -37,6 +37,7 @@ import java.util.Map;
 public class CalcAndroidTester extends ActivityInstrumentationTestCase2<CalcActivity> {
 	//seems to work all the way down to zero?
 	private static final int DELAY_BETWEEN_BUTTON_PRESSES = 300;
+	private static final int DELAY_AFTER_SELECTION = 800;
 	private static final int AFTER_CURSOR_MOVE = 0;
 	private static final int AFTER_CONTEXT_ACTION = 300;
 	private static final int DOUBLE_CLICK_PREVENTION_DELAY = 310; //double tap is 300 or less
@@ -178,23 +179,24 @@ public class CalcAndroidTester extends ActivityInstrumentationTestCase2<CalcActi
 
 		clickButtons("48-6155.1");
 		assertCursorVisible(true);
-//		setSelection(3,7);
-//		assertCursorVisible(true);
-//		clickButtons("47");
-//		clickButtons("=");
-//		assertCursorVisible(false);
-//		assertExpressionEquals("0.9");
-//
-//		//select ".9" replace with 1300
-//		setSelection(1,3);
-//		clickButtons("a1");
-//		assertExpressionEquals("0100");
-//
-//		moveCursorToPos(2);
-//		assertCursorVisible(true);
-//		clickButtons("3=");
-//		assertExpressionEquals("1,300");
-//
+		setSelection(3,7);
+		assertCursorVisible(true);
+		clickButtons("47");
+		clickButtons("=");
+		assertCursorVisible(false);
+		clickButtons("0.9");
+		assertExpressionEquals("0.9");
+
+		//select ".9" replace with 1300
+		setSelection(1,3);
+		clickButtons("a1");
+		assertExpressionEquals("0,100");
+
+		moveCursorToPos(3);
+		assertCursorVisible(true);
+		clickButtons("3=");
+		assertExpressionEquals("1,300");
+
 //		moveCursorToPos(0);
 //		clickButtons("q1+");
 //		assertExpressionEquals("48-47.1+1,300");
@@ -225,7 +227,7 @@ public class CalcAndroidTester extends ActivityInstrumentationTestCase2<CalcActi
 //		assertExpressionEquals("8");
 //
 //		//don't go into the next test without a small delay otherwise expression view throws NP (maybe?)
-//		sleep(700);
+		sleep(700);
 	}
 
 //
@@ -507,7 +509,7 @@ public class CalcAndroidTester extends ActivityInstrumentationTestCase2<CalcActi
 						mExpressionTextView.setSelection(start, end);
 					}
 				});
-		sleep(DELAY_BETWEEN_BUTTON_PRESSES);
+		sleep(DELAY_AFTER_SELECTION);
 	}
 
 	private long lastDownClick=0;
