@@ -12,7 +12,6 @@ import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.SystemClock;
-import android.text.Html;
 import android.text.InputType;
 import android.util.AttributeSet;
 import android.widget.EditText;
@@ -210,7 +209,7 @@ public class EditTextDisplay extends EditText {
 	 * @param expStr is the main expression to update
 	 */
 	private void setTextHtml(String expStr) {
-		setText(Html.fromHtml("<font color='gray'>" + mTextPrefix + "</font>" +
+		setText(ViewUtils.fromHtml("<font color='gray'>" + mTextPrefix + "</font>" +
 				  expStr +
 				  "<font color='gray'>" + mTextSuffix + "</font>"));
 	}

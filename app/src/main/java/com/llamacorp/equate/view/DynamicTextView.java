@@ -17,7 +17,6 @@ import com.llamacorp.equate.R;
 public class DynamicTextView extends TextView {
 	private float mTextSize = 0f;
 	private float mMinTextSize;
-	private float mStartingTextSize;
 
 	public DynamicTextView(Context context) {
 		super(context);
@@ -43,8 +42,7 @@ public class DynamicTextView extends TextView {
 		} finally {
 			ta.recycle();
 		}
-		mStartingTextSize = getTextSize();
-		Log.d("DYN", "mStartingTextSize = " + mStartingTextSize);
+		Log.d("DYN", "mStartingTextSize = " + getTextSize());
 	}
 
 
@@ -62,7 +60,8 @@ public class DynamicTextView extends TextView {
 	}
 
 	/**
-	 * Helper method to size text
+	 * Helper method to size text dynamically depending on the text size in
+	 * relation to the width of the text view
 	 */
 	private void layoutText() {
 		if (getText().equals("")) return;
@@ -73,7 +72,8 @@ public class DynamicTextView extends TextView {
 		if (mMinTextSize == getTextSize()) return;
 		float textWidth = paint.measureText(getText().toString());
 		float boxWidth = getWidth() - getPaddingLeft() - getPaddingRight();
-		;//- paint.measureText("MMMM");
+		// if the view doesn't exist, the box width will be 0 or negative
+		if (boxWidth <= 0f) return;
 		float textSize = getTextSize();
 		if (textWidth > boxWidth){
 			float scaled = textSize * boxWidth / textWidth;

@@ -1,9 +1,12 @@
 package com.llamacorp.equate.view;
 
 import android.content.Context;
+import android.text.Html;
+import android.text.Spanned;
 import android.view.Gravity;
 import android.widget.Toast;
 
+@SuppressWarnings("unused")
 public class ViewUtils {
 	public static float pixelsToSp(Context context, float px) {
 		if (context != null){
@@ -19,7 +22,6 @@ public class ViewUtils {
 			return sp * scaledDensity;
 		} else return 0;
 	}
-
 
 	public static float pixelsToDp(Context context, float px) {
 		if (context != null){
@@ -52,5 +54,16 @@ public class ViewUtils {
 	public static void toast(String text, Context c) {
 		final Toast toast = Toast.makeText(c, text, Toast.LENGTH_SHORT);
 		toast.show();
+	}
+
+	@SuppressWarnings("deprecation")
+	public static Spanned fromHtml(String html){
+		Spanned result;
+		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+			result = Html.fromHtml(html,Html.FROM_HTML_MODE_LEGACY);
+		} else {
+			result = Html.fromHtml(html);
+		}
+		return result;
 	}
 }

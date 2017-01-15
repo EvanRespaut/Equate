@@ -1,7 +1,8 @@
 package com.llamacorp.equate;
 
-import android.text.Html;
 import android.text.Spanned;
+
+import com.llamacorp.equate.view.ViewUtils;
 
 /**
  * Class used to store and operate on the result preview shows the user the
@@ -67,10 +68,13 @@ class Preview {
 			if (!suffixText.isEmpty())
 				suffix = "[" + SISuffixHelper.getSuffixName(mText) + "]";
 		}
+		//only add on "= " if the string isn't already empty
+		if (!"".equals(mText)) mText = "= " + mText;
 
-		return Html.fromHtml("= " + mText + " <font color=" + suffixColor
+		return ViewUtils.fromHtml(mText + " <font color=" + suffixColor
 				  + ">" + suffix + "</font>");
 	}
+
 
 	private void setText(String text) {
 		this.mText = text;

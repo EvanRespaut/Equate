@@ -2,8 +2,8 @@ package com.llamacorp.equate.view;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ListFragment;
-import android.text.Html;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,8 +57,10 @@ public class ResultListFragment extends ListFragment {
 		}
 
 
+		@NonNull
 		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
+		public View getView(int position, View convertView,
+								  @NonNull ViewGroup parent) {
 			// If we weren't given a view, inflate one
 			if (convertView == null)
 				convertView = getActivity().getLayoutInflater().
@@ -77,7 +79,7 @@ public class ResultListFragment extends ListFragment {
 						  " " + result.getQueryUnitTextLong() +
 						  " " + getResources().getString(R.string.word_to) +
 						  " " + result.getAnswerUnitTextLong() + ":";
-				textViewUnitDesc.setText(Html.fromHtml("<i>" + text + "</i>"));
+				textViewUnitDesc.setText(ViewUtils.fromHtml("<i>" + text + "</i>"));
 				//ListView reuses old textViewUnitDesc sometimes; make sure old one isn't still invisible
 				textViewUnitDesc.setVisibility(View.VISIBLE);
 
