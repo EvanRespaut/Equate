@@ -36,7 +36,7 @@ import java.util.Map;
  */
 public class CalcAndroidTester extends ActivityInstrumentationTestCase2<CalcActivity> {
 	//seems to work all the way down to zero?
-	private static final int DELAY_BETWEEN_BUTTON_PRESSES = 0;
+	private static final int DELAY_BETWEEN_BUTTON_PRESSES = 300;
 	private static final int AFTER_CURSOR_MOVE = 0;
 	private static final int AFTER_CONTEXT_ACTION = 300;
 	private static final int DOUBLE_CLICK_PREVENTION_DELAY = 310; //double tap is 300 or less
