@@ -1,4 +1,4 @@
-package com.llamacorp.equate.view;
+package com.llamacorp.equate.test;
 
 
 import android.support.test.espresso.ViewInteraction;
@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.view.ViewParent;
 
 import com.llamacorp.equate.R;
+import com.llamacorp.equate.view.CalcActivity;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
