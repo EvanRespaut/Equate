@@ -178,169 +178,169 @@ public class CalcAndroidTester extends ActivityInstrumentationTestCase2<CalcActi
 
 		clickButtons("48-6155.1");
 		assertCursorVisible(true);
-		setSelection(3,7);
-		assertCursorVisible(true);
-		clickButtons("47");
-		clickButtons("=");
-		assertCursorVisible(false);
-		assertExpressionEquals("0.9");
-
-		//select ".9" replace with 1300
-		setSelection(1,3);
-		clickButtons("a1");
-		assertExpressionEquals("0100");
-
-		moveCursorToPos(2);
-		assertCursorVisible(true);
-		clickButtons("3=");		
-		assertExpressionEquals("1,300");
-
-		moveCursorToPos(0);
-		clickButtons("q1+");
-		assertExpressionEquals("48-47.1+1,300");
-
-		setSelection(3,8);
-		contextCommand(android.R.id.cut);
-		assertExpressionEquals("48-1,300");
-
-		setSelection(0,4);
-		contextCommand(android.R.id.paste);
-		assertExpressionEquals("47.1+300");
-
-		clickButtons("=");
-		assertExpressionEquals("347.1");
-
-		setSelection(1,3);		
-		contextCommand(android.R.id.copy);
-		holdButton("b");
-		contextCommand(android.R.id.paste);
-		setSelection(0,0);		
-		assertExpressionEquals("47");
-
-		holdButton("b");
-		clickButtons("-5=");
-		assertExpressionEquals("-5");
-		
-		clickButtons("3-a0=");
-		assertExpressionEquals("8");
-
-		//don't go into the next test without a small delay otherwise expression view throws NP (maybe?)
-		sleep(700);
+//		setSelection(3,7);
+//		assertCursorVisible(true);
+//		clickButtons("47");
+//		clickButtons("=");
+//		assertCursorVisible(false);
+//		assertExpressionEquals("0.9");
+//
+//		//select ".9" replace with 1300
+//		setSelection(1,3);
+//		clickButtons("a1");
+//		assertExpressionEquals("0100");
+//
+//		moveCursorToPos(2);
+//		assertCursorVisible(true);
+//		clickButtons("3=");
+//		assertExpressionEquals("1,300");
+//
+//		moveCursorToPos(0);
+//		clickButtons("q1+");
+//		assertExpressionEquals("48-47.1+1,300");
+//
+//		setSelection(3,8);
+//		contextCommand(android.R.id.cut);
+//		assertExpressionEquals("48-1,300");
+//
+//		setSelection(0,4);
+//		contextCommand(android.R.id.paste);
+//		assertExpressionEquals("47.1+300");
+//
+//		clickButtons("=");
+//		assertExpressionEquals("347.1");
+//
+//		setSelection(1,3);
+//		contextCommand(android.R.id.copy);
+//		holdButton("b");
+//		contextCommand(android.R.id.paste);
+//		setSelection(0,0);
+//		assertExpressionEquals("47");
+//
+//		holdButton("b");
+//		clickButtons("-5=");
+//		assertExpressionEquals("-5");
+//
+//		clickButtons("3-a0=");
+//		assertExpressionEquals("8");
+//
+//		//don't go into the next test without a small delay otherwise expression view throws NP (maybe?)
+//		sleep(700);
 	}
 
-
-	@MediumTest
-	public void test2UnitConvertions(){
-		holdButton("b");
-		assertConvButtonSelected("");
-
-		clickConvButton("in");
-		//TODO come up with less crude way of clicking ok on dialog (hitting backspace works for now)
-		clickButtons("b");
-		
-		clickConvButton("in");
-		assertConvButtonSelected("");
-
-		clickConvButton("in");
-		clickButtons("b");
-		assertConvButtonSelected("");
-
-		clickButtons("36");
-		clickConvButton("in");
-		assertExpressionEquals("36 in");
-		assertConvButtonSelected("in");
-
-		clickConvButton("ft");
-		assertQueryAnswerExprConvbutton("36 in", "3 ft", "3 ft", "ft");
-
-		clickConvButton("nm");
-		assertQueryAnswerExprConvbutton("3 ft","9.144E8 nm","9.144E8 nm","nm");
-
-		clickButtons("b");
-		assertExpressionEquals("");
-		assertConvButtonSelected("");
-
-		clickConvButton("cm");
-		assertQueryAnswerExprConvbutton("3 ft","9.144E8 nm","","cm");
-		clickButtons("b");
-
-		clickConvButton("m");
-		clickButtons("3+1=");
-		assertQueryAnswerExprConvbutton("3+1 m","4 m","4 m","m");
-
-		clickConvButton("km");
-		assertQueryAnswerExprConvbutton("4 m","0.004 km","0.004 km","km");
-
-		clickButtons("ba1");
-		assertExpressionEquals("4 m"); //assertEquals("4", getExp());
-		assertConvButtonSelected("m"); //assertTrue(isConvButtonSelected("m"));
-
-		clickConvButton("cm");
-		assertQueryAnswerExprConvbutton("4 m","400 cm","400 cm","cm");
-
-		clickConvButton("cm");
-		assertQueryAnswerExprConvbutton("4 m","400 cm","400","");
-
-		clickButtons("b1609+.344");
-		clickConvButton("m");
-		clickButtons("=");
-		assertQueryAnswerExprConvbutton("1609+.344 m","1609.344 m","1609.344 m","m");
-
-		clickButtons("+a0");
-		clickConvButton("mi");
-		assertQueryAnswerExprConvbutton("1609.344+1609.344 m","2 mi","2 mi","mi");
-
-		clickButtons("/q2=");
-		assertQueryAnswerExprConvbutton("2/4 mi","0.5 mi","0.5 mi","mi");
-	}
-
-	@MediumTest
-	public void test3Swiping(){
-		holdButton("b");
-		//test to make sure swiping left clears current unit
-		clickConvButton("in");
-		clickButtons("12+24=");
-		assertConvButtonSelected("in");
-		assertExpressionEquals("36 in");
-		swipeConvKeysToLeft();
-
-		//see if "in" is still selected a bit off screen in the screen to the left
-		FragmentStatePagerAdapter tempAdapter = (FragmentStatePagerAdapter) mConKeysViewPager.getAdapter();
-		mConvertFragment = (ConvKeysFragment) tempAdapter.instantiateItem(mConKeysViewPager, mConKeysViewPager.getCurrentItem()+1);
-		int convertButtonPos = mUnitToPos.get("in");
-		assertTrue(!mConvertFragment.getView().findViewById(convertButtonIds[convertButtonPos]).isSelected());
-
-
-		swipeConvKeysToRight();
-		assertExpressionEquals("36");
-		assertConvButtonSelected("");
-
-		swipeConvKeysToLeft();
-		clickButtons("16");
-		clickConvButton("oz");
-		assertConvButtonSelected("oz");		
-		clickConvButton("lb");
-		assertQueryAnswerExprConvbutton("16 oz","1 lb","1 lb","lb");
-
-		//test to be sure clicking Unit-ed result scrolls to it
-		swipeConvKeysToRight();
-		clickButtons("ba0");
-		assertExpressionEquals("1 lb");
-		assertConvButtonSelected("lb");
-
-
-		swipeConvKeysToLeft();
-		swipeConvKeysToLeft();
-		swipeConvKeysToLeft();
-		swipeConvKeysToLeft();
-		swipeConvKeysToLeft();
-		swipeConvKeysToRight();
-		swipeConvKeysToRight();
-		swipeConvKeysToRight();
-		swipeConvKeysToRight();
-		swipeConvKeysToRight();
-		swipeConvKeysToRight();
-	}
+//
+//	@MediumTest
+//	public void test2UnitConvertions(){
+//		holdButton("b");
+//		assertConvButtonSelected("");
+//
+//		clickConvButton("in");
+//		//TODO come up with less crude way of clicking ok on dialog (hitting backspace works for now)
+//		clickButtons("b");
+//
+//		clickConvButton("in");
+//		assertConvButtonSelected("");
+//
+//		clickConvButton("in");
+//		clickButtons("b");
+//		assertConvButtonSelected("");
+//
+//		clickButtons("36");
+//		clickConvButton("in");
+//		assertExpressionEquals("36 in");
+//		assertConvButtonSelected("in");
+//
+//		clickConvButton("ft");
+//		assertQueryAnswerExprConvbutton("36 in", "3 ft", "3 ft", "ft");
+//
+//		clickConvButton("nm");
+//		assertQueryAnswerExprConvbutton("3 ft","9.144E8 nm","9.144E8 nm","nm");
+//
+//		clickButtons("b");
+//		assertExpressionEquals("");
+//		assertConvButtonSelected("");
+//
+//		clickConvButton("cm");
+//		assertQueryAnswerExprConvbutton("3 ft","9.144E8 nm","","cm");
+//		clickButtons("b");
+//
+//		clickConvButton("m");
+//		clickButtons("3+1=");
+//		assertQueryAnswerExprConvbutton("3+1 m","4 m","4 m","m");
+//
+//		clickConvButton("km");
+//		assertQueryAnswerExprConvbutton("4 m","0.004 km","0.004 km","km");
+//
+//		clickButtons("ba1");
+//		assertExpressionEquals("4 m"); //assertEquals("4", getExp());
+//		assertConvButtonSelected("m"); //assertTrue(isConvButtonSelected("m"));
+//
+//		clickConvButton("cm");
+//		assertQueryAnswerExprConvbutton("4 m","400 cm","400 cm","cm");
+//
+//		clickConvButton("cm");
+//		assertQueryAnswerExprConvbutton("4 m","400 cm","400","");
+//
+//		clickButtons("b1609+.344");
+//		clickConvButton("m");
+//		clickButtons("=");
+//		assertQueryAnswerExprConvbutton("1609+.344 m","1609.344 m","1609.344 m","m");
+//
+//		clickButtons("+a0");
+//		clickConvButton("mi");
+//		assertQueryAnswerExprConvbutton("1609.344+1609.344 m","2 mi","2 mi","mi");
+//
+//		clickButtons("/q2=");
+//		assertQueryAnswerExprConvbutton("2/4 mi","0.5 mi","0.5 mi","mi");
+//	}
+//
+//	@MediumTest
+//	public void test3Swiping(){
+//		holdButton("b");
+//		//test to make sure swiping left clears current unit
+//		clickConvButton("in");
+//		clickButtons("12+24=");
+//		assertConvButtonSelected("in");
+//		assertExpressionEquals("36 in");
+//		swipeConvKeysToLeft();
+//
+//		//see if "in" is still selected a bit off screen in the screen to the left
+//		FragmentStatePagerAdapter tempAdapter = (FragmentStatePagerAdapter) mConKeysViewPager.getAdapter();
+//		mConvertFragment = (ConvKeysFragment) tempAdapter.instantiateItem(mConKeysViewPager, mConKeysViewPager.getCurrentItem()+1);
+//		int convertButtonPos = mUnitToPos.get("in");
+//		assertTrue(!mConvertFragment.getView().findViewById(convertButtonIds[convertButtonPos]).isSelected());
+//
+//
+//		swipeConvKeysToRight();
+//		assertExpressionEquals("36");
+//		assertConvButtonSelected("");
+//
+//		swipeConvKeysToLeft();
+//		clickButtons("16");
+//		clickConvButton("oz");
+//		assertConvButtonSelected("oz");
+//		clickConvButton("lb");
+//		assertQueryAnswerExprConvbutton("16 oz","1 lb","1 lb","lb");
+//
+//		//test to be sure clicking Unit-ed result scrolls to it
+//		swipeConvKeysToRight();
+//		clickButtons("ba0");
+//		assertExpressionEquals("1 lb");
+//		assertConvButtonSelected("lb");
+//
+//
+//		swipeConvKeysToLeft();
+//		swipeConvKeysToLeft();
+//		swipeConvKeysToLeft();
+//		swipeConvKeysToLeft();
+//		swipeConvKeysToLeft();
+//		swipeConvKeysToRight();
+//		swipeConvKeysToRight();
+//		swipeConvKeysToRight();
+//		swipeConvKeysToRight();
+//		swipeConvKeysToRight();
+//		swipeConvKeysToRight();
+//	}
 
 
 
