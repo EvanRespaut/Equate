@@ -55,7 +55,13 @@ public class CalcActivityEspressoTest {
 		clickButtons("C");
 		assertExpressionEquals("");
 
-		clickButtons("(.1");
+		clickButtons("("); 
+		assertExpressionEquals("(");
+
+		clickButtons(".");
+		assertExpressionEquals("(.");
+
+		clickButtons("1");
 		assertExpressionEquals("(.1");
 
 		clickButtons("+b");
