@@ -82,6 +82,8 @@ public class CalcActivityEspressoTest {
 
 	@Test
 	public void testCalcActivity2() {
+		clickButtons("C");
+		assertExpressionEquals("");
 		onView(withId(R.id.close_para_button)).perform(click());
 		assertExpressionEquals(")");
 	}
