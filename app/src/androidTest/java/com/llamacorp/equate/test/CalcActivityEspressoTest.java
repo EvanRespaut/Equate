@@ -55,8 +55,10 @@ public class CalcActivityEspressoTest {
 		clickButtons("C");
 		assertExpressionEquals("");
 
-		clickButtons("("); 
-		assertExpressionEquals("(");
+		onView(withId(R.id.open_para_button)).perform(click());
+
+//		clickButtons("(");
+//		assertExpressionEquals("(");
 
 		clickButtons(".");
 		assertExpressionEquals("(.");
@@ -78,8 +80,13 @@ public class CalcActivityEspressoTest {
 
 	}
 
+	@Test
+	public void testCalcActivity2() {
+		onView(withId(R.id.close_para_button)).perform(click());
+		assertExpressionEquals(")");
+	}
 
-	private void assertExpressionEquals(String expected) {
+		private void assertExpressionEquals(String expected) {
 		getTextDisplay().check(matches(withText(expected)));
 	}
 
