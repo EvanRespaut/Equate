@@ -3,13 +3,13 @@
 #
 
 general:
-    java:
-        version: oraclejdk8
     artifacts:
         - /home/ubuntu/Equate/app/build/outputs/apk/
 
 
 machine:
+    java:
+        version: oraclejdk8
     environment:
         ANDROID_HOME: /usr/local/android-sdk-linux
         #not sure what this does, remove if uncessary later
