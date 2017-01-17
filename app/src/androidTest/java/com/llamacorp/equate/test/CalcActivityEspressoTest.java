@@ -31,7 +31,8 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 public class CalcActivityEspressoTest {
 
 	@Rule
-	public ActivityTestRule<CalcActivity> mActivityTestRule = new ActivityTestRule<>(CalcActivity.class);
+	public ActivityTestRule<CalcActivity> mActivityTestRule =
+			  new ActivityTestRule<>(CalcActivity.class);
 
 	@Test
 	public void testCalcActivity() {
@@ -88,6 +89,12 @@ public class CalcActivityEspressoTest {
 		assertExpressionEquals(")");
 	}
 
+	@Test
+	public void testCalcActivity8() {
+		clickButtons("1C8");
+		assertExpressionEquals("8");
+	}
+
 		private void assertExpressionEquals(String expected) {
 		getTextDisplay().check(matches(withText(expected)));
 	}
@@ -126,7 +133,7 @@ public class CalcActivityEspressoTest {
 		}
 
 		if (longClick) onView(withId(id)).perform(longClick());
-		else onView(withId(id)).perform();
+		else onView(withId(id)).perform(click());
 	}
 
 

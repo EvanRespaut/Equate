@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Paint;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.widget.TextView;
 
 import com.llamacorp.equate.R;
@@ -42,7 +41,7 @@ public class DynamicTextView extends TextView {
 		} finally {
 			ta.recycle();
 		}
-		Log.d("DYN", "mStartingTextSize = " + getTextSize());
+		//Log.d("DYN", "mStartingTextSize = " + getTextSize());
 	}
 
 

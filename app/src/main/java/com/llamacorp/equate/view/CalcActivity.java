@@ -22,7 +22,6 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -76,6 +75,9 @@ public class CalcActivity extends AppCompatActivity
 			  R.id.close_para_button,
 
 	};
+
+//	//time used for testing
+//	long mTimer = 0;
 
 	//main calculator object
 	public Calculator mCalc;// = new Calculator();
@@ -202,6 +204,23 @@ public class CalcActivity extends AppCompatActivity
 						  .setSecondaryText(mCalc.mPreferences.getPercentButSec());
 			}
 
+//
+//			button.setOnTouchListener(new View.OnTouchListener() {
+//				@Override
+//				public boolean onTouch(View view, MotionEvent motionEvent) {
+//					if (motionEvent.getActionMasked() == MotionEvent.ACTION_DOWN){
+//						mTimer = System.currentTimeMillis();
+//						Log.d("buttonTimer", "Time pressed = " +
+//								  String.valueOf(System.currentTimeMillis() - mTimer));
+//					}
+//					if (motionEvent.getActionMasked() == MotionEvent.ACTION_UP){
+//						Log.d("buttonTimer", "Time pressed = " +
+//								  String.valueOf(System.currentTimeMillis() - mTimer));
+//					}
+//					return false;
+//				}
+//			});
+
 			button.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View view) {
@@ -296,7 +315,7 @@ public class CalcActivity extends AppCompatActivity
 							buttonValue = "]";
 							break;
 						default:
-							return true;
+							return false;
 					}
 					//pass button to calc, change conv key colors (maybe) and update screen
 					if (!buttonValue.equals(""))
@@ -613,7 +632,6 @@ public class CalcActivity extends AppCompatActivity
 
 	private void updatePreviewText(int suffixColor) {
 		mResultPreview.setText(mCalc.getPreviewText(suffixColor));
-		Log.d("tag_prev", "prev height = " + mResultPreview.getHeight());
 	}
 
 	/**
