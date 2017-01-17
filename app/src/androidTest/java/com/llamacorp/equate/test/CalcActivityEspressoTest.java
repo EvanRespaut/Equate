@@ -126,7 +126,7 @@ public class CalcActivityEspressoTest {
 		}
 
 		if (longClick) onView(withId(id)).perform(longClick());
-		else onView(withId(id)).perform(click());
+		else onView(withId(id)).perform();
 	}
 
 

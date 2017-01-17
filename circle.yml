@@ -3,8 +3,13 @@
 #
 
 general:
+    java:
+        version: oraclejdk8
     artifacts:
         - /home/ubuntu/Equate/app/build/outputs/apk/
+        #not sure what this does, remove if uncessary later
+        JAVA_OPTS: "-Xms512m -Xmx2048m"
+        ADB_INSTALL_TIMEOUT: 5000
 
 machine:
     environment:
@@ -14,6 +19,9 @@ dependencies:
 #   cache_directories:
 #      - ~/.android
 #      - ~/android
+    pre:
+        - fb-adb start-server:
+            background: true
     override:
         - echo y | android update sdk --no-ui --all --filter "tools,platform-tools"
         - echo y | android update sdk --no-ui --all --filter "build-tools-25.0.1"
@@ -62,3 +70,5 @@ test:
         - cp -r app/build/outputs/androidTest-results/* $CIRCLE_TEST_REPORTS
         # copy the Android test results to the test results directory.
         - cp -r app/build/reports $CIRCLE_ARTIFACTS
+        # Save a screenshot to Circle-CI Artifacts
+        - fb-adb rcmd screencap -p > $CIRCLE_ARTIFACTS/screen-$(date +"%T").png
