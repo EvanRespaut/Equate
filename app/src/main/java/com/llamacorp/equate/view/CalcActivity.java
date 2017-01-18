@@ -357,7 +357,7 @@ public class CalcActivity extends AppCompatActivity
 			private Handler mResetHandler;
 			private View mView;
 			private static final int RESET_HOLD_TIME = 2200;
-			private static final int CLEAR_HOLD_TIME = 300;
+			private final int CLEAR_HOLD_TIME = ViewUtils.getLongClickTimeout(mAppContext);
 			//private int startTime;
 
 			@Override

@@ -13,7 +13,7 @@ import android.view.View;
 import com.llamacorp.equate.R;
 
 public class AnimatedHoldButton extends SecondaryTextButton {
-	private static final int CLICK_HOLD_TIME = 300; //normally 300  CircleCI breaks 550 < x 675
+	private final int CLICK_HOLD_TIME;
 
 	protected float mSecAdditionalXOffset = getContext().getResources().
 			  getDimensionPixelSize(R.dimen.button_secondary_text_additional_offset_x);
@@ -38,6 +38,8 @@ public class AnimatedHoldButton extends SecondaryTextButton {
 
 	public AnimatedHoldButton(Context context, AttributeSet attrs) {
 		super(context, attrs);
+
+		CLICK_HOLD_TIME = ViewUtils.getLongClickTimeout(context);
 
 		mPrimaryText = "";
 

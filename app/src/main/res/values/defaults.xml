@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+   <!-- Espresso tests break when timeout is too large, especially when running
+   on CircleCi -->
+   <integer name="long_click_timeout">300</integer>
+   <integer name="long_click_timeout_test">1000</integer>
+</resources>

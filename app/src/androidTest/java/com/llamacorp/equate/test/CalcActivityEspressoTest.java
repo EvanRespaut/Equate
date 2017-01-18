@@ -4,7 +4,6 @@ package com.llamacorp.equate.test;
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.test.suitebuilder.annotation.LargeTest;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
@@ -26,7 +25,6 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
-@LargeTest
 @RunWith(AndroidJUnit4.class)
 public class CalcActivityEspressoTest {
 
@@ -56,10 +54,8 @@ public class CalcActivityEspressoTest {
 		clickButtons("C");
 		assertExpressionEquals("");
 
-		onView(withId(R.id.open_para_button)).perform(click());
-
-//		clickButtons("(");
-//		assertExpressionEquals("(");
+		clickButtons("(");
+		assertExpressionEquals("(");
 
 		clickButtons(".");
 		assertExpressionEquals("(.");
@@ -83,10 +79,11 @@ public class CalcActivityEspressoTest {
 
 	@Test
 	public void testCalcActivity2() {
-		clickButtons("C");
-		assertExpressionEquals("");
-		onView(withId(R.id.close_para_button)).perform(click());
-		assertExpressionEquals(")");
+		clickButtons("C123789");
+		assertExpressionEquals("123,789");
+
+		clickButtons("bbbb");
+		assertExpressionEquals("12");
 	}
 
 	@Test
@@ -208,7 +205,7 @@ public class CalcActivityEspressoTest {
 
 
 	private static class InvalidButtonViewException extends RuntimeException {
-		public InvalidButtonViewException(String message) {
+		InvalidButtonViewException(String message) {
 			super(message);
 		}
 	}
