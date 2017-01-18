@@ -72,6 +72,6 @@ test:
         # copy the Android test results to the test results directory.
         - cp -r app/build/reports $CIRCLE_ARTIFACTS
         # copy a little file to make finding test reports easier
-        - wget -O $CIRCLE_ARTIFACTS/Report Summary.html 'https://www.dropbox.com/s/xjfu281rkmv2oow/Reports.html?dl=0'
+        - wget -O $CIRCLE_ARTIFACTS/Report_Summary.html 'https://www.dropbox.com/s/xjfu281rkmv2oow/Reports.html?dl=0'
 #        # Save a screenshot to Circle-CI Artifacts
 #        - fb-adb rcmd screencap -p > $CIRCLE_ARTIFACTS/screen-$(date +"%T").png
