@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Handler;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -49,7 +50,7 @@ public class AnimatedHoldButton extends SecondaryTextButton {
 		try {
 			mPrimaryText = ta.getString(R.styleable.AnimatedHoldButton_primary_text);
 			mPressedColor = ta.getColor(R.styleable.AnimatedHoldButton_pressed_color,
-					  getResources().getColor(R.color.op_button_pressed));
+					  ContextCompat.getColor(context, R.color.op_button_pressed));
 		} finally {
 			ta.recycle();
 		}
@@ -153,7 +154,8 @@ public class AnimatedHoldButton extends SecondaryTextButton {
 		private void initializeColors() {
 			if (mGradStartCol == null){
 				mGradStartCol = mPressedColor;
-				mGradEndCol = getResources().getColor(R.color.op_button_long_press_accent);
+				mGradEndCol = ContextCompat.getColor(getContext(),
+						  R.color.op_button_long_press_accent);
 				mAccentColor = mPressedColor;
 				mFinalColor = mPressedColor;
 			}

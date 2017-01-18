@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.widget.Button;
 
@@ -45,7 +46,7 @@ class SecondaryTextButton extends Button {
 			secTextPct = ta.getInteger(R.styleable.SecondaryTextButton_secondary_text_font_size_percentage,
 					  SECONDARY_FONT_PERCENTAGE);
 			mSecondaryTextColor = ta.getColor(R.styleable.SecondaryTextButton_secondary_text_color,
-					  getResources().getColor(R.color.button_secondary_text));
+					  ContextCompat.getColor(context, R.color.button_secondary_text));
 		} finally {
 			ta.recycle();
 		}

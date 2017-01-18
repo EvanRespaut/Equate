@@ -17,21 +17,21 @@ machine:
         ADB_INSTALL_TIMEOUT: 5000
 
 dependencies:
-#   cache_directories:
-#      - ~/.android
-#      - ~/android
-    pre:
-        - fb-adb start-server:
-            background: true
-    override:
-        - echo y | android update sdk --no-ui --all --filter "tools,platform-tools"
-        - echo y | android update sdk --no-ui --all --filter "build-tools-25.0.1"
-        - echo y | android update sdk --no-ui --all --filter "android-25"
-        - echo y | android update sdk --no-ui --all --filter "extra-google-m2repository"
-        - echo y | android update sdk --no-ui --all --filter "extra-android-m2repository"
-        #- echo y | android update sdk --no-ui --all --filter "extra-android-support"
-        - chmod +x gradlew
-        - ANDROID_HOME=/usr/local/android-sdk-linux ./gradlew dependencies
+   cache_directories:
+       - ~/.android
+       - ~/android
+   pre:
+       - fb-adb start-server:
+           background: true
+   override:
+       - echo y | android update sdk --no-ui --all --filter "tools,platform-tools"
+       - echo y | android update sdk --no-ui --all --filter "build-tools-25.0.1"
+       - echo y | android update sdk --no-ui --all --filter "android-25"
+       - echo y | android update sdk --no-ui --all --filter "extra-google-m2repository"
+       - echo y | android update sdk --no-ui --all --filter "extra-android-m2repository"
+       #- echo y | android update sdk --no-ui --all --filter "extra-android-support"
+       - chmod +x gradlew
+       - ANDROID_HOME=/usr/local/android-sdk-linux ./gradlew dependencies
 #dependencies:
 #  pre:
 #    - chmod +x gradlew
@@ -63,10 +63,12 @@ test:
         - ./gradlew connectedAndroidTest -PdisablePreDex
         # run the JUnit tests located in app\src\test\java\com\llamacorp
         - ./gradlew test
-        - (./gradlew assemble):
-            timeout: 360
+#        - (./gradlew assemble):
+#            timeout: 360
         # copy the test results to the test results directory.
         - cp -r app/build/test-results/* $CIRCLE_TEST_REPORTS
+        # copy a little file to make finding test reports easier
+        - wget -O $CIRCLE_TEST_REPORTS/Reports.html 'https://www.dropbox.com/s/xjfu281rkmv2oow/Reports.html?dl=0'
         # copy the Android test results to the test results directory.
         - cp -r app/build/outputs/androidTest-results/* $CIRCLE_TEST_REPORTS
         # copy the Android test results to the test results directory.
