@@ -66,12 +66,13 @@ class Preview {
 		if (mNumFormat == Expression.NumFormat.ENGINEERING){
 			String suffixText = SISuffixHelper.getSuffixName(mText);
 			if (!suffixText.isEmpty())
-				suffix = "[" + SISuffixHelper.getSuffixName(mText) + "]";
+				suffix = " [" + SISuffixHelper.getSuffixName(mText) + "]";
 		}
 		//only add on "= " if the string isn't already empty
-		if (!"".equals(mText)) mText = "= " + mText;
+		String returnText = mText;
+		if (!"".equals(mText)) returnText = "= " + mText;
 
-		return ViewUtils.fromHtml(mText + " <font color=" + suffixColor
+		return ViewUtils.fromHtml(returnText + "<font color=" + suffixColor
 				  + ">" + suffix + "</font>");
 	}
 

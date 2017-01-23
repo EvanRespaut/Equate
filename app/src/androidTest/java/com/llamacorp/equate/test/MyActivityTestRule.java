@@ -48,6 +48,7 @@ class MyActivityTestRule<A extends CalcActivity> extends ActivityTestRule {
 	private void resetSharedPrefs() {
 		File root = InstrumentationRegistry.getTargetContext().getFilesDir().getParentFile();
 		String[] sharedPreferencesFileNames = new File(root, "shared_prefs").list();
+		if (sharedPreferencesFileNames == null) return;
 		for (String fileName : sharedPreferencesFileNames) {
 			InstrumentationRegistry.getTargetContext().getSharedPreferences(fileName.replace(".xml", ""), Context.MODE_PRIVATE).edit().clear().apply();
 		}

@@ -5,6 +5,7 @@ import android.support.test.espresso.UiController;
 import android.support.test.espresso.ViewAction;
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.espresso.matcher.BoundedMatcher;
+import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.runner.AndroidJUnit4;
 import android.view.Gravity;
 import android.view.View;
@@ -33,6 +34,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isEnabled;
 import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
 import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
+import static android.support.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withParent;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
@@ -51,6 +53,7 @@ public class CalcActivityEspressoTest {
 	public void testCalcActivity() {
 		clickButtons("C");
 		assertExpressionEquals("");
+		assertResultPreviewInvisible();
 
 		clickButtons("(");
 		assertExpressionEquals("(");
@@ -60,15 +63,19 @@ public class CalcActivityEspressoTest {
 
 		clickButtons("1");
 		assertExpressionEquals("(.1");
+		assertResultPreviewEquals("= 0.1");
 
 		clickButtons("+b");
 		assertExpressionEquals("(.1");
 
 		clickButtons(")4");
 		assertExpressionEquals("(.1)*4");
+		assertResultPreviewEquals("= 0.4");
 
 		clickButtons("=");
 		assertExpressionEquals("0.4");
+		assertResultPreviewInvisible();
+
 
 //		ViewInteraction unitScrollView = onView(withText("Force"));
 //		unitScrollView.perform(scrollTo(), click());
@@ -210,6 +217,16 @@ public class CalcActivityEspressoTest {
 						  && view.equals(((ViewGroup) parent).getChildAt(position));
 			}
 		};
+	}
+
+	private void assertResultPreviewInvisible() {
+		onView(withId(R.id.resultPreview)).check(matches(
+				  withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
+	}
+
+	private void assertResultPreviewEquals(String expected) {
+		onView(withId(R.id.resultPreview)).check(matches(allOf(isDisplayed(),
+				  withText(expected))));
 	}
 
 	private void assertExpressionEquals(String expected) {
