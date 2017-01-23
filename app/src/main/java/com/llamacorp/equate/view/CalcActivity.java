@@ -183,11 +183,11 @@ public class CalcActivity extends AppCompatActivity
 
 		//use fragment manager to make the result list
 		FragmentManager fm = getSupportFragmentManager();
-		mResultListFrag = (ResultListFragment) fm.findFragmentById(R.id.resultListfragmentContainer);
+		mResultListFrag = (ResultListFragment) fm.findFragmentById(R.id.resultListFragmentContainer);
 
 		if (mResultListFrag == null){
 			mResultListFrag = new ResultListFragment();
-			fm.beginTransaction().add(R.id.resultListfragmentContainer, mResultListFrag).commit();
+			fm.beginTransaction().add(R.id.resultListFragmentContainer, mResultListFrag).commit();
 		}
 
 

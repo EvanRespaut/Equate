@@ -222,8 +222,5 @@ public class UnitTypeList {
 	public boolean setOrdered(Set<String> ordered) {
 		mOrderedUnitKeys = new ArrayList<>(XML_KEYS);
 		return mOrderedUnitKeys.retainAll(ordered);
-//		for (String s : XML_KEYS) {
-//			if (s.equals())
-//		}
 	}
 }

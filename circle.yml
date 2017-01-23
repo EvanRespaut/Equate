@@ -1,5 +1,6 @@
 #
 # Build configuration for Circle CI
+# Using Ubuntu 12.04 (Precise) Build Environment
 #
 
 general:
@@ -9,6 +10,7 @@ general:
 
 machine:
     java:
+        # jdk8 needed for fb-adb
         version: oraclejdk8
     environment:
         ANDROID_HOME: /usr/local/android-sdk-linux
@@ -19,7 +21,7 @@ machine:
 dependencies:
    cache_directories:
        - ~/.android
-       - ~/android
+       - /usr/local/android-sdk-linux/platforms/android-25
    pre:
        - fb-adb start-server:
            background: true

@@ -3,5 +3,5 @@
    <!-- Espresso tests break when timeout is too large, especially when running
    on CircleCi -->
    <integer name="long_click_timeout">300</integer>
-   <integer name="long_click_timeout_test">1000</integer>
+   <integer name="long_click_timeout_test">500</integer>
 </resources>

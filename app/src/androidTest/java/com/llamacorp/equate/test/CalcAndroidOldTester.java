@@ -112,7 +112,7 @@ public class CalcAndroidOldTester extends ActivityInstrumentationTestCase2<CalcA
 		mActivity = getActivity();
 
 		FragmentManager fm = mActivity.getSupportFragmentManager();
-		mResultFragment = (ResultListFragment) fm.findFragmentById(R.id.resultListfragmentContainer);
+		mResultFragment = (ResultListFragment) fm.findFragmentById(R.id.resultListFragmentContainer);
 		mResultListView = mResultFragment.getListView();
 
 		mConKeysViewPager = (ViewPager) getActivity().findViewById(R.id.unit_pager);
