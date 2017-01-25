@@ -1,6 +1,7 @@
 package com.llamacorp.equate.unit;
 
 import android.content.Context;
+import android.content.res.Resources;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -11,6 +12,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 
 /**
  * Abstract class, note that child class must implement a function to do raw

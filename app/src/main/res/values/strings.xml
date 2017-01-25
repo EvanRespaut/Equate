@@ -116,4 +116,64 @@
 
    <color name="app_background">#000000</color>
    <dimen name="button_radius">0dp</dimen>
+
+   <!-- Unit Names -->
+   <!--These names should not get translated, they're used internally only-->
+   <string-array name="unit_type_array_combined">
+      <item>key_currency|Currency        |Currency</item>
+      <item>key_temp    |Temperature     |Temp    </item>
+      <item>key_weight  |Weight          |Weight  </item>
+      <item>key_len     |Length          |Length  </item>
+      <item>key_area    |Area            |Area    </item>
+      <item>key_vol     |Volume          |Volume  </item>
+      <item>key_speed   |Speed           |Speed   </item>
+      <item>key_time    |Time            |Time    </item>
+      <item>key_fuel    |Fuel Economy    |Fuel Eco</item>
+      <item>key_power   |Power           |Power   </item>
+      <item>key_energy  |Energy          |Energy  </item>
+      <item>key_force   |Force           |Force   </item>
+      <item>key_torque  |Torque          |Torque  </item>
+      <item>key_pressure|Pressure        |Pressure</item>
+      <item>key_digital |Digital Storage |Digital </item>
+   </string-array>
+
+
+   <string-array name="unit_type_names">
+      <item>Currency</item>
+      <item>Temperature</item>
+      <item>Weight</item>
+      <item>Length</item>
+      <item>Area</item>
+      <item>Volume</item>
+      <item>Speed</item>
+      <item>Time</item>
+      <item>Fuel Economy</item>
+      <item>Power</item>
+      <item>Energy</item>
+      <item>Force</item>
+      <item>Torque</item>
+      <item>Pressure</item>
+      <item>Digital Storage</item>
+   </string-array>
+
+   <string-array name="unit_type_tab_names">
+      <item>Currency</item>
+      <item>Temp</item>
+      <item>Weight</item>
+      <item>Length</item>
+      <item>Area</item>
+      <item>Volume</item>
+      <item>Speed</item>
+      <item>Time</item>
+      <item>Fuel Eco</item>
+      <item>Power</item>
+      <item>Energy</item>
+      <item>Force</item>
+      <item>Torque</item>
+      <item>Pressure</item>
+      <item>Digital</item>
+   </string-array>
+
+
+
 </resources>

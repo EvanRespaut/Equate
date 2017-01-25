@@ -13,14 +13,16 @@ class UnitInitializer {
 	 * Method to generate a default unit type array in the form of a linked
 	 * hash map using the keys supplied as a parameter.
 	 * @param keys for the returned Unit Type Hash map
+	 * @param tabNames list of names for Unit Type tabs
 	 * @return a linked hash map of Unit Types
 	 * @throws UnitInitializerError if the supplied keys parameter is not of the
 	 * same length as the default unit type array.
 	 */
-	public static LinkedHashMap<String, UnitType> getUnitTypeMap(ArrayList<String> keys)
+	public static LinkedHashMap<String, UnitType> getUnitTypeMap(ArrayList<String> keys,
+																					 ArrayList<String> tabNames)
 			  throws UnitInitializerError {
 		LinkedHashMap<String, UnitType> unitTypeArray = new LinkedHashMap<>();
-		ArrayList<UnitType> units = getDefaultUnitArray();
+		ArrayList<UnitType> units = getDefaultUnitArray(tabNames);
 		if (units.size() != keys.size())
 			throw new UnitInitializerError();
 		else {
@@ -31,55 +33,14 @@ class UnitInitializer {
 		}
 	}
 
-	private static ArrayList<UnitType> getDefaultUnitArray() {
+
+	private static ArrayList<UnitType> getDefaultUnitArray(ArrayList<String> tabNames) {
 		ArrayList<UnitType> unitTypeArray = new ArrayList<>();
 
-//
-//      //array of values from 1914 $10 bill; starts with 1913; uses the CPI index
-//      //data can be found: http://data.bls.gov/timeseries/CUUR0000SA0
-//      double[] cpiTable = {9.9, 10, 10.1, 10.9, 12.8, 15.1, 17.3, 20, 17.9, 16.8,
-//              17.1, 17.1, 17.5, 17.7, 17.4, 17.1, 17.1, 16.7, 15.2, 13.7, 13, 13.4,
-//              13.7, 13.9, 14.4, 14.1, 13.9, 14, 14.7, 16.3, 17.3, 17.6, 18, 19.5,
-//              22.3, 24.1, 23.8, 24.1, 26, 26.5, 26.7, 26.9, 26.8, 27.2, 28.1, 28.9,
-//              29.1, 29.6, 29.9, 30.2, 30.6, 31, 31.5, 32.4, 33.4, 34.8, 36.7, 38.8,
-//              40.5, 41.8, 44.4, 49.3, 53.8, 56.9, 60.6, 65.2, 72.6, 82.4, 90.9, 96.5,
-//              99.6, 103.9, 107.6, 109.6, 113.6, 118.3, 124, 130.7, 136.2, 140.3,
-//              144.5, 148.2, 152.4, 156.9, 160.5, 163, 166.6, 172.2, 177.1, 179.9,
-//              184, 188.9, 195.3, 201.6, 207.342, 215.303, 214.537, 218.056, 224.939,
-//              229.594, 232.957, 236.911};
-//
-//      ArrayList<Double> al = new ArrayList<Double>();
-//      for(double val : cpiTable){
-//         //convert values such that 1 is current 2014 dollar
-//         double normalizedValue = val/cpiTable[cpiTable.length-1];
-//         al.add(normalizedValue);
-//      }
-//
-//
-//		UnitType unitsOfCurrency = new UnitType("Currency");
-//		unitsOfCurrency.addUnit(new UnitCurrency("USD", "Dollars", 1));
-//		unitsOfCurrency.addUnit(new UnitCurrency("EUR", "Euros", 0.929));
-//		unitsOfCurrency.addUnit(new UnitCurrency("CAD", "Canadian Dollars", 1.26));
-//		unitsOfCurrency.addUnit(new UnitCurrency("GBP", "Pounds", 0.67));
-//      unitsOfCurrency.addUnit(new UnitCurrency("BTC", "Bitcoins", 0.004,
-//              "http://blockchain.info/tobtc?currency=USD&value=1"));
-//
-//      unitsOfCurrency.addUnit(new UnitHistCurrency("USD", "Dollars", al, 1913, 1975));
-//		unitsOfCurrency.addUnit(new UnitCurrency("CHF", "Swiss Francs", 0.967));
-//      unitsOfCurrency.addUnit(new UnitCurrency("JPY", "Yen", 119.7));
-//		unitsOfCurrency.addUnit(new UnitCurrency("HKD", "Hong Kong Dollars", 7.75));
-//
-//
-//      unitsOfCurrency.addUnit(new UnitCurrency("AUD", "Australian Dollars", 1.314));
-//      unitsOfCurrency.addUnit(new UnitCurrency("SGD", "Singapore Dollars", 1.363));
-//		unitsOfCurrency.addUnit(new UnitCurrency("CNY", "Chinese Yuans", 6.198));
-//      unitsOfCurrency.addUnit(new UnitCurrency("RUB", "Russian Rubles", 57.62));
-//      unitsOfCurrency.addUnit(new UnitCurrency("AED", "UAE Dirhams", 3.673));
-		unitTypeArray.add(getCurrUnitType());
+		int nameInd = 0;
+		unitTypeArray.add(getCurrUnitType(tabNames.get(nameInd++)));
 
-		//refreshAllDynamicUnits();
-
-		UnitType unitsOfTemp = new UnitType("Temp");
+		UnitType unitsOfTemp = new UnitType(tabNames.get(nameInd++));
 		unitsOfTemp.addUnit(new UnitTemperature());
 		unitsOfTemp.addUnit(new UnitTemperature());
 		unitsOfTemp.addUnit(new UnitTemperature());
@@ -94,7 +55,7 @@ class UnitInitializer {
 		unitTypeArray.add(unitsOfTemp);
 
 
-		UnitType unitsOfWeight = new UnitType("Weight");
+		UnitType unitsOfWeight = new UnitType(tabNames.get(nameInd++));
 		unitsOfWeight.addUnit(new UnitScalar("oz", "Ounces", 1 / 0.028349523125)); //exact
 		unitsOfWeight.addUnit(new UnitScalar("lb", "Pounds", 1 / 0.45359237)); //exact
 		unitsOfWeight.addUnit(new UnitScalar("ton US", "Short Tons", 1 / 907.18474)); //exact
@@ -115,7 +76,7 @@ class UnitInitializer {
 		unitTypeArray.add(unitsOfWeight);
 
 
-		UnitType unitsOfLength = new UnitType("Length");
+		UnitType unitsOfLength = new UnitType(tabNames.get(nameInd++));
 		unitsOfLength.addUnit(new UnitScalar("in", "Inches", 1 / 0.0254));//exact
 		unitsOfLength.addUnit(new UnitScalar("ft", "Feet", 1 / 0.3048));//exact: in*12
 		unitsOfLength.addUnit(new UnitScalar("yd", "Yards", 1 / 0.9144));//exact: in*12*3
@@ -140,7 +101,7 @@ class UnitInitializer {
 		unitTypeArray.add(unitsOfLength);
 
 
-		UnitType unitsOfArea = new UnitType("Area");
+		UnitType unitsOfArea = new UnitType(tabNames.get(nameInd++));
 		unitsOfArea.addUnit(new UnitScalar("in\u00B2", "Square Inches", 1 / 0.00064516));//exact: 0.0254^2
 		unitsOfArea.addUnit(new UnitScalar("ft\u00B2", "Square Feet", 1 / 0.09290304));//0.3048^2
 		unitsOfArea.addUnit(new UnitScalar("yd\u00B2", "Square Yards", 1 / 0.83612736));//0.3048^2*9
@@ -158,7 +119,7 @@ class UnitInitializer {
 		unitTypeArray.add(unitsOfArea);
 
 
-		UnitType unitsOfVolume = new UnitType("Volume");
+		UnitType unitsOfVolume = new UnitType(tabNames.get(nameInd++));
 		unitsOfVolume.addUnit(new UnitScalar("tbsp", "Tablespoons", 1 / 0.00001478676478125));//exact: gal/256
 		unitsOfVolume.addUnit(new UnitScalar("cup", "Cups", 1 / 0.0002365882365));//exact: gal/16
 		unitsOfVolume.addUnit(new UnitScalar("pt", "Pints (US)", 1 / 0.000473176473));//exact: gal/8
@@ -187,7 +148,7 @@ class UnitInitializer {
 		unitTypeArray.add(unitsOfVolume);
 
 
-		UnitType unitsOfSpeed = new UnitType("Speed");
+		UnitType unitsOfSpeed = new UnitType(tabNames.get(nameInd++));
 		unitsOfSpeed.addUnit(new UnitScalar("mi/min", "Miles per minute", 1 / 26.8224));
 		unitsOfSpeed.addUnit(new UnitScalar("min/mi", "Minute miles", 1 / 26.8224, true));
 		unitsOfSpeed.addUnit(new UnitScalar("ft/s", "Feet per Second", 1 / 0.3048));
@@ -202,7 +163,7 @@ class UnitInitializer {
 		unitTypeArray.add(unitsOfSpeed);
 
 
-		UnitType unitsOfTime = new UnitType("Time");
+		UnitType unitsOfTime = new UnitType(tabNames.get(nameInd++));
 		unitsOfTime.addUnit(new UnitScalar("sec", "Seconds", 1));
 		unitsOfTime.addUnit(new UnitScalar("min", "Minutes", 1 / 60.0));
 		unitsOfTime.addUnit(new UnitScalar("hour", "Hours", 1 / 3600.0));
@@ -218,7 +179,7 @@ class UnitInitializer {
 		unitTypeArray.add(unitsOfTime);
 
 
-		UnitType unitsOfFuel = new UnitType("Fuel Eco");
+		UnitType unitsOfFuel = new UnitType(tabNames.get(nameInd++));
 		unitsOfFuel.addUnit(new UnitScalar());
 		unitsOfFuel.addUnit(new UnitScalar());
 		unitsOfFuel.addUnit(new UnitScalar());
@@ -233,7 +194,7 @@ class UnitInitializer {
 		unitTypeArray.add(unitsOfFuel);
 
 
-		UnitType unitsOfPower = new UnitType("Power");
+		UnitType unitsOfPower = new UnitType(tabNames.get(nameInd++));
 		unitsOfPower.addUnit(new UnitScalar("MW", "Megawatts", 1E-6));
 		unitsOfPower.addUnit(new UnitScalar("kW", "Kilowatts", 1E-3));
 		unitsOfPower.addUnit(new UnitScalar("W", "Watts", 1));
@@ -248,7 +209,7 @@ class UnitInitializer {
 		unitTypeArray.add(unitsOfPower);
 
 
-		UnitType unitsOfEnergy = new UnitType("Energy");
+		UnitType unitsOfEnergy = new UnitType(tabNames.get(nameInd++));
 		unitsOfEnergy.addUnit(new UnitScalar("cal", "Calories", 0.239005736)); //approx
 		unitsOfEnergy.addUnit(new UnitScalar("kCal", "Kilocalories", 0.239005736 / 1E3)); //approx, but exact comp to cal
 		unitsOfEnergy.addUnit(new UnitScalar("BTU", "British Thermal Units", 0.00094781712)); //approx
@@ -266,7 +227,7 @@ class UnitInitializer {
 		unitsOfEnergy.addUnit(new UnitScalar("Ha", "Hartrees", 2.29371044869059200E17));
 		unitTypeArray.add(unitsOfEnergy);
 
-		UnitType unitsOfForce = new UnitType("Force");
+		UnitType unitsOfForce = new UnitType(tabNames.get(nameInd++));
 		unitsOfForce.addUnit(new UnitScalar());
 		unitsOfForce.addUnit(new UnitScalar());
 		unitsOfForce.addUnit(new UnitScalar("dyn", "Dynes", 1E5));
@@ -281,7 +242,7 @@ class UnitInitializer {
 		unitTypeArray.add(unitsOfForce);
 
 
-		UnitType unitsOfTorque = new UnitType("Torque");
+		UnitType unitsOfTorque = new UnitType(tabNames.get(nameInd++));
 		unitsOfTorque.addUnit(new UnitScalar("Nm", "Newton Meters", 1));
 		unitsOfTorque.addUnit(new UnitScalar("Ncm", "Newton Centimeters", 100));
 		unitsOfTorque.addUnit(new UnitScalar("kgf m", "Kilogram-Force Meters", 1 / 9.80665)); //exact
@@ -295,7 +256,7 @@ class UnitInitializer {
 		unitsOfTorque.addUnit(new UnitScalar("dyn cm", "Dyne Centimeters", 1));
 		unitTypeArray.add(unitsOfTorque);
 
-		UnitType unitsOfPressure = new UnitType("Pressure");
+		UnitType unitsOfPressure = new UnitType(tabNames.get(nameInd++));
 		unitsOfPressure.addUnit(new UnitScalar("N/m\u00B2", "Newton/Square Meter", 1));
 		unitsOfPressure.addUnit(new UnitScalar("lb/ft\u00B2", "Pounds/Square Foot", 144 / 6894.757293168));  //approx
 		unitsOfPressure.addUnit(new UnitScalar("psi", "Pounds/Square Inch", 1 / 6894.757293168)); //approx
@@ -317,7 +278,7 @@ class UnitInitializer {
 		unitsOfPressure.addUnit(new UnitScalar("mTorr", "Millitorr", 760 / 101.325)); //exact
 		unitTypeArray.add(unitsOfPressure);
 
-		UnitType unitsOfDigital = new UnitType("Digital");
+		UnitType unitsOfDigital = new UnitType(tabNames.get(nameInd++));
 		unitsOfDigital.addUnit(new UnitScalar("byte", "Bytes", 1. / 8));
 		unitsOfDigital.addUnit(new UnitScalar("kB", "Kilobytes", 1. / (8. * Math.pow(2, 10))));  //approx
 		unitsOfDigital.addUnit(new UnitScalar("MB", "Megabytes", 1. / (8. * Math.pow(2, 20))));  //exact
@@ -352,7 +313,7 @@ class UnitInitializer {
 	 *
 	 * @return UnitArray of default unitCurrency
 	 */
-	private static UnitType getCurrUnitType() {
+	private static UnitType getCurrUnitType(String name) {
 
 		//array of values from 1914 $10 bill; starts with 1913; uses the CPI index
 		//data can be found: http://data.bls.gov/timeseries/CUUR0000SA0
@@ -375,7 +336,7 @@ class UnitInitializer {
 		}
 
 
-		UnitType uc = new UnitType("Currency",
+		UnitType uc = new UnitType(name,
 				  "http://finance.yahoo.com/webservice/v1/symbols/allcurrencies/quote");
 		uc.addUnit(new UnitCurrency("USD", "Dollars", 1));
 		uc.addUnit(new UnitCurrency("EUR", "Euros", 0.929));

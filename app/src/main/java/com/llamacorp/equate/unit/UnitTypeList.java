@@ -3,14 +3,13 @@ package com.llamacorp.equate.unit;
 import android.content.Context;
 import android.content.res.Resources;
 
-import com.llamacorp.equate.R;
+import com.llamacorp.equate.ResourceArrayParser;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Set;
 
@@ -24,6 +23,7 @@ public class UnitTypeList {
 	private static final String JSON_UNIT_TYPE = "unit_type";
 	private static final int DEFAULT_POS = 3;
 	private final ArrayList<String> XML_KEYS;
+	private final ArrayList<String> TAB_NAMES;
 
 	//actually stores all of the Unit Type Objects
 	private HashMap<String, UnitType> mUnits;
@@ -33,8 +33,9 @@ public class UnitTypeList {
 	private String mCurrentKey;
 
 	public UnitTypeList(Resources resources) {
-		String[] keys = resources.getStringArray(R.array.unit_type_array_keys);
-		XML_KEYS = new ArrayList<>(Arrays.asList(keys));
+		XML_KEYS = ResourceArrayParser.getUnitTypeKeyArray(resources);
+
+		TAB_NAMES = ResourceArrayParser.getUnitTypeTabNameArray(resources);
 
 		//initialize storage members
 		mUnits = new HashMap<>();
@@ -122,6 +123,7 @@ public class UnitTypeList {
 		return jsonReturnObj;
 	}
 
+
 	/**
 	 * Helper method used to initiate the array of various types of units
 	 */
@@ -133,7 +135,7 @@ public class UnitTypeList {
 			mCurrentKey = XML_KEYS.get(0);
 
 		mUnits.clear();
-		mUnits = UnitInitializer.getUnitTypeMap(XML_KEYS);
+		mUnits = UnitInitializer.getUnitTypeMap(XML_KEYS, TAB_NAMES);
 
 		mOrderedUnitKeys.clear();
 		mOrderedUnitKeys = new ArrayList<>(XML_KEYS);

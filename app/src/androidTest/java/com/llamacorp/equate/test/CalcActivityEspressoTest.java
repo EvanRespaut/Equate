@@ -1,6 +1,8 @@
 package com.llamacorp.equate.test;
 
 
+import android.content.Context;
+import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.UiController;
 import android.support.test.espresso.ViewAction;
 import android.support.test.espresso.ViewInteraction;
@@ -14,6 +16,7 @@ import android.view.ViewParent;
 import android.widget.EditText;
 
 import com.llamacorp.equate.R;
+import com.llamacorp.equate.ResourceArrayParser;
 import com.llamacorp.equate.view.CalcActivity;
 
 import org.hamcrest.Description;
@@ -23,13 +26,15 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.ArrayList;
+
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.action.ViewActions.longClick;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.contrib.DrawerActions.open;
 import static android.support.test.espresso.contrib.DrawerMatchers.isClosed;
 import static android.support.test.espresso.core.deps.guava.base.Preconditions.checkArgument;
+import static android.support.test.espresso.matcher.ViewMatchers.isDescendantOfA;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isEnabled;
 import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
@@ -38,6 +43,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withEffectiveVi
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withParent;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static com.llamacorp.equate.test.EspressoTestUtils.clickButtons;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.is;
 
@@ -83,17 +89,16 @@ public class CalcActivityEspressoTest {
 	}
 
 	@Test
-	public void testCalcActivity2() {
-		onView(withId(getButtonID("C"))).perform(longClick());
-		clickButtons("C1+2");
-		assertExpressionEquals("1+2");
+	public void testCheckUnitTypeNames() {
+		Context targetContext = InstrumentationRegistry.getTargetContext();
+		ArrayList<String> unitNames = ResourceArrayParser.
+				  getUnitTypeTabNameArray(targetContext.getResources());
 
-		clickButtons("=");
-		assertExpressionEquals("3");
-
-//		ViewInteraction appCompatTextView = onView(
-//				  allOf(withId(R.id.list_item_result_textPrevAnswer), withText("3"), isDisplayed()));
-//		appCompatTextView.perform(click());
+		for (String s : unitNames) {
+			onView(allOf(withText(s), isDescendantOfA(withId(R.id.unit_container))))
+					  .check(matches(withEffectiveVisibility(
+					  ViewMatchers.Visibility.VISIBLE)));
+		}
 	}
 
 
@@ -277,106 +282,4 @@ public class CalcActivityEspressoTest {
 	 * @param buttonString 1-9 for numbers, +-* etc operators; also, "a1" is one
 	 *                     answer ago, "q0" is the last query
 	 */
-	private void clickButtons(String buttonString) {
-		for (int i = 0; i < buttonString.length(); i++) {
-			String s = buttonString.substring(i, i + 1);
-			clickButton(s);
-		}
-	}
-
-	private void clickButton(String s) {
-		int id = getButtonID(s);
-		boolean longClick = false;
-
-		//special case buttons
-		switch (s) {
-			case "^":
-				id = R.id.multiply_button;
-				longClick = true;
-				break;
-			case "%":
-				id = R.id.minus_button;
-				longClick = true;
-				break;
-		}
-
-		if (longClick) onView(withId(id)).perform(longClick());
-		else onView(withId(id)).perform(click());
-	}
-
-	/**
-	 * Helper function takes a string of a key hit and passes back the View id
-	 *
-	 * @param s plain text form of the button
-	 * @return id of the button
-	 */
-	private int getButtonID(String s) {
-		int[] numButtonIds = {
-				  R.id.zero_button,
-				  R.id.one_button,
-				  R.id.two_button,
-				  R.id.three_button,
-				  R.id.four_button,
-				  R.id.five_button,
-				  R.id.six_button,
-				  R.id.seven_button,
-				  R.id.eight_button,
-				  R.id.nine_button};
-
-		int buttonId = -1;
-
-		switch (s) {
-			case "+":
-				buttonId = R.id.plus_button;
-				break;
-			case "-":
-				buttonId = R.id.minus_button;
-				break;
-			case "*":
-				buttonId = R.id.multiply_button;
-				break;
-			case "/":
-				buttonId = R.id.divide_button;
-				break;
-			case ".":
-				buttonId = R.id.decimal_button;
-				break;
-			case "=":
-				buttonId = R.id.equals_button;
-				break;
-			case "E":
-				buttonId = R.id.percent_button;
-				break;
-			case "^":
-				buttonId = R.id.multiply_button;
-				break;
-			case "(":
-				buttonId = R.id.open_para_button;
-				break;
-			case ")":
-				buttonId = R.id.close_para_button;
-				break;
-			case "b":
-				buttonId = R.id.backspace_button;
-				break;
-			case "C":
-				buttonId = R.id.clear_button;
-				break;
-			default:
-				//this for loop checks for numerical values
-				for (int i = 0; i < 10; i++)
-					if (s.equals(Character.toString((char) (48 + i))))
-						buttonId = numButtonIds[i];
-		}
-		if (buttonId == -1) throw new InvalidButtonViewException(
-				  "No View could be found for button = \"" + s + "\"");
-		return buttonId;
-	}
-
-
-	private static class InvalidButtonViewException extends RuntimeException {
-		InvalidButtonViewException(String message) {
-			super(message);
-		}
-	}
 }
