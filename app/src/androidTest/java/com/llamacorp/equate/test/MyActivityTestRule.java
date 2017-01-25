@@ -1,11 +1,13 @@
 package com.llamacorp.equate.test;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.FailureHandler;
 import android.support.test.espresso.NoMatchingViewException;
 import android.support.test.espresso.base.DefaultFailureHandler;
 import android.support.test.rule.ActivityTestRule;
+import android.util.Log;
 import android.view.View;
 
 import com.llamacorp.equate.view.CalcActivity;
@@ -15,6 +17,7 @@ import org.hamcrest.Matcher;
 import java.io.File;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
+import static android.support.test.InstrumentationRegistry.getTargetContext;
 import static android.support.test.espresso.Espresso.setFailureHandler;
 
 /**
@@ -46,13 +49,19 @@ class MyActivityTestRule<A extends CalcActivity> extends ActivityTestRule {
 
 
 	private void resetSharedPrefs() {
-		File root = InstrumentationRegistry.getTargetContext().getFilesDir().getParentFile();
+		File root = getTargetContext().getFilesDir().getParentFile();
 		String[] sharedPreferencesFileNames = new File(root, "shared_prefs").list();
 		if (sharedPreferencesFileNames == null) return;
 		for (String fileName : sharedPreferencesFileNames) {
-			InstrumentationRegistry.getTargetContext().getSharedPreferences(fileName.replace(".xml", ""), Context.MODE_PRIVATE).edit().clear().apply();
+			SharedPreferences sp = InstrumentationRegistry.getTargetContext()
+					  .getSharedPreferences(fileName.replace(".xml", ""), Context.MODE_PRIVATE);
+			sp.edit().clear().apply();
+			File fileToDelete = new File(root + "/shared_prefs/" + fileName);
+			boolean wasSuccessful = fileToDelete.delete();
+			Log.d("ESPRESSO_LOG", "File deleted = " + String.valueOf(wasSuccessful));
 		}
 	}
+
 
 	private static class CustomFailureHandle implements FailureHandler {
 		private final FailureHandler delegate;

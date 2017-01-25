@@ -81,12 +81,8 @@ public class CalcActivityEspressoTest {
 		clickButtons("=");
 		assertExpressionEquals("0.4");
 		assertResultPreviewInvisible();
-
-
-//		ViewInteraction unitScrollView = onView(withText("Force"));
-//		unitScrollView.perform(scrollTo(), click());
-
 	}
+
 
 	@Test
 	public void testCheckUnitTypeNames() {
@@ -97,13 +93,9 @@ public class CalcActivityEspressoTest {
 		for (String s : unitNames) {
 			onView(allOf(withText(s), isDescendantOfA(withId(R.id.unit_container))))
 					  .check(matches(withEffectiveVisibility(
-					  ViewMatchers.Visibility.VISIBLE)));
+								 ViewMatchers.Visibility.VISIBLE)));
 		}
-	}
 
-
-	@Test
-	public void testNavigationDrawer() {
 		// Open Drawer to click on navigation.
 		onView(withId(R.id.drawer_layout))
 				  .check(matches(isClosed(Gravity.START))) // Left Drawer should be closed.
@@ -154,7 +146,7 @@ public class CalcActivityEspressoTest {
 	}
 
 	@Test
-	public void recordingTabView() {
+	public void testClickUnitTypesDirect() {
 		clickButtons("C12345");
 
 		onView(allOf(withText("Currency"))).perform(

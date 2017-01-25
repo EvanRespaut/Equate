@@ -221,8 +221,13 @@ public class UnitTypeList {
 			ut.refreshDynamicUnits(context, forced);
 	}
 
-	public boolean setOrdered(Set<String> ordered) {
-		mOrderedUnitKeys = new ArrayList<>(XML_KEYS);
-		return mOrderedUnitKeys.retainAll(ordered);
+	public void setOrdered(Set<String> ordered) {
+		if (ordered == null){
+			mOrderedUnitKeys.clear();
+			mOrderedUnitKeys = new ArrayList<>(XML_KEYS);
+		} else {
+			mOrderedUnitKeys = new ArrayList<>(XML_KEYS);
+			mOrderedUnitKeys.retainAll(ordered);
+		}
 	}
 }

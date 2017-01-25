@@ -730,8 +730,7 @@ public class CalcActivity extends AppCompatActivity
 		Set<String> selections = sharedPref.getStringSet("unit_type_prefs", null);
 
 		// determine if user changed the configuration of the Unit Types
-		if (selections != null)
-			mCalc.setSelectedUnitTypes(selections);
+		mCalc.setSelectedUnitTypes(selections);
 
 		setupUnitTypePager();
 

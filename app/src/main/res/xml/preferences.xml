@@ -1,6 +1,7 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
    <MultiSelectListPreference
+      android:id="@+id/unit_type_multi_pref"
       android:dialogTitle="@string/unit_select_title"
       android:key="unit_type_prefs"
       android:summary="@string/unit_select_summary"

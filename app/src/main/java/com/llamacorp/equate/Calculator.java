@@ -527,7 +527,7 @@ public class Calculator {
 	}
 
 	/**
-	 * Returns if current Expresion is solved (equals/conversion was last operation)
+	 * Returns if current Expression is solved (equals/conversion was last operation)
 	 */
 	public boolean isSolved() {
 		return mExpression.isSolved();
@@ -553,8 +553,8 @@ public class Calculator {
 		return mPreview.getText(suffixColor);
 	}
 
-	public boolean setSelectedUnitTypes(Set<String> set) {
-		return mUnitTypeList.setOrdered(set);
+	public void setSelectedUnitTypes(Set<String> set) {
+		mUnitTypeList.setOrdered(set);
 	}
 
 	/**

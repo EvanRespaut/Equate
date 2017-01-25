@@ -24,11 +24,12 @@ public class CalculatorJUnitTest extends TestCase {
 	 * @return test calculator
 	 */
 	private Calculator getTestCalc() {
+		//TODO make this into something cleaner--use Mockito to completely fake the resource
 		MockResources mockResources = new MockResources() {
 			@Override
 			public String[] getStringArray(int id) {
-				if (id == R.array.unit_type_array_keys){
-					return new String[]{"key_currency", "key_temp", "key_weight", "key_len", "key_area", "key_vol", "key_speed", "key_time", "key_fuel", "key_power", "key_energy", "key_force", "key_torque", "key_pressure", "key_digital"};
+				if (id == R.array.unit_type_array_combined){
+					return new String[]{"key_currency|Currency|Currency", "key_temp|Temperature|Temp", "key_weight|Weight|Weight", "key_len|Length|Length", "key_area|Area|Area", "key_vol|Volume|Volume", "key_speed|Speed|Speed", "key_time|Time|Time", "key_fuel|FuelEconomy|FuelEco", "key_power|Power|Power", "key_energy|Energy|Energy", "key_force|Force|Force", "key_torque|Torque|Torque", "key_pressure|Pressure|Pressure", "key_digital|DigitalStorage|Digital"};
 				}
 				return null;
 			}
