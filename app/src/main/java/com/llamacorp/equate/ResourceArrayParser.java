@@ -14,17 +14,30 @@ public class ResourceArrayParser {
 	private final static int UNIT_TYPE_KEY_TAB_NAME = 2;
 
 
-	public static ArrayList<String> getUnitTypeKeyArray(Resources resources) {
+	public static String[] getUnitTypeKeyArray(Resources resources) {
+		ArrayList<String> al = getUnitTypeKeyArrayList(resources);
+		return al.toArray(new String[al.size()]);
+	}
+
+
+	public static String[] getUnitTypeNameArray(Resources resources) {
+		ArrayList<String> al = getUnitTypeNameArrayList(resources);
+		return al.toArray(new String[al.size()]);
+	}
+
+
+	public static ArrayList<String> getUnitTypeKeyArrayList(Resources resources) {
 		String[] stringArray = resources.getStringArray(R.array.unit_type_array_combined);
 		return getUnitArray(stringArray, UNIT_TYPE_KEY_POS);
 	}
 
-	public static ArrayList<String> getUnitTypeNameArray(Resources resources) {
+
+	public static ArrayList<String> getUnitTypeNameArrayList(Resources resources) {
 		String[] stringArray = resources.getStringArray(R.array.unit_type_array_combined);
 		return getUnitArray(stringArray, UNIT_TYPE_KEY_NAME);
 	}
 
-	public static ArrayList<String> getUnitTypeTabNameArray(Resources resources) {
+	public static ArrayList<String> getUnitTypeTabNameArrayList(Resources resources) {
 		String[] stringArray = resources.getStringArray(R.array.unit_type_array_combined);
 		return getUnitArray(stringArray, UNIT_TYPE_KEY_TAB_NAME);
 	}

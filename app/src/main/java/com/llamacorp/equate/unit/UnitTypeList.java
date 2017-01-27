@@ -33,9 +33,9 @@ public class UnitTypeList {
 	private String mCurrentKey;
 
 	public UnitTypeList(Resources resources) {
-		XML_KEYS = ResourceArrayParser.getUnitTypeKeyArray(resources);
+		XML_KEYS = ResourceArrayParser.getUnitTypeKeyArrayList(resources);
 
-		TAB_NAMES = ResourceArrayParser.getUnitTypeTabNameArray(resources);
+		TAB_NAMES = ResourceArrayParser.getUnitTypeTabNameArrayList(resources);
 
 		//initialize storage members
 		mUnits = new HashMap<>();

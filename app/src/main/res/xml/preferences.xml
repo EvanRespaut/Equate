@@ -1,14 +1,12 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-   <MultiSelectListPreference
-      android:id="@+id/unit_type_multi_pref"
-      android:dialogTitle="@string/unit_select_title"
-      android:key="unit_type_prefs"
-      android:summary="@string/unit_select_summary"
-      android:title="@string/unit_select_title"
-      android:entries="@array/unit_type_names"
-      android:entryValues="@array/unit_type_array_keys"
-      android:defaultValue="@array/unit_type_array_keys"/>
+   <!--<MultiSelectListPreference-->
+      <!--android:id="@+id/unit_type_multi_pref"-->
+      <!--android:dialogTitle="@string/unit_select_title"-->
+      <!--android:key="unit_type_prefs"-->
+      <!--android:summary="@string/unit_select_summary"-->
+      <!--android:title="@string/unit_select_title"-->
+      <!--android:defaultValue="@array/unit_type_array_keys"/>-->
 
    <SwitchPreference
       android:defaultValue="true"

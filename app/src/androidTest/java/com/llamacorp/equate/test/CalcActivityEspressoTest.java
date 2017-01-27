@@ -88,7 +88,7 @@ public class CalcActivityEspressoTest {
 	public void testCheckUnitTypeNames() {
 		Context targetContext = InstrumentationRegistry.getTargetContext();
 		ArrayList<String> unitNames = ResourceArrayParser.
-				  getUnitTypeTabNameArray(targetContext.getResources());
+				  getUnitTypeTabNameArrayList(targetContext.getResources());
 
 		for (String s : unitNames) {
 			onView(allOf(withText(s), isDescendantOfA(withId(R.id.unit_container))))

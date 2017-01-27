@@ -82,24 +82,4 @@
 
    <string name="unit_select_title">Displayed Units Types</string>
    <string name="unit_select_summary">Choose which unit types appear by default</string>
-
-
-   <!--These names should not get translated, they're used internally only-->
-   <string-array name="unit_type_array_keys">
-      <item>key_currency</item>
-      <item>key_temp</item>
-      <item>key_weight</item>
-      <item>key_len</item>
-      <item>key_area</item>
-      <item>key_vol</item>
-      <item>key_speed</item>
-      <item>key_time</item>
-      <item>key_fuel</item>
-      <item>key_power</item>
-      <item>key_energy</item>
-      <item>key_force</item>
-      <item>key_torque</item>
-      <item>key_pressure</item>
-      <item>key_digital</item>
-   </string-array>
 </resources>

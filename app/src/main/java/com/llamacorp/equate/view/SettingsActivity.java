@@ -4,15 +4,24 @@ package com.llamacorp.equate.view;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.ListPreference;
+import android.preference.MultiSelectListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
-import android.support.v7.app.ActionBar;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
+import android.preference.PreferenceScreen;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
 import com.llamacorp.equate.R;
+
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
+import static com.llamacorp.equate.ResourceArrayParser.getUnitTypeKeyArray;
+import static com.llamacorp.equate.ResourceArrayParser.getUnitTypeNameArray;
 
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. On
@@ -26,6 +35,8 @@ import com.llamacorp.equate.R;
  * API Guide</a> for more information on developing a Settings UI.
  */
 public class SettingsActivity extends AppCompatActivity {
+   private final static String UNIT_TYPE_PREF_KEY = "unit_type_prefs";
+
    /**
     * A preference value change listener that updates the preference's summary
     * to reflect its new value.
@@ -120,6 +131,7 @@ public class SettingsActivity extends AppCompatActivity {
          addPreferencesFromResource(R.xml.preferences);
          //setHasOptionsMenu(true);
 
+         setUpUnitTypePrefs();
 
          // Bind the summaries of EditText/List/Dialog/Ringtone preferences
          // to their values. When their values change, their summaries are
@@ -127,6 +139,30 @@ public class SettingsActivity extends AppCompatActivity {
          // guidelines.
          bindPreferenceSummaryToValue(findPreference("example_text"));
          bindPreferenceSummaryToValue(findPreference("example_list"));
+      }
+
+		/**
+       * Helper Class to setup the default Unit Type preference list in code
+       */
+      private void setUpUnitTypePrefs() {
+         PreferenceScreen screen = getPreferenceScreen();
+         MultiSelectListPreference listPref = new MultiSelectListPreference(super.getActivity());
+         listPref.setOrder(0);
+         listPref.setDialogTitle(R.string.unit_select_title);
+         listPref.setKey(UNIT_TYPE_PREF_KEY);
+         listPref.setSummary(R.string.unit_select_summary);
+         listPref.setTitle(R.string.unit_select_title);
+         listPref.setEntries(getUnitTypeNameArray(getResources()));
+
+         String[] keyArray = getUnitTypeKeyArray(getResources());
+         listPref.setEntryValues(keyArray);
+
+         final Set<String> result = new HashSet<>();
+         Collections.addAll(result, keyArray);
+
+         listPref.setDefaultValue(result);
+
+         screen.addPreference(listPref);
       }
 
       @Override
