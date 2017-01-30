@@ -131,7 +131,7 @@ public class CalcAndroidOldTester extends ActivityInstrumentationTestCase2<CalcA
 	//	}
 
 	@MediumTest
-	public void test1CalcFunctions() {
+	public void testOldInstrumentTester() {
 		getActivity().mCalc.resetCalc();
 //
 //		clickButtons("(.1+b)4");

@@ -2,10 +2,12 @@ package com.llamacorp.equate.test;
 
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.UiController;
 import android.support.test.espresso.ViewAction;
 import android.support.test.espresso.ViewInteraction;
+import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.espresso.matcher.BoundedMatcher;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.runner.AndroidJUnit4;
@@ -28,12 +30,16 @@ import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
 
+import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.action.ViewActions.scrollTo;
+import static android.support.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.contrib.DrawerActions.open;
 import static android.support.test.espresso.contrib.DrawerMatchers.isClosed;
 import static android.support.test.espresso.core.deps.guava.base.Preconditions.checkArgument;
+import static android.support.test.espresso.matcher.ViewMatchers.isChecked;
 import static android.support.test.espresso.matcher.ViewMatchers.isDescendantOfA;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isEnabled;
@@ -45,6 +51,9 @@ import static android.support.test.espresso.matcher.ViewMatchers.withParent;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static com.llamacorp.equate.test.EspressoTestUtils.clickButtons;
 import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.anything;
+import static org.hamcrest.Matchers.hasToString;
+import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 
 @RunWith(AndroidJUnit4.class)
@@ -87,62 +96,80 @@ public class CalcActivityEspressoTest {
 	@Test
 	public void testCheckUnitTypeNames() {
 		Context targetContext = InstrumentationRegistry.getTargetContext();
-		ArrayList<String> unitNames = ResourceArrayParser.
-				  getUnitTypeTabNameArrayList(targetContext.getResources());
+		Resources resources = targetContext.getResources();
 
-		for (String s : unitNames) {
+		ArrayList<String> displayedUnitTypes = ResourceArrayParser.
+				  getUnitTypeTabNameArrayList(resources);
+
+		for (String s : displayedUnitTypes) {
 			onView(allOf(withText(s), isDescendantOfA(withId(R.id.unit_container))))
 					  .check(matches(withEffectiveVisibility(
 								 ViewMatchers.Visibility.VISIBLE)));
 		}
+
 
 		// Open Drawer to click on navigation.
 		onView(withId(R.id.drawer_layout))
 				  .check(matches(isClosed(Gravity.START))) // Left Drawer should be closed.
 				  .perform(open()); // Open Drawer
 
-		ViewInteraction appCompatCheckedTextView = onView(
-				  allOf(withId(R.id.design_menu_item_text), withText("Settings"), isDisplayed()));
-		appCompatCheckedTextView.perform(click());
+		// Click settings
+		onView(allOf(withId(R.id.design_menu_item_text), withText("Settings"),
+				  isDisplayed())).perform(click());
 
-		ViewInteraction linearLayout = onView(
-				  allOf(childAtPosition(
-							 withId(android.R.id.list),
-							 0),
-							 isDisplayed()));
-		linearLayout.perform(click());
+		// Click settings
+//		onView(allOf(childAtPosition(withId(android.R.id.list), 0), isDisplayed()))
+//				  .perform(click());
 
-		ViewInteraction appCompatCheckedTextView2 = onView(
-				  allOf(withId(android.R.id.text1), withText("Length"),
-							 childAtPosition(
-										allOf(withClassName(is("com.android.internal.app.AlertController$RecycleListView")),
-												  withParent(withClassName(is("android.widget.FrameLayout")))),
-										3),
-							 isDisplayed()));
-		appCompatCheckedTextView2.perform(click());
+		// Open dialog to select displayed unit types
+		onView(allOf(withText("Displayed Unit Types"), isDisplayed()))
+				  .perform(click());
 
-		ViewInteraction appCompatCheckedTextView3 = onView(
-				  allOf(withId(android.R.id.text1), withText("Weight"),
-							 childAtPosition(
-										allOf(withClassName(is("com.android.internal.app.AlertController$RecycleListView")),
-												  withParent(withClassName(is("android.widget.FrameLayout")))),
-										2),
-							 isDisplayed()));
-		appCompatCheckedTextView3.perform(click());
+		ArrayList<String> toRemoveArray = new ArrayList<>();
+		toRemoveArray.add("Weight");
+		toRemoveArray.add("Length");
+		toRemoveArray.add("Energy");
+		toRemoveArray.add("Temperature");
 
-		ViewInteraction appCompatButton = onView(
-				  allOf(withId(android.R.id.button1), withText("OK"),
-							 withParent(allOf(withClassName(is("android.widget.LinearLayout")),
-										withParent(withClassName(is("android.widget.LinearLayout"))))),
-							 isDisplayed()));
-		appCompatButton.perform(click());
+		// Uncheck some unit types
+		for (String unitName : toRemoveArray) {
+			onData(hasToString(unitName)).check(matches(isChecked())).perform(click());
+		}
 
-		ViewInteraction appCompatImageButton = onView(
-				  allOf(withContentDescription("Navigate up"),
+//		// this will click the 0th element of the adapter view
+//		onData(is(instanceOf(String.class)))
+//				.inAdapterView(allOf(withClassName(is("com.android.internal.app.AlertController$RecycleListView")), isDisplayed()))
+//				.atPosition(0).perform(click());
+
+//		onView(allOf(withText("Weight"), isDisplayed())).check(matches(isChecked()))
+//				  .perform(click());
+
+		onView(allOf(withText("OK"), isDisplayed())).perform(click());
+
+		// Leave settings activity, go back to calculator
+		onView(allOf(withContentDescription("Navigate up"),
 							 withParent(allOf(withId(R.id.action_bar),
 										withParent(withId(R.id.action_bar_container)))),
-							 isDisplayed()));
-		appCompatImageButton.perform(click());
+							 isDisplayed())).perform(click());
+
+		// check remaining units are still there
+		displayedUnitTypes.removeAll(ResourceArrayParser
+				.getTabNamesFromNames(toRemoveArray, resources));
+
+		for (String s : displayedUnitTypes) {
+			onView(allOf(withText(s), isDescendantOfA(withId(R.id.unit_container))))
+					.check(matches(withEffectiveVisibility(
+							ViewMatchers.Visibility.VISIBLE)));
+		}
+
+		// check removed units are actually gone
+		ArrayList<String> removedTabNames = ResourceArrayParser
+				.getTabNamesFromNames(toRemoveArray, resources);
+
+		for (String s : removedTabNames) {
+			onView(allOf(withText(s), isDescendantOfA(withId(R.id.unit_container))))
+					.check(doesNotExist());
+		}
 	}
 
 	@Test

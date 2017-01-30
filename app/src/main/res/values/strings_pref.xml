@@ -80,6 +80,6 @@
    <string name="pref_title_vibrate">Vibrate</string>
 
 
-   <string name="unit_select_title">Displayed Units Types</string>
+   <string name="unit_select_title">Displayed Unit Types</string>
    <string name="unit_select_summary">Choose which unit types appear by default</string>
 </resources>

@@ -13,6 +13,22 @@ public class ResourceArrayParser {
 	private final static int UNIT_TYPE_KEY_NAME = 1;
 	private final static int UNIT_TYPE_KEY_TAB_NAME = 2;
 
+	/**
+	 * Used to translate between full unit type names ("Temperature") to names
+	 * that appear in the Unit Type tab view ("Temp").
+	 * @param toTranslate is a list of full unit type names to translate
+	 * @return a list of the translated tab names
+    */
+	public static ArrayList<String> getTabNamesFromNames(ArrayList<String> toTranslate, Resources resources) {
+		ArrayList<String> returnList = new ArrayList<>();
+		ArrayList<String> tabNames = getUnitTypeTabNameArrayList(resources);
+		ArrayList<String> unitNames = getUnitTypeNameArrayList(resources);
+
+		for (String s : toTranslate) {
+			returnList.add(tabNames.get(unitNames.indexOf(s)));
+		}
+		return returnList;
+	}
 
 	public static String[] getUnitTypeKeyArray(Resources resources) {
 		ArrayList<String> al = getUnitTypeKeyArrayList(resources);
