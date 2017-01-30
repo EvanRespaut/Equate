@@ -27,6 +27,9 @@ local.properties
 # Windows thumbnail db
 Thumbs.db
 
+# Andorid Captures
+*.li
+
 # OSX files
 .DS_Store
 
