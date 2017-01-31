@@ -1,24 +1,18 @@
 package com.llamacorp.equate.test;
 
 
-import android.content.Context;
-import android.content.res.Resources;
-import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.UiController;
 import android.support.test.espresso.ViewAction;
 import android.support.test.espresso.ViewInteraction;
-import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.espresso.matcher.BoundedMatcher;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.runner.AndroidJUnit4;
-import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.widget.EditText;
 
 import com.llamacorp.equate.R;
-import com.llamacorp.equate.ResourceArrayParser;
 import com.llamacorp.equate.view.CalcActivity;
 
 import org.hamcrest.Description;
@@ -28,32 +22,17 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.util.ArrayList;
-
-import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.action.ViewActions.scrollTo;
-import static android.support.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.contrib.DrawerActions.open;
-import static android.support.test.espresso.contrib.DrawerMatchers.isClosed;
 import static android.support.test.espresso.core.deps.guava.base.Preconditions.checkArgument;
-import static android.support.test.espresso.matcher.ViewMatchers.isChecked;
-import static android.support.test.espresso.matcher.ViewMatchers.isDescendantOfA;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isEnabled;
-import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
-import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static android.support.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withParent;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static com.llamacorp.equate.test.EspressoTestUtils.clickButtons;
 import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.anything;
-import static org.hamcrest.Matchers.hasToString;
-import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 
 @RunWith(AndroidJUnit4.class)
@@ -92,85 +71,6 @@ public class CalcActivityEspressoTest {
 		assertResultPreviewInvisible();
 	}
 
-
-	@Test
-	public void testCheckUnitTypeNames() {
-		Context targetContext = InstrumentationRegistry.getTargetContext();
-		Resources resources = targetContext.getResources();
-
-		ArrayList<String> displayedUnitTypes = ResourceArrayParser.
-				  getUnitTypeTabNameArrayList(resources);
-
-		for (String s : displayedUnitTypes) {
-			onView(allOf(withText(s), isDescendantOfA(withId(R.id.unit_container))))
-					  .check(matches(withEffectiveVisibility(
-								 ViewMatchers.Visibility.VISIBLE)));
-		}
-
-
-		// Open Drawer to click on navigation.
-		onView(withId(R.id.drawer_layout))
-				  .check(matches(isClosed(Gravity.START))) // Left Drawer should be closed.
-				  .perform(open()); // Open Drawer
-
-		// Click settings
-		onView(allOf(withId(R.id.design_menu_item_text), withText("Settings"),
-				  isDisplayed())).perform(click());
-
-		// Click settings
-//		onView(allOf(childAtPosition(withId(android.R.id.list), 0), isDisplayed()))
-//				  .perform(click());
-
-		// Open dialog to select displayed unit types
-		onView(allOf(withText("Displayed Unit Types"), isDisplayed()))
-				  .perform(click());
-
-		ArrayList<String> toRemoveArray = new ArrayList<>();
-		toRemoveArray.add("Weight");
-		toRemoveArray.add("Length");
-		toRemoveArray.add("Energy");
-		toRemoveArray.add("Temperature");
-
-		// Uncheck some unit types
-		for (String unitName : toRemoveArray) {
-			onData(hasToString(unitName)).check(matches(isChecked())).perform(click());
-		}
-
-//		// this will click the 0th element of the adapter view
-//		onData(is(instanceOf(String.class)))
-//				.inAdapterView(allOf(withClassName(is("com.android.internal.app.AlertController$RecycleListView")), isDisplayed()))
-//				.atPosition(0).perform(click());
-
-//		onView(allOf(withText("Weight"), isDisplayed())).check(matches(isChecked()))
-//				  .perform(click());
-
-		onView(allOf(withText("OK"), isDisplayed())).perform(click());
-
-		// Leave settings activity, go back to calculator
-		onView(allOf(withContentDescription("Navigate up"),
-							 withParent(allOf(withId(R.id.action_bar),
-										withParent(withId(R.id.action_bar_container)))),
-							 isDisplayed())).perform(click());
-
-		// check remaining units are still there
-		displayedUnitTypes.removeAll(ResourceArrayParser
-				.getTabNamesFromNames(toRemoveArray, resources));
-
-		for (String s : displayedUnitTypes) {
-			onView(allOf(withText(s), isDescendantOfA(withId(R.id.unit_container))))
-					.check(matches(withEffectiveVisibility(
-							ViewMatchers.Visibility.VISIBLE)));
-		}
-
-		// check removed units are actually gone
-		ArrayList<String> removedTabNames = ResourceArrayParser
-				.getTabNamesFromNames(toRemoveArray, resources);
-
-		for (String s : removedTabNames) {
-			onView(allOf(withText(s), isDescendantOfA(withId(R.id.unit_container))))
-					.check(doesNotExist());
-		}
-	}
 
 	@Test
 	public void testClickUnitTypesDirect() {

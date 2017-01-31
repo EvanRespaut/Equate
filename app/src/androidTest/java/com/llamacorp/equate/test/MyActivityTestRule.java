@@ -31,6 +31,14 @@ class MyActivityTestRule<A extends CalcActivity> extends ActivityTestRule {
 		super(activityClass);
 	}
 
+	public MyActivityTestRule(Class activityClass, boolean initialTouchMode) {
+		super(activityClass, initialTouchMode);
+	}
+
+	public MyActivityTestRule(Class activityClass, boolean initialTouchMode, boolean launchActivity) {
+		super(activityClass, initialTouchMode, launchActivity);
+	}
+
 	/**
 	 * Override this method to execute any code that should run before your {@link Activity} is
 	 * created and launched.
