@@ -3,15 +3,12 @@
 # Equate - Unit Converting Calculator
 Equate is an open source unit converting calculator designed to make converting one unit to another fast and simple. 
 
-For example, to convert 1/3 cup into tablespoons, type 1÷3, press cup, and then press tbsp.  That's it.  
+For example, to convert 1/4 cup into tablespoons, type 1÷4, press cup, and then press tbsp.  That's it.  
 
-To perform an even simpler conversion of one unit into another, say number of cups in a gallon, simply click gal and then cup. Only two button taps needed.
+To perform an even simpler conversion of one unit into another, say number of Bitcoins in a Dollar, simply click BTC and then USD. Only two button taps needed.
 
+<a href="http://imgur.com/xXvL0Fx"><img src="http://i.imgur.com/xXvL0Fx.gif" title="source: imgur.com" /></a>
 
-
-![Equate Screenshot](https://lh3.googleusercontent.com/tBu_wzYyK4YvieretzG8SXJVL4sUb6CXvcw_jv0IWYlGjQ_zkc54FpgN3eORYYXJx78G=h900-rw)
-
- 
 ## Features
  
 - Clean and fast unit conversions
