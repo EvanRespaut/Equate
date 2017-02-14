@@ -37,6 +37,7 @@ import com.llamacorp.equate.view.ConvKeysFragment.OnConvertKeySelectedListener;
 import com.llamacorp.equate.view.ResultListFragment.OnResultSelectedListener;
 import com.viewpagerindicator.TabPageIndicator;
 
+import java.util.HashSet;
 import java.util.Set;
 
 public class CalcActivity extends AppCompatActivity
@@ -558,6 +559,27 @@ public class CalcActivity extends AppCompatActivity
 	 */
 	public void selectUnitAtUnitArrayPos(int unitPos, String unitTypeKey) {
 		int visibleUnitTypeIndex = mCalc.getUnitTypeIndex(unitTypeKey);
+
+		// if Unit Type is not displayed, update prefs to set it as displayed
+		if (visibleUnitTypeIndex == -1){
+			//load in Unit Type arrangement prefs
+			SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+			Set<String> storedSet = sharedPref.getStringSet(
+					  SettingsActivity.UNIT_TYPE_PREF_KEY, null);
+
+			assert storedSet != null; // not sure why we'd have a null pref
+			HashSet<String> selections = new HashSet<>(storedSet);
+			selections.add(unitTypeKey);
+			sharedPref.edit().putStringSet(
+					  SettingsActivity.UNIT_TYPE_PREF_KEY, selections).apply();
+
+			// update the selections in the calculator
+			mCalc.setSelectedUnitTypes(selections);
+			visibleUnitTypeIndex = mCalc.getUnitTypeIndex(unitTypeKey);
+
+			// update our unit pager to reflect updated prefs
+			setupUnitTypePager();
+		}
 		//if not on right page, scroll there first
 		if (visibleUnitTypeIndex != mUnitTypeViewPager.getCurrentItem()){
 			unitPosToSelectAfterScroll = unitPos;
@@ -590,9 +612,9 @@ public class CalcActivity extends AppCompatActivity
 	 * option to scroll down the result list
 	 *
 	 * @param updateResult pass true to update result list
-	 * @param instaScroll  pass true to scroll instantly, otherwise use animation
+	 * @param instantScroll  pass true to scroll instantly, otherwise use animation
 	 */
-	private void updateScreen(boolean updateResult, boolean instaScroll) {
+	private void updateScreen(boolean updateResult, boolean instantScroll) {
 		mDisplay.updateTextFromCalc(); //Update EditText view
 
 		//will preview become visible during this screen update?
@@ -603,7 +625,7 @@ public class CalcActivity extends AppCompatActivity
 		//doesn't get hidden by the preview
 		if (mResultPreview.getVisibility() != View.VISIBLE && makePreviewVisible){
 			updateResult = true;
-			instaScroll = true;
+			instantScroll = true;
 		}
 
 		mResultPreview.setVisibility(makePreviewVisible ? View.VISIBLE : View.GONE);
@@ -612,7 +634,7 @@ public class CalcActivity extends AppCompatActivity
 
 		//if we hit equals, update result list
 		if (updateResult)
-			mResultListFrag.refresh(instaScroll);
+			mResultListFrag.refresh(instantScroll);
 	}
 
 	/**
@@ -621,7 +643,7 @@ public class CalcActivity extends AppCompatActivity
 	 * @param updateResult whether or not to update result
 	 */
 	public void updateScreen(boolean updateResult) {
-		//no insta scroll for previous expression
+		//no instant scroll for previous expression
 		updateScreen(updateResult, false);
 
 		//see if colored convert button should be not colored (if backspace or 
@@ -682,7 +704,11 @@ public class CalcActivity extends AppCompatActivity
 		// Handle navigation view item clicks here.
 		int id = item.getItemId();
 
-		if  (id == R.id.nav_settings){
+		if (id == R.id.nav_find) {
+//			FilterDialogBuilder filterDialog = new FilterDialogBuilder(mAppContext,
+//					 mCalc.getListOfUnits())
+		}
+		else if  (id == R.id.nav_settings){
 			Intent intent = new Intent(mAppContext, SettingsActivity.class);
 			startActivity(intent);
 		} else if (id == R.id.nav_about){
@@ -727,7 +753,8 @@ public class CalcActivity extends AppCompatActivity
 
 		//load in Unit Type arrangement prefs
 		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-		Set<String> selections = sharedPref.getStringSet("unit_type_prefs", null);
+		Set<String> selections = sharedPref.getStringSet(
+				  SettingsActivity.UNIT_TYPE_PREF_KEY, null);
 
 		// determine if user changed the configuration of the Unit Types
 		mCalc.setSelectedUnitTypes(selections);

@@ -341,13 +341,13 @@ class UnitInitializer {
 		uc.addUnit(new UnitCurrency("USD", "Dollars", 1));
 		uc.addUnit(new UnitCurrency("EUR", "Euros", 0.929));
 		uc.addUnit(new UnitCurrency("CAD", "Canadian Dollars", 1.26));
-		uc.addUnit(new UnitCurrency("GBP", "Pounds", 0.67));
+		uc.addUnit(new UnitCurrency("GBP", "British Pounds", 0.67));
 		uc.addUnit(new UnitCurrency("BTC", "Bitcoins", 0.004,
 				  "http://blockchain.info/tobtc?currency=USD&value=1"));
 
 		uc.addUnit(new UnitHistCurrency("USD", "Dollars", al, 1913, 1975));
 		uc.addUnit(new UnitCurrency("CHF", "Swiss Francs", 0.967));
-		uc.addUnit(new UnitCurrency("JPY", "Yen", 119.7));
+		uc.addUnit(new UnitCurrency("JPY", "Japanese Yen", 119.7));
 		uc.addUnit(new UnitCurrency("HKD", "Hong Kong Dollars", 7.75));
 
 

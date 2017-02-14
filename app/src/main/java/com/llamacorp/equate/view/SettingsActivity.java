@@ -35,7 +35,7 @@ import static com.llamacorp.equate.ResourceArrayParser.getUnitTypeNameArray;
  * API Guide</a> for more information on developing a Settings UI.
  */
 public class SettingsActivity extends AppCompatActivity {
-   private final static String UNIT_TYPE_PREF_KEY = "unit_type_prefs";
+   public final static String UNIT_TYPE_PREF_KEY = "unit_type_prefs";
 
    /**
     * A preference value change listener that updates the preference's summary
