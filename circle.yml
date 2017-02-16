@@ -61,6 +61,7 @@ test:
         # unlock the emulator screen
         - sleep 30
         - adb shell input keyevent 82
+        - fb-adb rcmd screencap -p > $CIRCLE_ARTIFACTS/screen-after-unlock-$(date +"%T").png
         # run tests  against the emulator.9
         - ./gradlew connectedAndroidTest -PdisablePreDex
         # run the JUnit tests located in app\src\test\java\com\llamacorp
@@ -76,4 +77,7 @@ test:
         # copy a little file to make finding test reports easier
         - wget -O $CIRCLE_ARTIFACTS/Report_Summary.html 'https://www.dropbox.com/s/xjfu281rkmv2oow/Reports.html?dl=0'
 #        # Save a screenshot to Circle-CI Artifacts
-#        - fb-adb rcmd screencap -p > $CIRCLE_ARTIFACTS/screen-$(date +"%T").png
+        - fb-adb rcmd screencap -p > $CIRCLE_ARTIFACTS/screen-post-testing-$(date +"%T").png
+        - fb-adb shell input tap 240 750
+        - sleep 10
+        - fb-adb rcmd screencap -p > $CIRCLE_ARTIFACTS/screen-post-click-$(date +"%T").png
