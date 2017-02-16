@@ -7,11 +7,19 @@ import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.runner.AndroidJUnit4;
 import android.view.Gravity;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewParent;
+import android.widget.Adapter;
+import android.widget.AdapterView;
 
 import com.llamacorp.equate.R;
 import com.llamacorp.equate.ResourceArrayParser;
 import com.llamacorp.equate.view.CalcActivity;
 
+import org.hamcrest.Description;
+import org.hamcrest.Matcher;
+import org.hamcrest.TypeSafeMatcher;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,6 +41,9 @@ import static android.support.test.espresso.matcher.ViewMatchers.withEffectiveVi
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withParent;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static com.llamacorp.equate.test.EspressoTestUtils.clickPrevAnswer;
+import static com.llamacorp.equate.test.EspressoTestUtils.clickUnit;
+import static com.llamacorp.equate.test.EspressoTestUtils.selectUnitTypeDirect;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.hasToString;
 
@@ -43,11 +54,60 @@ public class EspressoUnitTypeVisibility {
 	public MyActivityTestRule<CalcActivity> mActivityTestRule =
 			  new MyActivityTestRule<>(CalcActivity.class);
 
+	private static Matcher<View> childAtPosition(
+			  final Matcher<View> parentMatcher, final int position) {
+		return new TypeSafeMatcher<View>() {
+			@Override
+			public void describeTo(Description description) {
+				description.appendText("Child at position " + position + " in parent ");
+				parentMatcher.describeTo(description);
+			}
+
+			@Override
+			public boolean matchesSafely(View view) {
+				ViewParent parent = view.getParent();
+				return parent instanceof ViewGroup && parentMatcher.matches(parent)
+						  && view.equals(((ViewGroup) parent).getChildAt(position));
+			}
+		};
+	}
+
+
+	private static Matcher<View> withAdaptedData(final Matcher<View> dataMatcher) {
+		return new TypeSafeMatcher<View>() {
+			@Override
+			public void describeTo(Description description) {
+				description.appendText("with class name: ");
+				dataMatcher.describeTo(description);
+			}
+
+			@Override
+			public boolean matchesSafely(View view) {
+				if (!(view instanceof AdapterView)) {
+					return false;
+				}
+				@SuppressWarnings("rawtypes")
+				Adapter adapter = ((AdapterView) view).getAdapter();
+				for (int i = 0; i < adapter.getCount(); i++) {
+					if (dataMatcher.matches(adapter.getItem(i))) {
+						return true;
+					}
+				}
+				return false;
+			}
+		};
+	}
+
 
 	@Test
 	public void testCheckUnitTypeNames() {
 		// check that all unit types are visible (none removed)
-		checkUnitTypesVisible(new ArrayList<String>());
+		checkUnitTypesRemoved(new ArrayList<String>());
+
+		// move to length tab
+		selectUnitTypeDirect("Length");
+		clickUnit("ft");
+		clickUnit("in");
 
 		ArrayList<String> toRemoveArray = new ArrayList<>();
 		toRemoveArray.add("Weight");
@@ -59,12 +119,20 @@ public class EspressoUnitTypeVisibility {
 		hideUnitTypes(toRemoveArray);
 
 		//check hidden unit types are gone
-		checkUnitTypesVisible(toRemoveArray);
+		checkUnitTypesRemoved(toRemoveArray);
+
+		// click on the previous answer with "in" to re-enable Length units
+		clickPrevAnswer();
+		toRemoveArray.remove("Length");
+
+		checkUnitTypesRemoved(toRemoveArray);
+
 
 		// clear remaining unit types
 		ArrayList<String> toRemoveArray2 = new ArrayList<>();
 		toRemoveArray2.add("Currency");
 		toRemoveArray2.add("Area");
+		toRemoveArray2.add("Length");
 		toRemoveArray2.add("Volume");
 		toRemoveArray2.add("Speed");
 		toRemoveArray2.add("Time");
@@ -82,12 +150,11 @@ public class EspressoUnitTypeVisibility {
 		toRemoveArray.addAll(toRemoveArray2);
 
 		//check hidden unit types are gone
-		checkUnitTypesVisible(toRemoveArray);
+		checkUnitTypesRemoved(toRemoveArray);
 
 	}
 
-
-	private void checkUnitTypesVisible(ArrayList<String> removedUnitTypes) {
+	private void checkUnitTypesRemoved(ArrayList<String> removedUnitTypes) {
 		Context targetContext = InstrumentationRegistry.getTargetContext();
 		Resources resources = targetContext.getResources();
 
@@ -106,7 +173,7 @@ public class EspressoUnitTypeVisibility {
 								 ViewMatchers.Visibility.VISIBLE)));
 		}
 
-		if (visibleUnitTypes.size() == 0 )
+		if (visibleUnitTypes.size() == 0)
 			onView(withId(R.id.unit_container)).check(matches(
 					  withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
 		else {
@@ -117,7 +184,6 @@ public class EspressoUnitTypeVisibility {
 			}
 		}
 	}
-
 
 	private void hideUnitTypes(ArrayList<String> unitTypesToHide) {
 		// Open Drawer to click on navigation.

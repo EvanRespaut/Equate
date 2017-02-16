@@ -1,8 +1,6 @@
 package com.llamacorp.equate.test;
 
 
-import android.support.test.espresso.UiController;
-import android.support.test.espresso.ViewAction;
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.espresso.matcher.BoundedMatcher;
 import android.support.test.espresso.matcher.ViewMatchers;
@@ -27,11 +25,13 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.core.deps.guava.base.Preconditions.checkArgument;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static android.support.test.espresso.matcher.ViewMatchers.isEnabled;
 import static android.support.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static com.llamacorp.equate.test.EspressoTestUtils.clickButtons;
+import static com.llamacorp.equate.test.EspressoTestUtils.clickPrevAnswer;
+import static com.llamacorp.equate.test.EspressoTestUtils.clickPrevQuery;
+import static com.llamacorp.equate.test.EspressoTestUtils.selectUnitTypeDirect;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.is;
 
@@ -69,6 +69,20 @@ public class CalcActivityEspressoTest {
 		clickButtons("=");
 		assertExpressionEquals("0.4");
 		assertResultPreviewInvisible();
+
+		clickButtons("C2E2+5%=");
+		assertExpressionEquals("210");
+
+		clickPrevQuery();
+		assertExpressionEquals("2E2+5%");
+
+		clickButtons("bb56=");
+		assertExpressionEquals("256");
+
+		clickButtons("+");
+		clickPrevAnswer();
+		clickButtons("=");
+		assertExpressionEquals("512");
 	}
 
 
@@ -76,45 +90,11 @@ public class CalcActivityEspressoTest {
 	public void testClickUnitTypesDirect() {
 		clickButtons("C12345");
 
-		onView(allOf(withText("Currency"))).perform(
-				  new ViewAction() {
-					  @Override
-					  public Matcher<View> getConstraints() {
-						  return isEnabled(); // no constraints, they are checked above
-					  }
-
-					  @Override
-					  public String getDescription() {
-						  return "click Currency button";
-					  }
-
-					  @Override
-					  public void perform(UiController uiController, View view) {
-						  view.performClick();
-					  }
-				  }
-		);
+		selectUnitTypeDirect("Currency");
 
 		clickButtons("26");
 
-		onView(allOf(withText("Energy"))).perform(
-				  new ViewAction() {
-					  @Override
-					  public Matcher<View> getConstraints() {
-						  return isEnabled(); // no constraints, they are checked above
-					  }
-
-					  @Override
-					  public String getDescription() {
-						  return "click Currency button";
-					  }
-
-					  @Override
-					  public void perform(UiController uiController, View view) {
-						  view.performClick();
-					  }
-				  }
-		);
+		selectUnitTypeDirect("Energy");
 		clickButtons("b");
 
 		onView(allOf(withText("Power"))).perform(click());

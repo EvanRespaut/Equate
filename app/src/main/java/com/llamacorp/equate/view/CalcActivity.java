@@ -77,11 +77,8 @@ public class CalcActivity extends AppCompatActivity
 
 	};
 
-//	//time used for testing
-//	long mTimer = 0;
-
 	//main calculator object
-	public Calculator mCalc;// = new Calculator();
+	private Calculator mCalc;
 
 	//Crude fix: used to tell the ConvKeyViewPager what unit to select after
 	// scrolling to correct UnitType
@@ -397,10 +394,7 @@ public class CalcActivity extends AppCompatActivity
 			Runnable mBackspaceReset = new Runnable() {
 				@Override
 				public void run() {
-					mCalc.resetCalc();
-					setupUnitTypePager();
-					updateScreen(true);
-					ViewUtils.toastCentered("Calculator reset", mAppContext);
+					resetCalculator();
 				}
 			};
 
@@ -552,6 +546,21 @@ public class CalcActivity extends AppCompatActivity
 	}
 
 
+	public void resetCalculator() {
+		mCalc.resetCalc();
+
+		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+		SharedPreferences.Editor editor = preferences.edit();
+		editor.clear();
+		editor.apply();
+
+		setupUnitTypePager();
+
+		updateScreen(true);
+
+		ViewUtils.toastCentered("Calculator reset", mAppContext);
+	}
+
 	/**
 	 * Selects the a unit (used by result list)
 	 *
@@ -648,7 +657,7 @@ public class CalcActivity extends AppCompatActivity
 
 		//see if colored convert button should be not colored (if backspace or 
 		//clear were pressed, or if expression solved)
-		if (!mCalc.isUnitSelected())
+		if (!mCalc.isUnitSelected() && mUnitTypeViewPager != null)
 			clearUnitSelection(mUnitTypeViewPager.getCurrentItem());
 	}
 

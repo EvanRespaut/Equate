@@ -202,7 +202,9 @@ public class Calculator {
 
 
 	/**
-	 * Clears the result list, expression, and unit selection
+	 * Clears the result list, expression, and unit selection. Remember that this
+	 * is only backend data changes, the screen will not have been updated to
+	 * reflect any changes.
 	 */
 	public void resetCalc() {
 		mResultList.clear();

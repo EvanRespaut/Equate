@@ -1,5 +1,6 @@
 package com.llamacorp.equate.test;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.test.InstrumentationRegistry;
@@ -7,18 +8,19 @@ import android.support.test.espresso.FailureHandler;
 import android.support.test.espresso.NoMatchingViewException;
 import android.support.test.espresso.base.DefaultFailureHandler;
 import android.support.test.rule.ActivityTestRule;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
 
+import com.llamacorp.equate.test.IdlingResource.ViewPagerIdlingResource;
 import com.llamacorp.equate.view.CalcActivity;
 
 import org.hamcrest.Matcher;
 
 import java.io.File;
 
-import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.InstrumentationRegistry.getTargetContext;
-import static android.support.test.espresso.Espresso.setFailureHandler;
+import static android.support.test.espresso.Espresso.registerIdlingResources;
 
 /**
  * This class was created to allow for custom setup and tear down code before
@@ -26,16 +28,16 @@ import static android.support.test.espresso.Espresso.setFailureHandler;
  * perform additional duties besides printing the stack trace (maybe take a
  * screenshot)
  */
-class MyActivityTestRule<A extends CalcActivity> extends ActivityTestRule {
-	public MyActivityTestRule(Class activityClass) {
+class MyActivityTestRule<A extends CalcActivity> extends ActivityTestRule<A> {
+	public MyActivityTestRule(Class<A> activityClass) {
 		super(activityClass);
 	}
 
-	public MyActivityTestRule(Class activityClass, boolean initialTouchMode) {
+	public MyActivityTestRule(Class<A> activityClass, boolean initialTouchMode) {
 		super(activityClass, initialTouchMode);
 	}
 
-	public MyActivityTestRule(Class activityClass, boolean initialTouchMode, boolean launchActivity) {
+	public MyActivityTestRule(Class<A> activityClass, boolean initialTouchMode, boolean launchActivity) {
 		super(activityClass, initialTouchMode, launchActivity);
 	}
 
@@ -50,9 +52,32 @@ class MyActivityTestRule<A extends CalcActivity> extends ActivityTestRule {
 		super.beforeActivityLaunched();
 
 		resetSharedPrefs();
+//		setFailureHandler(new CustomFailureHandle(getInstrumentation().getTargetContext()));
+	}
 
-		getActivity();
-		setFailureHandler(new CustomFailureHandle(getInstrumentation().getTargetContext()));
+
+
+	/**
+	 * Override this method to execute any code that should run after your {@link Activity} is
+	 * launched, but before any test code is run including any method annotated with
+	 * <a href="http://junit.sourceforge.net/javadoc/org/junit/Before.html"><code>Before</code></a>.
+	 * <p>
+	 * Prefer
+	 * <a href="http://junit.sourceforge.net/javadoc/org/junit/Before.html"><code>Before</code></a>
+	 * over this method. This method should usually not be overwritten directly in tests and only be
+	 * used by subclasses of ActivityTestRule to get notified when the activity is created and
+	 * visible but test runs.
+	 */
+	@Override
+	protected void afterActivityLaunched() {
+		super.afterActivityLaunched();
+
+		// register an idling resource that will wait until a page settles before
+		// doing anything next (such as clicking a unit within it)
+		ViewPager vp = (ViewPager) getActivity()
+				  .findViewById(com.llamacorp.equate.R.id.unit_pager);
+		ViewPagerIdlingResource pagerIdle = new ViewPagerIdlingResource(vp, "unit_pager");
+		registerIdlingResources(pagerIdle);
 	}
 
 
