@@ -4,22 +4,19 @@ package com.llamacorp.equate.test;
 import android.content.Context;
 import android.content.res.Resources;
 import android.support.test.InstrumentationRegistry;
+import android.support.test.espresso.Espresso;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.runner.AndroidJUnit4;
+import android.support.v4.view.ViewPager;
 import android.view.Gravity;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewParent;
-import android.widget.Adapter;
-import android.widget.AdapterView;
 
 import com.llamacorp.equate.R;
 import com.llamacorp.equate.ResourceArrayParser;
+import com.llamacorp.equate.test.IdlingResource.ViewPagerIdlingResource;
 import com.llamacorp.equate.view.CalcActivity;
 
-import org.hamcrest.Description;
-import org.hamcrest.Matcher;
-import org.hamcrest.TypeSafeMatcher;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,6 +25,7 @@ import java.util.ArrayList;
 
 import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.Espresso.registerIdlingResources;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
@@ -48,56 +46,28 @@ import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.hasToString;
 
 @RunWith(AndroidJUnit4.class)
-public class EspressoUnitTypeVisibility {
+public class TestEspressoUnitTypeVisibility {
+
+	private ViewPagerIdlingResource mPagerIdle;
 
 	@Rule
 	public MyActivityTestRule<CalcActivity> mActivityTestRule =
 			  new MyActivityTestRule<>(CalcActivity.class);
 
-	private static Matcher<View> childAtPosition(
-			  final Matcher<View> parentMatcher, final int position) {
-		return new TypeSafeMatcher<View>() {
-			@Override
-			public void describeTo(Description description) {
-				description.appendText("Child at position " + position + " in parent ");
-				parentMatcher.describeTo(description);
-			}
-
-			@Override
-			public boolean matchesSafely(View view) {
-				ViewParent parent = view.getParent();
-				return parent instanceof ViewGroup && parentMatcher.matches(parent)
-						  && view.equals(((ViewGroup) parent).getChildAt(position));
-			}
-		};
+	@Before
+	public void registerIntentServiceIdlingResource() {
+		// register an idling resource that will wait until a page settles before
+		// doing anything next (such as clicking a unit within it)
+		ViewPager vp = (ViewPager) mActivityTestRule.getActivity()
+				  .findViewById(com.llamacorp.equate.R.id.unit_pager);
+		mPagerIdle = new ViewPagerIdlingResource(vp, "unit_pager");
+		registerIdlingResources(mPagerIdle);
 	}
 
-
-	private static Matcher<View> withAdaptedData(final Matcher<View> dataMatcher) {
-		return new TypeSafeMatcher<View>() {
-			@Override
-			public void describeTo(Description description) {
-				description.appendText("with class name: ");
-				dataMatcher.describeTo(description);
-			}
-
-			@Override
-			public boolean matchesSafely(View view) {
-				if (!(view instanceof AdapterView)) {
-					return false;
-				}
-				@SuppressWarnings("rawtypes")
-				Adapter adapter = ((AdapterView) view).getAdapter();
-				for (int i = 0; i < adapter.getCount(); i++) {
-					if (dataMatcher.matches(adapter.getItem(i))) {
-						return true;
-					}
-				}
-				return false;
-			}
-		};
+	@After
+	public void unregisterIntentServiceIdlingResource() {
+		Espresso.unregisterIdlingResources(mPagerIdle);
 	}
-
 
 	@Test
 	public void testCheckUnitTypeNames() {

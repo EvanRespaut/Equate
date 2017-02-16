@@ -8,11 +8,9 @@ import android.support.test.espresso.FailureHandler;
 import android.support.test.espresso.NoMatchingViewException;
 import android.support.test.espresso.base.DefaultFailureHandler;
 import android.support.test.rule.ActivityTestRule;
-import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
 
-import com.llamacorp.equate.test.IdlingResource.ViewPagerIdlingResource;
 import com.llamacorp.equate.view.CalcActivity;
 
 import org.hamcrest.Matcher;
@@ -20,7 +18,6 @@ import org.hamcrest.Matcher;
 import java.io.File;
 
 import static android.support.test.InstrumentationRegistry.getTargetContext;
-import static android.support.test.espresso.Espresso.registerIdlingResources;
 
 /**
  * This class was created to allow for custom setup and tear down code before
@@ -72,12 +69,6 @@ class MyActivityTestRule<A extends CalcActivity> extends ActivityTestRule<A> {
 	protected void afterActivityLaunched() {
 		super.afterActivityLaunched();
 
-		// register an idling resource that will wait until a page settles before
-		// doing anything next (such as clicking a unit within it)
-		ViewPager vp = (ViewPager) getActivity()
-				  .findViewById(com.llamacorp.equate.R.id.unit_pager);
-		ViewPagerIdlingResource pagerIdle = new ViewPagerIdlingResource(vp, "unit_pager");
-		registerIdlingResources(pagerIdle);
 	}
 
 

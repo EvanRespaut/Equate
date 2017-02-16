@@ -1,7 +1,11 @@
 package com.llamacorp.equate.test;
 import android.support.test.espresso.UiController;
 import android.support.test.espresso.ViewAction;
+import android.support.test.espresso.ViewInteraction;
+import android.support.test.espresso.matcher.BoundedMatcher;
+import android.support.test.espresso.matcher.ViewMatchers;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ListView;
 
 import com.llamacorp.equate.R;
@@ -15,19 +19,72 @@ import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.longClick;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.core.deps.guava.base.Preconditions.checkArgument;
 import static android.support.test.espresso.matcher.ViewMatchers.isDescendantOfA;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isEnabled;
+import static android.support.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.anyOf;
 import static org.hamcrest.Matchers.anything;
+import static org.hamcrest.Matchers.is;
 
 /**
  * Set of utilities used to help perform Espresso tests
  */
 public class EspressoTestUtils {
+	public static void assertResultPreviewInvisible() {
+		onView(withId(R.id.resultPreview)).check(matches(
+				  withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
+	}
+
+	public static void assertResultPreviewEquals(String expected) {
+		onView(withId(R.id.resultPreview)).check(matches(allOf(isDisplayed(),
+				  withText(expected))));
+	}
+
+	public static void assertExpressionEquals(String expected) {
+		getTextDisplay().check(matches(expressionEquals(expected)));
+	}
+
+	/**
+	 * Method to check an expression contains the text given by the testString
+	 * parameter.  This method also checks the test string isn't null and to turn
+	 * it into a Matcher<String>.
+	 * @param testString is the string to check the expression against
+	 * @return a Matcher<View> that can be used to turn into a View Interaction
+	 */
+	private static Matcher<View> expressionEquals(String testString) {
+		// use precondition to fail fast when a test is creating an invalid matcher
+		checkArgument(!(testString.equals(null)));
+		return expressionEquals(is(testString));
+	}
+
+	/**
+	 * Note that ideal the method below should implement a describeMismatch
+	 * method (as used by BaseMatcher), but this method is not invoked by
+	 * ViewAssertions.matches() and it won't get called. This means that I'm not
+	 * sure how to implement a custom error message.
+	 */
+	private static Matcher<View> expressionEquals(final Matcher<String> testString) {
+		return new BoundedMatcher<View, EditText>(EditText.class) {
+			@Override
+			public void describeTo(Description description) {
+				description.appendText("with expression text: " + testString);
+			}
+
+			@Override
+			protected boolean matchesSafely(EditText item) {
+				return testString.matches(item.getText().toString());
+			}
+		};
+	}
+
+	private static ViewInteraction getTextDisplay() {
+		return onView(withId(R.id.textDisplay));
+	}
 	/**
 	 * Clicks on the tab for the provided Unit Type name. Note that the Unit Type
 	 * doesn't need to be visible.
