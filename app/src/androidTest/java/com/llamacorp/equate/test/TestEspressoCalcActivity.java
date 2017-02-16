@@ -1,15 +1,21 @@
 package com.llamacorp.equate.test;
 
 
+import android.support.test.espresso.Espresso;
 import android.support.test.runner.AndroidJUnit4;
+import android.support.v4.view.ViewPager;
 
+import com.llamacorp.equate.test.IdlingResource.ViewPagerIdlingResource;
 import com.llamacorp.equate.view.CalcActivity;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.Espresso.registerIdlingResources;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static com.llamacorp.equate.test.EspressoTestUtils.assertExpressionEquals;
@@ -23,10 +29,26 @@ import static org.hamcrest.Matchers.allOf;
 
 @RunWith(AndroidJUnit4.class)
 public class TestEspressoCalcActivity {
+	private ViewPagerIdlingResource mPagerIdle;
 
 	@Rule
 	public MyActivityTestRule<CalcActivity> mActivityTestRule =
 			  new MyActivityTestRule<>(CalcActivity.class);
+
+	@Before
+	public void registerIntentServiceIdlingResource() {
+		// register an idling resource that will wait until a page settles before
+		// doing anything next (such as clicking a unit within it)
+		ViewPager vp = (ViewPager) mActivityTestRule.getActivity()
+				  .findViewById(com.llamacorp.equate.R.id.unit_pager);
+		mPagerIdle = new ViewPagerIdlingResource(vp, "unit_pager");
+		registerIdlingResources(mPagerIdle);
+	}
+
+	@After
+	public void unregisterIntentServiceIdlingResource() {
+		Espresso.unregisterIdlingResources(mPagerIdle);
+	}
 
 
 	@Test
@@ -79,7 +101,9 @@ public class TestEspressoCalcActivity {
 	public void testClickUnitTypesDirect() {
 		clickButtons("C12345");
 
-		selectUnitTypeDirect("Currency");
+		// used to be Currency, that proved to be unstable in test, probably due
+		// to web updates.
+		selectUnitTypeDirect("Temp");
 
 		clickButtons("26");
 
