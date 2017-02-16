@@ -158,7 +158,8 @@ public class EspressoTestUtils {
 		}
 
 
-		if (longClick) onView(withId(id)).perform(longClick());
+		if (longClick)
+			onView(withId(id)).perform(longClick());
 		else onView(withId(id)).perform(click());
 	}
 

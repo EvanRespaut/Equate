@@ -39,6 +39,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withEffectiveVi
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withParent;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static com.llamacorp.equate.test.EspressoTestUtils.clickButtons;
 import static com.llamacorp.equate.test.EspressoTestUtils.clickPrevAnswer;
 import static com.llamacorp.equate.test.EspressoTestUtils.clickUnit;
 import static com.llamacorp.equate.test.EspressoTestUtils.selectUnitTypeDirect;
@@ -71,6 +72,7 @@ public class TestEspressoUnitTypeVisibility {
 
 	@Test
 	public void testCheckUnitTypeNames() {
+		clickButtons("C");
 		// check that all unit types are visible (none removed)
 		checkUnitTypesRemoved(new ArrayList<String>());
 

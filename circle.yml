@@ -62,10 +62,43 @@ test:
         - sleep 30
         - adb shell input keyevent 82
         - fb-adb rcmd screencap -p > $CIRCLE_ARTIFACTS/screen-after-unlock-$(date +"%T").png
+		
+		- fb-adb shell input tap 240 750
+        - sleep 10
+        - fb-adb rcmd screencap -p > $CIRCLE_ARTIFACTS/screen-post-apps-click-$(date +"%T").png
+        # click ok
+        - fb-adb shell input tap 400 750
+        - sleep 10
+        - fb-adb rcmd screencap -p > $CIRCLE_ARTIFACTS/screen-post-ok-click-$(date +"%T").png
+        # click settings
+        - fb-adb shell input tap 300 700
+        - sleep 10
+        - fb-adb rcmd screencap -p > $CIRCLE_ARTIFACTS/screen-post-settings-click-$(date +"%T").png
+        # click search
+        - fb-adb shell input tap 440 80
+        - sleep 10
+        - fb-adb rcmd screencap -p > $CIRCLE_ARTIFACTS/screen-post-search-click-$(date +"%T").png
+		# type hold
+		- fb-adb shell input text 'hold'
+        - sleep 10
+        - fb-adb rcmd screencap -p > $CIRCLE_ARTIFACTS/screen-post-hold-click-$(date +"%T").png
+		# click hold
+        - fb-adb shell input tap 300 240
+        - sleep 10
+        - fb-adb rcmd screencap -p > $CIRCLE_ARTIFACTS/screen-post-result-click-$(date +"%T").png
+		# click setting
+        - fb-adb shell input tap 250 415
+        - sleep 10
+        - fb-adb rcmd screencap -p > $CIRCLE_ARTIFACTS/screen-post-option-click-$(date +"%T").png
+		# click long
+        - fb-adb shell input tap 130 480
+        - sleep 10
+        - fb-adb rcmd screencap -p > $CIRCLE_ARTIFACTS/screen-post-long-click-$(date +"%T").png
+
         # run tests  against the emulator.9
-        #- ./gradlew connectedAndroidTest -PdisablePreDex
+        - ./gradlew connectedAndroidTest -PdisablePreDex
         # run the JUnit tests located in app\src\test\java\com\llamacorp
-        #- ./gradlew test
+        - ./gradlew test
 
         # copy the test results to the test results directory.
         - cp -r app/build/test-results/* $CIRCLE_TEST_REPORTS
@@ -78,14 +111,3 @@ test:
         - wget -O $CIRCLE_ARTIFACTS/Report_Summary.html 'https://www.dropbox.com/s/xjfu281rkmv2oow/Reports.html?dl=0'
 #        # Save a screenshot to Circle-CI Artifacts
         - fb-adb rcmd screencap -p > $CIRCLE_ARTIFACTS/screen-post-testing-$(date +"%T").png
-        - fb-adb shell input tap 240 750
-        - sleep 10
-        - fb-adb rcmd screencap -p > $CIRCLE_ARTIFACTS/screen-post-apps-click-$(date +"%T").png
-        # click ok
-        - fb-adb shell input tap 400 750
-        - sleep 10
-        - fb-adb rcmd screencap -p > $CIRCLE_ARTIFACTS/screen-post-ok-click-$(date +"%T").png
-        # click settings
-        - fb-adb shell input tap 300 700
-        - sleep 10
-        - fb-adb rcmd screencap -p > $CIRCLE_ARTIFACTS/screen-post-settings-click-$(date +"%T").png
