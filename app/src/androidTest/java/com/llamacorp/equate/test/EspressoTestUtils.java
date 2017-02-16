@@ -25,9 +25,8 @@ import static org.hamcrest.Matchers.anyOf;
 import static org.hamcrest.Matchers.anything;
 
 /**
- * Created by Evan on 1/24/2017.
+ * Set of utilities used to help perform Espresso tests
  */
-
 public class EspressoTestUtils {
 	/**
 	 * Clicks on the tab for the provided Unit Type name. Note that the Unit Type
@@ -63,20 +62,23 @@ public class EspressoTestUtils {
 				  , isDisplayed())).perform(click());
 	}
 
-	public static void clickPrevAnswer() {
-		ResultClicker rc = new ResultClicker();
-		rc.clickPrevAnswer();
-	}
-
-	public static void clickPrevQuery() {
-		ResultClicker rc = new ResultClicker();
-		rc.clickPrevQuery();
-	}
 
 	public static void clickButtons(String buttonString) {
 		for (int i = 0; i < buttonString.length(); i++) {
 			String s = buttonString.substring(i, i + 1);
-			clickButton(s);
+			switch (s) {
+				case "a":
+					i++;
+					clickPrevAnswer(Integer.parseInt(buttonString.substring(i, i + 1)));
+					break;
+				case "q":
+					i++;
+					clickPrevQuery(Integer.parseInt(buttonString.substring(i, i + 1)));
+					break;
+				default:
+					clickButton(s);
+					break;
+			}
 		}
 	}
 
@@ -172,25 +174,44 @@ public class EspressoTestUtils {
 		return buttonId;
 	}
 
+
+	public static void clickPrevAnswer() {
+		clickPrevAnswer(0);
+	}
+
+	public static void clickPrevAnswer(int position) {
+		ResultClicker rc = new ResultClicker();
+		rc.clickPrevAnswer(position);
+	}
+
+	public static void clickPrevQuery() {
+		clickPrevQuery(0);
+	}
+
+	public static void clickPrevQuery(int position) {
+		ResultClicker rc = new ResultClicker();
+		rc.clickPrevQuery(position);
+	}
+
 	private static class ResultClicker {
 		private int numberOfAdapterItems;
 
-		public void clickPrevAnswer() {
+		public void clickPrevAnswer(int position) {
 			updateNumberofResults();
 
 			onData(anything())
 					  .inAdapterView(withId(android.R.id.list))
-					  .atPosition(numberOfAdapterItems - 1)
+					  .atPosition(numberOfAdapterItems - 1 - position)
 					  .onChildView(withId(R.id.list_item_result_textPrevAnswer))
 					  .perform(click());
 		}
 
-		public void clickPrevQuery() {
+		public void clickPrevQuery(int position) {
 			updateNumberofResults();
 
 			onData(anything())
 					  .inAdapterView(withId(android.R.id.list))
-					  .atPosition(numberOfAdapterItems - 1)
+					  .atPosition(numberOfAdapterItems - 1 - position)
 					  .onChildView(withId(R.id.list_item_result_textPrevQuery))
 					  .perform(click());
 		}

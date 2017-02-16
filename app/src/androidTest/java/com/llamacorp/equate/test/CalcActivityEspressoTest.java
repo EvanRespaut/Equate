@@ -83,6 +83,9 @@ public class CalcActivityEspressoTest {
 		clickPrevAnswer();
 		clickButtons("=");
 		assertExpressionEquals("512");
+
+		clickButtons("Ca1+a0=");
+		assertExpressionEquals("768");
 	}
 
 
@@ -102,6 +105,48 @@ public class CalcActivityEspressoTest {
 		clickButtons("67");
 	}
 
+
+	@Test
+	public void testOldSequence() {
+
+		clickButtons("(.1+b)4");
+		assertExpressionEquals("(.1)*4");
+
+		clickButtons("=");
+		assertExpressionEquals("0.4");
+
+		//now take 0.4, divide it by the last answer ("a0" is answer 0 answers ago) and get result
+		clickButtons("/a0=");
+		assertExpressionEquals("1");
+
+		clickButtons("q1bbb-6.1E0)^(a0+q0=");
+		assertExpressionEquals("36");
+
+		clickButtons(".5=");
+//		assertQueryAnswerExprConvbutton(".5", "0.5", "0.5", "");
+
+		clickButtons("q0=");
+//		assertQueryAnswerExprConvbutton(".5", "0.5", "0.5", "");
+
+		clickButtons("+bq0=");
+//		assertPrevAnswerEquals("Syntax Error", 0);
+		assertExpressionEquals("Syntax Error");
+
+		//clear out the syntax error and try to click it again (should do nothing)
+		clickButtons("ba0");
+//		assertPrevAnswerEquals("Syntax Error", 0);
+		assertExpressionEquals("");
+
+		clickButtons("=");
+		assertExpressionEquals("");
+
+		clickButtons("-=");
+		assertExpressionEquals("");
+
+		clickButtons("54+46=");
+		assertExpressionEquals("100");
+
+	}
 
 
 

@@ -132,7 +132,7 @@ public class CalcAndroidOldTester extends ActivityInstrumentationTestCase2<CalcA
 
 	@MediumTest
 	public void testOldInstrumentTester() {
-		getActivity().resetCalculator();
+//		getActivity().resetCalculator();
 //
 //		clickButtons("(.1+b)4");
 //		assertExpressionEquals("(.1)*4");
