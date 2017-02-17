@@ -62,8 +62,8 @@ test:
         - sleep 30
         - adb shell input keyevent 82
         - fb-adb rcmd screencap -p > $CIRCLE_ARTIFACTS/screen-after-unlock-$(date +"%T").png
-		
-		- fb-adb shell input tap 240 750
+        
+        - fb-adb shell input tap 240 750
         - sleep 10
         - fb-adb rcmd screencap -p > $CIRCLE_ARTIFACTS/screen-post-apps-click-$(date +"%T").png
         # click ok
@@ -78,19 +78,19 @@ test:
         - fb-adb shell input tap 440 80
         - sleep 10
         - fb-adb rcmd screencap -p > $CIRCLE_ARTIFACTS/screen-post-search-click-$(date +"%T").png
-		# type hold
-		- fb-adb shell input text 'hold'
+        # type hold
+        - fb-adb shell input text 'hold'
         - sleep 10
         - fb-adb rcmd screencap -p > $CIRCLE_ARTIFACTS/screen-post-hold-click-$(date +"%T").png
-		# click hold
+        # click hold
         - fb-adb shell input tap 300 240
         - sleep 10
         - fb-adb rcmd screencap -p > $CIRCLE_ARTIFACTS/screen-post-result-click-$(date +"%T").png
-		# click setting
+        # click setting
         - fb-adb shell input tap 250 415
         - sleep 10
         - fb-adb rcmd screencap -p > $CIRCLE_ARTIFACTS/screen-post-option-click-$(date +"%T").png
-		# click long
+        # click long
         - fb-adb shell input tap 130 480
         - sleep 10
         - fb-adb rcmd screencap -p > $CIRCLE_ARTIFACTS/screen-post-long-click-$(date +"%T").png
