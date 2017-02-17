@@ -14,6 +14,7 @@ machine:
         version: oraclejdk8
     environment:
         ANDROID_HOME: /usr/local/android-sdk-linux
+        TERM: "dumb"
         #not sure what this does, remove if uncessary later
         JAVA_OPTS: "-Xms512m -Xmx2048m"
         ADB_INSTALL_TIMEOUT: 5000
@@ -65,28 +66,28 @@ test:
         
         # directly open settings
         - fb-adb shell am start -n com.android.settings/.Settings
-        #- sleep 10
-        - fb-adb rcmd screencap -p > $CIRCLE_ARTIFACTS/$(date +"%T")screen-post-settings-click.png
+        - sleep 10
+        - fb-adb rcmd screencap -p > $CIRCLE_ARTIFACTS/$(date +"%T")screen-settings-open.png
         # click search
         - fb-adb shell input tap 440 80
-        #- sleep 10
-        - fb-adb rcmd screencap -p > $CIRCLE_ARTIFACTS/$(date +"%T")screen-post-search-click.png
+        - sleep 10
+        - fb-adb rcmd screencap -p > $CIRCLE_ARTIFACTS/$(date +"%T")screen-post-click-search.png
         # type hold
         - fb-adb shell input text 'hold'
-        #- sleep 10
-        - fb-adb rcmd screencap -p > $CIRCLE_ARTIFACTS/$(date +"%T")screen-post-hold-click.png
+        - sleep 10
+        - fb-adb rcmd screencap -p > $CIRCLE_ARTIFACTS/$(date +"%T")screen-post-type-hold.png
         # click hold
         - fb-adb shell input tap 300 240
-        #- sleep 10
-        - fb-adb rcmd screencap -p > $CIRCLE_ARTIFACTS/$(date +"%T")screen-post-result-click.png
+        - sleep 10
+        - fb-adb rcmd screencap -p > $CIRCLE_ARTIFACTS/$(date +"%T")screen-post-click-result.png
         # click setting
         - fb-adb shell input tap 250 415
-        #- sleep 10
-        - fb-adb rcmd screencap -p > $CIRCLE_ARTIFACTS/$(date +"%T")screen-post-option-click.png
+        - sleep 10
+        - fb-adb rcmd screencap -p > $CIRCLE_ARTIFACTS/$(date +"%T")screen-post-click-option-hold.png
         # click long
         - fb-adb shell input tap 130 480
-        #- sleep 10
-        - fb-adb rcmd screencap -p > $CIRCLE_ARTIFACTS/$(date +"%T")screen-post-long-click.png
+        - sleep 10
+        - fb-adb rcmd screencap -p > $CIRCLE_ARTIFACTS/$(date +"%T")screen-post-click-long.png
 
         # run tests  against the emulator.9
         - ./gradlew connectedAndroidTest -PdisablePreDex
