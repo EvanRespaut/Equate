@@ -74,7 +74,7 @@ test:
         - fb-adb rcmd screencap -p > $CIRCLE_ARTIFACTS/$(date +"%T")screen-post-click-search.png
         # type hold
         - fb-adb shell input text 'hold'
-        - sleep 10
+        - sleep 20
         - fb-adb rcmd screencap -p > $CIRCLE_ARTIFACTS/$(date +"%T")screen-post-type-hold.png
         # click hold
         - fb-adb shell input tap 300 240
