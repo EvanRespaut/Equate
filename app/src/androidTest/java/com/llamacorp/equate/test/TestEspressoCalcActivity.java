@@ -3,7 +3,6 @@ package com.llamacorp.equate.test;
 
 import android.support.test.espresso.Espresso;
 import android.support.test.runner.AndroidJUnit4;
-import android.support.v4.view.ViewPager;
 
 import com.llamacorp.equate.test.IdlingResource.ViewPagerIdlingResource;
 import com.llamacorp.equate.view.CalcActivity;
@@ -15,7 +14,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.Espresso.registerIdlingResources;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static com.llamacorp.equate.test.EspressoTestUtils.assertExpressionEquals;
@@ -25,6 +23,7 @@ import static com.llamacorp.equate.test.EspressoTestUtils.clickButtons;
 import static com.llamacorp.equate.test.EspressoTestUtils.clickPrevAnswer;
 import static com.llamacorp.equate.test.EspressoTestUtils.clickPrevQuery;
 import static com.llamacorp.equate.test.EspressoTestUtils.selectUnitTypeDirect;
+import static com.llamacorp.equate.test.EspressoTestUtils.setUp;
 import static org.hamcrest.Matchers.allOf;
 
 @RunWith(AndroidJUnit4.class)
@@ -36,13 +35,8 @@ public class TestEspressoCalcActivity {
 			  new MyActivityTestRule<>(CalcActivity.class);
 
 	@Before
-	public void registerIntentServiceIdlingResource() {
-		// register an idling resource that will wait until a page settles before
-		// doing anything next (such as clicking a unit within it)
-		ViewPager vp = (ViewPager) mActivityTestRule.getActivity()
-				  .findViewById(com.llamacorp.equate.R.id.unit_pager);
-		mPagerIdle = new ViewPagerIdlingResource(vp, "unit_pager");
-		registerIdlingResources(mPagerIdle);
+	public void setUpTest() {
+		mPagerIdle = setUp(mActivityTestRule);
 	}
 
 	@After
@@ -79,6 +73,8 @@ public class TestEspressoCalcActivity {
 		assertResultPreviewInvisible();
 
 		clickButtons("C2E2+5%=");
+		// if this test fails because a % is put instead of a E, make sure
+		// that the Settings -> Accessibility -> Hold Time is set to long
 		assertExpressionEquals("210");
 
 		clickPrevQuery();

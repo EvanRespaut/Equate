@@ -4,11 +4,14 @@ import android.support.test.espresso.ViewAction;
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.espresso.matcher.BoundedMatcher;
 import android.support.test.espresso.matcher.ViewMatchers;
+import android.support.v4.view.ViewPager;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.widget.EditText;
 import android.widget.ListView;
 
 import com.llamacorp.equate.R;
+import com.llamacorp.equate.test.IdlingResource.ViewPagerIdlingResource;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -16,10 +19,12 @@ import org.hamcrest.TypeSafeMatcher;
 
 import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.Espresso.registerIdlingResources;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.longClick;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.core.deps.guava.base.Preconditions.checkArgument;
+import static android.support.test.espresso.matcher.ViewMatchers.assertThat;
 import static android.support.test.espresso.matcher.ViewMatchers.isDescendantOfA;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isEnabled;
@@ -29,12 +34,31 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.anyOf;
 import static org.hamcrest.Matchers.anything;
+import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.is;
 
 /**
  * Set of utilities used to help perform Espresso tests
  */
 public class EspressoTestUtils {
+	public static ViewPagerIdlingResource setUp(MyActivityTestRule activityTestRule) {
+		// register an idling resource that will wait until a page settles before
+		// doing anything next (such as clicking a unit within it)
+		ViewPager vp = (ViewPager) activityTestRule.getActivity()
+				  .findViewById(com.llamacorp.equate.R.id.unit_pager);
+		ViewPagerIdlingResource pagerIdle = new ViewPagerIdlingResource(vp, "unit_pager");
+		registerIdlingResources(pagerIdle);
+
+		// make sure Espresso hold long clicks for enough time
+		// if this fails, make sure Settings -> Accessibility -> Touch & hold delay
+		// is set to medium or long (for CircleCI)
+		long timeEspressoHoldsKey = (long) (ViewConfiguration.getLongPressTimeout());
+		long buttonLongTimeout =  activityTestRule.getActivity()
+				  .getResources().getInteger(R.integer.long_click_timeout_test);
+		assertThat(timeEspressoHoldsKey, is(greaterThanOrEqualTo(buttonLongTimeout)));
+		return pagerIdle;
+	}
+
 	public static void assertResultPreviewInvisible() {
 		onView(withId(R.id.resultPreview)).check(matches(
 				  withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
