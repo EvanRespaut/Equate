@@ -164,6 +164,10 @@ public class UnitTypeList {
 		return mUnits.get(mOrderedUnitKeys.get(index));
 	}
 
+	public HashMap<String, UnitType> getUnitTypeArray() {
+		return mUnits;
+	}
+
 	/**
 	 * Get the currently selected Unit Type
 	 */

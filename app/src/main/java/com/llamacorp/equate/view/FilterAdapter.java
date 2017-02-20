@@ -14,25 +14,24 @@ import com.llamacorp.equate.R;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
-import java.util.List;
 
 /**
  * Custom adapter class that implements the Filterable interface, allowing it
  * to filter items within it based on a filter string.
  */
 class FilterAdapter extends BaseAdapter implements Filterable {
-	private List<String> arrayList; // current values post filtering
-	private List<String> mOriginalValues; // values pre filtering
+	private ArrayList<UnitSearchItem> mArrayList; // current values post filtering
+	private ArrayList<UnitSearchItem> mOriginalValues; // values pre filtering
 	private LayoutInflater inflater;
 
-	FilterAdapter(Context context, List<String> arrayList) {
-		this.arrayList = arrayList;
+	FilterAdapter(Context context, ArrayList<UnitSearchItem> arrayList) {
+		this.mArrayList = arrayList;
 		inflater = LayoutInflater.from(context);
 	}
 
 	@Override
 	public int getCount() {
-		return arrayList.size();
+		return mArrayList.size();
 	}
 
 	@Override
@@ -53,17 +52,16 @@ class FilterAdapter extends BaseAdapter implements Filterable {
 
 			holder = new ViewHolder();
 			convertView = inflater.inflate(R.layout.filter_dialog_list_row, parent, false);
-			holder.textView = (TextView) convertView.findViewById(R.id.country_name_textView);
+			holder.mNameTextView = (TextView) convertView.findViewById(R.id.search_dialog_name_textView);
+			holder.mAbbreviationTextView = (TextView) convertView.findViewById(R.id.search_dialog_abbreviation_textView);
 			convertView.setTag(holder);
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
-		holder.textView.setText(arrayList.get(position));
+		String s = mArrayList.get(position).getUnitName();
+		holder.mNameTextView.setText(s);
+		holder.mAbbreviationTextView.setText(mArrayList.get(position).getUnitAbbreviation());
 		return convertView;
-	}
-
-	public List<String> getArrayList() {
-		return arrayList;
 	}
 
 	@Override
@@ -73,7 +71,7 @@ class FilterAdapter extends BaseAdapter implements Filterable {
 			@SuppressWarnings("unchecked")
 			@Override
 			protected void publishResults(CharSequence constraint, FilterResults results) {
-				arrayList = (List<String>) results.values; // has the filtered values
+				mArrayList = (ArrayList<UnitSearchItem>) results.values; // has the filtered values
 				notifyDataSetChanged();  // notifies the data with new filtered values
 			}
 
@@ -84,12 +82,12 @@ class FilterAdapter extends BaseAdapter implements Filterable {
 				/* Create a hierarchy or order results separated by different sets
 				* and then added together at the end.  Note HashSet used to guarantee
 				* no duplicate results */
-				LinkedHashSet<String> mainList = new LinkedHashSet<>();
-				LinkedHashSet<String> secondaryList = new LinkedHashSet<>();
-				LinkedHashSet<String> tertiaryList = new LinkedHashSet<>();
+				LinkedHashSet<UnitSearchItem> mainList = new LinkedHashSet<>();
+				LinkedHashSet<UnitSearchItem> secondaryList = new LinkedHashSet<>();
+				LinkedHashSet<UnitSearchItem> tertiaryList = new LinkedHashSet<>();
 
 				if (mOriginalValues == null){
-					mOriginalValues = new ArrayList<>(arrayList); // saves the original data in mOriginalValues
+					mOriginalValues = new ArrayList<>(mArrayList); // saves the original data in mOriginalValues
 				}
 
 				// if constraint is too short:
@@ -103,12 +101,13 @@ class FilterAdapter extends BaseAdapter implements Filterable {
 					int mTextLength = constraint.length();
 
 					mainLoop:
-					for (String data : mOriginalValues) {
+					for (UnitSearchItem item : mOriginalValues) {
+						String data = item.getUnitName() + item.getUnitAbbreviation();
 						if (mTextLength > data.length())
 							continue;
 						// first results that should appear start with the filter
 						if (data.toLowerCase().startsWith(constraint.toString())){
-							mainList.add(data);
+							mainList.add(item);
 							continue;
 						}
 						// next add results that have multiple words with non-first
@@ -118,14 +117,14 @@ class FilterAdapter extends BaseAdapter implements Filterable {
 							for (String part : dataArray) {
 								if (part.replaceAll("\\(|\\)", "")
 										  .startsWith(constraint.toString())){
-									secondaryList.add(data);
+									secondaryList.add(item);
 									continue mainLoop;
 								}
 							}
 						}
 						// finally find matches within words
 						if (data.toLowerCase().contains(constraint)){
-							tertiaryList.add(data);
+							tertiaryList.add(item);
 						}
 					}
 
@@ -141,7 +140,9 @@ class FilterAdapter extends BaseAdapter implements Filterable {
 		};
 	}
 
+
 	private class ViewHolder {
-		TextView textView;
+		TextView mNameTextView;
+		TextView mAbbreviationTextView;
 	}
 }

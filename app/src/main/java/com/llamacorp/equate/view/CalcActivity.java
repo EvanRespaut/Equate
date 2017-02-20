@@ -27,6 +27,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -34,26 +35,14 @@ import android.widget.LinearLayout;
 import com.llamacorp.equate.Calculator;
 import com.llamacorp.equate.R;
 import com.llamacorp.equate.view.ConvKeysFragment.OnConvertKeySelectedListener;
-import com.llamacorp.equate.view.ResultListFragment.OnResultSelectedListener;
 import com.viewpagerindicator.TabPageIndicator;
 
 import java.util.HashSet;
 import java.util.Set;
 
 public class CalcActivity extends AppCompatActivity
-		  implements OnResultSelectedListener, OnConvertKeySelectedListener,
-		NavigationView.OnNavigationItemSelectedListener {
-	public enum UnitVisibility {VISIBLE, HIDDEN, TOGGLE}
-
-	private Context mAppContext;  //used for toasts and the like
-
-	private ResultListFragment mResultListFrag;   //scroll-able history
-	private EditTextDisplay mDisplay;      //main display
-	private ViewPager mUnitTypeViewPager;         //controls and displays UnitType
-	private DynamicTextView mResultPreview;   //Result preview
-
-	private Button mEqualsButton; //used for changing color
-
+		  implements ResultListFragment.UnitSelectListener, OnConvertKeySelectedListener,
+		  NavigationView.OnNavigationItemSelectedListener {
 	private static final int[] BUTTON_IDS = {
 			  R.id.zero_button, R.id.one_button, R.id.two_button, R.id.three_button,
 			  R.id.four_button, R.id.five_button, R.id.six_button, R.id.seven_button,
@@ -76,10 +65,17 @@ public class CalcActivity extends AppCompatActivity
 			  R.id.close_para_button,
 
 	};
+	private Context mAppContext;  //used for toasts and the like
 
+	private ResultListFragment mResultListFrag;   //scroll-able history
+	private EditTextDisplay mDisplay;      //main display
+	private ViewPager mUnitTypeViewPager;         //controls and displays UnitType
+	private DynamicTextView mResultPreview;   //Result preview
+	private UnitSearchDialogBuilder mSearchDialogBuilder; // Unit search dialog
+
+	private Button mEqualsButton; //used for changing color
 	//main calculator object
 	private Calculator mCalc;
-
 	//Crude fix: used to tell the ConvKeyViewPager what unit to select after
 	// scrolling to correct UnitType
 	private int unitPosToSelectAfterScroll = -1;
@@ -351,12 +347,51 @@ public class CalcActivity extends AppCompatActivity
 
 		ImageButton backspaceButton = (ImageButton) findViewById(R.id.backspace_button);
 		backspaceButton.setOnTouchListener(new View.OnTouchListener() {
-			private Handler mColorHoldHandler;
-			private Handler mResetHandler;
-			private View mView;
 			private static final int RESET_HOLD_TIME = 2200;
 			private final int CLEAR_HOLD_TIME = ViewUtils.getLongClickTimeout(mAppContext);
+			Runnable mBackspaceReset = new Runnable() {
+				@Override
+				public void run() {
+					resetCalculator();
+				}
+			};
+			private Handler mColorHoldHandler;
+			private Handler mResetHandler;
 			//private int startTime;
+			private View mView;
+			private int mInc;
+			//set up the runnable for when backspace is held down
+			Runnable mBackspaceColor = new Runnable() {
+				private static final int NUM_COLOR_CHANGES = 10;
+				private int mStartColor = ContextCompat.getColor(mAppContext, R.color.op_button_pressed);
+				private int mEndColor = ContextCompat.getColor(mAppContext, R.color.backspace_button_held);
+
+				@Override
+				public void run() {
+					//after clear had been performed and 100ms is up, set color back to default
+					if (mInc == -1){
+						mView.setBackgroundColor(mEndColor);
+						return;
+					}
+					//color the button black for a second and then clear
+					if (mInc == NUM_COLOR_CHANGES){
+						numButtonPressed("c");
+						mView.setBackgroundColor(Color.argb(255, 0, 0, 0));
+						mColorHoldHandler.postDelayed(this, 100);
+						mInc = -1;
+						return;
+					}
+					mColorHoldHandler.postDelayed(this, CLEAR_HOLD_TIME / NUM_COLOR_CHANGES);
+
+					float deltaRed = (float) Color.red(mStartColor) + ((float) Color.red(mEndColor) - (float) Color.red(mStartColor)) * ((float) mInc * (float) mInc * (float) mInc) / ((float) NUM_COLOR_CHANGES * (float) NUM_COLOR_CHANGES * (float) NUM_COLOR_CHANGES);
+
+					int deltaGreen = Color.green(mStartColor) + ((Color.green(mEndColor) - Color.green(mStartColor)) * mInc) / NUM_COLOR_CHANGES;
+					int deltaBlue = Color.blue(mStartColor) + ((Color.blue(mEndColor) - Color.blue(mStartColor)) * mInc) / NUM_COLOR_CHANGES;
+
+					mView.setBackgroundColor(Color.argb(255, (int) deltaRed, deltaGreen, deltaBlue));
+					mInc++;
+				}
+			};
 
 			@Override
 			public boolean onTouch(View view, MotionEvent event) {
@@ -389,53 +424,8 @@ public class CalcActivity extends AppCompatActivity
 				}
 				return false;
 			}
-
-
-			Runnable mBackspaceReset = new Runnable() {
-				@Override
-				public void run() {
-					resetCalculator();
-				}
-			};
-
-
-			private int mInc;
-			//set up the runnable for when backspace is held down
-			Runnable mBackspaceColor = new Runnable() {
-				private int mStartColor = ContextCompat.getColor(mAppContext, R.color.op_button_pressed);
-				private int mEndColor = ContextCompat.getColor(mAppContext, R.color.backspace_button_held);
-
-				private static final int NUM_COLOR_CHANGES = 10;
-
-				@Override
-				public void run() {
-					//after clear had been performed and 100ms is up, set color back to default
-					if (mInc == -1){
-						mView.setBackgroundColor(mEndColor);
-						return;
-					}
-					//color the button black for a second and then clear
-					if (mInc == NUM_COLOR_CHANGES){
-						numButtonPressed("c");
-						mView.setBackgroundColor(Color.argb(255, 0, 0, 0));
-						mColorHoldHandler.postDelayed(this, 100);
-						mInc = -1;
-						return;
-					}
-					mColorHoldHandler.postDelayed(this, CLEAR_HOLD_TIME / NUM_COLOR_CHANGES);
-
-					float deltaRed = (float) Color.red(mStartColor) + ((float) Color.red(mEndColor) - (float) Color.red(mStartColor)) * ((float) mInc * (float) mInc * (float) mInc) / ((float) NUM_COLOR_CHANGES * (float) NUM_COLOR_CHANGES * (float) NUM_COLOR_CHANGES);
-
-					int deltaGreen = Color.green(mStartColor) + ((Color.green(mEndColor) - Color.green(mStartColor)) * mInc) / NUM_COLOR_CHANGES;
-					int deltaBlue = Color.blue(mStartColor) + ((Color.blue(mEndColor) - Color.blue(mStartColor)) * mInc) / NUM_COLOR_CHANGES;
-
-					mView.setBackgroundColor(Color.argb(255, (int) deltaRed, deltaGreen, deltaBlue));
-					mInc++;
-				}
-			};
 		});
 	}
-
 
 	private void setupUnitTypePager() {
 		//if we have no Unit Types selected from settings, don't show Units view
@@ -521,7 +511,6 @@ public class CalcActivity extends AppCompatActivity
 		mUnitTypeTabIndicator.notifyDataSetChanged();
 	}
 
-
 	/**
 	 * Called when any non convert key is pressed
 	 *
@@ -545,7 +534,6 @@ public class CalcActivity extends AppCompatActivity
 		updateScreen(flags.performedSolve);
 	}
 
-
 	public void resetCalculator() {
 		mCalc.resetCalc();
 
@@ -564,7 +552,7 @@ public class CalcActivity extends AppCompatActivity
 	/**
 	 * Selects the a unit (used by result list)
 	 *
-	 * @see com.llamacorp.equate.view.ResultListFragment.OnResultSelectedListener
+	 * @see ResultListFragment.UnitSelectListener
 	 */
 	public void selectUnitAtUnitArrayPos(int unitPos, String unitTypeKey) {
 		int visibleUnitTypeIndex = mCalc.getUnitTypeIndex(unitTypeKey);
@@ -599,7 +587,6 @@ public class CalcActivity extends AppCompatActivity
 		}
 	}
 
-
 	private void setUnitViewVisibility(UnitVisibility uv) {
 		final LinearLayout mUnitContain = (LinearLayout) findViewById(R.id.unit_container);
 
@@ -615,13 +602,12 @@ public class CalcActivity extends AppCompatActivity
 		}
 	}
 
-
 	/**
 	 * Grabs newest data from Calculator, updates the main display, and gives an
 	 * option to scroll down the result list
 	 *
-	 * @param updateResult pass true to update result list
-	 * @param instantScroll  pass true to scroll instantly, otherwise use animation
+	 * @param updateResult  pass true to update result list
+	 * @param instantScroll pass true to scroll instantly, otherwise use animation
 	 */
 	private void updateScreen(boolean updateResult, boolean instantScroll) {
 		mDisplay.updateTextFromCalc(); //Update EditText view
@@ -655,7 +641,7 @@ public class CalcActivity extends AppCompatActivity
 		//no instant scroll for previous expression
 		updateScreen(updateResult, false);
 
-		//see if colored convert button should be not colored (if backspace or 
+		//see if colored convert button should be not colored (if backspace or
 		//clear were pressed, or if expression solved)
 		if (!mCalc.isUnitSelected() && mUnitTypeViewPager != null)
 			clearUnitSelection(mUnitTypeViewPager.getCurrentItem());
@@ -674,7 +660,6 @@ public class CalcActivity extends AppCompatActivity
 		mEqualsButton.setSelected(unHighlighted);
 	}
 
-
 	/**
 	 * Clear the unit selection for unit type fragment at position pos
 	 *
@@ -686,7 +671,6 @@ public class CalcActivity extends AppCompatActivity
 		if (currFragAtPos != null)
 			currFragAtPos.clearButtonSelection();
 	}
-
 
 	/**
 	 * Helper function to return the convert key fragment at position pos
@@ -706,6 +690,7 @@ public class CalcActivity extends AppCompatActivity
 
 	/**
 	 * Called when an item in the navigation menu drawer is selected
+	 *
 	 * @param item that is selected
 	 */
 	@Override
@@ -713,11 +698,19 @@ public class CalcActivity extends AppCompatActivity
 		// Handle navigation view item clicks here.
 		int id = item.getItemId();
 
-		if (id == R.id.nav_find) {
-//			FilterDialogBuilder filterDialog = new FilterDialogBuilder(mAppContext,
-//					 mCalc.getListOfUnits())
-		}
-		else if  (id == R.id.nav_settings){
+		if (id == R.id.nav_find){
+			if (mSearchDialogBuilder == null)
+				mSearchDialogBuilder = new UnitSearchDialogBuilder(mCalc.getUnitTypeList());
+
+			mSearchDialogBuilder.buildDialog(mAppContext,
+					  new AdapterView.OnItemClickListener() {
+						  @Override
+						  public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+							  mSearchDialogBuilder.cancelDialog();
+							  ViewUtils.toast("Clicked pos " + String.valueOf(position), mAppContext);
+						  }
+					  });
+		} else if (id == R.id.nav_settings){
 			Intent intent = new Intent(mAppContext, SettingsActivity.class);
 			startActivity(intent);
 		} else if (id == R.id.nav_about){
@@ -729,7 +722,6 @@ public class CalcActivity extends AppCompatActivity
 		return true;
 	}
 
-
 	@Override
 	public void onBackPressed() {
 		DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -740,7 +732,6 @@ public class CalcActivity extends AppCompatActivity
 		}
 	}
 
-
 	@Override
 	public void onPause() {
 		super.onPause();
@@ -750,7 +741,6 @@ public class CalcActivity extends AppCompatActivity
 			e.printStackTrace();
 		}
 	}
-
 
 	@Override
 	public void onResume() {
@@ -788,5 +778,8 @@ public class CalcActivity extends AppCompatActivity
 		}
 
 	}
+
+
+	public enum UnitVisibility {VISIBLE, HIDDEN, TOGGLE}
 
 }

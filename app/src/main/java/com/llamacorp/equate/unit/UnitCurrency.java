@@ -112,7 +112,7 @@ public class UnitCurrency extends Unit {
 	 * on Internet connection.
 	 */
 	public void asyncRefresh(Context c) {
-		if (getName().equals("") || getName().equals(DEFAULT_CURRENCY)) return;
+		if (getAbbreviation().equals("") || getAbbreviation().equals(DEFAULT_CURRENCY)) return;
 		if (mUpdating) return;
 
 		mContext = c;
@@ -125,7 +125,7 @@ public class UnitCurrency extends Unit {
 
 	private String getURL() {
 		//crude method, want something better later
-		if (getName().equals("BTC"))
+		if (getAbbreviation().equals("BTC"))
 			return mURLPrefix;
 		else
 			return mURLPrefix + toString();
@@ -149,7 +149,7 @@ public class UnitCurrency extends Unit {
 			boolean updateSuccess = false;
 
 			//this is crude, but works until we have more URLs each with unique formats
-			if (getName().equals("BTC"))
+			if (getAbbreviation().equals("BTC"))
 				try {
 					setValue(Double.parseDouble(result));
 					updateSuccess = true;
@@ -185,7 +185,7 @@ public class UnitCurrency extends Unit {
 				updateSuccess = true;
 			} catch (JSONException e) {
 //				if(result.contains("Over Quota")){
-//					System.out.println("Over quota for " + getName());
+//					System.out.println("Over quota for " + getAbbreviation());
 //				}
 //				else
 //					System.out.println("Result didn't parse, result = " + result);

@@ -473,6 +473,10 @@ public class Calculator {
 		return mResultList;
 	}
 
+	public UnitTypeList getUnitTypeList() {
+		return mUnitTypeList;
+	}
+
 	/**
 	 * Returns if a unit key in current UnitType is selected
 	 */

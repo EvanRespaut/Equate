@@ -122,7 +122,7 @@ public class UnitTypeUpdater {
 			if (!ut.getUnitPosInUnitArray(i).isDynamic()) continue;
 
 			UnitCurrency u = ((UnitCurrency) ut.getUnitPosInUnitArray(i));
-			YahooXmlParser.Entry entry = currRates.get(u.getName());
+			YahooXmlParser.Entry entry = currRates.get(u.getAbbreviation());
 			if (entry != null){
 				u.setValue(entry.price);
 				u.setUpdateTime(entry.date);

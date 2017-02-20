@@ -91,7 +91,7 @@ public class UnitHistCurrency extends Unit {
 	}
 
 	private void refreshNames() {
-		setDispName(getShortName(mYearIndex));
+		setAbbreviation(getShortName(mYearIndex));
 		setLongName(getLongName(mYearIndex));
 	}
 

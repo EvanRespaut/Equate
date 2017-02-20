@@ -19,11 +19,11 @@ import java.util.List;
 
 public class ResultListFragment extends ListFragment {
 	//this is for communication with the parent activity
-	private OnResultSelectedListener mCallback;
+	private UnitSelectListener mCallback;
 	private List<Result> mResultArray;
 
 	// Container Activity must implement this interface
-	public interface OnResultSelectedListener {
+	public interface UnitSelectListener {
 		void updateScreen(boolean updateResult);
 
 		void selectUnitAtUnitArrayPos(int unitPos, String unitTypeKey);
@@ -35,9 +35,9 @@ public class ResultListFragment extends ListFragment {
 
 		//Make sure container implements callback interface; else, throw exception
 		try {
-			mCallback = (OnResultSelectedListener) activity;
+			mCallback = (UnitSelectListener) activity;
 		} catch (ClassCastException e) {
-			throw new ClassCastException(activity.toString() + " must implement OnResultSelectedListener");
+			throw new ClassCastException(activity.toString() + " must implement UnitSelectListener");
 		}
 	}
 
@@ -111,7 +111,7 @@ public class ResultListFragment extends ListFragment {
 		 * @param text     the previous query or answer String
 		 */
 		private void setUpResultTextView(TextView textView, String text) {
-			//textView.setClickable(true);
+			//mNameTextView.setClickable(true);
 			/*
 			//want to superscript text after a "^" character
 			String [] splitArray = text.split("\\^");
@@ -121,7 +121,7 @@ public class ResultListFragment extends ListFragment {
 				SpannableString spanText = new SpannableString(splitArray[0] + splitArray[1]);   
 				//superscript the portion after the "^"
 				spanText.setSpan(new SuperscriptSpan(), splitArray[0].length(), spanText.length(), 0);  
-				textView.setText(spanText, BufferType.SPANNABLE);   
+				mNameTextView.setText(spanText, BufferType.SPANNABLE);
 			}
 
 			//otherwise just set it normally

@@ -1,7 +1,6 @@
 package com.llamacorp.equate.unit;
 
 import android.content.Context;
-import android.content.res.Resources;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -12,7 +11,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.HashMap;
 
 /**
  * Abstract class, note that child class must implement a function to do raw
@@ -335,14 +333,14 @@ public class UnitType {
 		int arraySize = size() - numDispUnits;
 		CharSequence[] cs = new CharSequence[arraySize];
 		for (int i = 0; i < arraySize; i++) {
-			cs[i] = getUnit(numDispUnits + i).getGenericLongName();
+			cs[i] = getUnit(numDispUnits + i).getLongName();
 		}
 		return cs;
 	}
 
 	/**
 	 * Used to get the Unit at a given position.  Note that the position is the
-	 * user defined order for buttons. Uses a mask to convert displayed position
+	 * user defined order for buttons. Uses a LUT to convert displayed position
 	 * into real array position.
 	 *
 	 * @param buttonPos Position of unit to retrieve (user defined order)

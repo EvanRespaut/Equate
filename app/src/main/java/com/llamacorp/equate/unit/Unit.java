@@ -11,12 +11,12 @@ public abstract class Unit  /*implements JsonSerializer<Unit>, JsonDeserializer<
 	private static final String JSON_VALUE = "value";
 
 
-	private String mDispName;
+	private String mAbbreviation;
 	private String mLongName;
 	protected double mValue;
 
 	protected Unit(String name, String longName, double value) {
-		mDispName = name;
+		mAbbreviation = name;
 		mLongName = longName;
 		mValue = value;
 	}
@@ -53,7 +53,7 @@ public abstract class Unit  /*implements JsonSerializer<Unit>, JsonDeserializer<
 
       /*
 		String unitType = json.getString(JSON_TYPE);
-		String packageName = Unit.class.getPackage().getName();
+		String packageName = Unit.class.getPackage().getAbbreviation();
 		Unit u;
 		try {
 			Class<?> c = Class.forName(packageName + "." + unitType);
@@ -89,20 +89,24 @@ public abstract class Unit  /*implements JsonSerializer<Unit>, JsonDeserializer<
 		mLongName = longName;
 	}
 
-	protected String getLongName() {
+	/**
+	 * Get the full name of the unit. For an abbreviated name, use getAbbreviation()
+	 * toString().
+	 */
+	public String getLongName() {
 		return mLongName;
 	}
 
-	public String getName() {
+	/**
+	 * Get the abbreviated name for this Unit that appears on the unit button. Use
+	 * getLongName for a full name of the unit.
+	 */
+	public String getAbbreviation() {
 		return toString();
 	}
 
-	public String getGenericLongName() {
-		return mLongName;
-	}
-
 	public String getLowercaseGenericLongName() {
-		return getGenericLongName().toLowerCase(Locale.US);
+		return getLongName().toLowerCase(Locale.US);
 	}
 
 	public String getLowercaseLongName() {
@@ -117,12 +121,12 @@ public abstract class Unit  /*implements JsonSerializer<Unit>, JsonDeserializer<
 		return mValue;
 	}
 
-	protected void setDispName(String name) {
-		mDispName = name;
+	void setAbbreviation(String name) {
+		mAbbreviation = name;
 	}
 
 	public String toString() {
-		return mDispName;
+		return mAbbreviation;
 	}
 
 	public boolean isDynamic() {
