@@ -48,6 +48,14 @@ public class YahooXmlParser {
       }
    }
 
+	/**
+    * Iterates over the top level XML branch called list, looking for the first
+    * "resources" tag.  Note that we only expect to find one.
+    * @param parser XML parser from Yahoo
+    * @return a HashMap of entries
+    * @throws XmlPullParserException
+    * @throws IOException
+    */
    private HashMap<String, Entry> findResources(XmlPullParser parser) throws XmlPullParserException, IOException {
       HashMap<String, Entry> entries = new HashMap<String, Entry>();
 
@@ -59,7 +67,7 @@ public class YahooXmlParser {
          String name = parser.getName();
          // Starts by looking for the resources tag
          if (name.equals("resources")) {
-            entries = readList(parser);
+            entries = readListOfResources(parser);
          } else {
             skip(parser);
          }
@@ -68,7 +76,11 @@ public class YahooXmlParser {
    }
 
 
-   private HashMap<String, Entry> readList(XmlPullParser parser) throws XmlPullParserException, IOException {
+	/**
+    * Iterates through each "resource" tag in the "resources" parent.  Each
+    * currency should have it's own "resource" tag.
+    */
+   private HashMap<String, Entry> readListOfResources(XmlPullParser parser) throws XmlPullParserException, IOException {
       HashMap<String, Entry> entries = new HashMap<String, Entry>();
 
       parser.require(XmlPullParser.START_TAG, ns, "resources");
@@ -79,8 +91,13 @@ public class YahooXmlParser {
          String name = parser.getName();
          // Starts by looking for the resource tag
          if (name.equals("resource")) {
+            if (parser.isEmptyElementTag()){
+               skip(parser);
+            }
             Entry ent = readResource(parser);
-            entries.put(ent.symbol, ent);
+            if (ent != null){
+               entries.put(ent.symbol, ent);
+            }
          } else {
             skip(parser);
          }
@@ -138,6 +155,9 @@ public class YahooXmlParser {
          } else {
             skip(parser);
          }
+      }
+      if (price == null || symbol == null || date == null){
+         return null;
       }
       return new Entry(Double.parseDouble(price), symbol, date);
    }
