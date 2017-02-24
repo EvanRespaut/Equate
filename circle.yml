@@ -60,7 +60,7 @@ test:
         # wait for it to have booted
         - circle-android wait-for-boot
         # unlock the emulator screen
-        - sleep 30
+        - sleep 50
         - adb shell input keyevent 82
         - fb-adb rcmd screencap -p > $CIRCLE_ARTIFACTS/$(date +"%T")screen-after-unlock.png
         
