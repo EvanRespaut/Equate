@@ -49,7 +49,7 @@
    <string name="word_historical">historical</string>
    <string name="historical_dialog_title">Select date:</string>
    <string name="word_Convert">Convert</string>
-   <string name="word_Converting">Converting</string>
+   <string name="word_Converted">Converted</string>
    <string name="word_to">to</string>
    <string name="word_updating">Updating</string>
    <string name="add_unit">Create New Unit</string>

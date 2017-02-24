@@ -20,6 +20,8 @@ import com.llamacorp.equate.unit.UnitType;
 import com.llamacorp.equate.unit.UnitTypeList;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Map;
 
 /**
@@ -28,6 +30,7 @@ import java.util.Map;
 public class UnitSearchDialogBuilder {
 	private AlertDialog mAlertDialog;
 	private final ArrayList<UnitSearchItem> mOriginalList;
+	private FilterAdapter mArrayAdapter;
 
 	/**
 	 * Constructor for the unit search dialog builder
@@ -43,9 +46,19 @@ public class UnitSearchDialogBuilder {
 			UnitType unitType = entry.getValue();
 			for (int i = 0; i < unitType.size(); i++) {
 				Unit unit = unitType.getUnitPosInUnitArray(i);
+				// some units are just dummies to help position other units
+				if (unit.toString().equals("") || unit.getLongName().equals("")){
+					continue;
+				}
 				items.add(new UnitSearchItem(unitTypeKey, unit.getLongName(),
 						  unit.getAbbreviation(), i));
 			}
+			Collections.sort(items, new Comparator<UnitSearchItem>() {
+				@Override
+				public int compare(UnitSearchItem o1, UnitSearchItem o2) {
+					return o1.getUnitName().compareTo(o2.getUnitName());
+				}
+			});
 		}
 		mOriginalList = items;
 	}
@@ -71,9 +84,9 @@ public class UnitSearchDialogBuilder {
 		layout.addView(listView);
 		builder.setView(layout);
 
-		final FilterAdapter arrayAdapter = new FilterAdapter(context, mOriginalList);
+		mArrayAdapter = new FilterAdapter(context, mOriginalList);
 
-		listView.setAdapter(arrayAdapter);
+		listView.setAdapter(mArrayAdapter);
 		listView.setOnItemClickListener(listener);
 
 		filterEditText.addTextChangedListener(new TextWatcher() {
@@ -87,7 +100,7 @@ public class UnitSearchDialogBuilder {
 			public void onTextChanged(CharSequence s, int start, int before, int count) {
 				// use Filter to filter results so filtering actions don't
 				// operate on the UI thread
-				arrayAdapter.getFilter().filter(s.toString());
+				mArrayAdapter.getFilter().filter(s.toString());
 			}
 		});
 
@@ -111,6 +124,10 @@ public class UnitSearchDialogBuilder {
 		// show the keyboard by default
 		mAlertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 		mAlertDialog.show();
+	}
+
+	public UnitSearchItem getItem(int position) {
+		return mArrayAdapter.getUnitSearchItem(position);
 	}
 
 	/**

@@ -707,7 +707,8 @@ public class CalcActivity extends AppCompatActivity
 						  @Override
 						  public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 							  mSearchDialogBuilder.cancelDialog();
-							  ViewUtils.toast("Clicked pos " + String.valueOf(position), mAppContext);
+							  UnitSearchItem item = mSearchDialogBuilder.getItem(position);
+							  selectUnitAtUnitArrayPos(item.getUnitPosition(), item.getUnitTypeKey());
 						  }
 					  });
 		} else if (id == R.id.nav_settings){

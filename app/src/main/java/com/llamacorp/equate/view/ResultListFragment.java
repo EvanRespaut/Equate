@@ -75,7 +75,7 @@ public class ResultListFragment extends ListFragment {
 					  findViewById(R.id.list_item_result_currencyTimestamp);
 			textViewUnitTimestamp.setVisibility(View.GONE);
 			if (result != null && result.containsUnits()){
-				String text = getResources().getString(R.string.word_Converting) +
+				String text = getResources().getString(R.string.word_Converted) +
 						  " " + result.getQueryUnitTextLong() +
 						  " " + getResources().getString(R.string.word_to) +
 						  " " + result.getAnswerUnitTextLong() + ":";

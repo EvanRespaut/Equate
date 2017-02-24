@@ -39,6 +39,10 @@ class FilterAdapter extends BaseAdapter implements Filterable {
 		return position;
 	}
 
+	public UnitSearchItem getUnitSearchItem(int position) {
+		return mArrayList.get(position);
+	}
+
 	@Override
 	public long getItemId(int position) {
 		return position;

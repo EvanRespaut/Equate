@@ -102,7 +102,7 @@ public abstract class Unit  /*implements JsonSerializer<Unit>, JsonDeserializer<
 	 * getLongName for a full name of the unit.
 	 */
 	public String getAbbreviation() {
-		return toString();
+		return mAbbreviation;
 	}
 
 	public String getLowercaseGenericLongName() {
@@ -125,8 +125,11 @@ public abstract class Unit  /*implements JsonSerializer<Unit>, JsonDeserializer<
 		mAbbreviation = name;
 	}
 
+	/**
+	 * Gets the abbreviation of the unit.
+	 */
 	public String toString() {
-		return mAbbreviation;
+		return getAbbreviation();
 	}
 
 	public boolean isDynamic() {
