@@ -61,7 +61,8 @@ public class TestEspressoUnitTypeVisibility {
 
 	@After
 	public void unregisterIntentServiceIdlingResource() {
-		Espresso.unregisterIdlingResources(mPagerIdle);
+		if (mPagerIdle != null) // maybe needed for CircleCi sometimes?
+			Espresso.unregisterIdlingResources(mPagerIdle);
 	}
 
 	@Test

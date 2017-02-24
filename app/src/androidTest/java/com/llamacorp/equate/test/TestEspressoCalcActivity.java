@@ -24,7 +24,6 @@ import static com.llamacorp.equate.test.EspressoTestUtils.clickPrevAnswer;
 import static com.llamacorp.equate.test.EspressoTestUtils.clickPrevQuery;
 import static com.llamacorp.equate.test.EspressoTestUtils.selectUnitTypeDirect;
 import static com.llamacorp.equate.test.EspressoTestUtils.setUp;
-import static org.hamcrest.Matchers.allOf;
 
 @RunWith(AndroidJUnit4.class)
 public class TestEspressoCalcActivity {
@@ -41,7 +40,8 @@ public class TestEspressoCalcActivity {
 
 	@After
 	public void unregisterIntentServiceIdlingResource() {
-		Espresso.unregisterIdlingResources(mPagerIdle);
+		if (mPagerIdle != null) // maybe needed for CircleCi sometimes?
+			Espresso.unregisterIdlingResources(mPagerIdle);
 	}
 
 
@@ -106,7 +106,7 @@ public class TestEspressoCalcActivity {
 		selectUnitTypeDirect("Energy");
 		clickButtons("b");
 
-		onView(allOf(withText("Power"))).perform(click());
+		onView(withText("Power")).perform(click());
 
 		clickButtons("67");
 	}
