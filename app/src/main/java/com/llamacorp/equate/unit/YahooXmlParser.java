@@ -48,8 +48,17 @@ public class YahooXmlParser {
 		}
 	}
 
+	/**
+	 * Iterates over the top level XML branch called list, looking for the first
+	 * "resources" tag. Note that we only expect to find one.
+	 *
+	 * @param parser XML parser from Yahoo
+	 * @return a HashMap of entries
+	 * @throws XmlPullParserException
+	 * @throws IOException
+	 */
 	private HashMap<String, Entry> findResources(XmlPullParser parser) throws XmlPullParserException, IOException {
-		HashMap<String, Entry> entries = new HashMap<String, Entry>();
+		HashMap<String, Entry> entries = new HashMap<>();
 
 		parser.require(XmlPullParser.START_TAG, ns, "list");
 		while (parser.next() != XmlPullParser.END_TAG) {
@@ -59,7 +68,7 @@ public class YahooXmlParser {
 			String name = parser.getName();
 			// Starts by looking for the resources tag
 			if (name.equals("resources")){
-				entries = readList(parser);
+				entries = readListOfResources(parser);
 			} else {
 				skip(parser);
 			}
@@ -68,8 +77,13 @@ public class YahooXmlParser {
 	}
 
 
-	private HashMap<String, Entry> readList(XmlPullParser parser) throws XmlPullParserException, IOException {
-		HashMap<String, Entry> entries = new HashMap<String, Entry>();
+	/**
+	 * Iterates through each "resource" tag in the "resources" parent. Each
+	 * currency should have it's own "resource" tag.
+	 */
+	private HashMap<String, Entry> readListOfResources(XmlPullParser parser)
+			  throws XmlPullParserException, IOException {
+		HashMap<String, Entry> entries = new HashMap<>();
 
 		parser.require(XmlPullParser.START_TAG, ns, "resources");
 		while (parser.next() != XmlPullParser.END_TAG) {
@@ -79,8 +93,13 @@ public class YahooXmlParser {
 			String name = parser.getName();
 			// Starts by looking for the resource tag
 			if (name.equals("resource")){
+				if (parser.isEmptyElementTag()){
+					skip(parser);
+				}
 				Entry ent = readResource(parser);
-				entries.put(ent.symbol, ent);
+				if (ent != null){
+					entries.put(ent.symbol, ent);
+				}
 			} else {
 				skip(parser);
 			}
@@ -88,22 +107,8 @@ public class YahooXmlParser {
 		return entries;
 	}
 
-
-	public static class Entry {
-		public final double price;
-		public final String symbol;
-		public final Date date;
-
-		private Entry(double price, String symbol, Date date) {
-			this.price = price;
-			this.symbol = symbol;
-			this.date = date;
-		}
-	}
-
-
 	/**
-	 * Parses the contents of a currency  entry. If it encounters a price,
+	 * Parses the contents of a currency entry. If it encounters a price,
 	 * summary, or symbol tag, hands them off to their respective methods for
 	 * processing. Otherwise, skips the tag.
 	 *
@@ -119,26 +124,34 @@ public class YahooXmlParser {
 			if (parser.getEventType() != XmlPullParser.START_TAG){
 				continue;
 			}
-			//read in name attribute (ie in  <field name="symbol">XAG=X</field>
+			//read in name attribute (ie in <field name="symbol">XAG=X</field>
 			//this will be "symbol")
 			String name = parser.getAttributeValue(null, "name");
-			if (name.equals("price")){
-				price = readPrice(parser);
-			} else if (name.equals("symbol")){
-				symbol = readSymbol(parser);
+			switch (name) {
+				case "price":
+					price = readPrice(parser);
+					break;
+				case "symbol":
+					symbol = readSymbol(parser);
 
-			} else if (name.equals("utctime")){
-				SimpleDateFormat sdf =
-						  new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.US);
+					break;
+				case "utctime":
+					SimpleDateFormat sdf =
+							  new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.US);
 
-				try {
-					date = sdf.parse(readSymbol(parser));
-				} catch (ParseException e) {
-					e.printStackTrace();
-				}
-			} else {
-				skip(parser);
+					try {
+						date = sdf.parse(readSymbol(parser));
+					} catch (ParseException e) {
+						e.printStackTrace();
+					}
+					break;
+				default:
+					skip(parser);
+					break;
 			}
+		}
+		if (price == null || symbol == null || date == null){
+			return null;
 		}
 		return new Entry(Double.parseDouble(price), symbol, date);
 	}
@@ -188,6 +201,18 @@ public class YahooXmlParser {
 					depth++;
 					break;
 			}
+		}
+	}
+
+	static class Entry {
+		final double price;
+		final String symbol;
+		final Date date;
+
+		private Entry(double price, String symbol, Date date) {
+			this.price = price;
+			this.symbol = symbol;
+			this.date = date;
 		}
 	}
 }
