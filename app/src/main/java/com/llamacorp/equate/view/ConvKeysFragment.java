@@ -244,7 +244,16 @@ public class ConvKeysFragment extends Fragment implements OnConvertKeyUpdateFini
 	}
 
 	private void refreshButtonText(int buttonPos) {
-		refreshButtonText("", buttonPos);
+		if (mUnitType.isUnitSelected()){
+				if (buttonPos != mUnitType.getCurrUnitButtonPos()){
+					refreshButtonText(getResources()
+							.getString(R.string.convert_arrow), buttonPos);
+			}
+			setSelectedButtonHighlight(true);
+		}
+		else {
+			refreshButtonText("", buttonPos);
+		}
 	}
 
 	private void refreshButtonText(String textPrefix, int buttonPos) {
@@ -373,7 +382,7 @@ public class ConvKeysFragment extends Fragment implements OnConvertKeyUpdateFini
 
 		//remove arrows
 		for (int i = 0; i < mConvButton.size(); i++) {
-			refreshButtonText(i);
+			refreshButtonText("", i);
 		}
 
 		//Clear color from previously selected convert button

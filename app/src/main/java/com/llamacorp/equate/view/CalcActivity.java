@@ -466,6 +466,9 @@ public class CalcActivity extends AppCompatActivity
 			//as the page is being scrolled to
 			@Override
 			public void onPageSelected(int pos) {
+				// clear unit selection from current Unit Type before switching
+				mCalc.getCurrUnitType().clearUnitSelection();
+
 				//update the calc with current UnitType selection
 				mCalc.setCurrentUnitTypePos(pos);
 

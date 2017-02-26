@@ -143,6 +143,20 @@ public class EspressoTestUtils {
 				  , isDisplayed())).perform(click());
 	}
 
+	/**
+	 * Checks that the unit button is visible for the given string
+	 */
+	public static void checkUnitButtonVisibleWithArrow(String buttonText) {
+		checkUnitButtonVisible("➜ " + buttonText);
+	}
+
+	/**
+	 * Checks that the unit button is visible for the given string
+    */
+	public static void checkUnitButtonVisible(String buttonText) {
+		onView(allOf(withText(buttonText), isDescendantOfA(withId(R.id.unit_pager))))
+				.check(matches(isDisplayed()));
+	}
 
 	public static void clickButtons(String buttonString) {
 		for (int i = 0; i < buttonString.length(); i++) {

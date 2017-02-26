@@ -37,12 +37,15 @@ import static android.support.test.espresso.matcher.ViewMatchers.withEffectiveVi
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withParent;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static com.llamacorp.equate.test.EspressoTestUtils.checkUnitButtonVisible;
+import static com.llamacorp.equate.test.EspressoTestUtils.checkUnitButtonVisibleWithArrow;
 import static com.llamacorp.equate.test.EspressoTestUtils.clickButtons;
 import static com.llamacorp.equate.test.EspressoTestUtils.clickPrevAnswer;
 import static com.llamacorp.equate.test.EspressoTestUtils.clickUnit;
 import static com.llamacorp.equate.test.EspressoTestUtils.selectUnitTypeDirect;
 import static com.llamacorp.equate.test.EspressoTestUtils.setUp;
 import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.anyOf;
 import static org.hamcrest.Matchers.hasToString;
 
 @RunWith(AndroidJUnit4.class)
@@ -75,6 +78,26 @@ public class TestEspressoUnitTypeVisibility {
 		selectUnitTypeDirect("Length");
 		clickUnit("ft");
 		clickUnit("in");
+		// move to Volume tab
+		selectUnitTypeDirect("Volume");
+		clickUnit("qt");
+
+		// check arrows appeared
+		checkUnitButtonVisible("qt");
+		checkUnitButtonVisibleWithArrow("pt");
+
+		// change to a non adjacent tab
+		selectUnitTypeDirect("Length");
+
+		//check no arrows here
+		checkUnitButtonVisible("yd");
+		checkUnitButtonVisible("mi");
+
+		// move back and make sure unit is not selected
+		selectUnitTypeDirect("Volume");
+		// make sure arrows are gone
+		checkUnitButtonVisible("pt");
+
 
 		ArrayList<String> toRemoveArray = new ArrayList<>();
 		toRemoveArray.add("Weight");
@@ -118,7 +141,6 @@ public class TestEspressoUnitTypeVisibility {
 
 		//check hidden unit types are gone
 		checkUnitTypesRemoved(toRemoveArray);
-
 	}
 
 	private void checkUnitTypesRemoved(ArrayList<String> removedUnitTypes) {
