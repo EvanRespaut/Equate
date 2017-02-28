@@ -13,6 +13,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -35,6 +37,7 @@ import android.widget.LinearLayout;
 import com.llamacorp.equate.Calculator;
 import com.llamacorp.equate.R;
 import com.llamacorp.equate.view.ConvKeysFragment.OnConvertKeySelectedListener;
+import com.llamacorp.equate.view.IdlingResource.SimpleIdlingResource;
 import com.viewpagerindicator.TabPageIndicator;
 
 import java.util.HashSet;
@@ -72,6 +75,10 @@ public class CalcActivity extends AppCompatActivity
 	private ViewPager mUnitTypeViewPager;         //controls and displays UnitType
 	private DynamicTextView mResultPreview;   //Result preview
 	private UnitSearchDialogBuilder mSearchDialogBuilder; // Unit search dialog
+
+	// (Used for test) Idling Resource which will be null in production.
+	@Nullable
+	private SimpleIdlingResource mIdlingResource;
 
 	private Button mEqualsButton; //used for changing color
 	//main calculator object
@@ -702,10 +709,11 @@ public class CalcActivity extends AppCompatActivity
 		int id = item.getItemId();
 
 		if (id == R.id.nav_find){
-			if (mSearchDialogBuilder == null)
+			if (mSearchDialogBuilder == null) {
 				mSearchDialogBuilder = new UnitSearchDialogBuilder(mCalc.getUnitTypeList());
+			}
 
-			mSearchDialogBuilder.buildDialog(mAppContext,
+			mSearchDialogBuilder.buildDialog(mAppContext, mIdlingResource,
 					  new AdapterView.OnItemClickListener() {
 						  @Override
 						  public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -786,4 +794,15 @@ public class CalcActivity extends AppCompatActivity
 
 	public enum UnitVisibility {VISIBLE, HIDDEN, TOGGLE}
 
+	/**
+	 * Only called from test, creates and returns a new {@link SimpleIdlingResource}.
+	 */
+	@VisibleForTesting
+	@NonNull
+	public SimpleIdlingResource getIdlingResource() {
+		if (mIdlingResource == null) {
+			mIdlingResource = new SimpleIdlingResource();
+		}
+		return mIdlingResource;
+	}
 }

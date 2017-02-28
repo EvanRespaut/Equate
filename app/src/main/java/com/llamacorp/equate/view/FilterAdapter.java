@@ -86,9 +86,11 @@ class FilterAdapter extends BaseAdapter implements Filterable {
 				/* Create a hierarchy or order results separated by different sets
 				* and then added together at the end.  Note HashSet used to guarantee
 				* no duplicate results */
-				LinkedHashSet<UnitSearchItem> mainList = new LinkedHashSet<>();
-				LinkedHashSet<UnitSearchItem> secondaryList = new LinkedHashSet<>();
-				LinkedHashSet<UnitSearchItem> tertiaryList = new LinkedHashSet<>();
+				LinkedHashSet<UnitSearchItem> list1 = new LinkedHashSet<>();
+				LinkedHashSet<UnitSearchItem> list2 = new LinkedHashSet<>();
+				LinkedHashSet<UnitSearchItem> list3 = new LinkedHashSet<>();
+				LinkedHashSet<UnitSearchItem> list4 = new LinkedHashSet<>();
+				LinkedHashSet<UnitSearchItem> list5 = new LinkedHashSet<>();
 
 				if (mOriginalValues == null){
 					mOriginalValues = new ArrayList<>(mArrayList); // saves the original data in mOriginalValues
@@ -104,40 +106,60 @@ class FilterAdapter extends BaseAdapter implements Filterable {
 					constraint = constraint.toString().toLowerCase();
 					int mTextLength = constraint.length();
 
-					mainLoop:
+					searchItemLoop:
 					for (UnitSearchItem item : mOriginalValues) {
-						String data = item.getUnitName() + item.getUnitAbbreviation();
+						String abbrev = item.getUnitAbbreviation().toLowerCase();
+						String longName = item.getUnitName().toLowerCase();
+						String data = longName + " " + abbrev;
+
+						// don't proceed if the filter is longer than the item
 						if (mTextLength > data.length())
 							continue;
-						// first results that should appear start with the filter
-						if (data.toLowerCase().startsWith(constraint.toString())){
-							mainList.add(item);
+
+						// check if the abbreviation is an exact match
+						if (constraint.equals(abbrev)){
+							list1.add(item);
 							continue;
 						}
+
+						// check if the long name is an exact match
+						if (constraint.equals(longName)){
+							list2.add(item);
+							continue;
+						}
+
+						// filter results that should appear start with constraint
+						if (data.startsWith(constraint.toString())){
+							list3.add(item);
+							continue;
+						}
+
 						// next add results that have multiple words with non-first
 						// starting letter
-						if (data.contains(" ")){
-							String dataArray[] = data.toLowerCase().split(" ");
-							for (String part : dataArray) {
-								if (part.replaceAll("\\(|\\)", "")
-										  .startsWith(constraint.toString())){
-									secondaryList.add(item);
-									continue mainLoop;
-								}
+						String dataArray[] = data.split(" ");
+						for (String part : dataArray) {
+							// remove all brackets
+							if (part.replaceAll("\\(|\\)", "")
+									  .startsWith(constraint.toString())){
+								list4.add(item);
+								continue searchItemLoop;
 							}
 						}
+
 						// finally find matches within words
-						if (data.toLowerCase().contains(constraint)){
-							tertiaryList.add(item);
+						if (data.contains(constraint)){
+							list5.add(item);
 						}
 					}
 
 					// join lists preserving hierarchy and guaranteeing uniqueness
-					mainList.addAll(secondaryList);
-					mainList.addAll(tertiaryList);
+					list1.addAll(list2);
+					list1.addAll(list3);
+					list1.addAll(list4);
+					list1.addAll(list5);
 
-					results.count = mainList.size();
-					results.values = new ArrayList<>(mainList);
+					results.count = list1.size();
+					results.values = new ArrayList<>(list1);
 				}
 				return results;
 			}

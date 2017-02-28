@@ -13,6 +13,7 @@ import com.llamacorp.equate.R;
 import com.llamacorp.equate.ResourceArrayParser;
 import com.llamacorp.equate.test.IdlingResource.ViewPagerIdlingResource;
 import com.llamacorp.equate.view.CalcActivity;
+import com.llamacorp.equate.view.IdlingResource.SimpleIdlingResource;
 
 import org.junit.After;
 import org.junit.Before;
@@ -24,7 +25,9 @@ import java.util.ArrayList;
 
 import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.Espresso.registerIdlingResources;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.contrib.DrawerActions.open;
@@ -32,26 +35,29 @@ import static android.support.test.espresso.contrib.DrawerMatchers.isClosed;
 import static android.support.test.espresso.matcher.ViewMatchers.isChecked;
 import static android.support.test.espresso.matcher.ViewMatchers.isDescendantOfA;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
 import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static android.support.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withParent;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static com.llamacorp.equate.test.EspressoTestUtils.assertExpressionEquals;
 import static com.llamacorp.equate.test.EspressoTestUtils.checkUnitButtonVisible;
 import static com.llamacorp.equate.test.EspressoTestUtils.checkUnitButtonVisibleWithArrow;
 import static com.llamacorp.equate.test.EspressoTestUtils.clickButtons;
 import static com.llamacorp.equate.test.EspressoTestUtils.clickPrevAnswer;
 import static com.llamacorp.equate.test.EspressoTestUtils.clickUnit;
+import static com.llamacorp.equate.test.EspressoTestUtils.getPagerIdle;
 import static com.llamacorp.equate.test.EspressoTestUtils.selectUnitTypeDirect;
-import static com.llamacorp.equate.test.EspressoTestUtils.setUp;
 import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.anyOf;
 import static org.hamcrest.Matchers.hasToString;
+import static org.hamcrest.Matchers.is;
 
 @RunWith(AndroidJUnit4.class)
 public class TestEspressoUnitTypeVisibility {
 
 	private ViewPagerIdlingResource mPagerIdle;
+	private SimpleIdlingResource mSimpleIdle;
 
 	@Rule
 	public MyActivityTestRule<CalcActivity> mActivityTestRule =
@@ -59,12 +65,16 @@ public class TestEspressoUnitTypeVisibility {
 
 	@Before
 	public void setUpTest() {
-		mPagerIdle = setUp(mActivityTestRule);
+		mPagerIdle = getPagerIdle(mActivityTestRule);
+		mSimpleIdle = mActivityTestRule.getActivity().getIdlingResource();
+		registerIdlingResources(mPagerIdle, mSimpleIdle);
 	}
 
 	@After
 	public void unregisterIntentServiceIdlingResource() {
-		if (mPagerIdle != null) // maybe needed for CircleCi sometimes?
+		if (mPagerIdle != null)
+			Espresso.unregisterIdlingResources(mPagerIdle);
+		if (mSimpleIdle != null)
 			Espresso.unregisterIdlingResources(mPagerIdle);
 	}
 
@@ -143,7 +153,49 @@ public class TestEspressoUnitTypeVisibility {
 		checkUnitTypesRemoved(toRemoveArray);
 	}
 
-	private void checkUnitTypesRemoved(ArrayList<String> removedUnitTypes) {
+	@Test
+	public void testUnitSearch() {
+		clickButtons("C");
+
+		searchForUnit("mil");
+
+		onView(allOf(withId(R.id.search_dialog_name_textView),
+				  withText("Thousandths of an Inch"))).perform(click());
+
+		assertExpressionEquals("Convert 1 mil to:");
+		checkUnitButtonVisibleWithArrow("in");
+		checkUnitButtonVisibleWithArrow("ft");
+		clickUnit("in");
+		assertExpressionEquals("0.001 in");
+
+		searchForUnit("pt");
+
+		onView(allOf(withId(R.id.search_dialog_name_textView),
+				  withText("Pints (US)"))).perform(click());
+		//TODO fix this
+		//assertExpressionEquals("Convert 0.0001 pt to:");
+
+		searchForUnit("tur");
+		onView(allOf(withId(R.id.search_dialog_name_textView),
+				  withText("Turkish Lira"))).perform(click());
+
+	}
+
+
+	private void searchForUnit(String searchString) {
+		// Open Drawer to click on navigation.
+		onView(withId(R.id.drawer_layout))
+				  .check(matches(isClosed(Gravity.START))) // Left Drawer should be closed.
+				  .perform(open()); // Open Drawer
+
+		onView(allOf(withId(R.id.design_menu_item_text),  withText("Find Unit"),
+				  isDisplayed())).perform(click());
+
+		onView(allOf(withClassName(is("android.widget.EditText")),
+				  isDisplayed())).perform(typeText(searchString));
+	}
+
+		private void checkUnitTypesRemoved(ArrayList<String> removedUnitTypes) {
 		Context targetContext = InstrumentationRegistry.getTargetContext();
 		Resources resources = targetContext.getResources();
 

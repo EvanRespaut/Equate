@@ -29,6 +29,7 @@
       android:layout_toStartOf="@id/search_dialog_abbreviation_textView"
       android:padding="5dp"
       android:text="Large Text"
+      android:textColor="@color/color_search_name_text"
       android:textAppearance="?android:attr/textAppearanceMedium"/>
 
 </RelativeLayout>

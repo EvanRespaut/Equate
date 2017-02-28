@@ -3,6 +3,8 @@ package com.llamacorp.equate.view;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.database.DataSetObserver;
+import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
@@ -18,6 +20,7 @@ import com.llamacorp.equate.R;
 import com.llamacorp.equate.unit.Unit;
 import com.llamacorp.equate.unit.UnitType;
 import com.llamacorp.equate.unit.UnitTypeList;
+import com.llamacorp.equate.view.IdlingResource.SimpleIdlingResource;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -69,6 +72,7 @@ public class UnitSearchDialogBuilder {
 	 * @param listener is called back when a item in the dialog list is clicked
 	 */
 	public void buildDialog(Context context,
+									@Nullable final SimpleIdlingResource idlingResource,
 									AdapterView.OnItemClickListener listener) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
@@ -85,7 +89,19 @@ public class UnitSearchDialogBuilder {
 		builder.setView(layout);
 
 		mArrayAdapter = new FilterAdapter(context, mOriginalList);
-
+		mArrayAdapter.registerDataSetObserver(new DataSetObserver() {
+			/**
+			 * Call in UI thread once filter action has finished
+			 */
+			@Override
+			public void onChanged() {
+				super.onChanged();
+				// The IdlingResource is null in production.
+				if (idlingResource != null) {
+					idlingResource.setIdleState(true);
+				}
+			}
+		});
 		listView.setAdapter(mArrayAdapter);
 		listView.setOnItemClickListener(listener);
 
@@ -98,6 +114,10 @@ public class UnitSearchDialogBuilder {
 			}
 
 			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				// The IdlingResource is null in production.
+				if (idlingResource != null) {
+					idlingResource.setIdleState(false);
+				}
 				// use Filter to filter results so filtering actions don't
 				// operate on the UI thread
 				mArrayAdapter.getFilter().filter(s.toString());

@@ -19,7 +19,6 @@ import org.hamcrest.TypeSafeMatcher;
 
 import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.Espresso.registerIdlingResources;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.longClick;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
@@ -41,22 +40,22 @@ import static org.hamcrest.Matchers.is;
  * Set of utilities used to help perform Espresso tests
  */
 public class EspressoTestUtils {
-	public static ViewPagerIdlingResource setUp(MyActivityTestRule activityTestRule) {
-		// register an idling resource that will wait until a page settles before
-		// doing anything next (such as clicking a unit within it)
-		ViewPager vp = (ViewPager) activityTestRule.getActivity()
-				  .findViewById(com.llamacorp.equate.R.id.unit_pager);
-		ViewPagerIdlingResource pagerIdle = new ViewPagerIdlingResource(vp, "unit_pager");
-		registerIdlingResources(pagerIdle);
-
+	public static void setUp(MyActivityTestRule activityTestRule) {
 		// make sure Espresso hold long clicks for enough time
 		// if this fails, make sure Settings -> Accessibility -> Touch & hold delay
 		// is set to medium or long (for CircleCI)
 		long timeEspressoHoldsKey = (long) (ViewConfiguration.getLongPressTimeout());
-		long buttonLongTimeout =  activityTestRule.getActivity()
+		long buttonLongTimeout = activityTestRule.getActivity()
 				  .getResources().getInteger(R.integer.long_click_timeout_test);
 		assertThat(timeEspressoHoldsKey, is(greaterThanOrEqualTo(buttonLongTimeout)));
-		return pagerIdle;
+	}
+
+	public static ViewPagerIdlingResource getPagerIdle(MyActivityTestRule activityTestRule) {
+		// register an idling resource that will wait until a page settles before
+		// doing anything next (such as clicking a unit within it)
+		ViewPager vp = (ViewPager) activityTestRule.getActivity()
+				  .findViewById(com.llamacorp.equate.R.id.unit_pager);
+		return new ViewPagerIdlingResource(vp, "unit_pager");
 	}
 
 	public static void assertResultPreviewInvisible() {

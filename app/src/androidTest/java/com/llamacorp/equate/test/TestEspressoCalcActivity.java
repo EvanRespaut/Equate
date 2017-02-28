@@ -14,6 +14,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.Espresso.registerIdlingResources;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static com.llamacorp.equate.test.EspressoTestUtils.assertExpressionEquals;
@@ -22,6 +23,7 @@ import static com.llamacorp.equate.test.EspressoTestUtils.assertResultPreviewInv
 import static com.llamacorp.equate.test.EspressoTestUtils.clickButtons;
 import static com.llamacorp.equate.test.EspressoTestUtils.clickPrevAnswer;
 import static com.llamacorp.equate.test.EspressoTestUtils.clickPrevQuery;
+import static com.llamacorp.equate.test.EspressoTestUtils.getPagerIdle;
 import static com.llamacorp.equate.test.EspressoTestUtils.selectUnitTypeDirect;
 import static com.llamacorp.equate.test.EspressoTestUtils.setUp;
 
@@ -35,12 +37,14 @@ public class TestEspressoCalcActivity {
 
 	@Before
 	public void setUpTest() {
-		mPagerIdle = setUp(mActivityTestRule);
+		setUp(mActivityTestRule);
+		mPagerIdle = getPagerIdle(mActivityTestRule);
+		registerIdlingResources(mPagerIdle);
 	}
 
 	@After
 	public void unregisterIntentServiceIdlingResource() {
-		if (mPagerIdle != null) // maybe needed for CircleCi sometimes?
+		if (mPagerIdle != null)
 			Espresso.unregisterIdlingResources(mPagerIdle);
 	}
 

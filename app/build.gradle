@@ -45,4 +45,5 @@ dependencies {
         exclude group: 'com.android.support', module: 'recyclerview-v7'
         exclude group: 'com.android.support', module: 'design'
     }
+    compile 'com.android.support.test.espresso:espresso-idling-resource:2.2.2'
 }

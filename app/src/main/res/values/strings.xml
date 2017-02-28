@@ -117,6 +117,8 @@
    <color name="app_background">#000000</color>
    <dimen name="button_radius">0dp</dimen>
 
+   <color name="color_search_name_text">#FFFFFF</color>
+
    <!-- Unit Names -->
    <!--These names should not get translated, they're used internally only-->
    <string-array name="unit_type_array_combined">
