@@ -282,8 +282,8 @@ public class Calculator {
 						//mPreview.set(mExpression, Expression.NumFormat.PLAIN);
 						mExpression.roundAndCleanExpression(Expression.NumFormat.PLAIN);
 					else
-						//mPreview.set(mExpression, Expression.NumFormat.SCINOTE);
-						mExpression.roundAndCleanExpression(Expression.NumFormat.SCINOTE);
+						//mPreview.set(mExpression, Expression.NumFormat.SCI_NOTE);
+						mExpression.roundAndCleanExpression(Expression.NumFormat.SCI_NOTE);
 					setSolved(false);
 				}
 				return resultFlags;
@@ -548,7 +548,7 @@ public class Calculator {
 	}
 
 	public Expression.NumFormat getNumberFormat() {
-		return mExpression.getmNumFormat();
+		return mExpression.getNumFormat();
 	}
 
 	public boolean isPreviewEmpty() {

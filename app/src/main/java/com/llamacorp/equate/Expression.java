@@ -16,13 +16,13 @@ public class Expression {
 	private static final String JSON_END = "sel_end";
 	private static final String JSON_SOLVED = "sel_end";
 
-	public enum NumFormat {NORMAL, PLAIN, SCINOTE, ENGINEERING}
+	public enum NumFormat {NORMAL, PLAIN, SCI_NOTE, ENGINEERING}
 
 	//the main expression string
 	private String mExpression;
 	//this string stores the more precise result after solving
 	private String mPreciseResult;
-	private MathContext mMcDisp;
+	private MathContext mMCDisplay;
 	private int mIntDisplayPrecision;
 
 	//highlighted text selection
@@ -39,10 +39,10 @@ public class Expression {
 
 	public static final String regexDecimal = "\\.";
 	public static final String regexGroupedExponent = "(\\^)";
-	public static final String regexGroupedMultDiv = "([/*])";
+	public static final String regexGroupedMultiDiv = "([/*])";
 	public static final String regexGroupedAddSub = "([+-])";
 
-	//note that in []'s only ^, -, and ] need escapes. - doen't need one if invalid
+	//note that in []'s only ^, -, and ] need escapes. - doesn't need one if invalid
 	public static final String regexNonNegOperators = "+/*^%";
 	private static final String regexOperators = regexNonNegOperators + "-";
 	private static final String regexInvalidChars = "[^0-9()E." + regexOperators + "]";
@@ -54,7 +54,7 @@ public class Expression {
 	public static final String regexGroupedNumber = "([-]?\\d*[.]?\\d+[.]?(?:E[+-]?\\d+)?)";
 	public static final String regexGroupedNonNegNumber = "((?:(?<=^)[-])?(?:(?<=[*+(/-])[-])?\\d*[.]?\\d+[.]?(?:E[+-]?\\d+)?)";
 	//this isn't really needed anymore, if want non capturing group, use ?:"
-	public static final int numGroupsInregexGroupedNumber = 1;
+	public static final int numGroupsInRegexGroupedNumber = 1;
 
 	//the following is a more concise version, but doesn't work with NP++ due to the | in the lookbehind
 	//public static final String regexGroupedNonNegNumber = "((?:(?<=^|[*+/])\\-)?\\d*\\.?\\d+\\.?(?:E[\\-\\+]?\\d+)?)";
@@ -64,16 +64,16 @@ public class Expression {
 			  {"[\u0096\u0097]", "-"}}; //alt-0151,0150
 	//TODO add in all these characters
 
-	public Expression(int dispPrecision) {
+	public Expression(int displayPrecision) {
 		clearExpression();
 		mPreciseResult = "";
 		setSelection(0, 0);
 		mHighlightedCharList = new ArrayList<>();
 		clearHighlightedList();
 		//skip precise unit usage if precision is set to 0
-		if (dispPrecision > 0){
-			mIntDisplayPrecision = dispPrecision;
-			mMcDisp = new MathContext(mIntDisplayPrecision);
+		if (displayPrecision > 0){
+			mIntDisplayPrecision = displayPrecision;
+			mMCDisplay = new MathContext(mIntDisplayPrecision);
 		}
 	}
 
@@ -97,7 +97,7 @@ public class Expression {
 		replaceExpression(exp.toString());
 		mPreciseResult = exp.getPreciseResult();
 		mIntDisplayPrecision = exp.mIntDisplayPrecision;
-		mMcDisp = exp.mMcDisp;
+		mMCDisplay = exp.mMCDisplay;
 		mSelectionEnd = exp.getSelectionEnd();
 		mSelectionStart = exp.getSelectionStart();
 		mSolved = exp.isSolved();
@@ -287,7 +287,7 @@ public class Expression {
 		setFormat(numFormat);
 
 		//if formatting messed ("-", "(())"), or number too big, throw error
-		BigDecimal bd = new BigDecimal(getExpression(), mMcDisp);
+		BigDecimal bd = new BigDecimal(getExpression(), mMCDisplay);
 
 		//only after getExpression() was successfully converted to BigDecimal
 		//save the original to precise result for potential later use
@@ -305,7 +305,7 @@ public class Expression {
 			case PLAIN:
 				formatStr = bd.toPlainString();
 				break;
-			case SCINOTE:
+			case SCI_NOTE:
 				formatStr = getSciNotation(bd, mIntDisplayPrecision, false);
 				break;
 			case ENGINEERING:
@@ -515,11 +515,11 @@ public class Expression {
 	 */
 	public void loadPreciseResult() {
 		//make sure we have valid precise result and rounding Mathcontext first
-		if (mPreciseResult.equals("") || mMcDisp == null)
+		if (mPreciseResult.equals("") || mMCDisplay == null)
 			return;
 
 		//make the precise string not precise temporarily for comparison
-		BigDecimal formallyPrec = new BigDecimal(mPreciseResult, mMcDisp);
+		BigDecimal formallyPrec = new BigDecimal(mPreciseResult, mMCDisplay);
 		String formallyPrecCleaned = cleanFormatting(formallyPrec.toString());
 
 		//find out if expression's first term matches first part of the precise result, if so replace with more precise term
@@ -697,7 +697,7 @@ public class Expression {
 	}
 
 
-	public NumFormat getmNumFormat() {
+	public NumFormat getNumFormat() {
 		return mNumFormat;
 	}
 

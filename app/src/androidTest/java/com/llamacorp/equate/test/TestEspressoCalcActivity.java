@@ -23,6 +23,7 @@ import static com.llamacorp.equate.test.EspressoTestUtils.assertResultPreviewInv
 import static com.llamacorp.equate.test.EspressoTestUtils.clickButtons;
 import static com.llamacorp.equate.test.EspressoTestUtils.clickPrevAnswer;
 import static com.llamacorp.equate.test.EspressoTestUtils.clickPrevQuery;
+import static com.llamacorp.equate.test.EspressoTestUtils.clickUnit;
 import static com.llamacorp.equate.test.EspressoTestUtils.getPagerIdle;
 import static com.llamacorp.equate.test.EspressoTestUtils.selectUnitTypeDirect;
 import static com.llamacorp.equate.test.EspressoTestUtils.setUp;
@@ -113,6 +114,15 @@ public class TestEspressoCalcActivity {
 		onView(withText("Power")).perform(click());
 
 		clickButtons("67");
+
+		clickButtons("C4*5=");
+		assertExpressionEquals("20");
+
+		// expression should clear out solve flag
+		clickUnit("MW");
+
+		//TODO fix this:
+		assertExpressionEquals("Convert 20 MW to:");
 	}
 
 

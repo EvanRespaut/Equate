@@ -40,7 +40,7 @@ public class Solver {
 		else if (exp.isSciNotation())
 			exp.roundAndCleanExpression(Expression.NumFormat.PLAIN);
 		else
-			exp.roundAndCleanExpression(Expression.NumFormat.SCINOTE);
+			exp.roundAndCleanExpression(Expression.NumFormat.SCI_NOTE);
 
 		return new Result(query, exp.toString());
 	}
@@ -140,7 +140,7 @@ public class Solver {
 		}
 		//perform other operations in proper order of operations
 		str = collapseOps(Expression.regexGroupedExponent, str);
-		str = collapseOps(Expression.regexGroupedMultDiv, str);
+		str = collapseOps(Expression.regexGroupedMultiDiv, str);
 		str = collapseOps(Expression.regexGroupedAddSub, str);
 		return str;
 	}
@@ -166,8 +166,8 @@ public class Solver {
 			//be sure string is formatted properly
 			try {
 				operand1 = new BigDecimal(mat.group(1));
-				operand2 = new BigDecimal(mat.group(Expression.numGroupsInregexGroupedNumber + 2));
-				operator = mat.group(Expression.numGroupsInregexGroupedNumber + 1);
+				operand2 = new BigDecimal(mat.group(Expression.numGroupsInRegexGroupedNumber + 2));
+				operator = mat.group(Expression.numGroupsInRegexGroupedNumber + 1);
 			} catch (NumberFormatException e) {
 				//throw syntax error if we have a weirdly formatted string
 				str = strSyntaxError;
