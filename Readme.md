@@ -1,11 +1,11 @@
 [![CircleCI Build Status](https://circleci.com/gh/EvanRespaut/Equate.svg?style=shield)](https://circleci.com/gh/EvanRespaut/Equate)
 
 # Equate - Unit Converting Calculator
-Equate is an open source unit converting calculator designed to make converting one unit to another fast and simple. 
+Equate is an open source unit converting calculator designed to make converting from one unit to another fast and simple. 
 
-For example, to convert 1/4 cups into tablespoons, type 1÷4, press cup, and then press tbsp.  That's it.  
+For example, to convert 1/4 cup into tablespoons, type 1÷4, press cup, and then press tbsp.  That's it.  
 
-To find the number of Bitcoins in a Dollar, simply move to the currency tab, click BTC, and then USD. Currency conversions use rates that are updated every 20 mins.
+To find the number of Dollars in a Bitcoin, simply move to the currency tab, click BTC, and then USD. The result will be the going rate for a Bitcoin in US Dollars. Note that currency conversions use rates that are updated every 20 mins.
 
 <a href="http://imgur.com/xXvL0Fx"><img src="http://i.imgur.com/xXvL0Fx.gif" title="source: imgur.com" /></a>
 
