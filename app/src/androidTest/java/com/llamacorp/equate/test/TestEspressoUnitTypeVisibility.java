@@ -91,13 +91,18 @@ public class TestEspressoUnitTypeVisibility {
 		// move to Volume tab
 		selectUnitTypeDirect("Volume");
 		clickUnit("qt");
+		assertExpressionEquals("Convert 12 qt to:");
 
 		// check arrows appeared
 		checkUnitButtonVisible("qt");
-		checkUnitButtonVisibleWithArrow("pt");
+		checkUnitButtonVisibleWithArrow("cup");
 
 		// change to a non adjacent tab
 		selectUnitTypeDirect("Length");
+		assertExpressionEquals("12");
+		// now that we switched to a new unit type, expression should be not solved
+		//TODO fix this
+		//assertResultPreviewEquals("12");
 
 		//check no arrows here
 		checkUnitButtonVisible("yd");

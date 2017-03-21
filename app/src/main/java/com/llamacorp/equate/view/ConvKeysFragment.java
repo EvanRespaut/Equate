@@ -332,6 +332,8 @@ public class ConvKeysFragment extends Fragment implements OnConvertKeyUpdateFini
 		}
 		//unit not previously selected, now select one
 		else if (mUnitType.isUnitSelected()){
+			// clear out solved flag
+			calc.setSolved(false);
 			//if expression was blank, add a highlighted "1"
 			if (calc.isExpressionEmpty()){
 				//add in a 1 for user's convenience 
@@ -400,6 +402,11 @@ public class ConvKeysFragment extends Fragment implements OnConvertKeyUpdateFini
 			//if no button is selected, return
 			if (currButtonPos == -1)
 				return;
+			// this fixes a bug when currency is selected and app leaves, and we
+			// reload, currency is still selected and this is a null pointer
+			if (currButtonPos >= mConvButton.size())
+				return;
+
 			//set the current button to highlighted or not
 			mConvButton.get(currButtonPos).setSelected(highlighted);
 		}

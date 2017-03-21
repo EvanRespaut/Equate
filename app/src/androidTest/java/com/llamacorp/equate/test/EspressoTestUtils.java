@@ -112,7 +112,7 @@ public class EspressoTestUtils {
 	 * Clicks on the tab for the provided Unit Type name. Note that the Unit Type
 	 * doesn't need to be visible.
 	 */
-	public static void selectUnitTypeDirect(String unitTypeName) {
+	public static void selectUnitTypeDirect(final String unitTypeName) {
 		onView(allOf(withText(unitTypeName))).perform(
 				  new ViewAction() {
 					  @Override
@@ -122,7 +122,7 @@ public class EspressoTestUtils {
 
 					  @Override
 					  public String getDescription() {
-						  return "click Currency button";
+						  return "click unit type" + unitTypeName;
 					  }
 
 					  @Override

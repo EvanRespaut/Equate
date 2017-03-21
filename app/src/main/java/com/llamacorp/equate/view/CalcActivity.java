@@ -501,7 +501,7 @@ public class CalcActivity extends AppCompatActivity
 				}
 
 				//clear out the unit in expression if it's now cleared
-				updateScreen(false);
+				updateScreen(true);
 
 				//move the cursor to the right end (helps usability a bit)
 				mDisplay.setSelectionToEnd();
@@ -626,7 +626,7 @@ public class CalcActivity extends AppCompatActivity
 		boolean makePreviewVisible = !mCalc.isSolved()
 				  && !mCalc.isPreviewEmpty() && !mCalc.isUnitSelected();
 
-		//if we preview just appeared, move the history list up so the last item
+		//if preview just appeared, move the history list up so the last item
 		//doesn't get hidden by the preview
 		if (mResultPreview.getVisibility() != View.VISIBLE && makePreviewVisible){
 			updateResult = true;
