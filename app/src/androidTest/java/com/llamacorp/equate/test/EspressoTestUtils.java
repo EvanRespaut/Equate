@@ -298,7 +298,7 @@ public class EspressoTestUtils {
 					  .inAdapterView(withId(android.R.id.list))
 					  .atPosition(numberOfAdapterItems - 1 - position)
 					  .onChildView(withId(R.id.list_item_result_textPrevAnswer))
-					  .perform(click());
+					  .perform(scrollTo(), click());
 		}
 
 		public void clickPrevQuery(int position) {
@@ -308,7 +308,7 @@ public class EspressoTestUtils {
 					  .inAdapterView(withId(android.R.id.list))
 					  .atPosition(numberOfAdapterItems - 1 - position)
 					  .onChildView(withId(R.id.list_item_result_textPrevQuery))
-					  .perform(click());
+					  .perform(scrollTo(), click());
 		}
 
 		private void updateNumberofResults() {
