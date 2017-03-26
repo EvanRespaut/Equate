@@ -127,6 +127,8 @@ public class TestEspressoUnitTypeVisibility {
 		checkUnitTypesRemoved(toRemoveArray);
 
 		// click on the previous answer with "in" to re-enable Length units
+		clickButtons("CC"); //clears out 12, need two since sometimes one doesn't work
+		assertExpressionEquals("");
 		clickPrevAnswer();
 		toRemoveArray.remove("Length");
 

@@ -20,7 +20,6 @@ import org.hamcrest.TypeSafeMatcher;
 import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.action.ViewActions.longClick;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.core.deps.guava.base.Preconditions.checkArgument;
@@ -198,7 +197,8 @@ public class EspressoTestUtils {
 
 		if (longClick)
 			onView(withId(id)).perform(longClick());
-		else onView(withId(id)).perform(click());
+		else
+			onView(withId(id)).perform(click());
 	}
 
 	/**
@@ -299,7 +299,7 @@ public class EspressoTestUtils {
 					  .inAdapterView(withId(android.R.id.list))
 					  .atPosition(numberOfAdapterItems - 1 - position)
 					  .onChildView(withId(R.id.list_item_result_textPrevAnswer))
-					  .perform(scrollTo(), click());
+					  .perform(click());
 		}
 
 		public void clickPrevQuery(int position) {
@@ -309,7 +309,7 @@ public class EspressoTestUtils {
 					  .inAdapterView(withId(android.R.id.list))
 					  .atPosition(numberOfAdapterItems - 1 - position)
 					  .onChildView(withId(R.id.list_item_result_textPrevQuery))
-					  .perform(scrollTo(), click());
+					  .perform(click());
 		}
 
 		private void updateNumberofResults() {
