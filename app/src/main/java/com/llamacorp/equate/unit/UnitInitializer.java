@@ -337,13 +337,13 @@ class UnitInitializer {
 
 
 		UnitType uc = new UnitType(name,
-				  "http://finance.yahoo.com/webservice/v1/symbols/allcurrencies/quote");
+				  "https://finance.yahoo.com/webservice/v1/symbols/allcurrencies/quote");
 		uc.addUnit(new UnitCurrency("USD", "Dollars", 1));
 		uc.addUnit(new UnitCurrency("EUR", "Euros", 0.929));
 		uc.addUnit(new UnitCurrency("CAD", "Canadian Dollars", 1.26));
 		uc.addUnit(new UnitCurrency("GBP", "British Pounds", 0.67));
 		uc.addUnit(new UnitCurrency("BTC", "Bitcoins", 0.004,
-				  "http://blockchain.info/tobtc?currency=USD&value=1"));
+				  "https://blockchain.info/tobtc?currency=USD&value=1"));
 
 		uc.addUnit(new UnitHistCurrency("USD", "Dollars", al, 1913, 1975));
 		uc.addUnit(new UnitCurrency("CHF", "Swiss Francs", 0.967));

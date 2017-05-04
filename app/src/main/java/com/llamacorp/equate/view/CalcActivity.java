@@ -7,6 +7,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -726,7 +728,25 @@ public class CalcActivity extends AppCompatActivity
 			Intent intent = new Intent(mAppContext, SettingsActivity.class);
 			startActivity(intent);
 		} else if (id == R.id.nav_about){
-			ViewUtils.toast("About", mAppContext);
+			PackageInfo pInfo = null;
+			String version = "unknown";
+			try {
+				pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+				version = pInfo.versionName;
+			} catch (PackageManager.NameNotFoundException e) {
+				e.printStackTrace();
+			}
+
+			new AlertDialog.Builder(mAppContext)
+					  .setTitle("About Equate")
+					  .setMessage("Version: " + version +
+								 "\n\nComments, bugs, questions: github.com/EvanRespaut/Equate")
+					  .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+						  public void onClick(DialogInterface dialog, int which) {
+							  // continue with delete
+						  }
+					  })
+					  .show();
 		}
 
 		DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
