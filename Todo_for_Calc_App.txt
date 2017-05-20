@@ -1,5 +1,6 @@
 ------------------ToDo Next--------------------
-- bug, back out of app, come back in and type single character, result preview size is wrong 
+- bug, back out of app, come back in and type single character, result preview size is wrong
+- bug, click currency, leave app, come back, selected currency's text has no color 
 - https://forums.xamarin.com/discussion/51142/error-inflating-class-android-support-design-widget-tablayout
 - hacker news
 - oi site
