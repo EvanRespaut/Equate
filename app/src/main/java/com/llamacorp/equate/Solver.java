@@ -24,13 +24,21 @@ public class Solver {
 	}
 
 
-	Result tryToggleSciNote(Expression exp, boolean forceEngineering) {
+	/**
+	 * If expression is a simple number, either in scientific or
+	 * plain notation, toggle notation types.
+	 * @param exp is the expression change notation types
+	 * @param forceEngineering boolean flag to force the expression to engineering
+	 *                         notation
+	 * @return boolean if the operation was successful
+    */
+	boolean tryToggleSciNote(Expression exp, boolean forceEngineering) {
 		//only proceed if only a number is in the expression
-		if (exp.isOnlyValidNumber())
-			return null;
+		if (!exp.isOnlyValidNumber())
+			return false;
 
 		//get and save query before operating on it
-		String query = exp.toString();
+//		String query = exp.toString();
 
 		//if we want engineering, just convert regardless if we have E already
 		if (forceEngineering){
@@ -42,7 +50,7 @@ public class Solver {
 		else
 			exp.roundAndCleanExpression(Expression.NumFormat.SCI_NOTE);
 
-		return new Result(query, exp.toString());
+		return true;
 	}
 
 

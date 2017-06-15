@@ -34,7 +34,7 @@ public class TestEspressoCalcActivity {
 
 	@Rule
 	public MyActivityTestRule<CalcActivity> mActivityTestRule =
-			  new MyActivityTestRule<>(CalcActivity.class);
+			new MyActivityTestRule<>(CalcActivity.class);
 
 	@Before
 	public void setUpTest() {
@@ -142,13 +142,11 @@ public class TestEspressoCalcActivity {
 		clickButtons("q1bbb-6.1E0)^(a0+q0=");
 		assertExpressionEquals("36");
 
-		clickButtons(".5=");
+		clickButtons("1/2=");
+		assertExpressionEquals("0.5");
 //		assertQueryAnswerExprConvbutton(".5", "0.5", "0.5", "");
 
-		clickButtons("q0=");
-//		assertQueryAnswerExprConvbutton(".5", "0.5", "0.5", "");
-
-		clickButtons("+bq0=");
+		clickButtons("a0+ba0=");
 //		assertPrevAnswerEquals("Syntax Error", 0);
 		assertExpressionEquals("Syntax Error");
 
@@ -166,5 +164,21 @@ public class TestEspressoCalcActivity {
 		clickButtons("54+46=");
 		assertExpressionEquals("100");
 
+	}
+
+
+	@Test
+	public void testToggleSciNote() {
+		clickButtons("C.00001=");
+		assertExpressionEquals("1E-5");
+
+		clickButtons("=");
+		assertExpressionEquals("0.00001");
+
+		clickButtons("C100*74=");
+		assertExpressionEquals("7,400");
+
+		clickButtons("=");
+		assertExpressionEquals("7.4E3");
 	}
 }

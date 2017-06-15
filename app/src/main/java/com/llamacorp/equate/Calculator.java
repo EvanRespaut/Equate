@@ -264,29 +264,38 @@ public class Calculator {
 					return resultFlags;
 				}
 				// Display sci/engineering notation if expression is just a number
-				//Result res = mSolver.tryToggleSciNote(mExpression, false);
-				//solve expression, load into result list if answer not empty
-				solveAndLoadIntoResultList();
+				boolean togglePerformed = mSolver.tryToggleSciNote(mExpression, false);
 
-				resultFlags.performedSolve = isSolved();
-				return resultFlags;
-			//check for long hold equals key
-			case "g":
-				//toggle between SI notation and not:
-				//if (mPreview.isNumFormatEngineering())
-				//	mPreview.set(new Expression(mExpression), Expression.NumFormat.NORMAL);
-				//else
-				mPreview.set(new Expression(mExpression), Expression.NumFormat.ENGINEERING);
-				if (mExpression.isOnlyValidNumber()){
-					if (mExpression.isSciNotation())
-						//mPreview.set(mExpression, Expression.NumFormat.PLAIN);
-						mExpression.roundAndCleanExpression(Expression.NumFormat.PLAIN);
-					else
-						//mPreview.set(mExpression, Expression.NumFormat.SCI_NOTE);
-						mExpression.roundAndCleanExpression(Expression.NumFormat.SCI_NOTE);
+				if (togglePerformed){
+					// in case this toggle was performed after operation, remove
+					// solve flag to show the preview
 					setSolved(false);
+					mPreview.set(new Expression(mExpression), Expression.NumFormat.ENGINEERING);
 				}
+				else {
+					//solve expression, load into result list if answer not empty
+					solveAndLoadIntoResultList();
+					resultFlags.performedSolve = isSolved();
+				}
+
 				return resultFlags;
+//			//check for long hold equals key
+//			case "g":
+//				//toggle between SI notation and not:
+//				//if (mPreview.isNumFormatEngineering())
+//				//	mPreview.set(new Expression(mExpression), Expression.NumFormat.NORMAL);
+//				//else
+//				mPreview.set(new Expression(mExpression), Expression.NumFormat.ENGINEERING);
+//				if (mExpression.isOnlyValidNumber()){
+//					if (mExpression.isSciNotation())
+//						//mPreview.set(mExpression, Expression.NumFormat.PLAIN);
+//						mExpression.roundAndCleanExpression(Expression.NumFormat.PLAIN);
+//					else
+//						//mPreview.set(mExpression, Expression.NumFormat.SCI_NOTE);
+//						mExpression.roundAndCleanExpression(Expression.NumFormat.SCI_NOTE);
+//					setSolved(false);
+//				}
+//				return resultFlags;
 			//check for backspace key
 			case "b":
 				backspace();
