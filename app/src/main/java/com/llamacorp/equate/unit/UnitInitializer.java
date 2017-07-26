@@ -160,7 +160,7 @@ class UnitInitializer {
 		unitsOfSpeed.addUnit(new UnitScalar("km/m", "Kilometers per minute", 60 / 1000.0));
 		unitsOfSpeed.addUnit(new UnitScalar("kph", "Kilometers per hour", 3600 / 1000.0));
 
-		unitsOfSpeed.addUnit(new UnitScalar("mi/s", "Miles per second", 1 / 0.44704));
+		unitsOfSpeed.addUnit(new UnitScalar("mi/s", "Miles per second", 1 / 0.44704 / 3600));
 		unitsOfSpeed.addUnit(new UnitScalar("c sound", "Speed of sound (sea level)", 1 / 340.3));
 		unitsOfSpeed.addUnit(new UnitScalar("c light", "Speed of light (vacuum)", 1 / 299792458.0));
 		unitTypeArray.add(unitsOfSpeed);
