@@ -58,21 +58,21 @@ class UnitInitializer {
 		UnitType unitsOfWeight = new UnitType(tabNames.get(nameInd++));
 		unitsOfWeight.addUnit(new UnitScalar("oz", "Ounces", 1 / 0.028349523125)); //exact
 		unitsOfWeight.addUnit(new UnitScalar("lb", "Pounds", 1 / 0.45359237)); //exact
-		unitsOfWeight.addUnit(new UnitScalar("ton US", "Short Tons", 1 / 907.18474)); //exact
-		unitsOfWeight.addUnit(new UnitScalar("ton UK", "Long Tons", 1 / 1016.0469088)); //exact
+		unitsOfWeight.addUnit(new UnitScalar("ton US", "Short tons", 1 / 907.18474)); //exact
+		unitsOfWeight.addUnit(new UnitScalar("ton UK", "Long tons", 1 / 1016.0469088)); //exact
 		unitsOfWeight.addUnit(new UnitScalar("st", "Stones", 1 / 6.35029318)); //exact
 
 		unitsOfWeight.addUnit(new UnitScalar("\u00B5g", "Micrograms", 1 / 1e-9));
 		unitsOfWeight.addUnit(new UnitScalar("mg", "Milligrams", 1 / 1e-6));
 		unitsOfWeight.addUnit(new UnitScalar("g", "Grams", 1 / 0.001));
 		unitsOfWeight.addUnit(new UnitScalar("kg", "Kilograms", 1));
-		unitsOfWeight.addUnit(new UnitScalar("ton", "Metric Tons", 1 / 1e3));
+		unitsOfWeight.addUnit(new UnitScalar("ton", "Metric tons", 1 / 1e3));
 
-		unitsOfWeight.addUnit(new UnitScalar("oz t", "Troy Ounces", 1 / 0.0311034768)); //exact
+		unitsOfWeight.addUnit(new UnitScalar("oz t", "Troy ounces", 1 / 0.0311034768)); //exact
 		unitsOfWeight.addUnit(new UnitScalar("gr", "Grains", 1 / 6.479891E-5)); //exact
 		unitsOfWeight.addUnit(new UnitScalar("dwt", "Pennyweights", 20 / 0.0311034768)); //exact, 1/20 troy oz
 		unitsOfWeight.addUnit(new UnitScalar("CD", "Carats", 5000)); // =200mg
-		unitsOfWeight.addUnit(new UnitScalar("llama", "Avg Llama Weight", 1 / 165.0)); //avg of 130 and 200kg
+		unitsOfWeight.addUnit(new UnitScalar("llama", "Avg llama weight", 1 / 165.0)); //avg of 130 and 200kg
 		unitTypeArray.add(unitsOfWeight);
 
 
@@ -91,31 +91,31 @@ class UnitInitializer {
 		unitsOfLength.addUnit(new UnitScalar("nm", "Nanometers", 1E9));
 		unitsOfLength.addUnit(new UnitScalar("pm", "Picometers", 1E12));
 		unitsOfLength.addUnit(new UnitScalar("\u212B", "\u212Bngstr\u00F6ms", 1E10));
-		unitsOfLength.addUnit(new UnitScalar("mil", "Thousandths of an Inch", 1 / 2.54E-5));
+		unitsOfLength.addUnit(new UnitScalar("mil", "Thousandths of an inch", 1 / 2.54E-5));
 		unitsOfLength.addUnit(new UnitScalar("fur", "Furlongs", 0.00497096954));
 		unitsOfLength.addUnit(new UnitScalar("pc", "Parsecs", 3.24078E-17));
-		unitsOfLength.addUnit(new UnitScalar("nmi", "Nautical Miles", 1 / 1852.0));
-		unitsOfLength.addUnit(new UnitScalar("ly", "Light Years", 1 / 9.4607E15));
-		unitsOfLength.addUnit(new UnitScalar("au", "Astronomical Units", 1 / 1.495978707E11)); //exact
-		unitsOfLength.addUnit(new UnitScalar("llama", "Avg Llama Height", 1 / 1.75));
+		unitsOfLength.addUnit(new UnitScalar("nmi", "Nautical miles", 1 / 1852.0));
+		unitsOfLength.addUnit(new UnitScalar("ly", "Light years", 1 / 9.4607E15));
+		unitsOfLength.addUnit(new UnitScalar("au", "Astronomical units", 1 / 1.495978707E11)); //exact
+		unitsOfLength.addUnit(new UnitScalar("llama", "Avg llama height", 1 / 1.75));
 		unitTypeArray.add(unitsOfLength);
 
 
 		UnitType unitsOfArea = new UnitType(tabNames.get(nameInd++));
-		unitsOfArea.addUnit(new UnitScalar("in\u00B2", "Square Inches", 1 / 0.00064516));//exact: 0.0254^2
-		unitsOfArea.addUnit(new UnitScalar("ft\u00B2", "Square Feet", 1 / 0.09290304));//0.3048^2
-		unitsOfArea.addUnit(new UnitScalar("yd\u00B2", "Square Yards", 1 / 0.83612736));//0.3048^2*9
+		unitsOfArea.addUnit(new UnitScalar("in\u00B2", "Square inches", 1 / 0.00064516));//exact: 0.0254^2
+		unitsOfArea.addUnit(new UnitScalar("ft\u00B2", "Square feet", 1 / 0.09290304));//0.3048^2
+		unitsOfArea.addUnit(new UnitScalar("yd\u00B2", "Square yards", 1 / 0.83612736));//0.3048^2*9
 		unitsOfArea.addUnit(new UnitScalar("acre", "Acres", 1 / 4046.8564224));//0.3048^2*9*4840
-		unitsOfArea.addUnit(new UnitScalar("mi\u00B2", "Square Miles", 1 / 2589988.110336));//1609.344^2
+		unitsOfArea.addUnit(new UnitScalar("mi\u00B2", "Square miles", 1 / 2589988.110336));//1609.344^2
 
-		unitsOfArea.addUnit(new UnitScalar("mm\u00B2", "Square Millimeters", 1 / 0.000001));
-		unitsOfArea.addUnit(new UnitScalar("cm\u00B2", "Square Centimeters", 1 / 0.0001));
-		unitsOfArea.addUnit(new UnitScalar("m\u00B2", "Square Meters", 1));
-		unitsOfArea.addUnit(new UnitScalar("km\u00B2", "Square Kilometers", 1 / 1000000.0));
+		unitsOfArea.addUnit(new UnitScalar("mm\u00B2", "Square millimeters", 1 / 0.000001));
+		unitsOfArea.addUnit(new UnitScalar("cm\u00B2", "Square centimeters", 1 / 0.0001));
+		unitsOfArea.addUnit(new UnitScalar("m\u00B2", "Square meters", 1));
+		unitsOfArea.addUnit(new UnitScalar("km\u00B2", "Square kilometers", 1 / 1000000.0));
 
 		unitsOfArea.addUnit(new UnitScalar("ha", "Hectares", 1 / 10000.0));
 		unitsOfArea.addUnit(new UnitScalar("a", "Ares", 0.01));
-		unitsOfArea.addUnit(new UnitScalar("cir mil", "Circular Mils", 1 / 5.067E-10));
+		unitsOfArea.addUnit(new UnitScalar("cir mil", "Circular mils", 1 / 5.067E-10));
 		unitTypeArray.add(unitsOfArea);
 
 
@@ -127,7 +127,7 @@ class UnitInitializer {
 		unitsOfVolume.addUnit(new UnitScalar("gal", "Gallons (US)", 1 / 0.003785411784));//exact: according to wiki
 
 		unitsOfVolume.addUnit(new UnitScalar("tsp", "Teaspoons", 1 / 0.00000492892159375));//exact: gal/768
-		unitsOfVolume.addUnit(new UnitScalar("fl oz", "Fluid Ounces (US)", 1 / 0.0000295735295625));//exact: gal/128
+		unitsOfVolume.addUnit(new UnitScalar("fl oz", "Fluid ounces (US)", 1 / 0.0000295735295625));//exact: gal/128
 		unitsOfVolume.addUnit(new UnitScalar("mL", "Milliliters", 1E6));
 		unitsOfVolume.addUnit(new UnitScalar("L", "Liters", 1000));
 
@@ -136,14 +136,14 @@ class UnitInitializer {
 		unitsOfVolume.addUnit(new UnitScalar("gal UK", "Gallons (UK)", 1000 / 4.54609));//exact: 4.54609L/gal uk
 		unitsOfVolume.addUnit(new UnitScalar("qt UK", "Quarts (UK)", 1000 / 1.1365225));//exact: gal uk/4
 		unitsOfVolume.addUnit(new UnitScalar("pt UK", "Pints (UK)", 1000 / 0.56826125));//exact: gal uk/8
-		unitsOfVolume.addUnit(new UnitScalar("fl oz UK", "Fluid Ounces (UK)", 1000 / 0.0284130625));//exact: gal uk/160
+		unitsOfVolume.addUnit(new UnitScalar("fl oz UK", "Fluid ounces (UK)", 1000 / 0.0284130625));//exact: gal uk/160
 		unitsOfVolume.addUnit(new UnitScalar("shot", "Shots (US)", 1 / 0.00004436029434375));//exact for 1.5 fl oz
-		unitsOfVolume.addUnit(new UnitScalar("m\u00B3", "Cubic Meters", 1));
-		unitsOfVolume.addUnit(new UnitScalar("in\u00B3", "Cubic Inches", 1 / 0.000016387064));//exact: gal/231
-		unitsOfVolume.addUnit(new UnitScalar("ft\u00B3", "Cubic Feet", 1 / 0.028316846592));//exact: gal/231*12^3
-		unitsOfVolume.addUnit(new UnitScalar("yd\u00B3", "Cubic Yards", 1 / 0.764554857984));//exact: 3^3 ft^3
-		unitsOfVolume.addUnit(new UnitScalar("cm\u00B3", "Cubic Centimeters", 1E6));
-		unitsOfVolume.addUnit(new UnitScalar("cm\u00B3", "Cubic Millimeters", 1E9));
+		unitsOfVolume.addUnit(new UnitScalar("m\u00B3", "Cubic meters", 1));
+		unitsOfVolume.addUnit(new UnitScalar("in\u00B3", "Cubic inches", 1 / 0.000016387064));//exact: gal/231
+		unitsOfVolume.addUnit(new UnitScalar("ft\u00B3", "Cubic feet", 1 / 0.028316846592));//exact: gal/231*12^3
+		unitsOfVolume.addUnit(new UnitScalar("yd\u00B3", "Cubic yards", 1 / 0.764554857984));//exact: 3^3 ft^3
+		unitsOfVolume.addUnit(new UnitScalar("cm\u00B3", "Cubic centimeters", 1E6));
+		unitsOfVolume.addUnit(new UnitScalar("cm\u00B3", "Cubic millimeters", 1E9));
 
 		unitTypeArray.add(unitsOfVolume);
 
@@ -151,15 +151,18 @@ class UnitInitializer {
 		UnitType unitsOfSpeed = new UnitType(tabNames.get(nameInd++));
 		unitsOfSpeed.addUnit(new UnitScalar("mi/min", "Miles per minute", 1 / 26.8224));
 		unitsOfSpeed.addUnit(new UnitScalar("min/mi", "Minute miles", 1 / 26.8224, true));
-		unitsOfSpeed.addUnit(new UnitScalar("ft/s", "Feet per Second", 1 / 0.3048));
-		unitsOfSpeed.addUnit(new UnitScalar("mph", "Miles per Hour", 1 / 0.44704));
+		unitsOfSpeed.addUnit(new UnitScalar("ft/s", "Feet per second", 1 / 0.3048));
+		unitsOfSpeed.addUnit(new UnitScalar("mph", "Miles per hour", 1 / 0.44704));
 		unitsOfSpeed.addUnit(new UnitScalar("knot", "Knots", 1 / 0.514444));
 
-		unitsOfSpeed.addUnit(new UnitScalar());
-		unitsOfSpeed.addUnit(new UnitScalar());
-		unitsOfSpeed.addUnit(new UnitScalar());
-		unitsOfSpeed.addUnit(new UnitScalar("m/s", "Meters per Second", 1));
-		unitsOfSpeed.addUnit(new UnitScalar("kph", "Kilometers per Hour", 3.6));
+		unitsOfSpeed.addUnit(new UnitScalar("m/s", "Meters per second", 1));
+		unitsOfSpeed.addUnit(new UnitScalar("km/s", "Kilometers per second", 1 / 1000.0));
+		unitsOfSpeed.addUnit(new UnitScalar("km/m", "Kilometers per minute", 60 / 1000.0));
+		unitsOfSpeed.addUnit(new UnitScalar("kph", "Kilometers per hour", 3600 / 1000.0));
+
+		unitsOfSpeed.addUnit(new UnitScalar("mi/s", "Miles per second", 1 / 0.44704));
+		unitsOfSpeed.addUnit(new UnitScalar("c sound", "Speed of sound (sea level)", 1 / 340.3));
+		unitsOfSpeed.addUnit(new UnitScalar("c light", "Speed of light (vacuum)", 1 / 299792458.0));
 		unitTypeArray.add(unitsOfSpeed);
 
 
@@ -183,14 +186,14 @@ class UnitInitializer {
 		unitsOfFuel.addUnit(new UnitScalar());
 		unitsOfFuel.addUnit(new UnitScalar());
 		unitsOfFuel.addUnit(new UnitScalar());
-		unitsOfFuel.addUnit(new UnitScalar("mpg US", "Miles per Gallon (US)", 3.785411784 / 1.609344)); //exact
-		unitsOfFuel.addUnit(new UnitScalar("mpg UK", "Miles per Gallon (UK)", 4.54609 / 1.609344)); //exact
+		unitsOfFuel.addUnit(new UnitScalar("mpg US", "Miles per gallon (US)", 3.785411784 / 1.609344)); //exact
+		unitsOfFuel.addUnit(new UnitScalar("mpg UK", "Miles per gallon (UK)", 4.54609 / 1.609344)); //exact
 
 		unitsOfFuel.addUnit(new UnitScalar());
 		unitsOfFuel.addUnit(new UnitScalar());
 		unitsOfFuel.addUnit(new UnitScalar("L/100km", "Liter per 100 Kilometers", .01, true));
-		unitsOfFuel.addUnit(new UnitScalar("km/L", "Meters per Liter", 1));
-		unitsOfFuel.addUnit(new UnitScalar("mi/L", "Miles per Liter", 1 / 1.609344)); //exact
+		unitsOfFuel.addUnit(new UnitScalar("km/L", "Meters per liter", 1));
+		unitsOfFuel.addUnit(new UnitScalar("mi/L", "Miles per liter", 1 / 1.609344)); //exact
 		unitTypeArray.add(unitsOfFuel);
 
 
@@ -198,8 +201,8 @@ class UnitInitializer {
 		unitsOfPower.addUnit(new UnitScalar("MW", "Megawatts", 1E-6));
 		unitsOfPower.addUnit(new UnitScalar("kW", "Kilowatts", 1E-3));
 		unitsOfPower.addUnit(new UnitScalar("W", "Watts", 1));
-		unitsOfPower.addUnit(new UnitScalar("hp", "Imperial Horsepower", 0.00134102208959503)); //exact, see below
-		unitsOfPower.addUnit(new UnitScalar("PS", "Metric Horsepower", 1 / 735.49875)); //exact from wiki?
+		unitsOfPower.addUnit(new UnitScalar("hp", "Imperial horsepower", 0.00134102208959503)); //exact, see below
+		unitsOfPower.addUnit(new UnitScalar("PS", "Metric horsepower", 1 / 735.49875)); //exact from wiki?
 
 		unitsOfPower.addUnit(new UnitScalar());
 		unitsOfPower.addUnit(new UnitScalar("Btu/hr", "Btus/Hour", 3.412141632)); //approx
@@ -212,7 +215,7 @@ class UnitInitializer {
 		UnitType unitsOfEnergy = new UnitType(tabNames.get(nameInd++));
 		unitsOfEnergy.addUnit(new UnitScalar("cal", "Calories", 0.239005736)); //approx
 		unitsOfEnergy.addUnit(new UnitScalar("kCal", "Kilocalories", 0.239005736 / 1E3)); //approx, but exact comp to cal
-		unitsOfEnergy.addUnit(new UnitScalar("BTU", "British Thermal Units", 0.00094781712)); //approx
+		unitsOfEnergy.addUnit(new UnitScalar("BTU", "British thermal units", 0.00094781712)); //approx
 		unitsOfEnergy.addUnit(new UnitScalar("ft-lb", "Foot-pounds", 0.737562149277265)); //exact - assumes g=9.80665m^2/s
 		unitsOfEnergy.addUnit(new UnitScalar("in-lb", "Inch-pounds", 12 / 0.737562149277265)); //exact from ft-lb
 
@@ -243,17 +246,17 @@ class UnitInitializer {
 
 
 		UnitType unitsOfTorque = new UnitType(tabNames.get(nameInd++));
-		unitsOfTorque.addUnit(new UnitScalar("Nm", "Newton Meters", 1));
-		unitsOfTorque.addUnit(new UnitScalar("Ncm", "Newton Centimeters", 100));
+		unitsOfTorque.addUnit(new UnitScalar("Nm", "Newton meters", 1));
+		unitsOfTorque.addUnit(new UnitScalar("Ncm", "Newton centimeters", 100));
 		unitsOfTorque.addUnit(new UnitScalar("kgf m", "Kilogram-Force Meters", 1 / 9.80665)); //exact
 		unitsOfTorque.addUnit(new UnitScalar("kgf cm", "Kilogram-Force Centimeters", 100 / 9.80665)); //exact
-		unitsOfTorque.addUnit(new UnitScalar("dyn m", "Dyne Meters", 1E5));
+		unitsOfTorque.addUnit(new UnitScalar("dyn m", "Dyne meters", 1E5));
 
 		unitsOfTorque.addUnit(new UnitScalar("lbf in", "Pound-Force Inches", 12 / 1.3558179483314004));  //exact
 		unitsOfTorque.addUnit(new UnitScalar("lbf ft", "Pound-Force Feet", 1 / 1.3558179483314004));  //exact
 		unitsOfTorque.addUnit(new UnitScalar("ozf in", "Ounce-Force Inches", 192 / 1.3558179483314004));  //exact
 		unitsOfTorque.addUnit(new UnitScalar("ozf ft", "Ounce-Force Feet", 16 / 1.3558179483314004));  //exact
-		unitsOfTorque.addUnit(new UnitScalar("dyn cm", "Dyne Centimeters", 1));
+		unitsOfTorque.addUnit(new UnitScalar("dyn cm", "Dyne centimeters", 1));
 		unitTypeArray.add(unitsOfTorque);
 
 		UnitType unitsOfPressure = new UnitType(tabNames.get(nameInd++));
@@ -266,11 +269,11 @@ class UnitInitializer {
 		unitsOfPressure.addUnit(new UnitScalar("kg/m\u00B2", "Kilogram/Square Meter", 1 / 9.80665)); //approx?
 		unitsOfPressure.addUnit(new UnitScalar("kPa", "Kilopascals", 0.001)); //exact
 		unitsOfPressure.addUnit(new UnitScalar("Pa", "Pascals", 1)); //exact
-		unitsOfPressure.addUnit(new UnitScalar("inHg", "Inches of Mercury", 1 / 3386.388640341)); //exact using cmHg - 1/(1333.22387415*2.54)
+		unitsOfPressure.addUnit(new UnitScalar("inHg", "Inches of mercury", 1 / 3386.388640341)); //exact using cmHg - 1/(1333.22387415*2.54)
 
-		unitsOfPressure.addUnit(new UnitScalar("cmHg", "Centimeters of Mercury", 1 / 1333.22387415)); //exact
-		unitsOfPressure.addUnit(new UnitScalar("cmH\u2082O", "Centimeters of Water", 1 / 98.0665)); //exact
-		unitsOfPressure.addUnit(new UnitScalar("mmHg", "Millimeters of Mercury", 1 / 133.322387415)); //exact
+		unitsOfPressure.addUnit(new UnitScalar("cmHg", "Centimeters of mercury", 1 / 1333.22387415)); //exact
+		unitsOfPressure.addUnit(new UnitScalar("cmH\u2082O", "Centimeters of water", 1 / 98.0665)); //exact
+		unitsOfPressure.addUnit(new UnitScalar("mmHg", "Millimeters of mercury", 1 / 133.322387415)); //exact
 		unitsOfPressure.addUnit(new UnitScalar("N/cm\u00B2", "Newton/Square Centimeters", 1E-4));
 		unitsOfPressure.addUnit(new UnitScalar("N/mm\u00B2", "Newton/Square Millimeters", 1E-6));
 		unitsOfPressure.addUnit(new UnitScalar("kg/cm\u00B2", "Kilogram/Square Centimeter", 1 / 98066.5)); //approx?

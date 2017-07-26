@@ -54,6 +54,11 @@
    <string name="word_updating">Updating</string>
    <string name="add_unit">Create New Unit</string>
 
+   <string name="about_title">About Equate</string>
+   <string name="about_version">Version: </string>
+   <string name="about_message">Comments, bugs, suggestions: github.com/EvanRespaut/Equate</string>
+
+
 
    <string name="words_units_up_to_date">Units up to date.</string>
 
