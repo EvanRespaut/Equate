@@ -50,7 +50,7 @@ public class CalculatorJUnitTest extends TestCase {
 	public void testParseKeyPressed() {
 		Calculator calc = getTestCalc();
 		//try all ops before (should do nothing), try double decimal, try changing op, and extra equals
-		loadStringToCalc("=++/-+-*--1..+4.34b+-2-==", calc);
+		loadStringToCalc("=++/-+-*--1..+4.34b+-2-=", calc);
 
 		assertEquals("1.3", calc.toString());
 
@@ -142,8 +142,8 @@ public class CalculatorJUnitTest extends TestCase {
 		assertEquals(Solver.strDivideZeroError, calc.toString());
 
 		//make sure num clears the error
-		loadStringToCalc("+1=", calc);
-		assertEquals("1", calc.toString());
+		loadStringToCalc("+1+5=", calc);
+		assertEquals("6", calc.toString());
 
 		//overflow
 		loadStringToCalc("9E9999999999=", calc);
@@ -153,15 +153,15 @@ public class CalculatorJUnitTest extends TestCase {
 	public void testCleaning() {
 		Calculator calc = getTestCalc();
 		//make sure we're cleaning properly
-		loadStringToCalc("6.10000=", calc);
+		loadStringToCalc("c6.10000==", calc);
 		assertEquals("6.1", calc.toString());
-		loadStringToCalc("0.00800=", calc);
+		loadStringToCalc("c0.00800==", calc);
 		assertEquals("0.008", calc.toString());
-		loadStringToCalc("6.000=", calc);
+		loadStringToCalc("c6.000==", calc);
 		assertEquals("6", calc.toString());
-		loadStringToCalc("800=", calc);
+		loadStringToCalc("c800==", calc);
 		assertEquals("800", calc.toString());
-		loadStringToCalc(".080800=", calc);
+		loadStringToCalc("c.080800==", calc);
 		assertEquals("0.0808", calc.toString());
 	}
 
@@ -172,7 +172,7 @@ public class CalculatorJUnitTest extends TestCase {
 		assertEquals("0.06", calc.toString());
 
 		//try some random math
-		loadStringToCalc("30E2-2E10*=", calc);
+		loadStringToCalc("c30E2-2E10*=", calc);
 		assertEquals("-19999997000", calc.toString());
 
 		//tests to make sure that after a #.#E# expression, we can put a .
@@ -181,29 +181,31 @@ public class CalculatorJUnitTest extends TestCase {
 
 
 		//test conversion of long numbers into and out of E
-		calc.parseKeyPressed("6");
+		loadStringToCalc("6", calc);
 		for (int i = 0; i < Calculator.DISPLAY_PRECISION; i++)
-			calc.parseKeyPressed("0");
-		calc.parseKeyPressed("=");
+			loadStringToCalc("0", calc);
+		loadStringToCalc("=", calc);
 		//not sure if we'll be keeping the . after the 6, both will pass for now
 		assertTrue(calc.toString().matches("6\\.?E" + Calculator.DISPLAY_PRECISION));
 
 		//make sure the number one less than the precision is display as plain text
 		String tester = "6";
-		calc.parseKeyPressed(tester);
+		loadStringToCalc("c" + tester, calc);
 		for (int i = 0; i < Calculator.DISPLAY_PRECISION - 1; i++) {
-			calc.parseKeyPressed("0");
+			loadStringToCalc("0", calc);
 			tester = tester + "0";
 		}
-		calc.parseKeyPressed("=");
-		assertTrue(calc.toString().equals(tester));
+		//add plus 0 to spoof the equals toggle sci note
+		loadStringToCalc("+0=", calc);
+		assertEquals(tester, calc.toString());
 
 
 		//0E8 should reduce to 0 not "E8"
-		loadStringToCalc("0E8==", calc);
+		loadStringToCalc("0E8=", calc);
+		assertEquals("0", calc.toString());
 
-		//catch the potentail problem of "532E+-"
-		loadStringToCalc("--5232E+-0=", calc);
+		//catch the potential problem of "532E+-"
+		loadStringToCalc("c--5232E+-0=", calc);
 		assertEquals("-5232", calc.toString());
 
 		//catch problem where this would hang
@@ -216,6 +218,14 @@ public class CalculatorJUnitTest extends TestCase {
 
 		loadStringToCalc("2E-2E-2=", calc);
 		assertEquals("-1.98", calc.toString());
+
+		//catch problem where this would hang the calculator if trying to print in plain text
+		// we just want it to look sci instead
+		loadStringToCalc("8E888=", calc);
+		assertEquals("8E888", calc.toString());
+
+		loadStringToCalc("c8E24=", calc);
+		assertEquals("8000000000000000000000000", calc.toString());
 	}
 
 
@@ -329,22 +339,22 @@ public class CalculatorJUnitTest extends TestCase {
 		loadStringToCalc("5-7n=", calc);
 		assertEquals("12", calc.toString());
 
-		loadStringToCalc("n=", calc);
+		loadStringToCalc("n", calc);
 		assertEquals("-12", calc.toString());
 
-		loadStringToCalc("n=", calc);
+		loadStringToCalc("n", calc);
 		assertEquals("12", calc.toString());
 
-		loadStringToCalc("(45-67)n1=", calc);
+		loadStringToCalc("c(45-67)n1=", calc);
 		assertEquals("-23", calc.toString());
 
 		loadStringToCalc("43*n=", calc);
 		assertEquals("43", calc.toString());
 
-		loadStringToCalc("43E-30n=", calc);
+		loadStringToCalc("43E-30n==", calc);
 		assertEquals("-4.3E-29", calc.toString());
 
-		loadStringToCalc("(-45n)=", calc);
+		loadStringToCalc("c(-45n)=", calc);
 		assertEquals("45", calc.toString());
 	}
 
@@ -533,6 +543,7 @@ public class CalculatorJUnitTest extends TestCase {
 	private void loadStringToCalc(String str, Calculator calc) {
 
 		for (int i = 0; i < str.length(); i++) {
+
 			calc.parseKeyPressed(String.valueOf(str.charAt(i)));
 			//be sure to update where keys are going
 			//	calc.setSelection(calc.toString().length(), calc.toString().length());

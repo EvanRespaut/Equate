@@ -31,7 +31,7 @@ public class Solver {
 	 * @param forceEngineering boolean flag to force the expression to engineering
 	 *                         notation
 	 * @return boolean if the operation was successful
-    */
+	 */
 	boolean tryToggleSciNote(Expression exp, boolean forceEngineering) {
 		//only proceed if only a number is in the expression
 		if (!exp.isOnlyValidNumber())
@@ -40,15 +40,30 @@ public class Solver {
 		//get and save query before operating on it
 //		String query = exp.toString();
 
+
 		//if we want engineering, just convert regardless if we have E already
 		if (forceEngineering){
-			exp.roundAndCleanExpression(Expression.NumFormat.ENGINEERING);
+			try {
+				exp.roundAndCleanExpression(Expression.NumFormat.ENGINEERING);
+			} catch (NumberFormatException e) {
+				exp.replaceExpression(strSyntaxError);
+			}
 		}
 		//determine if we are are in sci notation already
-		else if (exp.isSciNotation())
-			exp.roundAndCleanExpression(Expression.NumFormat.PLAIN);
-		else
-			exp.roundAndCleanExpression(Expression.NumFormat.SCI_NOTE);
+		else if (exp.isSciNotation()){
+			try {
+				exp.roundAndCleanExpression(Expression.NumFormat.PLAIN);
+			} catch (NumberFormatException e) {
+				exp.replaceExpression(strSyntaxError);
+			}
+		}
+		else {
+			try {
+				exp.roundAndCleanExpression(Expression.NumFormat.SCI_NOTE);
+			} catch (NumberFormatException e) {
+				exp.replaceExpression(strSyntaxError);
+			}
+		}
 
 		return true;
 	}

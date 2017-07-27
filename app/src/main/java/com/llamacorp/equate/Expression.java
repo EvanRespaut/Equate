@@ -303,7 +303,11 @@ public class Expression {
 					formatStr = bd.toString();
 				break;
 			case PLAIN:
-				formatStr = bd.toPlainString();
+				// only if the number after the exponent is reasonably small will we allow a plain format
+				if (Math.abs(bd.scale()) < 25)
+					formatStr = bd.toPlainString();
+				else
+					formatStr = getSciNotation(bd, mIntDisplayPrecision, false);
 				break;
 			case SCI_NOTE:
 				formatStr = getSciNotation(bd, mIntDisplayPrecision, false);
@@ -330,7 +334,7 @@ public class Expression {
 	 * @return String representation of the number in scientific notation
 	 */
 	private static String getSciNotation(BigDecimal bd, int digits, boolean engStr) {
-		String format = engStr ? "##0.0E0" : "#.0E0";
+		String format = engStr ? "##0.0E0" : "0.0E0";
 		DecimalFormat formatter = new DecimalFormat(format);
 		//formatter.setRoundingMode(RoundingMode.HALF_UP);
 		formatter.setMinimumFractionDigits(digits);

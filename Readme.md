@@ -30,6 +30,9 @@ To find the number of Dollars in a Bitcoin, simply move to the currency tab, cli
 If you like the app and want to support the developer, donate :)
 
 - Bitcoin: `1CwYNoBWEgX4Fdf4bpw7g1hkQHDac1icmx`
+
+![Bitcoin QR Code](https://blockchain.info/qr?data=1CwYNoBWEgX4Fdf4bpw7g1hkQHDac1icmx&size=100 "Bitcoin QR Code")
+
 - Paypal:
 
 [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=evanrespaut%40gmail%2ecom&lc=US&item_name=Equate&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted)

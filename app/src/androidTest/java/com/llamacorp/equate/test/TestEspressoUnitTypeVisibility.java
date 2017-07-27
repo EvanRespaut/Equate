@@ -167,7 +167,7 @@ public class TestEspressoUnitTypeVisibility {
 		searchForUnit("mil");
 
 		onView(allOf(withId(R.id.search_dialog_name_textView),
-				  withText("Thousandths of an Inch"))).perform(click());
+				  withText("Thousandths of an inch"))).perform(click());
 
 		assertExpressionEquals("Convert 1 mil to:");
 		checkUnitButtonVisibleWithArrow("in");
