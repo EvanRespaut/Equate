@@ -217,12 +217,12 @@ public class ConvKeysFragment extends Fragment implements OnConvertKeyUpdateFini
 		builder.setTitle(title);
 		builder.setItems(mUnitType.getUndisplayedUnitNames(mNumConvButtons), itemClickListener);
 		//null seems to do the same as canceling the dialog
-		builder.setPositiveButton(R.string.add_unit, new DialogInterface.OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialogInterface, int i) {
-				createCustomUnitDialog();
-			}
-		});
+//		builder.setPositiveButton(R.string.add_unit, new DialogInterface.OnClickListener() {
+//			@Override
+//			public void onClick(DialogInterface dialogInterface, int i) {
+//				createCustomUnitDialog();
+//			}
+//		});
 		builder.setNegativeButton(android.R.string.cancel, null);
 		AlertDialog alert = builder.create();
 		alert.show();
