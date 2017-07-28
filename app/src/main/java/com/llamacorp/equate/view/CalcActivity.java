@@ -290,6 +290,9 @@ public class CalcActivity extends AppCompatActivity
 						case R.id.multiply_button:
 							buttonValue = "^";
 							break;
+						case R.id.clear_button:
+							resetDialog();
+							break;
 						case R.id.equals_button:
 							//buttonValue = "g";
 							DrawerLayout drawer =
@@ -537,11 +540,9 @@ public class CalcActivity extends AppCompatActivity
 
 		if (flags.createDiffUnitDialog){
 			new AlertDialog.Builder(this)
-					  .setMessage("Click a different unit to convert")
-					  .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-						  public void onClick(DialogInterface dialog, int which) {
-						  }
-					  })
+					  .setMessage(getText(R.string.click_another_unit))
+					  .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+						  public void onClick(DialogInterface dialog, int which) {}})
 					  .show();
 		}
 
@@ -549,6 +550,59 @@ public class CalcActivity extends AppCompatActivity
 		updateScreen(flags.performedSolve);
 	}
 
+	/**
+	 * Helper function to setup the dialog used to reset the calculator.
+	 */
+	private void resetDialog() {
+		DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				switch (which){
+					case DialogInterface.BUTTON_POSITIVE:
+						clearHistory();
+						break;
+
+					case DialogInterface.BUTTON_NEGATIVE:
+						new AlertDialog.Builder(mAppContext)
+								  .setMessage(getText(R.string.reset_factory_msg))
+								  .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+									  public void onClick(DialogInterface dialog, int which) {
+										  resetCalculator();
+									  }})
+								  .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+									  public void onClick(DialogInterface dialog, int which) {}})
+								  .show();
+						break;
+
+					case DialogInterface.BUTTON_NEUTRAL:
+						break;
+				}
+			}
+		};
+
+		new AlertDialog.Builder(mAppContext)
+				  .setTitle(getText(R.string.reset_title))
+				  .setPositiveButton(getText(R.string.reset_clear_history), dialogClickListener)
+				  .setNegativeButton(getText(R.string.reset_factory), dialogClickListener)
+				  .setNeutralButton(android.R.string.cancel, dialogClickListener)
+				  .show();
+	}
+
+	/**
+	 * Clears the history,  updates the screen, and toasts the user
+	 */
+	public void clearHistory() {
+		mCalc.clearResultList();
+
+		updateScreen(true);
+
+		ViewUtils.toastCentered("History cleared", mAppContext);
+	}
+
+	/**
+	 * Perform a full reset of the calculator.  Clears expression, history,
+	 * preferences, and resets the calculator to original state.
+	 */
 	public void resetCalculator() {
 		mCalc.resetCalc();
 
@@ -745,10 +799,7 @@ public class CalcActivity extends AppCompatActivity
 					  .setMessage(getText(R.string.about_version) + version +
 								 "\n\n" + getText(R.string.about_message))
 					  .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-						  public void onClick(DialogInterface dialog, int which) {
-							  // continue with delete
-						  }
-					  })
+						  public void onClick(DialogInterface dialog, int which) {}})
 					  .show();
 		}
 
@@ -806,7 +857,7 @@ public class CalcActivity extends AppCompatActivity
 			mDisplay.setText(R.string.app_name);
 			mDisplay.setCursorVisible(false);
 		} else {
-		//	updateScreen(true, true);
+			//	updateScreen(true, true);
 			mDisplay.setSelectionToEnd();
 			//pull ListFrag's focus, to be sure EditText's cursor blinks when app starts
 			mDisplay.requestFocus();

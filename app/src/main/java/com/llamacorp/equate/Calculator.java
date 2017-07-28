@@ -209,12 +209,20 @@ public class Calculator {
 	public void resetCalc() {
 		mResultList.clear();
 		mExpression = new Expression(DISPLAY_PRECISION);
+		mPreview = new Preview(mSolver);
 		mPreferences = new Preferences();
 
 		//load the calculating precision
 		mSolver = new Solver(intCalcPrecision);
 
 		mUnitTypeList.initialize();
+	}
+
+	/**
+	 * Clears result list
+	 */
+	public void clearResultList() {
+		mResultList.clear();
 	}
 
 	/**

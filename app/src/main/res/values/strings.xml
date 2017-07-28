@@ -58,6 +58,13 @@
    <string name="about_version">Version: </string>
    <string name="about_message">Comments, bugs, suggestions: github.com/EvanRespaut/Equate</string>
 
+   <string name="click_another_unit">Click a different unit to perform a conversion</string>
+
+   <string name="reset_title">Clear calculator?</string>
+   <string name="reset_clear_history">Clear all history</string>
+   <string name="reset_factory">Calculator factory reset</string>
+   <string name="reset_factory_msg">Warning, factory reset will clear all history, preferences, and restore the calculator to its original state. Proceed?</string>
+
 
 
    <string name="words_units_up_to_date">Units up to date.</string>
