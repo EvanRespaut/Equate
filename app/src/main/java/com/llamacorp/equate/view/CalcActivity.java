@@ -35,7 +35,6 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.llamacorp.equate.Calculator;
 import com.llamacorp.equate.R;
@@ -363,41 +362,26 @@ public class CalcActivity extends AppCompatActivity
 
 		ImageButton backspaceButton = (ImageButton) findViewById(R.id.backspace_button);
 		backspaceButton.setOnTouchListener(new View.OnTouchListener() {
-			private static final int RESET_HOLD_TIME = 2200;
-			private final int CLEAR_HOLD_TIME = ViewUtils.getLongClickTimeout(mAppContext);
-			Runnable mBackspaceReset = new Runnable() {
-				@Override
-				public void run() {
-					resetCalculator();
-				}
-			};
+			private final int BACKSPACE_REPEAT = ViewUtils.getLongClickTimeout(mAppContext);
 			private Handler mColorHoldHandler;
-			private Handler mResetHandler;
-			//private int startTime;
 			private View mView;
 			private int mInc;
+			private static final int NUM_COLOR_CHANGES = 10;
+			private final int COLOR_CHANGE_PERIOD = BACKSPACE_REPEAT / NUM_COLOR_CHANGES;
 			//set up the runnable for when backspace is held down
 			Runnable mBackspaceColor = new Runnable() {
-				private static final int NUM_COLOR_CHANGES = 10;
 				private int mStartColor = ContextCompat.getColor(mAppContext, R.color.op_button_pressed);
 				private int mEndColor = ContextCompat.getColor(mAppContext, R.color.backspace_button_held);
 
 				@Override
 				public void run() {
-					//after clear had been performed and 100ms is up, set color back to default
-					if (mInc == -1){
-						mView.setBackgroundColor(mEndColor);
-						return;
-					}
-					//color the button black for a second and then clear
+					// after color change is finished, repeat the backspace key every 100ms
 					if (mInc == NUM_COLOR_CHANGES){
-						numButtonPressed("c");
-						mView.setBackgroundColor(Color.argb(255, 0, 0, 0));
+						numButtonPressed("b");
 						mColorHoldHandler.postDelayed(this, 100);
-						mInc = -1;
 						return;
 					}
-					mColorHoldHandler.postDelayed(this, CLEAR_HOLD_TIME / NUM_COLOR_CHANGES);
+					mColorHoldHandler.postDelayed(this, COLOR_CHANGE_PERIOD);
 
 					float deltaRed = (float) Color.red(mStartColor) + ((float) Color.red(mEndColor) - (float) Color.red(mStartColor)) * ((float) mInc * (float) mInc * (float) mInc) / ((float) NUM_COLOR_CHANGES * (float) NUM_COLOR_CHANGES * (float) NUM_COLOR_CHANGES);
 
@@ -413,29 +397,22 @@ public class CalcActivity extends AppCompatActivity
 			public boolean onTouch(View view, MotionEvent event) {
 				switch (event.getAction()) {
 					case MotionEvent.ACTION_DOWN:
+						numButtonPressed("b");
+
 						mView = view;
 						mInc = 0;
 
 						if (mColorHoldHandler != null) return true;
 						mColorHoldHandler = new Handler();
-						mColorHoldHandler.postDelayed(mBackspaceColor, 10);
-
-						if (mResetHandler != null) return true;
-						mResetHandler = new Handler();
-						mResetHandler.postDelayed(mBackspaceReset, RESET_HOLD_TIME);
+						mColorHoldHandler.postDelayed(mBackspaceColor, COLOR_CHANGE_PERIOD);
 
 						break;
 					case MotionEvent.ACTION_UP:
 						if (mColorHoldHandler == null) return true;
-						if (mResetHandler == null) return true;
-						numButtonPressed("b");
 						view.setBackgroundColor(ContextCompat.getColor(mAppContext, R.color.op_button_normal));
 
 						mColorHoldHandler.removeCallbacks(mBackspaceColor);
 						mColorHoldHandler = null;
-
-						mResetHandler.removeCallbacks(mBackspaceReset);
-						mResetHandler = null;
 						break;
 				}
 				return false;
