@@ -1,6 +1,7 @@
 package com.llamacorp.equate.view;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.text.Html;
 import android.text.Spanned;
 import android.view.Gravity;

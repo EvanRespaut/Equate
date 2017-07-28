@@ -35,6 +35,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.llamacorp.equate.Calculator;
 import com.llamacorp.equate.R;
@@ -46,28 +47,28 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class CalcActivity extends AppCompatActivity
-		  implements ResultListFragment.UnitSelectListener, OnConvertKeySelectedListener,
-		  NavigationView.OnNavigationItemSelectedListener {
+		implements ResultListFragment.UnitSelectListener, OnConvertKeySelectedListener,
+		NavigationView.OnNavigationItemSelectedListener {
 	private static final int[] BUTTON_IDS = {
-			  R.id.zero_button, R.id.one_button, R.id.two_button, R.id.three_button,
-			  R.id.four_button, R.id.five_button, R.id.six_button, R.id.seven_button,
-			  R.id.eight_button, R.id.nine_button,
+			R.id.zero_button, R.id.one_button, R.id.two_button, R.id.three_button,
+			R.id.four_button, R.id.five_button, R.id.six_button, R.id.seven_button,
+			R.id.eight_button, R.id.nine_button,
 
-			  R.id.plus_button,
-			  R.id.minus_button,
-			  R.id.multiply_button,
-			  R.id.divide_button,
-			  R.id.percent_button,
+			R.id.plus_button,
+			R.id.minus_button,
+			R.id.multiply_button,
+			R.id.divide_button,
+			R.id.percent_button,
 
-			  R.id.decimal_button,
-			  R.id.equals_button,
-			  //		R.id.ee_button,
-			  //		R.id.power_button,
+			R.id.decimal_button,
+			R.id.equals_button,
+			//		R.id.ee_button,
+			//		R.id.power_button,
 
-			  R.id.clear_button,
+			R.id.clear_button,
 
-			  R.id.open_para_button,
-			  R.id.close_para_button,
+			R.id.open_para_button,
+			R.id.close_para_button,
 
 	};
 	private Context mAppContext;  //used for toasts and the like
@@ -202,9 +203,9 @@ public class CalcActivity extends AppCompatActivity
 
 			if (id == R.id.percent_button){
 				((AnimatedHoldButton) button)
-						  .setPrimaryText(mCalc.mPreferences.getPercentButMain());
+						.setPrimaryText(mCalc.mPreferences.getPercentButMain());
 				((AnimatedHoldButton) button)
-						  .setSecondaryText(mCalc.mPreferences.getPercentButSec());
+						.setSecondaryText(mCalc.mPreferences.getPercentButSec());
 			}
 
 //
@@ -296,7 +297,7 @@ public class CalcActivity extends AppCompatActivity
 						case R.id.equals_button:
 							//buttonValue = "g";
 							DrawerLayout drawer =
-									  (DrawerLayout) findViewById(R.id.drawer_layout);
+									(DrawerLayout) findViewById(R.id.drawer_layout);
 							drawer.openDrawer(GravityCompat.START);
 							break;
 						case R.id.percent_button:
@@ -540,10 +541,9 @@ public class CalcActivity extends AppCompatActivity
 
 		if (flags.createDiffUnitDialog){
 			new AlertDialog.Builder(this)
-					  .setMessage(getText(R.string.click_another_unit))
-					  .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-						  public void onClick(DialogInterface dialog, int which) {}})
-					  .show();
+					.setMessage(getText(R.string.click_another_unit))
+					.setPositiveButton(android.R.string.ok, null) //null cancels dialog
+					.show();
 		}
 
 		//update the result list and do it with the normal scroll (not fast)
@@ -554,38 +554,35 @@ public class CalcActivity extends AppCompatActivity
 	 * Helper function to setup the dialog used to reset the calculator.
 	 */
 	private void resetDialog() {
-		DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				switch (which){
-					case DialogInterface.BUTTON_POSITIVE:
-						clearHistory();
-						break;
-
-					case DialogInterface.BUTTON_NEGATIVE:
-						new AlertDialog.Builder(mAppContext)
-								  .setMessage(getText(R.string.reset_factory_msg))
-								  .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-									  public void onClick(DialogInterface dialog, int which) {
-										  resetCalculator();
-									  }})
-								  .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-									  public void onClick(DialogInterface dialog, int which) {}})
-								  .show();
-						break;
-
-					case DialogInterface.BUTTON_NEUTRAL:
-						break;
-				}
-			}
-		};
-
 		new AlertDialog.Builder(mAppContext)
-				  .setTitle(getText(R.string.reset_title))
-				  .setPositiveButton(getText(R.string.reset_clear_history), dialogClickListener)
-				  .setNegativeButton(getText(R.string.reset_factory), dialogClickListener)
-				  .setNeutralButton(android.R.string.cancel, dialogClickListener)
-				  .show();
+				.setTitle(getText(R.string.reset_title))
+				.setTitle(getText(R.string.reset_title))
+				.setItems(new CharSequence[]
+								{getText(R.string.reset_clear_history), getText(R.string.reset_factory)},
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int which) {
+								// The 'which' argument contains the index position
+								// of the selected item
+								switch (which) {
+									case 0:
+										clearHistory();
+										break;
+									case 1:
+										new AlertDialog.Builder(mAppContext)
+												.setMessage(getText(R.string.reset_factory_msg))
+												.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+													public void onClick(DialogInterface dialog, int which) {
+														resetCalculator();
+													}})
+												.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+													public void onClick(DialogInterface dialog, int which) {}})
+												.show();
+										break;
+								}
+							}
+						})
+				.setNegativeButton(android.R.string.cancel, null) // null cancels dialog
+				.create().show();
 	}
 
 	/**
@@ -631,13 +628,13 @@ public class CalcActivity extends AppCompatActivity
 			//load in Unit Type arrangement prefs
 			SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 			Set<String> storedSet = sharedPref.getStringSet(
-					  SettingsActivity.UNIT_TYPE_PREF_KEY, null);
+					SettingsActivity.UNIT_TYPE_PREF_KEY, null);
 
 			assert storedSet != null; // not sure why we'd have a null pref
 			HashSet<String> selections = new HashSet<>(storedSet);
 			selections.add(unitTypeKey);
 			sharedPref.edit().putStringSet(
-					  SettingsActivity.UNIT_TYPE_PREF_KEY, selections).apply();
+					SettingsActivity.UNIT_TYPE_PREF_KEY, selections).apply();
 
 			// update the selections in the calculator
 			mCalc.setSelectedUnitTypes(selections);
@@ -661,7 +658,7 @@ public class CalcActivity extends AppCompatActivity
 
 		if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
 			if (uv == UnitVisibility.HIDDEN || mCalc.getUnitTypeSize() == 0 ||
-					  (uv == UnitVisibility.TOGGLE && mUnitContain.getVisibility() == LinearLayout.VISIBLE))
+					(uv == UnitVisibility.TOGGLE && mUnitContain.getVisibility() == LinearLayout.VISIBLE))
 				mUnitContain.setVisibility(LinearLayout.GONE);
 			else {
 				mUnitContain.setVisibility(LinearLayout.VISIBLE);
@@ -683,7 +680,7 @@ public class CalcActivity extends AppCompatActivity
 
 		//will preview become visible during this screen update?
 		boolean makePreviewVisible = !mCalc.isSolved()
-				  && !mCalc.isPreviewEmpty() && !mCalc.isUnitSelected();
+				&& !mCalc.isPreviewEmpty() && !mCalc.isUnitSelected();
 
 		//if preview just appeared, move the history list up so the last item
 		//doesn't get hidden by the preview
@@ -749,11 +746,11 @@ public class CalcActivity extends AppCompatActivity
 	 */
 	private ConvKeysFragment getConvKeyFrag(int pos) {
 		FragmentStatePagerAdapter tempAdapter =
-				  (FragmentStatePagerAdapter) mUnitTypeViewPager.getAdapter();
+				(FragmentStatePagerAdapter) mUnitTypeViewPager.getAdapter();
 		//make sure we aren't trying to access an invalid page fragment
 		if (pos < tempAdapter.getCount() && pos >= 0){
 			return (ConvKeysFragment) tempAdapter.
-					  instantiateItem(mUnitTypeViewPager, pos);
+					instantiateItem(mUnitTypeViewPager, pos);
 		} else return null;
 	}
 
@@ -773,19 +770,19 @@ public class CalcActivity extends AppCompatActivity
 			}
 
 			mSearchDialogBuilder.buildDialog(mAppContext, mIdlingResource,
-					  new AdapterView.OnItemClickListener() {
-						  @Override
-						  public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-							  mSearchDialogBuilder.cancelDialog();
-							  UnitSearchItem item = mSearchDialogBuilder.getItem(position);
-							  selectUnitAtUnitArrayPos(item.getUnitPosition(), item.getUnitTypeKey());
-						  }
-					  });
+					new AdapterView.OnItemClickListener() {
+						@Override
+						public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+							mSearchDialogBuilder.cancelDialog();
+							UnitSearchItem item = mSearchDialogBuilder.getItem(position);
+							selectUnitAtUnitArrayPos(item.getUnitPosition(), item.getUnitTypeKey());
+						}
+					});
 		} else if (id == R.id.nav_settings){
 			Intent intent = new Intent(mAppContext, SettingsActivity.class);
 			startActivity(intent);
 		} else if (id == R.id.nav_about){
-			PackageInfo pInfo = null;
+			PackageInfo pInfo;
 			String version = "unknown";
 			try {
 				pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
@@ -795,12 +792,11 @@ public class CalcActivity extends AppCompatActivity
 			}
 
 			new AlertDialog.Builder(mAppContext)
-					  .setTitle(getText(R.string.about_title))
-					  .setMessage(getText(R.string.about_version) + version +
-								 "\n\n" + getText(R.string.about_message))
-					  .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-						  public void onClick(DialogInterface dialog, int which) {}})
-					  .show();
+					.setTitle(getText(R.string.about_title))
+					.setMessage(getText(R.string.about_version) + version +
+							"\n\n" + getText(R.string.about_message))
+					.setPositiveButton(android.R.string.yes, null)
+					.show();
 		}
 
 		DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -839,7 +835,7 @@ public class CalcActivity extends AppCompatActivity
 		//load in Unit Type arrangement prefs
 		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 		Set<String> selections = sharedPref.getStringSet(
-				  SettingsActivity.UNIT_TYPE_PREF_KEY, null);
+				SettingsActivity.UNIT_TYPE_PREF_KEY, null);
 
 		// determine if user changed the configuration of the Unit Types
 		mCalc.setSelectedUnitTypes(selections);
