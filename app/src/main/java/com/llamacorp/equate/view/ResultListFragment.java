@@ -3,6 +3,7 @@ package com.llamacorp.equate.view;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ListFragment;
 import android.view.Gravity;
 import android.view.View;
@@ -47,16 +48,28 @@ public class ResultListFragment extends ListFragment {
 		}
 	}
 
+	/**
+	 * Called when the fragment's activity has been created and this
+	 * fragment's view hierarchy instantiated.  It can be used to do final
+	 * initialization once these pieces are in place, such as retrieving
+	 * views or restoring state.  It is also useful for fragments that use
+	 * {@link #setRetainInstance(boolean)} to retain their instance,
+	 * as this callback tells the fragment when it is fully associated with
+	 * the new activity instance.  This is called after {@link #onCreateView}
+	 * and before {@link #onViewStateRestored(Bundle)}.
+	 *
+	 * @param savedInstanceState If the fragment is being re-created from
+	 *                           a previous saved state, this is the state.
+	 */
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
 
 		mResultArray = Calculator.getCalculator(getActivity()).getResultList();
 
 		ResultAdapter adapter = new ResultAdapter(mResultArray);
 		setListAdapter(adapter);
 	}
-
 
 	private class ResultAdapter extends ArrayAdapter<Result> {
 		ResultAdapter(List<Result> prevTest) {

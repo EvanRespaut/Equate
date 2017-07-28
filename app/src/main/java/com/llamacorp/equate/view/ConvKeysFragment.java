@@ -230,7 +230,7 @@ public class ConvKeysFragment extends Fragment implements OnConvertKeyUpdateFini
 
 	private void createCustomUnitDialog() {
 		AlertDialog.Builder builder = new AlertDialog.
-				Builder(getActivity());
+				  Builder(getActivity());
 		builder.setTitle("Create Custom Unit:");
 		builder.setNegativeButton(android.R.string.cancel, null);
 		AlertDialog alert = builder.create();
@@ -245,9 +245,12 @@ public class ConvKeysFragment extends Fragment implements OnConvertKeyUpdateFini
 
 	private void refreshButtonText(int buttonPos) {
 		if (mUnitType.isUnitSelected()){
-				if (buttonPos != mUnitType.getCurrUnitButtonPos()){
-					refreshButtonText(getResources()
-							.getString(R.string.convert_arrow), buttonPos);
+			if (buttonPos != mUnitType.getCurrUnitButtonPos()){
+				// fixes a bug - make sure fragment is loaded before getting resources
+				if(!isAdded())
+					return;
+				refreshButtonText(getResources()
+						  .getString(R.string.convert_arrow), buttonPos);
 			}
 			setSelectedButtonHighlight(true);
 		}
