@@ -806,7 +806,7 @@ public class CalcActivity extends AppCompatActivity
 			mDisplay.setText(R.string.app_name);
 			mDisplay.setCursorVisible(false);
 		} else {
-			updateScreen(true, true);
+		//	updateScreen(true, true);
 			mDisplay.setSelectionToEnd();
 			//pull ListFrag's focus, to be sure EditText's cursor blinks when app starts
 			mDisplay.requestFocus();

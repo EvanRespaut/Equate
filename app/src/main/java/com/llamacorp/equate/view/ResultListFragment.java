@@ -1,6 +1,6 @@
 package com.llamacorp.equate.view;
 
-import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ListFragment;
@@ -22,22 +22,28 @@ public class ResultListFragment extends ListFragment {
 	private UnitSelectListener mCallback;
 	private List<Result> mResultArray;
 
-	// Container Activity must implement this interface
-	public interface UnitSelectListener {
+	/**
+	 * Container Activity must implement this interface
+	 */
+	interface UnitSelectListener {
 		void updateScreen(boolean updateResult);
 
 		void selectUnitAtUnitArrayPos(int unitPos, String unitTypeKey);
 	}
 
+	/**
+	 * Override onAttach to check that this fragment implements
+	 * the @{@link UnitSelectListener} interface.
+	 */
 	@Override
-	public void onAttach(Activity activity) {
-		super.onAttach(activity);
+	public void onAttach(Context context) {
+		super.onAttach(context);
 
 		//Make sure container implements callback interface; else, throw exception
 		try {
-			mCallback = (UnitSelectListener) activity;
+			mCallback = (UnitSelectListener) context;
 		} catch (ClassCastException e) {
-			throw new ClassCastException(activity.toString() + " must implement UnitSelectListener");
+			throw new ClassCastException(context.toString() + " must implement UnitSelectListener");
 		}
 	}
 
@@ -46,6 +52,7 @@ public class ResultListFragment extends ListFragment {
 		super.onCreate(savedInstanceState);
 
 		mResultArray = Calculator.getCalculator(getActivity()).getResultList();
+
 		ResultAdapter adapter = new ResultAdapter(mResultArray);
 		setListAdapter(adapter);
 	}
@@ -55,7 +62,6 @@ public class ResultListFragment extends ListFragment {
 		ResultAdapter(List<Result> prevTest) {
 			super(getActivity(), 0, prevTest);
 		}
-
 
 		@NonNull
 		@Override
@@ -195,29 +201,32 @@ public class ResultListFragment extends ListFragment {
 		}
 	}
 
-
 	/**
 	 * Update the listView and scroll to the bottom
-	 *
-	 * @param instaScroll if false, use animated scroll to bottom,
+	 * @param instantScroll if false, use animated scroll to bottom,
 	 *                    otherwise use scroll instantly
 	 */
-	public void refresh(boolean instaScroll) {
+	public void refresh(boolean instantScroll) {
 		if (getListAdapter() == null) return;
 		//notify the adapter that the listview needs to be updated
 		((ResultAdapter) getListAdapter()).notifyDataSetChanged();
 
 		//scroll to the bottom of the list
-		if (instaScroll){
+		if (instantScroll){
 			//post a runnable for setSelection otherwise it won't be called
+
 			getListView().post(new Runnable() {
 				@Override
 				public void run() {
 					//attempt to fix bug:
 					if (getListAdapter() == null) return;
+					//	try {
 					getListView().setSelection(getListAdapter().getCount() - 1);
+					//	} catch (IllegalStateException e) {
+					//	}
 				}
 			});
+
 		} else
 			getListView().smoothScrollToPosition(getListAdapter().getCount() - 1);
 	}
