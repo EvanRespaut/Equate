@@ -138,12 +138,13 @@ class UnitInitializer {
 		unitsOfVolume.addUnit(new UnitScalar("pt UK", "Pints (UK)", 1000 / 0.56826125));//exact: gal uk/8
 		unitsOfVolume.addUnit(new UnitScalar("fl oz UK", "Fluid ounces (UK)", 1000 / 0.0284130625));//exact: gal uk/160
 		unitsOfVolume.addUnit(new UnitScalar("shot", "Shots (US)", 1 / 0.00004436029434375));//exact for 1.5 fl oz
+		unitsOfVolume.addUnit(new UnitScalar("keg", "Half barrel keg", 1 / 0.058673882652)); //exact
 		unitsOfVolume.addUnit(new UnitScalar("m\u00B3", "Cubic meters", 1));
 		unitsOfVolume.addUnit(new UnitScalar("in\u00B3", "Cubic inches", 1 / 0.000016387064));//exact: gal/231
 		unitsOfVolume.addUnit(new UnitScalar("ft\u00B3", "Cubic feet", 1 / 0.028316846592));//exact: gal/231*12^3
 		unitsOfVolume.addUnit(new UnitScalar("yd\u00B3", "Cubic yards", 1 / 0.764554857984));//exact: 3^3 ft^3
 		unitsOfVolume.addUnit(new UnitScalar("cm\u00B3", "Cubic centimeters", 1E6));
-		unitsOfVolume.addUnit(new UnitScalar("cm\u00B3", "Cubic millimeters", 1E9));
+
 
 		unitTypeArray.add(unitsOfVolume);
 
