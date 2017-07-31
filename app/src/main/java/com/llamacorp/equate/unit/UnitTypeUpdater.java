@@ -1,6 +1,8 @@
 package com.llamacorp.equate.unit;
 
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 
 import com.llamacorp.equate.R;
@@ -15,6 +17,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
 
 /**
  * Helper class is used to update dynamic unit types such as currency by
@@ -38,39 +41,50 @@ public class UnitTypeUpdater {
 		if (isTimeoutReached(ut) || forced){
 			//add "Updating" text
 			ut.setUpdating(true);
-			new UpdateYahooXMLAsyncTask(ut, forced).execute();
+			new UpdateCurrenciesAsyncTask(ut, forced, mUnitsToUpdate, mContext)
+					.execute();
 		} else {
 			ViewUtils.toast(mContext.getText(R.string.words_units_up_to_date)
-					  .toString(), mContext);
+					.toString(), mContext);
 		}
 	}
 
 	private boolean isTimeoutReached(UnitType ut) {
 		Date now = new Date();
-		if (ut.getLastUpdateTime() != null && (now.getTime() -
-				  ut.getLastUpdateTime().getTime())
-				  < (60 * 1000 * UPDATE_TIMEOUT_MIN)){
-			return false;
-		} else
-			return true;
+		return !(ut.getLastUpdateTime() != null && (now.getTime() -
+				ut.getLastUpdateTime().getTime())
+				< (60 * 1000 * UPDATE_TIMEOUT_MIN));
 	}
 
 	/**
 	 * This class is used to create a background task that handles
 	 * the actual retrieval of the Yahoo XML file that contains the current rates
 	 */
-	private class UpdateYahooXMLAsyncTask extends AsyncTask<Void, Void, Boolean> {
+	private static class UpdateCurrenciesAsyncTask extends AsyncTask<Void, Void, Boolean> {
+		private enum ErrorCause {NO_INTERNET, TIMEOUT, XML_PARSING_ERROR}
+		private Context mContext;
 		private UnitType mUnitType;
+		private ArrayList<Integer> mUnitsToUpdate;
 		private Boolean mForced;
+		private ErrorCause mErrorCause;
 
-		public UpdateYahooXMLAsyncTask(UnitType unitType, Boolean forced) {
+
+		public UpdateCurrenciesAsyncTask(UnitType unitType, Boolean forced,
+													ArrayList<Integer> unitsToUpdate,
+													Context context) {
 			mUnitType = unitType;
 			mForced = forced;
+			mUnitsToUpdate = unitsToUpdate;
+			mContext = context;
 		}
 
-		//This method is called first
+		// This is the main method that runs asynchronously. Runs first
 		@Override
 		protected Boolean doInBackground(Void... voids) {
+			if (!isNetworkAvailable()){
+				mErrorCause = ErrorCause.NO_INTERNET;
+				return false;
+			}
 			return updateRatesWithXML(mUnitType);
 		}
 
@@ -82,7 +96,22 @@ public class UnitTypeUpdater {
 				String text = "Updated at ";
 				if (mForced) text = "FORCED update at ";
 				ViewUtils.toastLong(text + mUnitType.getLastUpdateTime().toString(),
-						  mContext);
+						mContext);
+			} else {
+				switch (mErrorCause) {
+					case NO_INTERNET:
+						ViewUtils.toastLong("Update error: no internet connection", mContext);
+						break;
+					case XML_PARSING_ERROR:
+						ViewUtils.toastLong("Update error: Yahoo XML parsing error", mContext);
+						break;
+					case TIMEOUT:
+						ViewUtils.toastLong("Update error: internet connection timeout", mContext);
+						break;
+					default:
+						ViewUtils.toastLong("Error: unknown", mContext);
+						break;
+				}
 			}
 
 			//update the remaining units that got missed by yahoo xml
@@ -97,85 +126,98 @@ public class UnitTypeUpdater {
 			//remove text "Updating"
 			mUnitType.setUpdating(false);
 		}
-	}
 
-
-	private boolean updateRatesWithXML(UnitType ut) {
-		//only try to update currencies if we have XML currency URL to work with
-		if (ut.getXMLCurrencyURL() == null) return false;
-
-		HashMap<String, YahooXmlParser.Entry> currRates = null;
-
-		//grab the array of yahoo currency units
-		try {
-			currRates = getCurrRates(ut.getXMLCurrencyURL());
-		} catch (XmlPullParserException | IOException e) {
-			e.printStackTrace();
+		private boolean isNetworkAvailable() {
+			ConnectivityManager connectivityManager
+					= (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+			NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+			return activeNetworkInfo != null && activeNetworkInfo.isConnected();
 		}
 
-		//leave if we have not updated rates
-		if (currRates == null) return false;
 
-		//update each existing curr with new rates
-		for (int i = 0; i < ut.size(); i++) {
-			//skip unit support that don't support updating (not hist)
-			if (!ut.getUnitPosInUnitArray(i).isDynamic()) continue;
+		private boolean updateRatesWithXML(UnitType ut) {
+			//only try to update currencies if we have XML currency URL to work with
+			if (ut.getXMLCurrencyURL() == null) return false;
 
-			UnitCurrency u = ((UnitCurrency) ut.getUnitPosInUnitArray(i));
-			YahooXmlParser.Entry entry = currRates.get(u.getAbbreviation());
-			if (entry != null){
-				u.setValue(entry.price);
-				u.setUpdateTime(entry.date);
-			} else {
-				//this is for BTC and other units that don't get updated by yahoo
-				mUnitsToUpdate.add(i);
+			HashMap<String, YahooXmlParser.Entry> currRates = null;
+
+			// Attempt to retrieve the array of yahoo currency units
+			try {
+				currRates = getCurrRates(ut.getXMLCurrencyURL());
+			} catch (XmlPullParserException | IOException e) {
+				if (e instanceof XmlPullParserException){
+					mErrorCause = ErrorCause.XML_PARSING_ERROR;
+				} else {
+					mErrorCause = ErrorCause.TIMEOUT;
+				}
+				e.printStackTrace();
 			}
-		}
-		return true;
-	}
 
+			//leave if we have not updated rates
+			if (currRates == null) return false;
 
-	/**
-	 * Downloads XML file of current Yahoo finance currency rates
-	 *
-	 * @param urlString URL of XML string
-	 * @return Array of currencies with updated values
-	 * @throws XmlPullParserException
-	 * @throws IOException
-	 */
-	private HashMap<String, YahooXmlParser.Entry> getCurrRates(String urlString)
-			  throws XmlPullParserException, IOException {
-		InputStream stream = null;
-		YahooXmlParser yahooXmlParser = new YahooXmlParser();
-		HashMap<String, YahooXmlParser.Entry> currRates = null;
+			//update each existing curr with new rates
+			for (int i = 0; i < ut.size(); i++) {
+				//skip unit support that don't support updating (not hist)
+				if (!ut.getUnitPosInUnitArray(i).isDynamic()) continue;
 
-		try {
-			stream = downloadUrl(urlString);
-			currRates = yahooXmlParser.parse(stream);
-			// Makes sure that the InputStream is closed after the app is
-			// finished using it.
-		} finally {
-			if (stream != null){
-				stream.close();
+				UnitCurrency u = ((UnitCurrency) ut.getUnitPosInUnitArray(i));
+				YahooXmlParser.Entry entry = currRates.get(u.getAbbreviation());
+				if (entry != null){
+					u.setValue(entry.price);
+					u.setUpdateTime(entry.date);
+				} else {
+					//this is for BTC and other units that don't get updated by yahoo
+					mUnitsToUpdate.add(i);
+				}
 			}
+			return true;
 		}
-		return currRates;
-	}
 
 
-	/**
-	 * Given a string representation of a URL, sets up a connection and gets
-	 * an input stream.
-	 */
-	private InputStream downloadUrl(String urlString) throws IOException {
-		URL url = new URL(urlString);
-		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-		conn.setReadTimeout(10000 /* milliseconds */);
-		conn.setConnectTimeout(15000 /* milliseconds */);
-		conn.setRequestMethod("GET");
-		conn.setDoInput(true);
-		// Starts the query
-		conn.connect();
-		return conn.getInputStream();
+		/**
+		 * Downloads XML file of current Yahoo finance currency rates
+		 *
+		 * @param urlString URL of XML string
+		 * @return Array of currencies with updated values
+		 * @throws XmlPullParserException
+		 * @throws IOException
+		 */
+		private HashMap<String, YahooXmlParser.Entry> getCurrRates(String urlString)
+				throws XmlPullParserException, IOException {
+			InputStream stream = null;
+			YahooXmlParser yahooXmlParser = new YahooXmlParser();
+			HashMap<String, YahooXmlParser.Entry> currRates = null;
+
+			// Note that we don't handle Xml parsing or IO exceptions here, we pass them on
+			try {
+				stream = downloadUrl(urlString);
+				currRates = yahooXmlParser.parse(stream);
+				// Makes sure that the InputStream is closed after the app is
+				// finished using it.
+			} finally {
+				if (stream != null){
+					stream.close();
+				}
+			}
+			return currRates;
+		}
+
+
+		/**
+		 * Given a string representation of a URL, sets up a connection and gets
+		 * an input stream.
+		 */
+		private InputStream downloadUrl(String urlString) throws IOException {
+			URL url = new URL(urlString);
+			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+			conn.setReadTimeout(10000 /* milliseconds */);
+			conn.setConnectTimeout(15000 /* milliseconds */);
+			conn.setRequestMethod("GET");
+			conn.setDoInput(true);
+			// Starts the query
+			conn.connect();
+			return conn.getInputStream();
+		}
 	}
 }
