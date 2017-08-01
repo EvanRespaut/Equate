@@ -65,6 +65,13 @@
    <string name="reset_factory">Calculator factory reset</string>
    <string name="reset_factory_msg">Warning, factory reset will clear all history, preferences, and restore the calculator to its original state. Proceed?</string>
 
+   <string name="update_at">Updated at </string>
+   <string name="update_forced">FORCED update at </string>
+
+   <string name="update_error_internet">Update error: no internet connection</string>
+   <string name="update_error_parsing">Update error: Yahoo XML parsing error</string>
+   <string name="update_error_timeout">Update error: internet connection timeout</string>
+   <string name="update_error_unknown">Error: unknown</string>
 
 
    <string name="words_units_up_to_date">Units up to date.</string>

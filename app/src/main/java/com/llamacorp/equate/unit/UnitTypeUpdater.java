@@ -17,7 +17,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.LinkedList;
 
 /**
  * Helper class is used to update dynamic unit types such as currency by
@@ -34,13 +33,19 @@ public class UnitTypeUpdater {
 		mUnitsToUpdate = new ArrayList<>();
 	}
 
+	/**
+	 * Perform an update of units inside a UnitType if the timeout period has
+	 * been reached or if the refresh is forced.
+	 */
 	public void update(UnitType ut, boolean forced) {
 		if (!ut.containsDynamicUnits()) return;
 
 		//only do update if timeout period has passed
 		if (isTimeoutReached(ut) || forced){
-			//add "Updating" text
+			//add "Updating" text to each visible button
 			ut.setUpdating(true);
+			// perform the unit update using a separate thread so UI thread
+			// doesn't get bogged down
 			new UpdateCurrenciesAsyncTask(ut, forced, mUnitsToUpdate, mContext)
 					.execute();
 		} else {
@@ -49,6 +54,10 @@ public class UnitTypeUpdater {
 		}
 	}
 
+	/**
+	 * Determines if the refresh timeout on the unit has been reached. Don't want
+	 * to spam the API with lots of requests.
+	 */
 	private boolean isTimeoutReached(UnitType ut) {
 		Date now = new Date();
 		return !(ut.getLastUpdateTime() != null && (now.getTime() -
@@ -78,7 +87,7 @@ public class UnitTypeUpdater {
 			mContext = context;
 		}
 
-		// This is the main method that runs asynchronously. Runs first
+		// The main method that runs asynchronously
 		@Override
 		protected Boolean doInBackground(Void... voids) {
 			if (!isNetworkAvailable()){
@@ -93,23 +102,24 @@ public class UnitTypeUpdater {
 		protected void onPostExecute(Boolean successful) {
 			if (successful){
 				mUnitType.setLastUpdateTime(new Date());
-				String text = "Updated at ";
-				if (mForced) text = "FORCED update at ";
+				CharSequence text = mContext.getText(R.string.update_at);
+				if (mForced) text = mContext.getText(R.string.update_forced);
 				ViewUtils.toastLong(text + mUnitType.getLastUpdateTime().toString(),
 						mContext);
 			} else {
+				// something went wrong with the update, toast the user more info
 				switch (mErrorCause) {
 					case NO_INTERNET:
-						ViewUtils.toastLong("Update error: no internet connection", mContext);
+						ViewUtils.toastLong(R.string.update_error_internet, mContext);
 						break;
 					case XML_PARSING_ERROR:
-						ViewUtils.toastLong("Update error: Yahoo XML parsing error", mContext);
+						ViewUtils.toastLong(R.string.update_error_parsing, mContext);
 						break;
 					case TIMEOUT:
-						ViewUtils.toastLong("Update error: internet connection timeout", mContext);
+						ViewUtils.toastLong(R.string.update_error_timeout, mContext);
 						break;
 					default:
-						ViewUtils.toastLong("Error: unknown", mContext);
+						ViewUtils.toastLong(R.string.update_error_unknown, mContext);
 						break;
 				}
 			}
@@ -117,7 +127,8 @@ public class UnitTypeUpdater {
 			//update the remaining units that got missed by yahoo xml
 			if (mUnitsToUpdate != null){
 				for (int i = 0; i < mUnitsToUpdate.size(); i++) {
-					UnitCurrency u = (UnitCurrency) mUnitType.getUnitPosInUnitArray(mUnitsToUpdate.get(i));
+					UnitCurrency u = (UnitCurrency) mUnitType
+							  .getUnitPosInUnitArray(mUnitsToUpdate.get(i));
 					if (u.isTimeoutReached(mContext))
 						u.asyncRefresh(mContext);
 				}
@@ -127,11 +138,15 @@ public class UnitTypeUpdater {
 			mUnitType.setUpdating(false);
 		}
 
+		/**
+		 * Method to determine if the the device is connected to the internet
+		 * @return true if the device is connected to the internet, false otherwise
+		 */
 		private boolean isNetworkAvailable() {
 			ConnectivityManager connectivityManager
 					= (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
 			NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-			return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+			return activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
 		}
 
 

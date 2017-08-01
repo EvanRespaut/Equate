@@ -21,9 +21,6 @@
 
 - currencies should be caps
 - instant result preview clips onto next line now, make text dynamic sized?
-- Tap equals once should give you eng?
-- Make readme file markup, like https://github.com/googlesamples/android-ClippingBasic/
-- hold equals for settings?
 - Fix long press on Edittext http://stackoverflow.com/questions/14169040/enable-disable-actionbar-menu-item
 - http://fedepaol.github.io/blog/2014/09/01/dragging-with-viewdraghelper/
 https://github.com/android/platform_frameworks_support/blob/master/v4/java/android/support/v4/view/ViewPager.java

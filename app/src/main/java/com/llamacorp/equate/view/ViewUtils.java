@@ -1,7 +1,6 @@
 package com.llamacorp.equate.view;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.text.Html;
 import android.text.Spanned;
 import android.view.Gravity;
@@ -53,6 +52,12 @@ public class ViewUtils {
 
 	public static void toastLong(String text, Context c) {
 		final Toast toast = Toast.makeText(c, text, Toast.LENGTH_LONG);
+		toast.show();
+	}
+
+
+	public static void toastLong(int id, Context c) {
+		final Toast toast = Toast.makeText(c, c.getText(id), Toast.LENGTH_LONG);
 		toast.show();
 	}
 
