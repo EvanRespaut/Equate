@@ -22,10 +22,11 @@ To find the number of Dollars in a Bitcoin, simply move to the currency tab, cli
 
 
 ## Download
-<a href="https://f-droid.org/packages/com.llamacorp.equate/" target="_blank">
-<img src="https://f-droid.org/badge/get-it-on.png" alt="Get it on F-Droid" height="100"/></a>
 <a href="https://play.google.com/store/apps/details?id=com.llamacorp.equate" target="_blank">
 <img src="https://play.google.com/intl/en_us/badges/images/generic/en-play-badge.png" alt="Get it on Google Play" height="100"/></a>
+
+<a href="https://f-droid.org/packages/com.llamacorp.equate/" target="_blank">
+<img src="https://f-droid.org/badge/get-it-on.png" alt="Get it on F-Droid" height="100"/></a>
 
 ## Donate
 If you like the app and want to support the developer, donate :)
