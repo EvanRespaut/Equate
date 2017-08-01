@@ -10,7 +10,6 @@ To find the number of Dollars in a Bitcoin, simply move to the currency tab, cli
 <a href="http://imgur.com/xXvL0Fx"><img src="http://i.imgur.com/xXvL0Fx.gif" title="source: imgur.com" /></a>
 
 ## Features
- 
 - Clean and fast unit conversions
 - 15 different unit types, including real time currency and precious metals
 - Over 130 units to convert between
@@ -22,9 +21,11 @@ To find the number of Dollars in a Bitcoin, simply move to the currency tab, cli
 - Smart parenthesis
 
 
-## Download on Google Play Store
-<a href="https://play.google.com/store/apps/details?id=com.llamacorp.equate&utm_source=global_co&utm_medium=prtnr&utm_content=Mar2515&utm_campaign=PartBadge&pcampaignid=MKT-AC-global-none-all-co-pr-py-PartBadges-Oct1515-1"><img alt="Get it on Google Play" height="80" src="https://play.google.com/intl/en_us/badges/images/apps/en-play-badge.png" /></a>
-
+## Download
+<a href="https://f-droid.org/packages/com.llamacorp.equate/" target="_blank">
+<img src="https://f-droid.org/badge/get-it-on.png" alt="Get it on F-Droid" height="100"/></a>
+<a href="https://play.google.com/store/apps/details?id=com.llamacorp.equate" target="_blank">
+<img src="https://play.google.com/intl/en_us/badges/images/generic/en-play-badge.png" alt="Get it on Google Play" height="100"/></a>
 
 ## Donate
 If you like the app and want to support the developer, donate :)
