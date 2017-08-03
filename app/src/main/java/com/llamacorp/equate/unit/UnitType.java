@@ -2,6 +2,8 @@ package com.llamacorp.equate.unit;
 
 import android.content.Context;
 
+import com.llamacorp.equate.unit.updater.UnitTypeUpdater;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;

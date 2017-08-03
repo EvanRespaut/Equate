@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.llamacorp.equate.unit;
+package com.llamacorp.equate.unit.updater;
 
 import android.util.Xml;
 
@@ -31,33 +31,43 @@ import java.util.Locale;
  * This class parses XML feeds from
  * http://finance.yahoo.com/webservice/v1/symbols/allcurrencies/quote
  */
-public class YahooXmlParser {
-	// We don't use namespaces
-	private static final String ns = null;
+public class YahooXmlParser extends CurrencyURLParser{
+	private static final String YAHOO_API_URL =
+			  "https://finance.yahoo.com/webservice/v1/symbols/allcurrencies/quote";
+	private static final String ns = null; // We don't use namespaces
+
+	/** Constructor that initializes the base method's URL */
+	YahooXmlParser() {
+		super(YAHOO_API_URL);
+	}
 
 
-	public HashMap<String, Entry> parse(InputStream in) throws XmlPullParserException, IOException {
+	/**
+	 * Parse a stream of XML data and extract currency rates and times.
+	 * @param in input XML stream to parse
+	 * @return a HashMap of all the symbols and prices from the XML stream
+	 * @throws CurrencyParseException if there is any problem parsing the stream
+	 */
+	protected HashMap<String, Entry> parse(InputStream in) throws CurrencyParseException {
 		try {
 			XmlPullParser parser = Xml.newPullParser();
 			parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
 			parser.setInput(in, null);
 			parser.nextTag();
 			return findResources(parser);
-		} finally {
-			in.close();
+		} catch (IOException | XmlPullParserException e) {
+			throw new CurrencyParseException();
 		}
 	}
 
 	/**
 	 * Iterates over the top level XML branch called list, looking for the first
 	 * "resources" tag. Note that we only expect to find one.
-	 *
 	 * @param parser XML parser from Yahoo
 	 * @return a HashMap of entries
-	 * @throws XmlPullParserException
-	 * @throws IOException
 	 */
-	private HashMap<String, Entry> findResources(XmlPullParser parser) throws XmlPullParserException, IOException {
+	private HashMap<String, Entry> findResources(XmlPullParser parser)
+			  throws XmlPullParserException, IOException {
 		HashMap<String, Entry> entries = new HashMap<>();
 
 		parser.require(XmlPullParser.START_TAG, ns, "list");
@@ -201,18 +211,6 @@ public class YahooXmlParser {
 					depth++;
 					break;
 			}
-		}
-	}
-
-	static class Entry {
-		final double price;
-		final String symbol;
-		final Date date;
-
-		private Entry(double price, String symbol, Date date) {
-			this.price = price;
-			this.symbol = symbol;
-			this.date = date;
 		}
 	}
 }

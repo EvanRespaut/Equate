@@ -1,4 +1,4 @@
-package com.llamacorp.equate.unit;
+package com.llamacorp.equate.unit.updater;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
@@ -6,17 +6,17 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 
 import com.llamacorp.equate.R;
+import com.llamacorp.equate.unit.UnitCurrency;
+import com.llamacorp.equate.unit.UnitType;
+import com.llamacorp.equate.unit.updater.CurrencyURLParser.CurrencyParseException;
 import com.llamacorp.equate.view.ViewUtils;
 
-import org.xmlpull.v1.XmlPullParserException;
-
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+
+
 
 /**
  * Helper class is used to update dynamic unit types such as currency by
@@ -47,10 +47,10 @@ public class UnitTypeUpdater {
 			// perform the unit update using a separate thread so UI thread
 			// doesn't get bogged down
 			new UpdateCurrenciesAsyncTask(ut, forced, mUnitsToUpdate, mContext)
-					.execute();
+					  .execute();
 		} else {
 			ViewUtils.toast(mContext.getText(R.string.words_units_up_to_date)
-					.toString(), mContext);
+					  .toString(), mContext);
 		}
 	}
 
@@ -61,8 +61,8 @@ public class UnitTypeUpdater {
 	private boolean isTimeoutReached(UnitType ut) {
 		Date now = new Date();
 		return !(ut.getLastUpdateTime() != null && (now.getTime() -
-				ut.getLastUpdateTime().getTime())
-				< (60 * 1000 * UPDATE_TIMEOUT_MIN));
+				  ut.getLastUpdateTime().getTime())
+				  < (60 * 1000 * UPDATE_TIMEOUT_MIN));
 	}
 
 	/**
@@ -78,9 +78,9 @@ public class UnitTypeUpdater {
 		private ErrorCause mErrorCause;
 
 
-		public UpdateCurrenciesAsyncTask(UnitType unitType, Boolean forced,
-													ArrayList<Integer> unitsToUpdate,
-													Context context) {
+		UpdateCurrenciesAsyncTask(UnitType unitType, Boolean forced,
+										  ArrayList<Integer> unitsToUpdate,
+										  Context context) {
 			mUnitType = unitType;
 			mForced = forced;
 			mUnitsToUpdate = unitsToUpdate;
@@ -94,8 +94,9 @@ public class UnitTypeUpdater {
 				mErrorCause = ErrorCause.NO_INTERNET;
 				return false;
 			}
-			return updateRatesWithXML(mUnitType);
+			return updateRates(mUnitType);
 		}
+
 
 		// This method is called after doInBackground completes
 		@Override
@@ -105,7 +106,7 @@ public class UnitTypeUpdater {
 				CharSequence text = mContext.getText(R.string.update_at);
 				if (mForced) text = mContext.getText(R.string.update_forced);
 				ViewUtils.toastLong(text + mUnitType.getLastUpdateTime().toString(),
-						mContext);
+						  mContext);
 			} else {
 				// something went wrong with the update, toast the user more info
 				switch (mErrorCause) {
@@ -144,23 +145,82 @@ public class UnitTypeUpdater {
 		 */
 		private boolean isNetworkAvailable() {
 			ConnectivityManager connectivityManager
-					= (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+					  = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
 			NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
 			return activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
 		}
 
 
-		private boolean updateRatesWithXML(UnitType ut) {
-			//only try to update currencies if we have XML currency URL to work with
-			if (ut.getXMLCurrencyURL() == null) return false;
+//
+//		private boolean updateCryptoCurrencies(UnitType ut) {
+//			String URL = ut.getCryptoCurrencyURL();
+//
+//			//only try to update currencies if we have crypto currency URL to work with
+//			if (URL == null) return false;
+//
+//			InputStream stream = null;
+//
+//			// Attempt to retrieve the JSON object of crypto currencies
+//			try {
+//				stream = downloadUrl(URL);
+//			} catch (IOException e) {
+//				mErrorCause = ErrorCause.TIMEOUT;
+//				e.printStackTrace();
+//			}
+//
+//			try {
+//				BufferedReader reader = new BufferedReader(new InputStreamReader(
+//						  stream, "UTF-8"), 8);
+//
+//				StringBuilder sBuilder = new StringBuilder();
+//
+//				String line = null;
+//				while ((line = reader.readLine()) != null) {
+//					sBuilder.append(line + "\n");
+//				}
+//
+//				String result = sBuilder.toString();
+//
+//				try {
+//					JSONObject jObj = new JSONObject(result);
+//					JSONObject btcJSON = jObj.getJSONObject("btc");
+//					String name = btcJSON.getString("name");
+//				} catch (JSONException e) {
+//					e.printStackTrace();
+//				}
+//
+//
+//
+//			} catch (UnsupportedEncodingException e) {
+//				e.printStackTrace();
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//			}
+//
+//
+////			JsonReader reader = null;
+////			try {
+////				reader = new JsonReader(new InputStreamReader(stream, "UTF-8"));
+////			} catch (UnsupportedEncodingException e) {
+////				e.printStackTrace();
+////			}
+//
+//			try {
+//				stream.close();
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//			}
+//			return true;
+//		}
 
-			HashMap<String, YahooXmlParser.Entry> currRates = null;
+		private boolean updateRates(UnitType ut) {
+			HashMap<String, CurrencyURLParser.Entry> currRates = null;
 
 			// Attempt to retrieve the array of yahoo currency units
 			try {
-				currRates = getCurrRates(ut.getXMLCurrencyURL());
-			} catch (XmlPullParserException | IOException e) {
-				if (e instanceof XmlPullParserException){
+				currRates = new YahooXmlParser().downloadAndParse();
+			} catch (CurrencyParseException | IOException e) {
+				if (e instanceof CurrencyParseException){
 					mErrorCause = ErrorCause.XML_PARSING_ERROR;
 				} else {
 					mErrorCause = ErrorCause.TIMEOUT;
@@ -177,7 +237,7 @@ public class UnitTypeUpdater {
 				if (!ut.getUnitPosInUnitArray(i).isDynamic()) continue;
 
 				UnitCurrency u = ((UnitCurrency) ut.getUnitPosInUnitArray(i));
-				YahooXmlParser.Entry entry = currRates.get(u.getAbbreviation());
+				CurrencyURLParser.Entry entry = currRates.get(u.getAbbreviation());
 				if (entry != null){
 					u.setValue(entry.price);
 					u.setUpdateTime(entry.date);
@@ -187,52 +247,6 @@ public class UnitTypeUpdater {
 				}
 			}
 			return true;
-		}
-
-
-		/**
-		 * Downloads XML file of current Yahoo finance currency rates
-		 *
-		 * @param urlString URL of XML string
-		 * @return Array of currencies with updated values
-		 * @throws XmlPullParserException
-		 * @throws IOException
-		 */
-		private HashMap<String, YahooXmlParser.Entry> getCurrRates(String urlString)
-				throws XmlPullParserException, IOException {
-			InputStream stream = null;
-			YahooXmlParser yahooXmlParser = new YahooXmlParser();
-			HashMap<String, YahooXmlParser.Entry> currRates = null;
-
-			// Note that we don't handle Xml parsing or IO exceptions here, we pass them on
-			try {
-				stream = downloadUrl(urlString);
-				currRates = yahooXmlParser.parse(stream);
-				// Makes sure that the InputStream is closed after the app is
-				// finished using it.
-			} finally {
-				if (stream != null){
-					stream.close();
-				}
-			}
-			return currRates;
-		}
-
-
-		/**
-		 * Given a string representation of a URL, sets up a connection and gets
-		 * an input stream.
-		 */
-		private InputStream downloadUrl(String urlString) throws IOException {
-			URL url = new URL(urlString);
-			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-			conn.setReadTimeout(10000 /* milliseconds */);
-			conn.setConnectTimeout(15000 /* milliseconds */);
-			conn.setRequestMethod("GET");
-			conn.setDoInput(true);
-			// Starts the query
-			conn.connect();
-			return conn.getInputStream();
 		}
 	}
 }

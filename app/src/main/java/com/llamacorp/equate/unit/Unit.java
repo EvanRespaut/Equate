@@ -113,7 +113,7 @@ public abstract class Unit  /*implements JsonSerializer<Unit>, JsonDeserializer<
 		return getLongName().toLowerCase(Locale.US);
 	}
 
-	protected void setValue(double value) {
+	public void setValue(double value) {
 		mValue = value;
 	}
 
