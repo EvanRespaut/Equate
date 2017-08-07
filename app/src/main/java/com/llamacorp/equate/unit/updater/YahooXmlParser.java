@@ -44,19 +44,20 @@ public class YahooXmlParser extends CurrencyURLParser{
 
 	/**
 	 * Parse a stream of XML data and extract currency rates and times.
-	 * @param in input XML stream to parse
+	 * @param stream input XML stream to parse
 	 * @return a HashMap of all the symbols and prices from the XML stream
 	 * @throws CurrencyParseException if there is any problem parsing the stream
 	 */
-	protected HashMap<String, Entry> parse(InputStream in) throws CurrencyParseException {
+	@Override
+	protected HashMap<String, Entry> parse(InputStream stream) throws CurrencyParseException {
 		try {
 			XmlPullParser parser = Xml.newPullParser();
 			parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
-			parser.setInput(in, null);
+			parser.setInput(stream, null);
 			parser.nextTag();
 			return findResources(parser);
 		} catch (IOException | XmlPullParserException e) {
-			throw new CurrencyParseException();
+			throw new CurrencyParseException(e.getMessage());
 		}
 	}
 

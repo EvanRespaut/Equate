@@ -71,6 +71,9 @@ public abstract class CurrencyURLParser {
 
 	/** Generic exception used when there are parsing errors */
 	static class CurrencyParseException extends Exception {
+		public CurrencyParseException(String message) {
+			super(message);
+		}
 	}
 
 	static class Entry {

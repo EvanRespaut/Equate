@@ -215,10 +215,19 @@ public class UnitTypeUpdater {
 
 		private boolean updateRates(UnitType ut) {
 			HashMap<String, CurrencyURLParser.Entry> currRates = null;
+			HashMap<String, CurrencyURLParser.Entry> cryptCurrRates = null;
 
 			// Attempt to retrieve the array of yahoo currency units
 			try {
 				currRates = new YahooXmlParser().downloadAndParse();
+				cryptCurrRates = new CoinmarketcapParser().downloadAndParse();
+
+				// add the two set of rates together, but make sure the normal
+				// currency rates will overwrite the crypto rates when there is a
+				// symbol overlap
+				cryptCurrRates.putAll(currRates);
+				currRates = cryptCurrRates;
+
 			} catch (CurrencyParseException | IOException e) {
 				if (e instanceof CurrencyParseException){
 					mErrorCause = ErrorCause.XML_PARSING_ERROR;
