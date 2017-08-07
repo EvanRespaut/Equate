@@ -25,7 +25,6 @@ public class UnitCurrency extends Unit {
 	public static final String DEFAULT_CURRENCY = "USD";
 
 	private Date mTimeLastUpdated;
-	//	private String mURLPrefix = "http://rate-exchange.appspot.com/currency?from=USD&to=";
 	private String mURLPrefix = "http://rate-exchange.herokuapp.com/fetchRate?from="
 			  + DEFAULT_CURRENCY + "&to=";
 
@@ -40,10 +39,29 @@ public class UnitCurrency extends Unit {
 	//used to tell parent classes if the asyncRefresh is currently running
 	private boolean mUpdating = false;
 
+	/**
+	 * Create a new currency unit
+	 * @param name abbreviated name of the currency (eg, "USD" for US dollar)
+	 * @param longName long name (eg, "US Dollar")
+	 * @param value the price of the unit in inverted US dollars
+	 */
 	public UnitCurrency(String name, String longName, double value) {
 		super(name, longName, value);
 		//Note that Jan = 0 in the Gregorian Calendar constructor below
 		mTimeLastUpdated = new GregorianCalendar(2015, 3, 1, 1, 11).getTime();
+	}
+
+	/**
+	 * Create a new currency unit
+	 * @param name abbreviated name of the currency (eg, "USD" for US dollar)
+	 * @param longName long name (eg, "US Dollar")
+	 * @param value the price of the unit in inverted US dollars
+	 * @param updateTime the time the price was updated
+	 */
+	public UnitCurrency(String name, String longName, double value,
+							  GregorianCalendar updateTime) {
+		super(name, longName, value);
+		mTimeLastUpdated = updateTime.getTime();
 	}
 
 	public UnitCurrency(String name, String longName, double value, String URL) {
@@ -88,10 +106,6 @@ public class UnitCurrency extends Unit {
 		return mUpdating;
 	}
 
-//
-//	public void setCallback(OnConvertKeyUpdateFinishedListener callback) {
-//		mCallback = callback;
-//	}
 
 	@Override
 	public String convertTo(Unit toUnit, String expressionToConv) {

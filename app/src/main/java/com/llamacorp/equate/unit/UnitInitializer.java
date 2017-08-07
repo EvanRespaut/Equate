@@ -1,6 +1,7 @@
 package com.llamacorp.equate.unit;
 
 import java.util.ArrayList;
+import java.util.GregorianCalendar;
 import java.util.LinkedHashMap;
 
 class UnitInitializer {
@@ -339,14 +340,15 @@ class UnitInitializer {
 			al.add(normalizedValue);
 		}
 
+		// the time that the below cryptocurrency prices were last updated
+		GregorianCalendar cryTime = new GregorianCalendar(2017, 8, 6, 9, 30);
 
-		UnitType uc = new UnitType(name,
-				  "https://finance.yahoo.com/webservice/v1/symbols/allcurrencies/quote");
+		UnitType uc = new UnitType(name);
 		uc.addUnit(new UnitCurrency("USD", "Dollars", 1));
 		uc.addUnit(new UnitCurrency("EUR", "Euros", 0.929));
 		uc.addUnit(new UnitCurrency("CAD", "Canadian Dollars", 1.26));
 		uc.addUnit(new UnitCurrency("GBP", "British Pounds", 0.67));
-		uc.addUnit(new UnitCurrency("BTC", "Bitcoins", 1 / 3197.67));
+		uc.addUnit(new UnitCurrency("BTC", "Bitcoins", 1 / 3197.67, cryTime));
 
 		uc.addUnit(new UnitHistCurrency("USD", "Dollars", al, 1913, 1975));
 		uc.addUnit(new UnitCurrency("CHF", "Swiss Francs", 0.967));
@@ -357,7 +359,7 @@ class UnitInitializer {
 		uc.addUnit(new UnitCurrency("AUD", "Australian Dollars", 1.390144));
 		uc.addUnit(new UnitCurrency("CNY", "Chinese Yuans", 6.198));
 		uc.addUnit(new UnitCurrency("RUB", "Russian Rubles", 66.499496));
-		uc.addUnit(new UnitCurrency("ETH", "Ethereum", 1 / 259.493));
+		uc.addUnit(new UnitCurrency("ETH", "Ethereum", 1 / 259.493, cryTime));
 
 
 		uc.addUnit(new UnitCurrency("AFN", "Afghan Afghani", 64.349998));
@@ -524,54 +526,54 @@ class UnitInitializer {
 		uc.addUnit(new UnitCurrency("ZMW", "Zambian Kwacha", 10.003));
 		uc.addUnit(new UnitCurrency("ZWL", "Zimbabwean Dollars (obsolete)", 322.355011));
 
-		uc.addUnit(new UnitCurrency("XRP", "Ripple", 1 / 0.177874));
-		uc.addUnit(new UnitCurrency("BCH", "Bitcoin Cash", 1 / 265.901));
-		uc.addUnit(new UnitCurrency("LTC", "Litecoin", 1 / 45.604));
-		uc.addUnit(new UnitCurrency("XEM", "NEM", 1 / 0.249221));
-		uc.addUnit(new UnitCurrency("ETC", "Ethereum Classic", 1 / 15.2784));
-		uc.addUnit(new UnitCurrency("DASH", "Dash", 1 / 188.47));
-		uc.addUnit(new UnitCurrency("MIOTA", "IOTA", 1 / 0.41844));
-		uc.addUnit(new UnitCurrency("ANS", "NEO", 1 / 14.3648));
-		uc.addUnit(new UnitCurrency("XMR", "Monero", 1 / 47.5925));
-		uc.addUnit(new UnitCurrency("STRAT", "Stratis", 1 / 6.6174));
-		uc.addUnit(new UnitCurrency("QTUM", "Qtum", 1 / 10.2253));
-		uc.addUnit(new UnitCurrency("WAVES", "Waves", 1 / 5.06547));
-		uc.addUnit(new UnitCurrency("BCC", "BitConnect", 1 / 78.9994));
-		uc.addUnit(new UnitCurrency("EOS", "EOS", 1 / 1.73145));
-		uc.addUnit(new UnitCurrency("BTS", "BitShares", 1 / 0.152211));
-		uc.addUnit(new UnitCurrency("ZEC", "Zcash", 1 / 207.122));
-		uc.addUnit(new UnitCurrency("VERI", "Veritaseum", 1 / 163.623));
-		uc.addUnit(new UnitCurrency("USDT", "Tether", 1 / 1.00041));
-		uc.addUnit(new UnitCurrency("STEEM", "Steem", 1 / 1.32925));
-		uc.addUnit(new UnitCurrency("OMG", "OmiseGo", 1 / 2.76948));
-		uc.addUnit(new UnitCurrency("GNT", "Golem", 1 / 0.316181));
-		uc.addUnit(new UnitCurrency("SC", "Siacoin", 1 / 0.00920123));
-		uc.addUnit(new UnitCurrency("ICN", "Iconomi", 1 / 2.88673));
-		uc.addUnit(new UnitCurrency("BCN", "Bytecoin", 1 / 0.00136501));
-		uc.addUnit(new UnitCurrency("XLM", "Stellar Lumens", 1 / 0.0223541));
-		uc.addUnit(new UnitCurrency("LSK", "Lisk", 1 / 2.14081));
-		uc.addUnit(new UnitCurrency("GNO", "Gnosis", 1 / 208.418));
-		uc.addUnit(new UnitCurrency("SNT", "Status", 1 / 0.0621873));
-		uc.addUnit(new UnitCurrency("DOGE", "Dogecoin", 1 / 0.00192536));
-		uc.addUnit(new UnitCurrency("PAY", "TenX", 1 / 2.03164));
-		uc.addUnit(new UnitCurrency("REP", "Augur", 1 / 18.8266));
-		uc.addUnit(new UnitCurrency("GBYTE", "Byteball", 1 / 543.745));
-		uc.addUnit(new UnitCurrency("FCT", "Factom", 1 / 20.1917));
-		uc.addUnit(new UnitCurrency("GAME", "GameCredits", 1 / 2.71252));
-		uc.addUnit(new UnitCurrency("PPT", "Populous", 1 / 4.53956));
-		uc.addUnit(new UnitCurrency("DCR", "Decred", 1 / 30.4952));
-		uc.addUnit(new UnitCurrency("MAID", "MaidSafeCoin", 1 / 0.360463));
-		uc.addUnit(new UnitCurrency("DGB", "DigiByte", 1 / 0.0186395));
-		uc.addUnit(new UnitCurrency("BAT", "Basic Attention Token", 1 / 0.162531));
-		uc.addUnit(new UnitCurrency("DGD", "DigixDAO", 1 / 70.326));
-		uc.addUnit(new UnitCurrency("ARDR", "Ardor", 1 / 0.133794));
-		uc.addUnit(new UnitCurrency("NXT", "Nxt", 1 / 0.130891));
-		uc.addUnit(new UnitCurrency("MCAP", "MCAP", 1 / 1.96551));
-		uc.addUnit(new UnitCurrency("KMD", "Komodo", 1 / 1.05183));
-		uc.addUnit(new UnitCurrency("PIVX", "PIVX", 1 / 1.94049));
-		uc.addUnit(new UnitCurrency("BNT", "Bancor", 1 / 2.37154));
-		uc.addUnit(new UnitCurrency("LKK", "Lykke", 1 / 0.360812));
-		uc.addUnit(new UnitCurrency("ARK", "Ark", 1 / 0.943015));
+		uc.addUnit(new UnitCurrency("XRP", "Ripple", 1 / 0.177605, cryTime));
+		uc.addUnit(new UnitCurrency("BCH", "Bitcoin Cash", 1 / 263.36, cryTime));
+		uc.addUnit(new UnitCurrency("LTC", "Litecoin", 1 / 45.246, cryTime));
+		uc.addUnit(new UnitCurrency("XEM", "NEM", 1 / 0.252438, cryTime));
+		uc.addUnit(new UnitCurrency("ETC", "Ethereum Classic", 1 / 15.2, cryTime));
+		uc.addUnit(new UnitCurrency("DASH", "Dash", 1 / 187.539, cryTime));
+		uc.addUnit(new UnitCurrency("MIOTA", "IOTA", 1 / 0.425763, cryTime));
+		uc.addUnit(new UnitCurrency("ANS", "NEO", 1 / 14.4828, cryTime));
+		uc.addUnit(new UnitCurrency("XMR", "Monero", 1 / 47.4512, cryTime));
+		uc.addUnit(new UnitCurrency("STRAT", "Stratis", 1 / 6.57858, cryTime));
+		uc.addUnit(new UnitCurrency("QTUM", "Qtum", 1 / 9.9334, cryTime));
+		uc.addUnit(new UnitCurrency("BCC", "BitConnect", 1 / 78.4569, cryTime));
+		uc.addUnit(new UnitCurrency("WAVES", "Waves", 1 / 4.90476, cryTime));
+		uc.addUnit(new UnitCurrency("EOS", "EOS", 1 / 1.70987, cryTime));
+		uc.addUnit(new UnitCurrency("ZEC", "Zcash", 1 / 206.468, cryTime));
+		uc.addUnit(new UnitCurrency("BTS", "BitShares", 1 / 0.148933, cryTime));
+		uc.addUnit(new UnitCurrency("USDT", "Tether", 1 / 0.999844, cryTime));
+		uc.addUnit(new UnitCurrency("VERI", "Veritaseum", 1 / 157.784, cryTime));
+		uc.addUnit(new UnitCurrency("STEEM", "Steem", 1 / 1.3176, cryTime));
+		uc.addUnit(new UnitCurrency("OMG", "OmiseGo", 1 / 2.74397, cryTime));
+		uc.addUnit(new UnitCurrency("GNT", "Golem", 1 / 0.315259, cryTime));
+		uc.addUnit(new UnitCurrency("SC", "Siacoin", 1 / 0.00919203, cryTime));
+		uc.addUnit(new UnitCurrency("ICN", "Iconomi", 1 / 2.87782, cryTime));
+		uc.addUnit(new UnitCurrency("BCN", "Bytecoin", 1 / 0.00134475, cryTime));
+		uc.addUnit(new UnitCurrency("XLM", "Stellar Lumens", 1 / 0.0221617, cryTime));
+		uc.addUnit(new UnitCurrency("LSK", "Lisk", 1 / 2.13442, cryTime));
+		uc.addUnit(new UnitCurrency("GNO", "Gnosis", 1 / 207.614, cryTime));
+		uc.addUnit(new UnitCurrency("SNT", "Status", 1 / 0.0612608, cryTime));
+		uc.addUnit(new UnitCurrency("PAY", "TenX", 1 / 2.01811, cryTime));
+		uc.addUnit(new UnitCurrency("DOGE", "Dogecoin", 1 / 0.00191011, cryTime));
+		uc.addUnit(new UnitCurrency("REP", "Augur", 1 / 18.6763, cryTime));
+		uc.addUnit(new UnitCurrency("GBYTE", "Byteball", 1 / 545.792, cryTime));
+		uc.addUnit(new UnitCurrency("FCT", "Factom", 1 / 20.0677, cryTime));
+		uc.addUnit(new UnitCurrency("GAME", "GameCredits", 1 / 2.69226, cryTime));
+		uc.addUnit(new UnitCurrency("DCR", "Decred", 1 / 30.2754, cryTime));
+		uc.addUnit(new UnitCurrency("PPT", "Populous", 1 / 4.44577, cryTime));
+		uc.addUnit(new UnitCurrency("MAID", "MaidSafeCoin", 1 / 0.359581, cryTime));
+		uc.addUnit(new UnitCurrency("BAT", "Basic Attention Token", 1 / 0.161562, cryTime));
+		uc.addUnit(new UnitCurrency("DGB", "DigiByte", 1 / 0.018204, cryTime));
+		uc.addUnit(new UnitCurrency("DGD", "DigixDAO", 1 / 69.343, cryTime));
+		uc.addUnit(new UnitCurrency("ARDR", "Ardor", 1 / 0.131982, cryTime));
+		uc.addUnit(new UnitCurrency("NXT", "Nxt", 1 / 0.129459, cryTime));
+		uc.addUnit(new UnitCurrency("MCAP", "MCAP", 1 / 1.98548, cryTime));
+		uc.addUnit(new UnitCurrency("KMD", "Komodo", 1 / 1.03886, cryTime));
+		uc.addUnit(new UnitCurrency("PIVX", "PIVX", 1 / 1.93232, cryTime));
+		uc.addUnit(new UnitCurrency("BNT", "Bancor", 1 / 2.34959, cryTime));
+		uc.addUnit(new UnitCurrency("LKK", "Lykke", 1 / 0.359779, cryTime));
+		uc.addUnit(new UnitCurrency("ARK", "Ark", 1 / 0.945247, cryTime));
 
 		return uc;
 	}

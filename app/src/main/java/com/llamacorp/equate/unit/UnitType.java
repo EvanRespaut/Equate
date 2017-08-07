@@ -35,13 +35,12 @@ public class UnitType {
 	//Order to display units (based on mUnitArray index
 	private ArrayList<Integer> mUnitDisplayOrder;
 
-	private String mXMLCurrencyURL;
 	private boolean mUpdating = false;
 	private Date mLastUpdateTime;
 
 
 	//this is for communication with fragment hosting convert keys
-	OnConvertKeyUpdateFinishedListener mCallback;
+	private OnConvertKeyUpdateFinishedListener mCallback;
 
 	public interface OnConvertKeyUpdateFinishedListener {
 		void refreshAllButtonsText();
@@ -58,11 +57,6 @@ public class UnitType {
 		mIsUnitSelected = false;
 		mUpdating = false;
 		mLastUpdateTime = new GregorianCalendar(2015, 3, 1, 1, 11).getTime();
-	}
-
-	public UnitType(String name, String URL) {
-		this(name);
-		mXMLCurrencyURL = URL;
 	}
 
 	/**
@@ -387,10 +381,6 @@ public class UnitType {
 		fillUnitDisplayOrder();
 	}
 
-
-	public String getXMLCurrencyURL() {
-		return mXMLCurrencyURL;
-	}
 
 
 	public Unit getPrevUnit() {

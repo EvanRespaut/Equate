@@ -125,15 +125,15 @@ public class UnitTypeUpdater {
 				}
 			}
 
-			//update the remaining units that got missed by yahoo xml
-			if (mUnitsToUpdate != null){
-				for (int i = 0; i < mUnitsToUpdate.size(); i++) {
-					UnitCurrency u = (UnitCurrency) mUnitType
-							  .getUnitPosInUnitArray(mUnitsToUpdate.get(i));
-					if (u.isTimeoutReached(mContext))
-						u.asyncRefresh(mContext);
-				}
-			}
+//			//update the remaining units that got missed by yahoo xml
+//			if (mUnitsToUpdate != null){
+//				for (int i = 0; i < mUnitsToUpdate.size(); i++) {
+//					UnitCurrency u = (UnitCurrency) mUnitType
+//							  .getUnitPosInUnitArray(mUnitsToUpdate.get(i));
+//					if (u.isTimeoutReached(mContext))
+//						u.asyncRefresh(mContext);
+//				}
+//			}
 
 			//remove text "Updating"
 			mUnitType.setUpdating(false);
