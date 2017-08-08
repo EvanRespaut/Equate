@@ -26,6 +26,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatDelegate;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -48,6 +49,9 @@ import java.util.Set;
 public class CalcActivity extends AppCompatActivity
 		implements ResultListFragment.UnitSelectListener, OnConvertKeySelectedListener,
 		NavigationView.OnNavigationItemSelectedListener {
+	// Fixes Resources$NotFoundException on API < 19 when using vector drawables
+	static {	AppCompatDelegate.setCompatVectorFromResourcesEnabled(true); }
+
 	private static final int[] BUTTON_IDS = {
 			R.id.zero_button, R.id.one_button, R.id.two_button, R.id.three_button,
 			R.id.four_button, R.id.five_button, R.id.six_button, R.id.seven_button,
