@@ -129,7 +129,7 @@ public class ConvKeysFragment extends Fragment implements OnConvertKeyUpdateFini
 								mSearchDialogBuilder.cancelDialog();
 								UnitSearchItem selectedItem = mSearchDialogBuilder.getItem(position);
 								clickUnitButton(selectedItem.getUnitPosition());
-								updateFavorites(selectedItem.getUnitPosition());
+//								updateFavorites(selectedItem.getUnitPosition());
 							}
 						});
 					}
