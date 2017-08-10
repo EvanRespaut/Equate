@@ -26,7 +26,7 @@ public class UnitTypeList {
 	private final ArrayList<String> TAB_NAMES;
 
 	//actually stores all of the Unit Type Objects
-	private HashMap<String, UnitType> mUnits;
+	private HashMap<String, UnitType> mUnitTypes;
 	private ArrayList<String> mOrderedUnitKeys;
 
 	//stores the current location in mUnitTypeArray
@@ -38,7 +38,7 @@ public class UnitTypeList {
 		TAB_NAMES = ResourceArrayParser.getUnitTypeTabNameArrayList(resources);
 
 		//initialize storage members
-		mUnits = new HashMap<>();
+		mUnitTypes = new HashMap<>();
 		mOrderedUnitKeys = new ArrayList<>();
 
 		//clear existing values and load in defaults
@@ -60,11 +60,11 @@ public class UnitTypeList {
 
 		//if we added another UnitType and total count is different than previous
 		// just use default
-		if (jUnitTypeArray.length() == mUnits.size()){
+		if (jUnitTypeArray.length() == mUnitTypes.size()){
 			//Load in user settings to already assembled UnitType array
 			int i = 0;
-			for (String key : mUnits.keySet()) {
-				mUnits.get(key).loadJSON(jUnitTypeArray.getJSONObject(i));
+			for (String key : mUnitTypes.keySet()) {
+				mUnitTypes.get(key).loadJSON(jUnitTypeArray.getJSONObject(i));
 				i++;
 			}
 
@@ -97,7 +97,7 @@ public class UnitTypeList {
 		}
 
 		JSONArray jUnitTypeArray = new JSONArray();
-		for (UnitType u : mUnits.values())
+		for (UnitType u : mUnitTypes.values())
 			try {
 				jUnitTypeArray.put(u.toJSON());
 			} catch (JSONException e) {
@@ -134,8 +134,8 @@ public class UnitTypeList {
 		else
 			mCurrentKey = XML_KEYS.get(0);
 
-		mUnits.clear();
-		mUnits = UnitInitializer.getUnitTypeMap(XML_KEYS, TAB_NAMES);
+		mUnitTypes.clear();
+		mUnitTypes = UnitInitializer.getUnitTypeMap(XML_KEYS, TAB_NAMES);
 
 		mOrderedUnitKeys.clear();
 		mOrderedUnitKeys = new ArrayList<>(XML_KEYS);
@@ -153,7 +153,7 @@ public class UnitTypeList {
 	 * @param key of Unit Type to get
 	 */
 	public UnitType get(String key){
-		return mUnits.get(key);
+		return mUnitTypes.get(key);
 	}
 
 	/**
@@ -161,11 +161,11 @@ public class UnitTypeList {
 	 * @param index of the visible Unit Type to get
 	 */
 	public UnitType get(int index){
-		return mUnits.get(mOrderedUnitKeys.get(index));
+		return mUnitTypes.get(mOrderedUnitKeys.get(index));
 	}
 
 	public HashMap<String, UnitType> getUnitTypeArray() {
-		return mUnits;
+		return mUnitTypes;
 	}
 
 	/**
@@ -221,7 +221,7 @@ public class UnitTypeList {
 	 * @param forced should update be forced without waiting for time-out
 	 */
 	public void refreshDynamicUnits(Context context, boolean forced) {
-		for (UnitType ut : mUnits.values())
+		for (UnitType ut : mUnitTypes.values())
 			ut.refreshDynamicUnits(context, forced);
 	}
 

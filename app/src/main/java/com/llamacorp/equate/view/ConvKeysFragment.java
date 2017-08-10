@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 
 import com.llamacorp.equate.Calculator;
@@ -22,6 +23,8 @@ public class ConvKeysFragment extends Fragment implements OnConvertKeyUpdateFini
 
 	//this is for communication with the parent activity
 	OnConvertKeySelectedListener mCallback;
+	private static final int SEARCH_DIALOG_MIN_SIZE = 30;
+	private UnitSearchDialogBuilder mSearchDialogBuilder;
 
 	// Container Activity must implement this interface
 	public interface OnConvertKeySelectedListener {
@@ -117,14 +120,29 @@ public class ConvKeysFragment extends Fragment implements OnConvertKeyUpdateFini
 			mMoreButton.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View view) {
-					createMoreUnitsDialog(getText(R.string.select_unit),
-							  new DialogInterface.OnClickListener() {
-								  @Override
-								  public void onClick(DialogInterface dialog, int item) {
-									  clickUnitButton(item + mNumConvButtons);
-									  updateFavorites(item + mNumConvButtons);
-								  }
-							  });
+					// use a list dialog with search when there are lots of units
+					if (mUnitType.size() > SEARCH_DIALOG_MIN_SIZE){
+						createSearchDialog(getText(R.string.more_button_search_hint),
+								  new AdapterView.OnItemClickListener() {
+							@Override
+							public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+								mSearchDialogBuilder.cancelDialog();
+								UnitSearchItem selectedItem = mSearchDialogBuilder.getItem(position);
+								clickUnitButton(selectedItem.getUnitPosition());
+								updateFavorites(selectedItem.getUnitPosition());
+							}
+						});
+					}
+					else {
+						createMoreUnitsDialog(getText(R.string.select_unit),
+								  new DialogInterface.OnClickListener() {
+									  @Override
+									  public void onClick(DialogInterface dialog, int item) {
+										  clickUnitButton(item + mNumConvButtons);
+										  updateFavorites(item + mNumConvButtons);
+									  }
+								  });
+					}
 				}
 			});
 		}
@@ -168,21 +186,35 @@ public class ConvKeysFragment extends Fragment implements OnConvertKeyUpdateFini
 				@Override
 				public boolean onLongClick(View view) {
 					//if there are less units to display than slots, move on
-					if (mUnitType.size() <= mNumConvButtons)
-						return true;
+					if (mUnitType.size() <= mNumConvButtons) return true;
 
 					String title = getText(R.string.word_Change)
-							  + " " + mUnitType.getLowercaseGenericLongName(buttonPos)
+							  + " " + mUnitType.getUnit(buttonPos).getAbbreviation()
+							  + " " + getText(R.string.word_button)
 							  + " " + getText(R.string.word_to) + ":";
 
-					//pass the title and on item click listener
-					createMoreUnitsDialog(title, new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialog, int item) {
-							mUnitType.swapUnits(buttonPos, item + mNumConvButtons);
-							refreshButtonText(buttonPos);
-						}
-					});
+					// use a list dialog with search when there are lots of units
+					if (mUnitType.size() > SEARCH_DIALOG_MIN_SIZE){
+						createSearchDialog(title, new AdapterView.OnItemClickListener() {
+							@Override
+							public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+								mSearchDialogBuilder.cancelDialog();
+								UnitSearchItem selectedItem = mSearchDialogBuilder.getItem(position);
+								mUnitType.swapUnits(buttonPos, selectedItem.getUnitPosition());
+								refreshButtonText(buttonPos);
+							}
+						});
+					}
+					else {
+						//pass the title and on item click listener
+						createMoreUnitsDialog(title, new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int item) {
+								mUnitType.swapUnits(buttonPos, item + mNumConvButtons);
+								refreshButtonText(buttonPos);
+							}
+						});
+					}
 					return false;
 				}
 			});
@@ -212,20 +244,29 @@ public class ConvKeysFragment extends Fragment implements OnConvertKeyUpdateFini
 	 *                          units in the dialog list
 	 */
 	private void createMoreUnitsDialog(CharSequence title, DialogInterface.OnClickListener itemClickListener) {
-		AlertDialog.Builder builder = new AlertDialog.
-				  Builder(getActivity());
+		Context context = getActivity();
+		AlertDialog.Builder builder = new AlertDialog.Builder(context);
 		builder.setTitle(title);
 		builder.setItems(mUnitType.getUndisplayedUnitNames(mNumConvButtons), itemClickListener);
-		//null seems to do the same as canceling the dialog
-//		builder.setPositiveButton(R.string.add_unit, new DialogInterface.OnClickListener() {
-//			@Override
-//			public void onClick(DialogInterface dialogInterface, int i) {
-//				createCustomUnitDialog();
-//			}
-//		});
 		builder.setNegativeButton(android.R.string.cancel, null);
 		AlertDialog alert = builder.create();
 		alert.show();
+
+	}
+
+
+	/**
+	 * Helper function to build a list dialog box that has a search function
+	 * Dialog lists has a cancel button.
+	 *
+	 * @param hint              hint that displays in the EditText search box
+	 * @param itemClickListener OnClickListener for when the user selects one
+	 *                          of the units in the dialog list
+	 */
+	private void createSearchDialog(CharSequence hint, AdapterView.OnItemClickListener itemClickListener) {
+		Context context = getActivity();
+		mSearchDialogBuilder = new UnitSearchDialogBuilder(mUnitType);
+		mSearchDialogBuilder.buildDialog(context, hint, null, itemClickListener);
 	}
 
 	private void createCustomUnitDialog() {

@@ -750,7 +750,9 @@ public class CalcActivity extends AppCompatActivity
 				mSearchDialogBuilder = new UnitSearchDialogBuilder(mCalc.getUnitTypeList());
 			}
 
-			mSearchDialogBuilder.buildDialog(mAppContext, mIdlingResource,
+			mSearchDialogBuilder.buildDialog(mAppContext,
+					  getString(R.string.find_unit),
+					  mIdlingResource,
 					new AdapterView.OnItemClickListener() {
 						@Override
 						public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

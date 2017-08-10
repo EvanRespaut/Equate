@@ -355,8 +355,8 @@ public class UnitType {
 	}
 
 	/**
-	 * Get the unit given a position of the original mUnitArray.  This does not
-	 * use the mUnitDisplayOrder like getUnit uses. Will return null if pos is
+	 * Get the unit given a position of the original mUnitArray.  Unlike getUnit,
+	 * this does not use the mUnitDisplayOrder. Will return null if pos is
 	 * invalid (less than 0 or greater than mUnitArray size)
 	 *
 	 * @param pos position of unit in mUnitArray
@@ -393,7 +393,6 @@ public class UnitType {
 
 	/**
 	 * Get the number of Units in this UnitType
-	 *
 	 * @return integer of number of Units in this UnitType
 	 */
 	public int size() {

@@ -36,7 +36,8 @@ public class UnitSearchDialogBuilder {
 	private FilterAdapter mArrayAdapter;
 
 	/**
-	 * Constructor for the unit search dialog builder
+	 * Constructor for unit search dialog builder used to build a dialog for
+	 * a list of Unit Types
 	 * @param unitTypeList is the collection of Unit Types and units to search
 	 *                     over.
 	 */
@@ -47,31 +48,63 @@ public class UnitSearchDialogBuilder {
 				  unitTypeList.getUnitTypeArray().entrySet()) {
 			String unitTypeKey = entry.getKey();
 			UnitType unitType = entry.getValue();
-			for (int i = 0; i < unitType.size(); i++) {
-				Unit unit = unitType.getUnitPosInUnitArray(i);
-				// some units are just dummies to help position other units
-				if (unit.toString().equals("") || unit.getLongName().equals("")){
-					continue;
-				}
-				items.add(new UnitSearchItem(unitTypeKey, unit.getLongName(),
-						  unit.getAbbreviation(), i));
-			}
-			Collections.sort(items, new Comparator<UnitSearchItem>() {
-				@Override
-				public int compare(UnitSearchItem o1, UnitSearchItem o2) {
-					return o1.getUnitName().compareTo(o2.getUnitName());
-				}
-			});
+
+			UnitListBuilder(items, unitType, unitTypeKey);
 		}
 		mOriginalList = items;
 	}
 
 	/**
+	 * Constructor for unit search dialog builder used to build a dialog for
+	 * a single unit type. Note that this will show all units, including those
+	 * that are already buttons on the main screen
+	 * @param unitType contains units for the search dialog
+	 */
+	public UnitSearchDialogBuilder(UnitType unitType) {
+		ArrayList<UnitSearchItem> items = new ArrayList<>();
+
+		// note that we're using a blank unit type key, this will be fine
+		// since we only have one unit type to distinguish from
+		UnitListBuilder(items, unitType, "");
+
+		mOriginalList = items;
+	}
+
+	/**
+	 * Helper function for constructors used to collect Units into a list,
+	 * and sort the result.
+	 * @param items ArrayList of existing units (or empty)
+	 * @param unitType Unit Type to find the units from
+	 * @param unitTypeKey the key of the the above unit type
+	 */
+	private void UnitListBuilder(ArrayList<UnitSearchItem> items,
+										  UnitType unitType,
+										  String unitTypeKey) {
+		for (int i = 0; i < unitType.size(); i++) {
+			Unit unit = unitType.getUnitPosInUnitArray(i);
+			// some units are just dummies to help position other units
+			if (unit.toString().equals("") || unit.getLongName().equals("")){
+				continue;
+			}
+			items.add(new UnitSearchItem(unitTypeKey, unit.getLongName(),
+					  unit.getAbbreviation(), i));
+		}
+		Collections.sort(items, new Comparator<UnitSearchItem>() {
+			@Override
+			public int compare(UnitSearchItem o1, UnitSearchItem o2) {
+				return o1.getUnitName().compareTo(o2.getUnitName());
+			}
+		});
+	}
+
+	/**
 	 * Method to create the actual search dialog.
 	 * @param context of the application used to create the dialog
+	 * @param hint is the text to display in the edit text search box before
+	 *             the user starts typing
 	 * @param listener is called back when a item in the dialog list is clicked
 	 */
-	public void buildDialog(Context context,
+	public void buildDialog(Context context, CharSequence hint,
 									@Nullable final SimpleIdlingResource idlingResource,
 									AdapterView.OnItemClickListener listener) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -81,6 +114,7 @@ public class UnitSearchDialogBuilder {
 
 		filterEditText.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_search_white, 0, 0, 0);
 		filterEditText.setInputType(InputType.TYPE_CLASS_TEXT);
+		filterEditText.setHint(hint);
 
 		LinearLayout layout = new LinearLayout(context);
 		layout.setOrientation(LinearLayout.VERTICAL);
