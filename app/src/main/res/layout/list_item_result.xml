@@ -26,6 +26,7 @@
          android:id="@+id/list_item_result_textPrevQuery"
          style="@style/ResultText"
          android:gravity="left"
+         android:minEms="6"
          android:paddingRight="15dp">
       </TextView>
 
