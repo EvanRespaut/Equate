@@ -2,7 +2,7 @@ package com.llamacorp.equate.unit;
 
 import android.content.Context;
 
-import com.llamacorp.equate.unit.updater.UnitTypeUpdater;
+import com.llamacorp.equate.unit.updater.UnitUpdater;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -35,6 +35,7 @@ public class UnitType {
 	//Order to display units (based on mUnitArray index
 	private ArrayList<Integer> mUnitDisplayOrder;
 
+	// flag used to tell if the unit is currently being asynchronously updated
 	private boolean mUpdating = false;
 	private Date mLastUpdateTime;
 
@@ -239,10 +240,9 @@ public class UnitType {
 	 * is asynchronous and will only happen sometime in the future
 	 * Internet connection permitting.
 	 */
-	public void refreshDynamicUnits(Context c, boolean forced) {
+	public void updateDynamicUnits(Context c, boolean forced) {
 		if (containsDynamicUnits()){
-			UnitTypeUpdater utp = new UnitTypeUpdater(c);
-			utp.update(this, forced);
+			new UnitUpdater(c).update(this, forced);
 		}
 	}
 
@@ -258,7 +258,7 @@ public class UnitType {
 //	/** Check to see if unit at position pos is currently updating */
 //	public boolean isUnitUpdating(int pos){
 //		//TODO have this return true if isUpdating is true, otherwise do the following
-//		//TODO also make conv keys reflect this change (so all will show updating)
+//		//TODO also make convert keys reflect this change (so all will show updating)
 //		//TODO but once yahoo xml update is finished, individuals will show updating
 //		if(getUnit(pos).isDynamic())
 //			return ((UnitCurrency)getUnit(pos)).isUpdating();
@@ -349,7 +349,7 @@ public class UnitType {
 		//if somehow there are more UnitDisplayOrder (unit deleted), don't want
 		//to address nonexistent element
 		if (mUnitDisplayOrder.size() > size())
-			resetUnitDipplayOrder();
+			resetUnitDisplayOrder();
 
 		return mUnitArray.get(mUnitDisplayOrder.get(buttonPos));
 	}
@@ -376,7 +376,7 @@ public class UnitType {
 			mUnitDisplayOrder.add(mUnitDisplayOrder.size());
 	}
 
-	private void resetUnitDipplayOrder() {
+	private void resetUnitDisplayOrder() {
 		mUnitDisplayOrder.clear();
 		fillUnitDisplayOrder();
 	}
@@ -403,6 +403,11 @@ public class UnitType {
 		return findUnitButtonPosition(mCurrUnit);
 	}
 
+	/**
+	 * Function used to set the updating flag, which is used to signify whether
+	 * or not this unit type is currently being asynchronously updated.
+	 * @param updating is true if unit is being updated false otherwise
+	 */
 	public void setUpdating(boolean updating) {
 		mUpdating = updating;
 		//refresh text
@@ -410,6 +415,10 @@ public class UnitType {
 			mCallback.refreshAllButtonsText();
 	}
 
+	/**
+	 * Returns the updating flag, which is used to signify whether or not this
+	 * unit type is currently being asynchronously updated.
+	 */
 	public boolean isUpdating() {
 		return mUpdating;
 	}

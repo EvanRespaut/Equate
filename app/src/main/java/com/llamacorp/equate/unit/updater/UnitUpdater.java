@@ -23,12 +23,12 @@ import java.util.HashMap;
  * calling all the necessary async tasks and such
  * Created by Evan on 10/2/2015.
  */
-public class UnitTypeUpdater {
-	public static int UPDATE_TIMEOUT_MIN = 90;
+public class UnitUpdater {
+	private static int UPDATE_TIMEOUT_MIN = 90;
 	private Context mContext;
 	private ArrayList<Integer> mUnitsToUpdate;
 
-	public UnitTypeUpdater(Context mContext) {
+	public UnitUpdater(Context mContext) {
 		this.mContext = mContext;
 		mUnitsToUpdate = new ArrayList<>();
 	}

@@ -155,7 +155,7 @@ public class ConvKeysFragment extends Fragment implements OnConvertKeyUpdateFini
 			if (mUnitType.size() > mNumConvButtons)
 				((SecondaryTextButton) button).setSecondaryText((String) getText(R.string.ellipsis));
 
-			//add to our list of conv buttons
+			//add to our list of convert buttons
 			mConvButton.add(button);
 
 			//if button is empty, don't create OnClickListener for it

@@ -115,7 +115,7 @@
    <color name="button_text_normal">#D4D4D4</color>
    <color name="button_text_pressed">#232323</color>
 
-   <!-- This is for the conv button that has been selected -->
+   <!-- This is for the convert button that has been selected -->
    <color name="button_text_conv_normal">#282828</color>
    <color name="button_text_conv_pressed">#232323</color>
 

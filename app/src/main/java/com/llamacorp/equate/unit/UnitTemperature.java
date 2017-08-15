@@ -18,22 +18,22 @@ public class UnitTemperature extends Unit {
 //	}
 
 	@Override
-	public String convertTo(Unit toUnit, String expressionToConv) {
+	public String convertTo(Unit toUnit, String expressionToConvert) {
 		//converting from Fahrenheit, always go to Celsius
 		if (getValue() == FAHRENHEIT)
-			expressionToConv = "(" + expressionToConv + "-32)*5/9";
+			expressionToConvert = "(" + expressionToConvert + "-32)*5/9";
 
 		//converting from Kelvin, always go to Celsius
 		if (getValue() == KELVIN)
-			expressionToConv = "(" + expressionToConv + "-273.15)";
+			expressionToConvert = "(" + expressionToConvert + "-273.15)";
 
 		//if we wanted Celsius, break
 		if (toUnit.getValue() == CELSIUS)
-			return expressionToConv;
+			return expressionToConvert;
 		else if (toUnit.getValue() == FAHRENHEIT)
-			return "(" + expressionToConv + "*9/5+32";
+			return "(" + expressionToConvert + "*9/5+32";
 		else if (toUnit.getValue() == KELVIN)
-			return expressionToConv + "+273.15";
+			return expressionToConvert + "+273.15";
 		else
 			return "";
 	}

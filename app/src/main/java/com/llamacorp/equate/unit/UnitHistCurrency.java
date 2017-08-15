@@ -29,13 +29,13 @@ public class UnitHistCurrency extends Unit {
 	}
 
 	@Override
-	public String convertTo(Unit toUnit, String expressionToConv) {
+	public String convertTo(Unit toUnit, String expressionToConvert) {
 		double toUnitValue;
 		if (this == toUnit)
 			toUnitValue = getPreviousUnitValue();
 		else
 			toUnitValue = getValue();
-		return expressionToConv + "*" + toUnit.getValue() + "/" + toUnitValue;
+		return expressionToConvert + "*" + toUnit.getValue() + "/" + toUnitValue;
 	}
 
 	/**

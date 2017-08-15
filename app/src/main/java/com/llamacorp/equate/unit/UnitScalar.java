@@ -43,13 +43,13 @@ public class UnitScalar extends Unit {
 	 * Perform Unit conversion
 	 *
 	 * @param toUnit           is desired unit to convert into
-	 * @param expressionToConv is the expression to convert
+	 * @param expressionToConvert is the expression to convert
 	 * @return returns the expression string to be evaluated, will
 	 * contain something like 33*fromValue/toValue.  Will possibly
 	 * also include inversion for inverted units. For example, 33 min/mile
 	 * to mph would be 1/33*...
 	 */
-	public String convertTo(Unit toUnit, String expressionToConv) {
+	public String convertTo(Unit toUnit, String expressionToConvert) {
 		String invertFrom = "";
 		String invertTo = "";
 
@@ -59,7 +59,7 @@ public class UnitScalar extends Unit {
 			invertFrom = "1/";
 			invertTo = "1/";
 		}
-		return invertFrom + expressionToConv + "*" + invertTo + "("
+		return invertFrom + expressionToConvert + "*" + invertTo + "("
 				  + toUnit.getValue() + "/" + getValue() + ")";
 	}
 }

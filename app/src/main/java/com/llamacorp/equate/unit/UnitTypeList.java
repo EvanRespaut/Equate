@@ -222,7 +222,7 @@ public class UnitTypeList {
 	 */
 	public void refreshDynamicUnits(Context context, boolean forced) {
 		for (UnitType ut : mUnitTypes.values())
-			ut.refreshDynamicUnits(context, forced);
+			ut.updateDynamicUnits(context, forced);
 	}
 
 	public void setOrdered(Set<String> ordered) {

@@ -280,7 +280,7 @@ public class CalcActivity extends AppCompatActivity
 								if (buttonId == BUTTON_IDS[i])
 									buttonValue = String.valueOf(i);
 					}
-					//pass button to calc, change conv key colors (maybe) and update screen
+					//pass button to calc, change convert key colors (maybe) and update screen
 					numButtonPressed(buttonValue);
 				}
 			});
@@ -330,7 +330,7 @@ public class CalcActivity extends AppCompatActivity
 						default:
 							return false;
 					}
-					//pass button to calc, change conv key colors (maybe) and update screen
+					//pass button to calc, change convert key colors (maybe) and update screen
 					if (!buttonValue.equals(""))
 						numButtonPressed(buttonValue);
 					return true;
