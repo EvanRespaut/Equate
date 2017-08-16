@@ -158,9 +158,10 @@ class UnitInitializer {
 		unitsOfSpeed.addUnit(new UnitScalar("knot", "Knots", 1 / 0.514444));
 
 		unitsOfSpeed.addUnit(new UnitScalar("m/s", "Meters per second", 1));
+		unitsOfSpeed.addUnit(new UnitScalar("min/km", "Minutes per Kilometer", 60.0 / 1000.0, true));
 		unitsOfSpeed.addUnit(new UnitScalar("km/s", "Kilometers per second", 1 / 1000.0));
-		unitsOfSpeed.addUnit(new UnitScalar("km/m", "Kilometers per minute", 60 / 1000.0));
-		unitsOfSpeed.addUnit(new UnitScalar("kph", "Kilometers per hour", 3600 / 1000.0));
+		unitsOfSpeed.addUnit(new UnitScalar("km/min", "Kilometers per minute", 60 / 1000.0));// m is short for meters, corrected to min as in minutes
+		unitsOfSpeed.addUnit(new UnitScalar("km/h", "Kilometers per hour", 3600 / 1000.0));// The unit symbol km/h. Worldwide, it is the most commonly used unit of speed on road signs and car speedometers
 
 		unitsOfSpeed.addUnit(new UnitScalar("mi/s", "Miles per second", 1 / 0.44704 / 3600));
 		unitsOfSpeed.addUnit(new UnitScalar("c sound", "Speed of sound (sea level)", 1 / 340.3));
