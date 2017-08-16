@@ -122,7 +122,7 @@ public abstract class Unit  /*implements JsonSerializer<Unit>, JsonDeserializer<
 		mValue = value;
 	}
 
-	protected double getValue() {
+	public double getValue() {
 		return mValue;
 	}
 

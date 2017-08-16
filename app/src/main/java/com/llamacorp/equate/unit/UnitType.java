@@ -43,6 +43,8 @@ public class UnitType {
 	//this is for communication with fragment hosting convert keys
 	private OnConvertKeyUpdateFinishedListener mCallback;
 
+
+
 	public interface OnConvertKeyUpdateFinishedListener {
 		void refreshAllButtonsText();
 	}
@@ -332,6 +334,24 @@ public class UnitType {
 			cs[i] = getUnit(numDispUnits + i).getLongName();
 		}
 		return cs;
+	}
+
+
+	/**
+	 * Get a unit given a unit's abbreviation in the unit type array.
+	 * Abbreviations should be unique for each unit, otherwise unit buttons
+	 * could look the same.  Since abbreviations should be unique, we shouldn't
+	 * have early/false finds.
+	 * @param abbreviation for the unit to find
+	 * @return the Unit that has the abbreviation supplied
+	 */
+	public Unit getUnit(String abbreviation) {
+		for (Unit u : mUnitArray) {
+			if (u.getAbbreviation().equals(abbreviation)){
+				return u;
+			}
+		}
+		return null;
 	}
 
 	/**

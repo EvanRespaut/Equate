@@ -349,8 +349,7 @@ class UnitInitializer {
 		uc.addUnit(new UnitCurrency("EUR", "Euros", 0.929));
 		uc.addUnit(new UnitCurrency("CAD", "Canadian Dollars", 1.26));
 		uc.addUnit(new UnitCurrency("GBP", "British Pounds", 0.67));
-		UnitCurrency bitcoin = new UnitCurrency("BTC", "Bitcoins", 1 / 3197.67, cryTime);
-		uc.addUnit(bitcoin);
+		uc.addUnit(new UnitCurrency("BTC", "Bitcoins", 1 / 3197.67, cryTime));
 
 		uc.addUnit(new UnitHistCurrency("USD", "Dollars", al, 1913, 1975));
 		uc.addUnit(new UnitCurrency("CHF", "Swiss Francs", 0.967));
@@ -577,7 +576,7 @@ class UnitInitializer {
 //		uc.addUnit(new UnitCurrency("LKK", "Lykke", 1 / 0.359779, cryTime));
 //		uc.addUnit(new UnitCurrency("ARK", "Ark", 1 / 0.945247, cryTime));
 
-		uc.addUnit(new UnitCurrency("SAT", "Satoshi", 1E8 / 3197.67, cryTime, bitcoin, 1E8));
+		uc.addUnit(new UnitCurrency("SAT", "Satoshi", 1E8 / 3197.67, cryTime, "BTC", 1E8));
 
 		return uc;
 	}

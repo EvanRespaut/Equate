@@ -50,14 +50,6 @@ public class UnitUpdater {
 			new UpdateCurrenciesAsyncTask(ut, forced, mUnitsToUpdate, mContext)
 					  .execute();
 
-			for (int i = 0; i < ut.size(); i++) {
-				Unit unit = ut.getUnitPosInUnitArray(i);
-				if (unit.isDynamic()){
-					UnitCurrency uc = (UnitCurrency) unit;
-					if(uc.isFractionCurrency())
-						uc.updateFractionalValue();
-				}
-			}
 		} else {
 			ViewUtils.toast(mContext.getText(R.string.words_units_up_to_date)
 					  .toString(), mContext);
@@ -265,10 +257,26 @@ public class UnitUpdater {
 				CurrencyURLParser.Entry entry = currRates.get(u.getAbbreviation());
 				if (entry != null){
 					u.setValue(entry.price);
-					u.setUpdateTime(entry.date);
+					u.setUpdateDate(entry.date);
 				} else {
 					//this is for BTC and other units that don't get updated by yahoo
 					mUnitsToUpdate.add(i);
+				}
+			}
+
+			//TODO inefficient to loop over UnitType twice. instead store fractional
+			//TODO currencies in a separate array in UnitType perhaps?
+			//update each fractional currency with new rates
+			for (int i = 0; i < ut.size(); i++) {
+				Unit unit = ut.getUnitPosInUnitArray(i);
+				if (unit.isDynamic()){
+					UnitCurrency uc = (UnitCurrency) unit;
+					if(uc.isFractionCurrency()){
+						UnitCurrency parent = (UnitCurrency) ut.getUnit(uc.getFractionParent());
+						double parentValue = ut.getUnit(uc.getFractionParent()).getValue();
+						uc.updateFractionalValue(parentValue);
+						uc.setUpdateDate(parent.getUpdateDate());
+					}
 				}
 			}
 			return true;

@@ -8,13 +8,14 @@ import java.util.GregorianCalendar;
 
 public class UnitCurrency extends Unit {
 	private static final String JSON_LAST_UPDATE = "updated";
-	public static final String DEFAULT_CURRENCY = "USD";
-	public static final String JSON_IS_FRACTIONAL = "is_fraction";
-	public static final String JSON_FRACTION_VALUE = "fraction";
-	public static final String JSON_PARENT = "parent";
+	private static final String JSON_FRACTION_VALUE = "fraction";
+	private static final String JSON_FRACTION_PARENT = "parent";
 
-	private boolean mFractionalCurrency = false;
-	private UnitCurrency mParentCurrency;
+	public static final String DEFAULT_CURRENCY = "USD";
+
+	// default to no parent
+	private static final String NO_PARENT = "no_parent";
+	private String mParentCurrency = NO_PARENT;
 	private double mFraction = 0.0;
 
 	private Date mTimeLastUpdated;
@@ -64,16 +65,15 @@ public class UnitCurrency extends Unit {
 	 * @param longName long name (eg, "US Dollar")
 	 * @param value the price of the unit in inverted US dollars
 	 * @param updateTime the time the price was updated
-	 * @param unit the symbol for the currency for which this is a
+	 * @param parent the symbol for the currency for which this is a
 	 *                       fraction of (for cents, this would be USD)
 	 * @param fraction actual fraction of the parent currency
 	 */
 	public UnitCurrency(String name, String longName, double value,
-							  GregorianCalendar updateTime, UnitCurrency unit,
+							  GregorianCalendar updateTime, String parent,
 							  double fraction) {
 		this(name, longName, value, updateTime);
-		mFractionalCurrency = true;
-		mParentCurrency = unit;
+		mParentCurrency = parent;
 		mFraction = fraction;
 	}
 
@@ -90,10 +90,9 @@ public class UnitCurrency extends Unit {
 		boolean success = super.loadJSON(json);
 		//only load in the time if the JSON object matches this UNIT
 		if (success){
-			setUpdateTime(new Date(json.getLong(JSON_LAST_UPDATE)));
-//			mFractionalCurrency = json.getBoolean(JSON_IS_FRACTIONAL);
-//			mFraction = json.getDouble(JSON_FRACTION_VALUE);
-//			mParentCurrency = json.getString(JSON_PARENT);
+			setUpdateDate(new Date(json.getLong(JSON_LAST_UPDATE)));
+			mFraction = json.getDouble(JSON_FRACTION_VALUE);
+			mParentCurrency = json.getString(JSON_FRACTION_PARENT);
 		}
 		return success;
 	}
@@ -105,11 +104,17 @@ public class UnitCurrency extends Unit {
 	public JSONObject toJSON() throws JSONException {
 		JSONObject json = super.toJSON();
 		json.put(JSON_LAST_UPDATE, mTimeLastUpdated.getTime());
+		json.put(JSON_FRACTION_VALUE, mFraction);
+		json.put(JSON_FRACTION_PARENT, mParentCurrency);
 		return json;
 	}
 
-	public void setUpdateTime(Date date) {
+	public void setUpdateDate(Date date) {
 		mTimeLastUpdated = date;
+	}
+
+	public Date getUpdateDate() {
+		return mTimeLastUpdated;
 	}
 
 	public long getTimeOfUpdate() {
@@ -126,16 +131,20 @@ public class UnitCurrency extends Unit {
 	}
 
 	public boolean isFractionCurrency() {
-		return mFractionalCurrency;
+		return !mParentCurrency.equals(NO_PARENT);
+	}
+
+	public String getFractionParent() {
+		return mParentCurrency;
 	}
 
 	/**
 	 * Update the value of this fractional currency with the value of the parent
 	 * currency, presumably after the parent has been updated
 	 */
-	public void updateFractionalValue() {
-		if (isFractionCurrency() && mParentCurrency != null){
-			setValue(mFraction * mParentCurrency.getValue());
+	public void updateFractionalValue(double parent) {
+		if (isFractionCurrency()){
+			setValue(mFraction * parent);
 		}
 	}
 
@@ -209,7 +218,7 @@ public class UnitCurrency extends Unit {
 //
 //			//record time of update only if we actually updated
 //			if (updateSuccess){
-//				setUpdateTime(new Date());
+//				setUpdateDate(new Date());
 //			}
 //
 //			//updating is complete
