@@ -13,7 +13,7 @@ public abstract class Unit  /*implements JsonSerializer<Unit>, JsonDeserializer<
 
 	private String mAbbreviation;
 	private String mLongName;
-	protected double mValue;
+	private double mValue;
 
 	protected Unit(String name, String longName, double value) {
 		mAbbreviation = name;
@@ -113,6 +113,11 @@ public abstract class Unit  /*implements JsonSerializer<Unit>, JsonDeserializer<
 		return getLongName().toLowerCase(Locale.US);
 	}
 
+	/**
+	 * Sets the value of this unit relative to another base unit
+	 * @param value is a double representing a ratio of the amount of this unit
+	 *              vs the base unit
+	 */
 	public void setValue(double value) {
 		mValue = value;
 	}

@@ -151,17 +151,18 @@ class UnitInitializer {
 
 
 		UnitType unitsOfSpeed = new UnitType(tabNames.get(nameInd++));
-		unitsOfSpeed.addUnit(new UnitScalar("mi/min", "Miles per minute", 1 / 26.8224));
 		unitsOfSpeed.addUnit(new UnitScalar("min/mi", "Minute miles", 1 / 26.8224, true));
+		unitsOfSpeed.addUnit(new UnitScalar("mi/min", "Miles per minute", 1 / 26.8224));
 		unitsOfSpeed.addUnit(new UnitScalar("ft/s", "Feet per second", 1 / 0.3048));
 		unitsOfSpeed.addUnit(new UnitScalar("mph", "Miles per hour", 1 / 0.44704));
 		unitsOfSpeed.addUnit(new UnitScalar("knot", "Knots", 1 / 0.514444));
 
+		unitsOfSpeed.addUnit(new UnitScalar("min/km", "Minutes per kilometer", 60 / 1000.0, true));
+		unitsOfSpeed.addUnit(new UnitScalar("km/min", "Kilometers per minute", 60 / 1000.0));
 		unitsOfSpeed.addUnit(new UnitScalar("m/s", "Meters per second", 1));
-		unitsOfSpeed.addUnit(new UnitScalar("km/s", "Kilometers per second", 1 / 1000.0));
-		unitsOfSpeed.addUnit(new UnitScalar("km/m", "Kilometers per minute", 60 / 1000.0));
 		unitsOfSpeed.addUnit(new UnitScalar("kph", "Kilometers per hour", 3600 / 1000.0));
 
+		unitsOfSpeed.addUnit(new UnitScalar("km/s", "Kilometers per second", 1 / 1000.0));
 		unitsOfSpeed.addUnit(new UnitScalar("mi/s", "Miles per second", 1 / 0.44704 / 3600));
 		unitsOfSpeed.addUnit(new UnitScalar("c sound", "Speed of sound (sea level)", 1 / 340.3));
 		unitsOfSpeed.addUnit(new UnitScalar("c light", "Speed of light (vacuum)", 1 / 299792458.0));
@@ -348,7 +349,8 @@ class UnitInitializer {
 		uc.addUnit(new UnitCurrency("EUR", "Euros", 0.929));
 		uc.addUnit(new UnitCurrency("CAD", "Canadian Dollars", 1.26));
 		uc.addUnit(new UnitCurrency("GBP", "British Pounds", 0.67));
-		uc.addUnit(new UnitCurrency("BTC", "Bitcoins", 1 / 3197.67, cryTime));
+		UnitCurrency bitcoin = new UnitCurrency("BTC", "Bitcoins", 1 / 3197.67, cryTime);
+		uc.addUnit(bitcoin);
 
 		uc.addUnit(new UnitHistCurrency("USD", "Dollars", al, 1913, 1975));
 		uc.addUnit(new UnitCurrency("CHF", "Swiss Francs", 0.967));
@@ -574,6 +576,8 @@ class UnitInitializer {
 //		uc.addUnit(new UnitCurrency("BNT", "Bancor", 1 / 2.34959, cryTime));
 //		uc.addUnit(new UnitCurrency("LKK", "Lykke", 1 / 0.359779, cryTime));
 //		uc.addUnit(new UnitCurrency("ARK", "Ark", 1 / 0.945247, cryTime));
+
+		uc.addUnit(new UnitCurrency("SAT", "Satoshi", 1E8 / 3197.67, cryTime, bitcoin, 1E8));
 
 		return uc;
 	}

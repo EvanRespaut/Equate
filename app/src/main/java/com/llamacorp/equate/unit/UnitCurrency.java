@@ -9,6 +9,13 @@ import java.util.GregorianCalendar;
 public class UnitCurrency extends Unit {
 	private static final String JSON_LAST_UPDATE = "updated";
 	public static final String DEFAULT_CURRENCY = "USD";
+	public static final String JSON_IS_FRACTIONAL = "is_fraction";
+	public static final String JSON_FRACTION_VALUE = "fraction";
+	public static final String JSON_PARENT = "parent";
+
+	private boolean mFractionalCurrency = false;
+	private UnitCurrency mParentCurrency;
+	private double mFraction = 0.0;
 
 	private Date mTimeLastUpdated;
 //	private String mURLPrefix = "http://rate-exchange.herokuapp.com/fetchRate?from="
@@ -21,9 +28,9 @@ public class UnitCurrency extends Unit {
 //	public interface OnConvertKeyUpdateFinishedListener {
 //		public void updateDynamicUnitButtons(String text);
 //	}
-
-	//used to tell parent classes if the asyncRefresh is currently running
-	private boolean mUpdating = false;
+//
+//	//used to tell parent classes if the asyncRefresh is currently running
+//	private boolean mUpdating = false;
 
 	/**
 	 * Create a new currency unit
@@ -50,6 +57,26 @@ public class UnitCurrency extends Unit {
 		mTimeLastUpdated = updateTime.getTime();
 	}
 
+	/**
+	 * Create a new currency unit that is used for currency units that are
+	 * fractional sizes of other existing currencies.
+	 * @param name abbreviated name of the currency (eg, "USD" for US dollar)
+	 * @param longName long name (eg, "US Dollar")
+	 * @param value the price of the unit in inverted US dollars
+	 * @param updateTime the time the price was updated
+	 * @param unit the symbol for the currency for which this is a
+	 *                       fraction of (for cents, this would be USD)
+	 * @param fraction actual fraction of the parent currency
+	 */
+	public UnitCurrency(String name, String longName, double value,
+							  GregorianCalendar updateTime, UnitCurrency unit,
+							  double fraction) {
+		this(name, longName, value, updateTime);
+		mFractionalCurrency = true;
+		mParentCurrency = unit;
+		mFraction = fraction;
+	}
+
 //	public UnitCurrency(String name, String longName, double value, String URL) {
 //		this(name, longName, value);
 //		mURLPrefix = URL;
@@ -62,8 +89,12 @@ public class UnitCurrency extends Unit {
 	public boolean loadJSON(JSONObject json) throws JSONException {
 		boolean success = super.loadJSON(json);
 		//only load in the time if the JSON object matches this UNIT
-		if (success)
+		if (success){
 			setUpdateTime(new Date(json.getLong(JSON_LAST_UPDATE)));
+//			mFractionalCurrency = json.getBoolean(JSON_IS_FRACTIONAL);
+//			mFraction = json.getDouble(JSON_FRACTION_VALUE);
+//			mParentCurrency = json.getString(JSON_PARENT);
+		}
 		return success;
 	}
 
@@ -94,6 +125,19 @@ public class UnitCurrency extends Unit {
 		return expressionToConvert + "*" + toUnit.getValue() + "/" + getValue();
 	}
 
+	public boolean isFractionCurrency() {
+		return mFractionalCurrency;
+	}
+
+	/**
+	 * Update the value of this fractional currency with the value of the parent
+	 * currency, presumably after the parent has been updated
+	 */
+	public void updateFractionalValue() {
+		if (isFractionCurrency() && mParentCurrency != null){
+			setValue(mFraction * mParentCurrency.getValue());
+		}
+	}
 
 //	public boolean isUpdating() {
 //		return mUpdating;

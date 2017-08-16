@@ -6,6 +6,7 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 
 import com.llamacorp.equate.R;
+import com.llamacorp.equate.unit.Unit;
 import com.llamacorp.equate.unit.UnitCurrency;
 import com.llamacorp.equate.unit.UnitType;
 import com.llamacorp.equate.unit.updater.CurrencyURLParser.CurrencyParseException;
@@ -48,6 +49,15 @@ public class UnitUpdater {
 			// doesn't get bogged down
 			new UpdateCurrenciesAsyncTask(ut, forced, mUnitsToUpdate, mContext)
 					  .execute();
+
+			for (int i = 0; i < ut.size(); i++) {
+				Unit unit = ut.getUnitPosInUnitArray(i);
+				if (unit.isDynamic()){
+					UnitCurrency uc = (UnitCurrency) unit;
+					if(uc.isFractionCurrency())
+						uc.updateFractionalValue();
+				}
+			}
 		} else {
 			ViewUtils.toast(mContext.getText(R.string.words_units_up_to_date)
 					  .toString(), mContext);
@@ -78,6 +88,9 @@ public class UnitUpdater {
 		private ErrorCause mErrorCause;
 
 
+		/**
+		 * Constructor to create a new Asynchronous task used to update currencies
+		 */
 		UpdateCurrenciesAsyncTask(UnitType unitType, Boolean forced,
 										  ArrayList<Integer> unitsToUpdate,
 										  Context context) {
@@ -87,7 +100,9 @@ public class UnitUpdater {
 			mContext = context;
 		}
 
-		// The main method that runs asynchronously
+		/**
+		 * The main method that runs asynchronously
+		 */
 		@Override
 		protected Boolean doInBackground(Void... voids) {
 			if (!isNetworkAvailable()){
@@ -97,8 +112,9 @@ public class UnitUpdater {
 			return updateRates(mUnitType);
 		}
 
-
-		// This method is called after doInBackground completes
+		/**
+		 * This method is called after doInBackground completes
+		 */
 		@Override
 		protected void onPostExecute(Boolean successful) {
 			if (successful){
