@@ -128,7 +128,9 @@ public class ConvKeysFragment extends Fragment implements OnConvertKeyUpdateFini
 							public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 								mSearchDialogBuilder.cancelDialog();
 								UnitSearchItem selectedItem = mSearchDialogBuilder.getItem(position);
-								clickUnitButton(selectedItem.getUnitPosition());
+								clickUnitButton(mUnitType
+										  .findButtonPositionforUnitArrayPos(
+										  		  selectedItem.getUnitPosition()));
 //								updateFavorites(selectedItem.getUnitPosition());
 							}
 						});
@@ -263,7 +265,8 @@ public class ConvKeysFragment extends Fragment implements OnConvertKeyUpdateFini
 	 * @param itemClickListener OnClickListener for when the user selects one
 	 *                          of the units in the dialog list
 	 */
-	private void createSearchDialog(CharSequence hint, AdapterView.OnItemClickListener itemClickListener) {
+	private void createSearchDialog(CharSequence hint,
+											  AdapterView.OnItemClickListener itemClickListener) {
 		Context context = getActivity();
 		mSearchDialogBuilder = new UnitSearchDialogBuilder(mUnitType);
 		mSearchDialogBuilder.buildDialog(context, hint, null, itemClickListener);

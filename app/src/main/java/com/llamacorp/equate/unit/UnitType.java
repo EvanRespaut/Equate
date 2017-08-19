@@ -200,6 +200,13 @@ public class UnitType {
 		return -1;  //if we didn't find the unit
 	}
 
+	/**
+	 * This function takes a unit array position (the original position of a unit
+	 * when the unit array is created in code) and returns the display order
+	 * position (after units have been moved around by the user.
+	 * @param pos the position of the unit in the original unit array
+	 * @return the position of the unit in the display order array
+	 */
 	public int findButtonPositionforUnitArrayPos(int pos) {
 		return mUnitDisplayOrder.indexOf(pos);
 	}
