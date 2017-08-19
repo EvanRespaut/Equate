@@ -143,6 +143,15 @@ public class EspressoTestUtils {
 	}
 
 	/**
+	 * Long clicks a unit in the unit pager with the displayed name of unitName
+	 */
+	public static void longClickUnit(String unitName) {
+		onView(allOf(anyOf(withText(unitName), withText("➜ " + unitName)),
+				  isDescendantOfA(withId(R.id.unit_pager))
+				  , isDisplayed())).perform(longClick());
+	}
+
+	/**
 	 * Checks that the unit button is visible for the given string
 	 */
 	public static void checkUnitButtonVisibleWithArrow(String buttonText) {
@@ -157,6 +166,18 @@ public class EspressoTestUtils {
 				.check(matches(isDisplayed()));
 	}
 
+
+	public static void resetCalculator() {
+		longClickButton("C");
+		onView(withText("Calculator factory reset")).perform(click());
+		onView(withText("OK")).perform(click());
+	}
+
+	private static void longClickButton(String s) {
+		clickButton(s, true);
+	}
+
+
 	public static void clickButtons(String buttonString) {
 		for (int i = 0; i < buttonString.length(); i++) {
 			String s = buttonString.substring(i, i + 1);
@@ -170,15 +191,14 @@ public class EspressoTestUtils {
 					clickPrevQuery(Integer.parseInt(buttonString.substring(i, i + 1)));
 					break;
 				default:
-					clickButton(s);
+					clickButton(s, false);
 					break;
 			}
 		}
 	}
 
-	private static void clickButton(String s) {
+	private static void clickButton(String s, boolean longClick) {
 		int id;
-		boolean longClick = false;
 
 		//special case buttons
 		switch (s) {
@@ -193,7 +213,6 @@ public class EspressoTestUtils {
 			default:
 				id = getButtonID(s);
 		}
-
 
 		if (longClick)
 			onView(withId(id)).perform(longClick());

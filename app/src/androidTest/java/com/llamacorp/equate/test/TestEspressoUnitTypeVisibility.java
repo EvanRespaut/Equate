@@ -48,6 +48,8 @@ import static com.llamacorp.equate.test.EspressoTestUtils.clickButtons;
 import static com.llamacorp.equate.test.EspressoTestUtils.clickPrevAnswer;
 import static com.llamacorp.equate.test.EspressoTestUtils.clickUnit;
 import static com.llamacorp.equate.test.EspressoTestUtils.getPagerIdle;
+import static com.llamacorp.equate.test.EspressoTestUtils.longClickUnit;
+import static com.llamacorp.equate.test.EspressoTestUtils.resetCalculator;
 import static com.llamacorp.equate.test.EspressoTestUtils.selectUnitTypeDirect;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.hasToString;
@@ -162,6 +164,58 @@ public class TestEspressoUnitTypeVisibility {
 
 	@Test
 	public void testUnitSearch() {
+		resetCalculator();
+
+		selectUnitTypeDirect("Currency");
+		longClickUnit("CHF");
+
+		// type "sato" into filter
+		onView(allOf(withClassName(is("android.widget.EditText")),
+				  isDisplayed())).perform(typeText("sato"));
+
+		// click on "Satochi"
+		onView(allOf(withId(R.id.search_dialog_name_textView),
+				  withText("Satoshi"))).perform(click());
+
+		clickUnit("BTC");
+
+		// even after we do a unit update, 1 BTC should be equal to 100,000,000 sat
+		clickUnit("SAT");
+
+		assertExpressionEquals("100,000,000 SAT");
+
+		// now make sure when we click sat in the search, it brings up the correct unit
+		clickButtons("C");
+		onView(allOf(withId(R.id.convert_button10), withText("More…"), isDisplayed())).perform(click());
+		// type "sato" into filter
+		onView(allOf(withClassName(is("android.widget.EditText")),
+				  isDisplayed())).perform(typeText("sato"));
+
+		// click on "Satochi"
+		onView(allOf(withId(R.id.search_dialog_name_textView),
+				  withText("Satoshi"))).perform(click());
+		clickUnit("BTC");
+		assertExpressionEquals("0.00000001 BTC");
+
+
+		clickButtons("C");
+		longClickUnit("SAT");
+
+		// type "sato" into filter
+		onView(allOf(withClassName(is("android.widget.EditText")),
+				  isDisplayed())).perform(typeText("CHF"));
+
+		// click on "Satochi"
+		onView(allOf(withId(R.id.search_dialog_name_textView),
+				  withText("Swiss Francs"))).perform(click());
+
+		clickUnit("CHF");
+		clickUnit("USD");
+
+
+
+		
+
 		clickButtons("C");
 
 		searchForUnit("mil");
