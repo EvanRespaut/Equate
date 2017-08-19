@@ -577,6 +577,7 @@ class UnitInitializer {
 //		uc.addUnit(new UnitCurrency("ARK", "Ark", 1 / 0.945247, cryTime));
 
 		uc.addUnit(new UnitCurrency("SAT", "Satoshi", 1E8 / 3197.67, cryTime, "BTC", 1E8));
+		uc.addUnit(new UnitCurrency("mBTC", "Millibitcoin", 1E3 / 3197.67, cryTime, "BTC", 1E3));
 
 		return uc;
 	}
