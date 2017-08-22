@@ -270,7 +270,9 @@ public class ConvKeysFragment extends Fragment implements OnConvertKeyUpdateFini
 											  AdapterView.OnItemClickListener itemClickListener) {
 		Context context = getActivity();
 		mSearchDialogBuilder = new UnitSearchDialogBuilder(mUnitType);
-		mSearchDialogBuilder.buildDialog(context, hint, null, itemClickListener);
+		CalcActivity ca = (CalcActivity) getActivity();
+		//TODO not sure if the idleResource should be accessed this way...
+		mSearchDialogBuilder.buildDialog(context, hint, ca.getIdlingResource(), itemClickListener);
 	}
 
 	private void createCustomUnitDialog() {

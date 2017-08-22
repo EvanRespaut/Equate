@@ -174,6 +174,9 @@ public class TestEspressoUnitTypeVisibility {
 		onView(allOf(withClassName(is("android.widget.EditText")),
 				  isDisplayed())).perform(typeText("sato"));
 
+		onView(allOf(withClassName(is("android.widget.EditText")),
+				  isDisplayed())).check(matches(withText("sato")));
+
 		// click on "Satochi"
 		onView(allOf(withId(R.id.search_dialog_name_textView),
 				  withText("Satoshi"))).perform(click());

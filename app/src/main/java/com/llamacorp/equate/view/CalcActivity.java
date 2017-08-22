@@ -16,7 +16,6 @@ import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.annotation.VisibleForTesting;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -894,7 +893,7 @@ public class CalcActivity extends AppCompatActivity
 	/**
 	 * Only called from test, creates and returns a new {@link SimpleIdlingResource}.
 	 */
-	@VisibleForTesting
+//	@VisibleForTesting
 	@NonNull
 	public SimpleIdlingResource getIdlingResource() {
 		if (mIdlingResource == null) {
