@@ -68,6 +68,7 @@ public class TestEspressoUnitTypeVisibility {
 	@Before
 	public void setUpTest() {
 		mPagerIdle = getPagerIdle(mActivityTestRule);
+
 		mSimpleIdle = mActivityTestRule.getActivity().getIdlingResource();
 		registerIdlingResources(mPagerIdle, mSimpleIdle);
 	}

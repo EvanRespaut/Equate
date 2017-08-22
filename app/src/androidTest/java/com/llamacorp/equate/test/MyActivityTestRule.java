@@ -18,6 +18,9 @@ import org.hamcrest.Matcher;
 import java.io.File;
 
 import static android.support.test.InstrumentationRegistry.getTargetContext;
+import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 /**
  * This class was created to allow for custom setup and tear down code before
@@ -69,6 +72,8 @@ class MyActivityTestRule<A extends CalcActivity> extends ActivityTestRule<A> {
 	protected void afterActivityLaunched() {
 		super.afterActivityLaunched();
 
+		// clear out what's new dialog
+		onView(withText("OK")).perform(click());
 	}
 
 
