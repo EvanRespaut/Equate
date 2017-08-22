@@ -214,7 +214,7 @@ public class TestEspressoUnitTypeVisibility {
 
 
 
-		
+
 
 		clickButtons("C");
 
