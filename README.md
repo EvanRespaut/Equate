@@ -33,7 +33,7 @@ If you like the app and want to support the developer, tip :)
 
 - Bitcoin: [`15KCzAPJvSJLUfjuTQgAgSiSwQu6uLiexC`](https://evanrespaut.github.io/qr_codes/QR_15KCzAPJvSJLUfjuTQgAgSiSwQu6uLiexC.png)
 - Ethereum: [`0x7CD8d76430bf0A091e38f2aBF161931EddFfF917`](https://evanrespaut.github.io/qr_codes/QR_0x7CD8d76430bf0A091e38f2aBF161931EddFfF917.png)
-- Dash: [`XubciXfXUFEGmHHG14PbhUASJ4qQ24KUds`](https://evanrespaut.github.io/qr_codes/QR_XubciXfXUFEGmHHG14PbhUASJ4qQ24KUds.png)
+- Dash: [`XpdZmP3eunJT9Eg8qFL3x6TQSyq7gu6riY`](https://evanrespaut.github.io/qr_codes/QR_XpdZmP3eunJT9Eg8qFL3x6TQSyq7gu6riY.png)
 - Litecoin: [`LWXjRk7Sy5Eb4pgGPS7DhEsQm6JHPU4NRr`](https://evanrespaut.github.io/qr_codes/QR_LWXjRk7Sy5Eb4pgGPS7DhEsQm6JHPU4NRr.png)
 
 
