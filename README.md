@@ -28,12 +28,14 @@ To find the number of Dollars in a Bitcoin, simply move to the currency tab, cli
 <a href="https://f-droid.org/packages/com.llamacorp.equate/" target="_blank">
 <img src="https://f-droid.org/badge/get-it-on.png" alt="Get it on F-Droid" height="100"/></a>
 
-## Donate
-If you like the app and want to support the developer, donate :)
+## Tip/Donate
+If you like the app and want to support the developer, tip :)
 
-- Bitcoin: `1CwYNoBWEgX4Fdf4bpw7g1hkQHDac1icmx`
+- Bitcoin: [`15KCzAPJvSJLUfjuTQgAgSiSwQu6uLiexC`](https://evanrespaut.github.io/qr_codes/QR_15KCzAPJvSJLUfjuTQgAgSiSwQu6uLiexC.png)
+- Ethereum: [`0x7CD8d76430bf0A091e38f2aBF161931EddFfF917`](https://evanrespaut.github.io/qr_codes/QR_0x7CD8d76430bf0A091e38f2aBF161931EddFfF917.png)
+- Dash: [`XubciXfXUFEGmHHG14PbhUASJ4qQ24KUds`](https://evanrespaut.github.io/qr_codes/QR_XubciXfXUFEGmHHG14PbhUASJ4qQ24KUds.png)
+- Litecoin: [`LWXjRk7Sy5Eb4pgGPS7DhEsQm6JHPU4NRr`](https://evanrespaut.github.io/qr_codes/QR_LWXjRk7Sy5Eb4pgGPS7DhEsQm6JHPU4NRr.png)
 
-![Bitcoin QR Code](https://blockchain.info/qr?data=1CwYNoBWEgX4Fdf4bpw7g1hkQHDac1icmx&size=100 "Bitcoin QR Code")
 
 - Paypal:
 

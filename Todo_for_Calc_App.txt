@@ -1,4 +1,6 @@
 ------------------ToDo Next--------------------
+- currency sync icon:
+https://static.ivanti.com/sites/marketing/media/images/solutions/cloud-service/cloud-service_block2-icon3.svg?ext=.svg
 - add fortnight
 - add km/min
 - bug, back out of app, come back in and type single character, result preview size is wrong
