@@ -579,6 +579,7 @@ class UnitInitializer {
 		uc.addUnit(new UnitCurrency("SAT", "Satoshi", 1E8 / 3197.67, cryTime, "BTC", 1E8));
 		uc.addUnit(new UnitCurrency("mBTC", "Millibitcoin", 1E3 / 3197.67, cryTime, "BTC", 1E3));
 
+		uc.addUnit(new UnitCurrency("GWEI", "Gwei (Ethereum)", 1E9 / 259.493, cryTime, "ETH", 1E9));
 		return uc;
 	}
 }
