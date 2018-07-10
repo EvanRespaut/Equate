@@ -66,6 +66,7 @@ public class CoinmarketcapParser extends CurrencyURLParser {
 //					e.printStackTrace();
 //				}
 //				// TODO parse the date from Coinmarketcap, for now just use now
+				// TODO date code is in ISO 8601 format
 				Date now = new Date();
 
 				Entry entry = new Entry(price, symbol, now);
