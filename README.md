@@ -1,5 +1,3 @@
-[![CircleCI Build Status](https://circleci.com/gh/EvanRespaut/Equate.svg?style=shield)](https://circleci.com/gh/EvanRespaut/Equate)
-
 # Equate - Unit Converting Calculator
 Equate is an open source unit converting calculator designed to make converting from one unit to another fast and simple. 
 
