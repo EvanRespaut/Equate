@@ -86,8 +86,8 @@
    <string name="about">About</string>
    <string name="find_unit">Find Unit</string>
    <string name="find_unit_hint">Find unit:</string>
-   <string name="whats_new1_6">Whats new in v1.6</string>
-   <string name="version1_6_description">—  Over 30 new cryptocurrencies (including Ethereum, Litecoin, Ripple, Dash)\n—  Search feature for currencies\n—  Hold equals to open navigation drawer\n—  Hold clear to erase history\n—  Miscellaneous new units\n—  Other minor bug fixes\n\nIf you like the app and want to support the dev, tip!\ngithub.com/EvanRespaut/Equate</string>
+   <string name="whats_new">Whats new in v1.7</string>
+   <string name="version_description">—  Fix for currency updating. \n\nIf you like the app and want to support the dev, tip!\ngithub.com/EvanRespaut/Equate</string>
 
 
    <color name="equal_button_normal">#176B17</color>

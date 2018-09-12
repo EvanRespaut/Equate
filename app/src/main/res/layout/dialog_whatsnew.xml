@@ -8,6 +8,6 @@
    <TextView
       android:layout_width="fill_parent"
       android:layout_height="wrap_content"
-      android:text="@string/version1_6_description"
+      android:text="@string/version_description"
       android:layout_marginLeft="10dp"/>
 </LinearLayout>

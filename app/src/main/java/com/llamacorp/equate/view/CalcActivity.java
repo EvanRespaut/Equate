@@ -620,8 +620,8 @@ public class CalcActivity extends AppCompatActivity
 			View view = inflater.inflate(R.layout.dialog_whatsnew, null);
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-			builder.setTitle(getText(R.string.whats_new1_6))
-					  .setMessage(getText(R.string.version1_6_description))
+			builder.setTitle(getText(R.string.whats_new))
+					  .setMessage(getText(R.string.version_description))
 					  .setPositiveButton("OK", new DialogInterface.OnClickListener() {
 						  @Override
 						  public void onClick(DialogInterface dialog, int which) {
