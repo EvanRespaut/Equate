@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+   <string name="app_name">Equate</string>
+   <string name="app_phrase">Unitate aldatze kalkulagailua</string>
+   <string name="action_settings">Ezarpenak</string>
+
+   <string name="decimal_button">,</string>
+   <string name="equals_button">=</string>
+   <string name="ee_button">EE</string>
+   <string name="power_button">^</string>
+   <string name="backspace_button">Atzera</string>
+   <string name="open_para_button">(</string>
+   <string name="close_para_button">)</string>
+   <string name="percent_button">%</string>
+   <string name="negate_button">±</string>
+   <string name="invert_button">1/x</string>
+   <string name="clear_button">C</string>
+
+   <string name="open_para_long_button">…)</string>
+   <string name="close_para_long_button">(…</string>
+
+
+   <string name="zero_button">0</string>
+   <string name="one_button">1</string>
+   <string name="two_button">2</string>
+   <string name="three_button">3</string>
+   <string name="four_button">4</string>
+   <string name="five_button">5</string>
+   <string name="six_button">6</string>
+   <string name="seven_button">7</string>
+   <string name="eight_button">8</string>
+   <string name="nine_button">9</string>
+
+   <string name="plus_button">+</string>
+   <string name="minus_button">-</string>
+   <string name="multiply_button">×</string>
+   <string name="divide_button">÷</string>
+
+   <string name="equals_secondary_text">≡</string>
+
+
+   <string name="first_convert_message">Sakatu nahi duzun unitatea aldaketa burutzeko.</string>
+   <string name="first_convert_message_no_numbers">Sartu zenbakiren bat eta sakatu nahi duzun unitatea, aldaketa burutzeko.</string>
+
+   <string name="more_button">Gehiago...</string>
+   <string name="more_button_search_hint">Aurkitu unitatea</string>
+   <string name="select_unit">Hautatu unitate bat:</string>
+   <string name="word_Change">Aldaketa</string>
+   <string name="word_historical">historiala</string>
+   <string name="historical_dialog_title">Hautatu data:</string>
+   <string name="word_Convert">Aldatu</string>
+   <string name="word_Converted">Aldatuta</string>
+   <string name="word_updating">Berritzen</string>
+   <string name="word_button">Botoia</string>
+   <string name="add_unit">Sortu unitate berria</string>
+
+   <string name="about_title">Equate-ri buruz</string>
+   <string name="about_version">Bertsioa:</string>
+   <string name="about_message">Komentarioak, akatsak, iradokizunak, edo garatzaileari dohaintza bat egiteko: github.com/EvanRespaut/Equate</string>
+
+   <string name="click_another_unit">Sakatu beste unitate bat aldaketa bat burutzeko</string>
+
+   <string name="reset_title">Kalkulagailua garbitu?</string>
+   <string name="reset_clear_history">Garbitu historial osoa</string>
+   <string name="reset_factory">Kalkulagailua balio lehenetsitara erreseteatu</string>
+   <string name="reset_factory_msg">Kontuz lehenetsitako balioetara erreseteatzeak historiala eta ezarpenak ezabatuko ditu eta kalkulagailua egoera originalera bueltaraziko du. Jarraitu?</string>
+
+   <string name="update_at">Noiz berritua</string>
+
+   <string name="update_error_internet">Akatsa berritzean: ez dago interneteko konexiorik</string>
+   <string name="update_error_unknown">Akatsa: ezezaguna</string>
+
+
+   <string name="words_units_up_to_date">Unitateak eguneratuta.</string>
+
+   <string name="convert_arrow">➜ </string>
+   <string name="convert_toast_converting">Aldatzen</string>
+   <string name="convert_toast_no_numbers">Ez dago aldatzeko zenbakirik</string>
+   <string name="ellipsis">…</string>
+   <string name="settings">Ezarpenak</string>
+   <string name="about">Honi buruz</string>
+   <string name="find_unit">Aurkitu unitatea</string>
+   <string name="find_unit_hint">Aurkitu unitatea:</string>
+   <string name="whats_new1_6">Zer da berri v1.6-an</string>
+   <string name="version1_6_description">—  30 kriptomoneta berri (besteak beste Ethereum, Litecoin, Ripple, Dash)\n
+  —  Monetetarako bilaketa funtzioa\n
+  —  Mantentzeak nabigazio panela irekitzen du\n
+  —  Mantendu garbitu botoia historiala ezabatzeko\n
+  —  Hainbat unitate berri\n
+  —  Akats txikien konponketa\n
+  \n
+  Aplikazioa gustoko baduzu, egiozu dohaintza garatzaileari!\n
+  github.com/EvanRespaut/Equate</string>
+
+
+   <color name="equal_button_normal">#176B17</color>
+   <color name="equal_button_pressed">#ff7cc97c</color>
+   <color name="equal_button_text_normal">#D4D4D4</color>
+   <color name="equal_button_text_pressed">#232323</color>
+
+   <color name="clear_button_pressed">#B23535</color>
+
+   <color name="num_button_normal">#191919</color>
+   <color name="num_button_pressed">#ff80a172</color> <!--used to be 93795B -->
+
+   <color name="op_button_normal">#282828</color>
+   <color name="op_button_pressed">#61AD61</color>
+   <color name="op_button_long_press_accent">#000000</color>
+
+   <color name="backspace_button_held">#E10000</color>
+
+   <color name="conv_button_normal">#191919</color>
+   <color name="conv_button_selected">#738E68</color>
+   <color name="conv_button_pressed">#97BC89</color>
+
+
+   <color name="button_secondary_text">#636363</color>
+   <color name="equals_secondary_text_color_normal">#ff969696</color>
+
+
+   <color name="button_text_normal">#D4D4D4</color>
+   <color name="button_text_pressed">#232323</color>
+
+   <!-- This is for the convert button that has been selected -->
+   <color name="button_text_conv_normal">#282828</color>
+   <color name="button_text_conv_pressed">#232323</color>
+
+   <!-- Accent color for convert buttons NOT selected -->
+   <color name="button_text_conv_not_selected">#1BC41B</color>
+
+   <color name="prev_curr_exp_divider">#252525</color>
+
+
+   <color name="result_text">#FFFFFF</color>
+
+   <color name="prev_result_text">#808080</color>
+   <color name="prev_result_text_pressed">#000000</color>
+
+   <color name="prev_result_text_timestamp">#606060</color>
+
+   <color name="preview_text_color">#B23535</color>
+   <color name="preview_si_suffix_text_color">#B23535</color>
+
+
+   <color name="app_background">#000000</color>
+   <dimen name="button_radius">0dp</dimen>
+
+   <color name="color_search_name_text">#FFFFFF</color>
+
+   <!-- Unit Names -->
+   <!--These names should not get translated, they're used internally only-->
+</resources>
