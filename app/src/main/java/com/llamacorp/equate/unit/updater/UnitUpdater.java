@@ -227,7 +227,9 @@ public class UnitUpdater {
 
 			// Attempt to retrieve the array of yahoo currency units
 			try {
-				currRates = new ECBXmlParser().downloadAndParse();
+				//currRates = new ECBXmlParser().downloadAndParse();
+				currRates = new FloatRateParser().downloadAndParse();
+
 				cryptCurrRates = new CoinmarketcapParser().downloadAndParse();
 
 				// add the two set of rates together, but make sure the normal

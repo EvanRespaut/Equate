@@ -1,13 +1,22 @@
 apply plugin: 'com.android.application'
 
+allprojects {
+    repositories {
+        jcenter()
+        maven {
+            url 'https://maven.google.com'
+        }
+    }
+}
+
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.1"
+    compileSdkVersion 26
+    buildToolsVersion "26.0.1"
     useLibrary 'org.apache.http.legacy'
     defaultConfig {
         applicationId "com.llamacorp.equate"
         minSdkVersion 14
-        targetSdkVersion 25
+        targetSdkVersion 26
 
         testApplicationId "com.llamacorp.equate.test"
 //        // for old Android testing:
@@ -34,9 +43,9 @@ android {
 
 
 dependencies {
-    compile 'com.android.support:design:25.1.1'
+    compile 'com.android.support:design:26.1.0'
     compile 'junit:junit:4.12'
-    androidTestCompile 'com.android.support:design:25.1.1'
+    androidTestCompile 'com.android.support:design:26.1.0'
     androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     }

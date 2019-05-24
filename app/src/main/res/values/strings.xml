@@ -71,7 +71,7 @@
    <string name="update_forced">FORCED update at </string>
 
    <string name="update_error_internet">Update error: no internet connection</string>
-   <string name="update_error_parsing">Update error: Yahoo XML parsing error</string>
+   <string name="update_error_parsing">Update error: XML parsing error</string>
    <string name="update_error_timeout">Update error: internet connection timeout</string>
    <string name="update_error_unknown">Error: unknown</string>
 
