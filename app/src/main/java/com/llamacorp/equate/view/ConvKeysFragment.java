@@ -5,11 +5,15 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.llamacorp.equate.Calculator;
 import com.llamacorp.equate.R;
@@ -112,7 +116,7 @@ public class ConvKeysFragment extends Fragment implements OnConvertKeyUpdateFini
 		if (mUnitType.size() > convertButtonIds.length){
 			mNumConvButtons = mNumConvButtons - 1;
 
-			mMoreButton = (Button) v.findViewById(convertButtonIds[mNumConvButtons]);
+			mMoreButton = v.findViewById(convertButtonIds[mNumConvButtons]);
 
 			mMoreButton.setText(getText(R.string.more_button));
 			//button.setTypeface(null, Typeface.ITALIC);
@@ -124,16 +128,16 @@ public class ConvKeysFragment extends Fragment implements OnConvertKeyUpdateFini
 					if (mUnitType.size() > SEARCH_DIALOG_MIN_SIZE){
 						createSearchDialog(getText(R.string.more_button_search_hint),
 								  new AdapterView.OnItemClickListener() {
-							@Override
-							public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-								mSearchDialogBuilder.cancelDialog();
-								UnitSearchItem selectedItem = mSearchDialogBuilder.getItem(position);
-								clickUnitButton(mUnitType
-										  .findButtonPositionforUnitArrayPos(
-										  		  selectedItem.getUnitPosition()));
+									  @Override
+									  public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+										  mSearchDialogBuilder.cancelDialog();
+										  UnitSearchItem selectedItem = mSearchDialogBuilder.getItem(position);
+										  clickUnitButton(mUnitType
+													 .findButtonPositionforUnitArrayPos(
+																selectedItem.getUnitPosition()));
 //								updateFavorites(selectedItem.getUnitPosition());
-							}
-						});
+									  }
+								  });
 					}
 					else {
 						createMoreUnitsDialog(getText(R.string.select_unit),
@@ -142,6 +146,12 @@ public class ConvKeysFragment extends Fragment implements OnConvertKeyUpdateFini
 									  public void onClick(DialogInterface dialog, int item) {
 										  clickUnitButton(item + mNumConvButtons);
 										  updateFavorites(item + mNumConvButtons);
+									  }
+								  },
+								  new DialogInterface.OnClickListener() {
+									  @Override
+									  public void onClick(DialogInterface dialog, int item) {
+										  createCustomUnitDialog();
 									  }
 								  });
 					}
@@ -216,7 +226,7 @@ public class ConvKeysFragment extends Fragment implements OnConvertKeyUpdateFini
 								mUnitType.swapUnits(buttonPos, item + mNumConvButtons);
 								refreshButtonText(buttonPos);
 							}
-						});
+						}, null);
 					}
 					return false;
 				}
@@ -246,15 +256,18 @@ public class ConvKeysFragment extends Fragment implements OnConvertKeyUpdateFini
 	 * @param itemClickListener OnClickListener for when the user selects one of the
 	 *                          units in the dialog list
 	 */
-	private void createMoreUnitsDialog(CharSequence title, DialogInterface.OnClickListener itemClickListener) {
+	private void createMoreUnitsDialog(CharSequence title,
+												  DialogInterface.OnClickListener itemClickListener,
+												  DialogInterface.OnClickListener customClickListener) {
 		Context context = getActivity();
 		AlertDialog.Builder builder = new AlertDialog.Builder(context);
 		builder.setTitle(title);
 		builder.setItems(mUnitType.getUndisplayedUnitNames(mNumConvButtons), itemClickListener);
 		builder.setNegativeButton(android.R.string.cancel, null);
+		if(customClickListener != null)
+			builder.setNeutralButton(getText(R.string.more_button_custom_unit), customClickListener);
 		AlertDialog alert = builder.create();
 		alert.show();
-
 	}
 
 
@@ -278,7 +291,24 @@ public class ConvKeysFragment extends Fragment implements OnConvertKeyUpdateFini
 	private void createCustomUnitDialog() {
 		AlertDialog.Builder builder = new AlertDialog.
 				  Builder(getActivity());
-		builder.setTitle("Create Custom Unit:");
+		builder.setTitle("Create New Unit:");
+
+		Context context = getActivity();
+		final EditText filterEditText = new EditText(context);
+		final TextView textView = new TextView(context);
+
+		filterEditText.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_search_white, 0, 0, 0);
+		filterEditText.setInputType(InputType.TYPE_CLASS_TEXT);
+		filterEditText.setHint("ie Dollars");
+
+		textView.setText("Unit Name:");
+
+		LinearLayout layout = new LinearLayout(context);
+		layout.setOrientation(LinearLayout.VERTICAL);
+		layout.addView(textView);
+		layout.addView(filterEditText);
+		builder.setView(layout);
+
 		builder.setNegativeButton(android.R.string.cancel, null);
 		AlertDialog alert = builder.create();
 		alert.show();

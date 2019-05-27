@@ -45,6 +45,7 @@
 
    <string name="more_button">More&#8230;</string>
    <string name="more_button_search_hint">Find unit</string>
+   <string name="more_button_custom_unit">Create Custom Unit</string>
    <string name="select_unit">Select a unit:</string>
    <string name="word_Change">Change</string>
    <string name="word_historical">historical</string>
