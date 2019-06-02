@@ -264,8 +264,8 @@ public class ConvKeysFragment extends Fragment implements OnConvertKeyUpdateFini
 		builder.setTitle(title);
 		builder.setItems(mUnitType.getUndisplayedUnitNames(mNumConvButtons), itemClickListener);
 		builder.setNegativeButton(android.R.string.cancel, null);
-		if(customClickListener != null)
-			builder.setNeutralButton(getText(R.string.more_button_custom_unit), customClickListener);
+//		if(customClickListener != null)
+//			builder.setNeutralButton(getText(R.string.more_button_custom_unit), customClickListener);
 		AlertDialog alert = builder.create();
 		alert.show();
 	}
