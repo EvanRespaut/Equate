@@ -9,14 +9,14 @@ To find the number of Dollars in a Bitcoin, simply move to the currency tab, cli
 
 ## Features
 - Clean and fast unit conversions
-- 15 different unit types, including real time currency and precious metals
+- 15 different unit types, including 148 currencies
 - Over 130 units to convert between
 - Instant result preview
 - Customizable unit buttons
 - Semi-scientific calculator 
 - Order of operations
 - Operation history, with recall
-- Smart parenthesis
+- Smart parentheses
 
 
 ## Download
