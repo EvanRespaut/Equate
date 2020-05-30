@@ -35,6 +35,6 @@ If you like the app and want to support the developer, tip :)
 - Litecoin: [`LWXjRk7Sy5Eb4pgGPS7DhEsQm6JHPU4NRr`](https://evanrespaut.github.io/qr_codes/QR_LWXjRk7Sy5Eb4pgGPS7DhEsQm6JHPU4NRr.png)
 
 
-- Paypal:
+- Paypal: [paypal.me/EvanRespaut](paypal.me/EvanRespaut)
 
 [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=evanrespaut%40gmail%2ecom&lc=US&item_name=Equate&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted)
