@@ -230,7 +230,7 @@ public class UnitUpdater {
 				//currRates = new ECBXmlParser().downloadAndParse();
 				currRates = new FloatRateParser().downloadAndParse();
 
-				cryptCurrRates = new CoinmarketcapParser().downloadAndParse();
+				cryptCurrRates = new CoinpaprikaParser().downloadAndParse();
 
 				// add the two set of rates together, but make sure the normal
 				// currency rates will overwrite the crypto rates when there is a

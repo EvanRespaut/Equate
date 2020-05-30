@@ -93,7 +93,7 @@ class UnitInitializer {
 		unitsOfLength.addUnit(new UnitScalar("pm", "Picometers", 1E12));
 		unitsOfLength.addUnit(new UnitScalar("\u212B", "\u212Bngstr\u00F6ms", 1E10));
 		unitsOfLength.addUnit(new UnitScalar("mil", "Thousandths of an inch", 1 / 2.54E-5));
-		unitsOfLength.addUnit(new UnitScalar("fur", "Furlongs", 0.00497096954));
+		unitsOfLength.addUnit(new UnitScalar("fur", "Furlongs", 1 / 201.168)); //exact: 1/8 mile
 		unitsOfLength.addUnit(new UnitScalar("pc", "Parsecs", 3.24078E-17));
 		unitsOfLength.addUnit(new UnitScalar("nmi", "Nautical miles", 1 / 1852.0));
 		unitsOfLength.addUnit(new UnitScalar("ly", "Light years", 1 / 9.4607E15));
