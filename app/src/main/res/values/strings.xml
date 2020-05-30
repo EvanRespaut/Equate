@@ -87,8 +87,8 @@
    <string name="about">About</string>
    <string name="find_unit">Find Unit</string>
    <string name="find_unit_hint">Find unit:</string>
-   <string name="whats_new">Whats new in v1.8</string>
-   <string name="version_description">—  Using new currency source with 148 currencies. \n\nIf you like the app and want to support the dev, tip!\ngithub.com/EvanRespaut/Equate</string>
+   <string name="whats_new">Whats new in v1.9</string>
+   <string name="version_description">—  Fixed broken cryptocurrency updater. \n\nIf you like the app and want to support the dev, tip!\ngithub.com/EvanRespaut/Equate</string>
 
 
    <color name="equal_button_normal">#176B17</color>
