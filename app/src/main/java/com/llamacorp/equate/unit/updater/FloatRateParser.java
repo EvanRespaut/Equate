@@ -20,7 +20,7 @@ import java.util.Locale;
  */
 public class FloatRateParser extends CurrencyURLParser {
 	private static final String FLOAT_RATE_API_URL =
-			  "http://www.floatrates.com/daily/usd.json";
+			  "https://www.floatrates.com/daily/usd.json";
 
 	public FloatRateParser() {
 		super(FLOAT_RATE_API_URL);
