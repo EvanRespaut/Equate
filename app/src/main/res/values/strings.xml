@@ -58,7 +58,7 @@
    <string name="add_unit">Create New Unit</string>
 
    <string name="about_title">About Equate</string>
-   <string name="about_version">Version: </string>
+   <string name="about_version">Version: %s</string>
    <string name="about_message">Comments, bugs, suggestions, or if you would like to tip the dev: github.com/EvanRespaut/Equate</string>
 
    <string name="click_another_unit">Click a different unit to perform a conversion</string>
