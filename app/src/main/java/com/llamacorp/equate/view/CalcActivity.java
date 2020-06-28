@@ -819,7 +819,7 @@ public class CalcActivity extends AppCompatActivity
 
 			new AlertDialog.Builder(mAppContext)
 					  .setTitle(getText(R.string.about_title))
-					  .setMessage(getText(R.string.about_version) + version +
+					  .setMessage(String.format(getText(R.string.about_version).toString(), version) +
 								 "\n\n" + getText(R.string.about_message))
 					  .setPositiveButton(android.R.string.yes, null)
 					  .show();
