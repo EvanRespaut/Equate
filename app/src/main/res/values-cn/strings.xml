@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Equate</string>
+    <string name="app_phrase">单位转换计算器</string>
+    <string name="action_settings">设置</string>
+	
+    <string name="decimal_button">.</string>
+    <string name="equals_button">=</string>
+    <string name="ee_button">EE</string>
+    <string name="power_button">^</string>
+    <string name="backspace_button">退格键</string>
+    <string name="open_para_button">(</string>
+    <string name="close_para_button">)</string>
+    <string name="percent_button">%</string>
+    <string name="negate_button">&#177;</string>
+    <string name="invert_button">1/x</string>
+    <string name="clear_button">C</string>
+	
+    <string name="open_para_long_button">&#8230;)</string>
+    <string name="close_para_long_button">(&#8230;</string>
+	
+	
+    <string name="zero_button">0</string>
+    <string name="one_button">1</string>
+    <string name="two_button">2</string>
+    <string name="three_button">3</string>
+    <string name="four_button">4</string>
+    <string name="five_button">5</string>
+    <string name="six_button">6</string>
+    <string name="seven_button">7</string>
+    <string name="eight_button">8</string>
+    <string name="nine_button">9</string>
+	
+    <string name="plus_button">+</string>
+    <string name="minus_button">-</string>
+    <string name="multiply_button">×</string>
+    <string name="divide_button">÷</string>
+	
+    <string name="equals_secondary_text">&#8801;</string>
+	
+	
+    <string name="first_convert_message">现在按想要的单位执行转换</string>
+    <string name="first_convert_message_no_numbers">现在输入一些数字并按想要的单位执行转换</string>
+	
+    <string name="more_button">更多&#8230;</string>
+    <string name="more_button_search_hint">查找单位</string>
+    <string name="more_button_custom_unit">创建自定义单位</string>
+    <string name="select_unit">选择一个单位：</string>
+    <string name="word_Change">更改</string>
+    <string name="word_historical">历史记录</string>
+    <string name="historical_dialog_title">选择日期：</string>
+    <string name="word_Convert">转换</string>
+    <string name="word_Converted">已转换</string>
+    <string name="word_to">到</string>
+    <string name="word_updating">更新中</string>
+    <string name="word_button">按钮</string>
+    <string name="add_unit">新建单位</string>
+	
+    <string name="about_title">关于 Equate</string>
+    <string name="about_version">版本：</string>
+    <string name="about_message">评论、错误、建议或你想打赏开发者；github.com/EvanRespaut/Equate</string>
+	
+    <string name="click_another_unit">点击一个不同的单位来执行一次转换</string>
+	
+    <string name="reset_title">清除计算器？</string>
+    <string name="reset_clear_history">清除所有历史</string>
+    <string name="reset_factory">恢复出厂设置</string>
+    <string name="reset_factory_msg">警告，恢复出厂设置将清除所有历史和选项并将计算器还原到初始状态。要继续吗？</string>
+	
+    <string name="update_at">更新于 </string>
+    <string name="update_forced">强制更新于 </string>
+	
+    <string name="update_error_internet">更新错误：无互联网连接</string>
+    <string name="update_error_parsing">更新错误：XML 解析错误</string>
+    <string name="update_error_timeout">更新错误：互联网连接超时</string>
+    <string name="update_error_unknown">错误：未知</string>
+	
+	
+    <string name="words_units_up_to_date">单位已是最新</string>
+	
+    <string name="convert_arrow">&#10140;&#160;</string>
+    <string name="convert_toast_converting">转换中</string>
+    <string name="convert_toast_no_numbers">无可转换数字</string>
+    <string name="ellipsis">&#8230;</string>
+    <string name="settings">设置</string>
+    <string name="about">关于</string>
+    <string name="find_unit">查找单位</string>
+    <string name="find_unit_hint">查找单位：</string>
+    <string name="whats_new">v2.0 变化</string>
+	<string name="version_description">— 货币更新器热修复 \n\n如果你喜欢这个应用，想支持开发者， 打赏吧！\ngithub.com/EvanRespaut/Equate</string>
+	
+	
+	<color name="equal_button_normal">#176B17</color>
+    <color name="equal_button_pressed">#ff7cc97c</color>
+    <color name="equal_button_text_normal">#D4D4D4</color>
+    <color name="equal_button_text_pressed">#232323</color>
+
+    <color name="clear_button_pressed">#B23535</color>
+
+    <color name="num_button_normal">#191919</color>
+    <color name="num_button_pressed">#ff80a172</color> <!--used to be 93795B -->
+
+    <color name="op_button_normal">#282828</color>
+    <color name="op_button_pressed">#61AD61</color>
+    <color name="op_button_long_press_accent">#000000</color>
+
+    <color name="backspace_button_held">#E10000</color>
+
+    <color name="conv_button_normal">#191919</color>
+    <color name="conv_button_selected">#738E68</color>
+    <color name="conv_button_pressed">#97BC89</color>
+
+
+    <color name="button_secondary_text">#636363</color>
+    <color name="equals_secondary_text_color_normal">#ff969696</color>
+
+
+    <color name="button_text_normal">#D4D4D4</color>
+    <color name="button_text_pressed">#232323</color>
+
+    <!-- This is for the convert button that has been selected -->
+    <color name="button_text_conv_normal">#282828</color>
+    <color name="button_text_conv_pressed">#232323</color>
+
+    <!-- Accent color for convert buttons NOT selected -->
+    <color name="button_text_conv_not_selected">#1BC41B</color>
+
+    <color name="prev_curr_exp_divider">#252525</color>
+
+
+    <color name="result_text">#FFFFFF</color>
+
+    <color name="prev_result_text">#808080</color>
+    <color name="prev_result_text_pressed">#000000</color>
+
+    <color name="prev_result_text_timestamp">#606060</color>
+
+    <color name="preview_text_color">#B23535</color>
+    <color name="preview_si_suffix_text_color">#B23535</color>
+
+
+    <color name="app_background">#000000</color>
+    <dimen name="button_radius">0dp</dimen>
+
+    <color name="color_search_name_text">#FFFFFF</color>
+
+    <!-- Unit Names -->
+    <!--These names should not get translated, they're used internally only-->
+    <string-array name="unit_type_array_combined">
+      <item>key_currency|Currency        |Currency</item>
+      <item>key_temp    |Temperature     |Temp    </item>
+      <item>key_weight  |Weight          |Weight  </item>
+      <item>key_len     |Length          |Length  </item>
+      <item>key_area    |Area            |Area    </item>
+      <item>key_vol     |Volume          |Volume  </item>
+      <item>key_speed   |Speed           |Speed   </item>
+      <item>key_time    |Time            |Time    </item>
+      <item>key_fuel    |Fuel Economy    |Fuel Eco</item>
+      <item>key_power   |Power           |Power   </item>
+      <item>key_energy  |Energy          |Energy  </item>
+      <item>key_force   |Force           |Force   </item>
+      <item>key_torque  |Torque          |Torque  </item>
+      <item>key_pressure|Pressure        |Pressure</item>
+      <item>key_digital |Digital Storage |Digital </item>
+    </string-array>
+</resources>
